@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Reports\Routes\Takings;
+namespace App\Services\Operation\Routes\Takings;
 
 use App\Models\Company\Company;
 use App\Models\Operation\FuelStation;

@@ -4,7 +4,7 @@
         <div class="panel-heading">
             <div class="panel-heading-btn">
                 <a href="" class="btn btn-lime bg-lime-dark btn-export btn-sm" style="color: white !important;"
-                   onclick="$(this).attr('href','{{ route('report-passengers-taxcentral-search-report')  }}?export=true&'+$('.form-search-report').serialize())">
+                   onclick="$(this).attr('href','{{ route('report-passengers-occupation-search-report')  }}?export=true&'+$('.form-search-report').serialize())">
                     <i class="fa fa-file-excel-o"></i> @lang('Export excel')
                 </a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime " data-click="panel-expand" title="@lang('Expand / Compress')">
@@ -52,7 +52,7 @@
                             @endif
                             <td>
                                 <a href="javascript:;"
-                                   data-url="{{ route('report-passengers-taxcentral-seat-detail',['historySeat'=>$historySeat->id]) }}"
+                                   data-url="{{ route('report-passengers-occupation-seat-detail',['historySeat'=>$historySeat->id]) }}"
                                    class="btn btn-sm btn-grey btn-link btn-show-trajectory-seat-report">
                                     <i class="fa fa-cog fa-spin"></i> @lang('Report detail')
                                 </a>

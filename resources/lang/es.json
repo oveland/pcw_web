@@ -831,5 +831,12 @@
   "Memos": "Memorandos",
   "Memo": "Memorandum",
   "memo": "memorandum",
-  "Vehicles memo": "Memorandum de vehiculo"
+  "Vehicles memo": "Memorandum de vehiculo",
+  "Manual total passengers": "Total pasajeros manuales",
+  "Manual total production": "Total producción manuales",
+  "System count information": "Información conteo sistema",
+  "Manual count information": "Información conteo manual",
+  "url-occupation": "ocupacion",
+  "Occupation": "Ocupación",
+  "occupation": "ocupación"
 }

@@ -673,38 +673,12 @@
                                     </li>
                                 @endif
 
-                                @if( Auth::user() && Auth::user()->isAdmin() )
-                                    <li class="nav-item menu-passengers-mixed">
-                                        <a href="{{ route('report-passengers-mixed')  }}" class="faa-parent animated-hover nav-link">
-                                            <i class="fa fa-compass faa-vertical"></i> <i class="fa fa-crosshairs faa-vertical"></i>
-                                            @lang('Mixed')
-                                        </a>
-                                    </li>
-                                @endif
-
-                                <li class="nav-item menu-passengers-geolocation">
-                                    <a href="{{ route('report-passengers-geolocation')  }}" class="faa-parent animated-hover nav-link">
-                                        <i class="fa fa-map-marker faa-vertical"></i> @lang('Geolocation')
+                                <li class="nav-item menu-passengers-occupation">
+                                    <a href="{{ route('report-passengers-occupation-report')  }}" class="faa-parent animated-hover nav-link">
+                                        <i class="fa fa-user-circle-o faa-vertical" aria-hidden="true"></i>
+                                        @lang('Occupation')
                                     </a>
                                 </li>
-
-                                @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral()) )
-                                    <li class="nav-item menu-passengers-taxcentral">
-                                        <a href="javascript:;" class="faa-parent animated-hover nav-link nav-toggle">
-                                            <i class="fa fa-building faa-vertical"></i>
-                                            @lang('Taxcentral')
-                                            <span class="arrow"></span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li class="nav-item menu-passengers-taxcentral">
-                                                <a href="{{ route('report-passengers-taxcentral-report')  }}" class="faa-parent animated-hover nav-link">
-                                                    <i class="fa fa-user-circle-o faa-vertical" aria-hidden="true"></i>
-                                                    @lang('Passengers report')
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                @endif
                             </ul>
                         </li>
                         <li class="nav-item menu-drivers">
@@ -1530,7 +1504,7 @@
 
 <template id="animated-loading">
     <div class="col-md-12 text-center">
-        <img class="" alt="@lang('Loading')..." src="https://www.pcwserviciosgps.com/files/loading.svg" height="200px">
+        <img class="" alt="@lang('Loading')..." src="https://www.pcwserviciosgps.com/files/loading.gif" height="200px">
     </div>
 </template>
 

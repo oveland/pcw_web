@@ -13,7 +13,7 @@ use App\Services\Reports\Routes\OffRoadService;
 use App\Services\Reports\Routes\SpeedingService;
 use App\Services\Reports\Routes\ControlPointService;
 
-use App\Services\Reports\Routes\Takings\RouteTakingsService;
+use App\Services\Operation\Routes\Takings\RouteTakingsService;
 use Illuminate\Support\ServiceProvider;
 
 class ReportsServiceProvider extends ServiceProvider

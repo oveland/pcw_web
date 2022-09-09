@@ -4,7 +4,8 @@
     $thresholdMinLocations = 300;
 @endphp
 <!-- begin table -->
-<table id="table-report" class="table table-bordered table-striped table-hover table-valign-middle table-report">
+<table id="table-report"
+       class="table table-bordered table-striped table-hover table-valign-middle table-report">
     <thead>
     <tr class="inverse">
         <th class="">
@@ -28,10 +29,11 @@
             @lang('Vehicle')
         </th>
         @if( $company->hasDriverRegisters() )
-        <th>
-            <i class="fa fa-user text-muted"></i><br>
-            @lang('Driver') <hr class="m-0"> @lang('Dispatcher')
-        </th>
+            <th>
+                <i class="fa fa-user text-muted"></i><br>
+                @lang('Driver')
+                <hr class="m-0"> @lang('Dispatcher')
+            </th>
         @endif
         <th>
             <i class="fa fa-clock-o text-muted"></i><br>
@@ -48,7 +50,8 @@
         @if( $company->hasRecorderCounter() )
             <th class="text-center">
                 <i class="fa fa-compass text-muted"></i><br>
-                {{ str_limit(__('Recorder'),5) }}<br>
+                {{ str_limit(__('Recorder'),5) }}
+                <br>
                 <small class="text-muted">
                     @lang('Initial')
                     <hr class="m-0">
@@ -57,7 +60,8 @@
             </th>
             <th class="text-center">
                 <i class="icon-users text-muted"></i><br>
-                <small><i class="fa fa-compass text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
+                <small><i class="fa fa-compass text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}
+                <br>
                 <small class="text-muted">
                     @lang('Recorder')
                 </small>
@@ -68,12 +72,14 @@
             <th>
                 <i class="icon-users text-muted"></i>
                 <br>
-                <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}<br>
+                <small><i class="fa fa-crosshairs text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}
+                <br>
                 <small class="text-muted">
                     @lang('Sensor')
                 </small>
                 |
-                <small class="text-muted tooltips" data-title="Sumatoria del conteo enviado por el sensor independiente de los turnos/despachos realizados en el día">
+                <small class="text-muted tooltips"
+                       data-title="Sumatoria del conteo enviado por el sensor independiente de los turnos/despachos realizados en el día">
                     @lang('Sensor total')
                 </small>
             </th>
@@ -145,20 +151,25 @@
         $color = $offRoadPercent > 50 ? 'red-sunglo' : ($dispatchRegister->complete() ? 'inverse' : ($dispatchRegister->isCancelled() ? 'yellow-crusta' : 'yellow-soft'));
         @endphp
         <tr>
-            <th width="5%" class="bg-{{ $color }} text-white text-center">
+            <th width="5%"
+                class="bg-{{ $color }} text-white text-center">
                 {{ $dispatchRegister->date }}
                 @if( Auth::user()->isSuperAdmin() )
-                <div class="text-sm"><small>{{ $dispatchRegister->id }}</small></div>
+                    <div class="text-sm">
+                        <small>{{ $dispatchRegister->id }}</small>
+                    </div>
                 @endif
             </th>
-            <th width="10%" class="bg-{{ $color }} text-white text-center">
+            <th width="10%"
+                class="bg-{{ $color }} text-white text-center">
                 <span class="m-b-5">
                     @if($dispatchRegister->processedByARD())
                         @php
                             $dv = $dispatchRegister->dispatcherVehicle;
                         @endphp
                         <span class="label label-lime label-lg">{{ $route->name }}</span>
-                        <small class="text-muted" style="margin-top: 12px;display: block">{{ $dv ? $dv->route->name : '---' }}</small>
+                        <small class="text-muted"
+                               style="margin-top: 12px;display: block">{{ $dv ? $dv->route->name : '---' }}</small>
                     @else
                         <span>{{ $route->name }}</span>
                     @endif
@@ -166,85 +177,120 @@
 
                 @if($dispatchRegister->hasValidOffRoad() && $offRoadPercent)
                     <div class="m-t-1">
-                        <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger bg-red-mint p-5') }} tooltips" data-placement="bottom" title="@lang('Percent in off road')">
-                            {{ number_format($offRoadPercent, 1,'.', '') }}% <i class="fa fa-random faa-passing animated"></i>
+                        <label class="label label-{{ $offRoadPercent < 5 ? 'success': ($offRoadPercent < 50 ? 'warning': 'danger bg-red-mint p-5') }} tooltips"
+                               data-placement="bottom"
+                               title="@lang('Percent in off road')">
+                            {{ number_format($offRoadPercent, 1,'.', '') }}
+                            %
+                            <i class="fa fa-random faa-passing animated"></i>
                         </label>
                     </div>
                 @endif
                 @if(Auth::user()->isSuperAdmin() && $invalidGPSPercent)
-                <div class="m-t-1">
-                    <label class="label label-{{ $invalidGPSPercent < $thresholdAlertSS ? 'default': 'danger' }} tooltips" data-placement="bottom" title="@lang('GPS with issues')">
-                        @if($invalidGPSPercent)
-                            {{ $invalidGPSPercent  }}% <i class="fa fa-signal faa-flash animated"></i>
-                        @endif
-                    </label>
-                </div>
+                    <div class="m-t-1">
+                        <label class="label label-{{ $invalidGPSPercent < $thresholdAlertSS ? 'default': 'danger' }} tooltips"
+                               data-placement="bottom"
+                               title="@lang('GPS with issues')">
+                            @if($invalidGPSPercent)
+                                {{ $invalidGPSPercent  }}
+                                %
+                                <i class="fa fa-signal faa-flash animated"></i>
+                            @endif
+                        </label>
+                    </div>
                 @endif
             </th>
-            <th width="5%" class="bg-{{ $color }} text-white text-center">
-                {{ $dispatchRegister->round_trip }}<br>
+            <th width="5%"
+                class="bg-{{ $color }} text-white text-center">
+                {{ $dispatchRegister->round_trip }}
+                <br>
                 <small>{{ $dispatchRegister->status }}</small>
                 <br>
-                <small>{{ $dispatchRegister->getRouteDistance(true) }} Km</small>
+                <small>{{ $dispatchRegister->getRouteDistance(true) }}
+                    Km</small>
             </th>
-            <th width="5%" class="bg-{{ $color }} text-white text-center">{{ $dispatchRegister->turn }}</th>
-            <th width="5%" class="bg-{{ $color }} text-white text-center">{{ $vehicle->number }}</th>
+            <th width="5%"
+                class="bg-{{ $color }} text-white text-center">{{ $dispatchRegister->turn }}</th>
+            <th width="5%"
+                class="bg-{{ $color }} text-white text-center">{{ $vehicle->number }}</th>
 
             @if($company->hasDriverRegisters())
-            <td width="25%" class="text-uppercase">
-                @if(Auth::user()->canEditDrivers())
-                    @php
-                        $driverInfo = $driver ? $driver->fullName() : $dispatchRegister->driver_code;
-                        $driverInfo = trim($driverInfo);
-                    @endphp
-                    <div class="tooltips box-edit" data-title="@lang('Driver')">
+                <td width="25%"
+                    class="text-uppercase">
+                    @if(Auth::user()->canEditDrivers())
+                        @php
+                            $driverInfo = $driver ? $driver->fullName() : $dispatchRegister->driver_code;
+                            $driverInfo = trim($driverInfo);
+                        @endphp
+                        <div class="tooltips box-edit"
+                             data-title="@lang('Driver')">
                         <span class="box-info">
                             <span class="{{ !$driverInfo?'text-danger text-bold':'' }} text-capitalize">
                                 {{ $driverInfo ?: __('None') }}
                             </span>
                         </span>
-                        <div class="box-edit" style="display: none">
-                            @php
-                                $obs = $dispatchRegister->getObservation('driver_code');
-                            @endphp
-                            <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                   data-url="{{ route('report-passengers-manage-update', ['action' => 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="driver_code"
-                                   class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $dispatchRegister->driver_code }}">
-                            <div class="box-obs">
-                                <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                            <div class="box-edit"
+                                 style="display: none">
+                                @php
+                                    $obs = $dispatchRegister->getObservation('driver_code');
+                                @endphp
+                                <input id="edit-start-recorder-{{ $dispatchRegister->id }}"
+                                       title="@lang('Press enter for edit')"
+                                       name=""
+                                       type="number"
+                                       data-url="{{ route('report-passengers-manage-update', ['action' => 'editField']) }}"
+                                       data-id="{{ $dispatchRegister->id }}"
+                                       data-field="driver_code"
+                                       class="input-sm form-control edit-input-recorder edit-input-value"
+                                       value="{{ $dispatchRegister->driver_code }}">
+                                <div class="box-obs">
+                                <textarea
+                                        name=""
+                                        rows="3"
+                                        class="input-sm form-control edit-input-obs"
+                                        placeholder="@lang('Observations')"
                                 >{{ $obs->observation }}</textarea>
-                                @if($obs->updated_at)
-                                <div class="text-muted text-center box-audit">
-                                    <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
-                                    <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                    @if($obs->updated_at)
+                                        <div class="text-muted text-center box-audit">
+                                            <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
+                                            ·
+                                            <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                        </div>
+                                    @endif
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
+                                            title="@lang('Cancel')">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save"
+                                            title="@lang('Save')">
+                                        <i class="fa fa-save"></i>
+                                    </button>
                                 </div>
-                                @endif
-                                <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                                <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
-                                    <i class="fa fa-save"></i>
-                                </button>
                             </div>
                         </div>
-                    </div>
-                @else
-                    {{ $driver ? $driver->fullName():$dispatchRegister->driver_code }}
-                @endif
-                @if($dispatchRegister->user)
-                    <hr class="m-0">
-                    <small class="text-muted tooltips" data-title="@lang('User') @lang('Dispatcher')" data-placement="bottom">
-                        {{ $dispatchRegister->user->name }}
-                    </small>
-                @endif
-            </td>
+                    @else
+                        {{ $driver ? $driver->fullName():$dispatchRegister->driver_code }}
+                    @endif
+                    @if($dispatchRegister->user)
+                        <hr class="m-0">
+                        <small class="text-muted tooltips"
+                               data-title="@lang('User') @lang('Dispatcher')"
+                               data-placement="bottom">
+                            {{ $dispatchRegister->user->name }}
+                        </small>
+                    @endif
+                </td>
             @endif
 
             <td class="text-center">
-                <span class="tooltips" title="Registrado a las {{ $strTime->toString($dispatchRegister->time) }}">{{ $strTime->toString($dispatchRegister->departure_time) }}</span>
+                <span class="tooltips"
+                      title="Registrado a las {{ $strTime->toString($dispatchRegister->time) }}">{{ $strTime->toString($dispatchRegister->departure_time) }}</span>
                 <br>
-                <small class="tooltips text-info" data-title="@lang('Vehicles without route')" data-placement="bottom">
-                    {{ $dispatchRegister->available_vehicles }} <i class="fa fa-bus"></i>
+                <small class="tooltips text-info"
+                       data-title="@lang('Vehicles without route')"
+                       data-placement="bottom">
+                    {{ $dispatchRegister->available_vehicles }}
+                    <i class="fa fa-bus"></i>
                 </small>
                 @if( isset($lastArrivalTime[$vehicle->id]) && $lastArrivalTime[$vehicle->id] )
                     @php
@@ -252,11 +298,15 @@
                         $totalDeadTime[$vehicle->id] = $strTime->addStrTime($totalDeadTime[$vehicle->id], $deadTime);
                     @endphp
                     <br>
-                    <small class="tooltips text-primary" data-title="@lang('Dead time')" data-placement="bottom">
+                    <small class="tooltips text-primary"
+                           data-title="@lang('Dead time')"
+                           data-placement="bottom">
                         <i class="ion-android-stopwatch text-muted"></i> {{ $deadTime }}
                     </small>
                     <br>
-                    <small class="tooltips text-warning" data-title="@lang('Accumulated dead time')" data-placement="bottom">
+                    <small class="tooltips text-warning"
+                           data-title="@lang('Accumulated dead time')"
+                           data-placement="bottom">
                         <i class="ion-android-stopwatch text-muted"></i> {{ $totalDeadTime[$vehicle->id] }}
                     </small>
                 @else
@@ -266,50 +316,75 @@
                 @endif
             </td>
 
-            <td width="10%" class="text-center">
-                <span class="tooltips" data-title="@lang('Arrival Time')"  data-placement="left">
+            <td width="10%"
+                class="text-center">
+                <span class="tooltips"
+                      data-title="@lang('Arrival Time')"
+                      data-placement="left">
                     {{ $strTime->toString($dispatchRegister->arrival_time) }}
                 </span><br>
-                <small class="tooltips text-muted" data-title="@lang('Arrival Time Scheduled')" data-placement="left">
+                <small class="tooltips text-muted"
+                       data-title="@lang('Arrival Time Scheduled')"
+                       data-placement="left">
                     {{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}
                 </small>
                 <hr class="m-0">
-                <small class="tooltips text" data-title="@lang('Arrival Time Difference')"  data-placement="left">
-                    {{ $strTime->toString($dispatchRegister->arrival_time_difference) }} <i class="ion-android-stopwatch text-muted"></i>
+                <small class="tooltips text"
+                       data-title="@lang('Arrival Time Difference')"
+                       data-placement="left">
+                    {{ $strTime->toString($dispatchRegister->arrival_time_difference) }}
+                    <i class="ion-android-stopwatch text-muted"></i>
                 </small>
             </td>
 
-            <td width="8%" class="text-center">{{ $dispatchRegister->getRouteTime() }}</td>
+            <td width="8%"
+                class="text-center">{{ $dispatchRegister->getRouteTime() }}</td>
 
             @if( $company->hasRecorderCounter() )
-                <td width="10%" class="p-r-0 p-l-0 text-center">
+                <td width="10%"
+                    class="p-r-0 p-l-0 text-center">
                     @if( Auth::user()->canEditRecorders() )
                         @php
                             $obs = $dispatchRegister->getObservation('start_recorder');
                         @endphp
-                        <div class="tooltips box-edit" data-title="@lang('Start Recorder')">
+                        <div class="tooltips box-edit"
+                             data-title="@lang('Start Recorder')">
                             <span class="box-info">
                                 <span class="">
                                     {{ $startRecorder }}
                                 </span>
                             </span>
-                            <div class="box-edit" style="display: none">
-                                <input id="edit-start-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="start_recorder"
-                                       class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $startRecorder }}">
+                            <div class="box-edit"
+                                 style="display: none">
+                                <input id="edit-start-recorder-{{ $dispatchRegister->id }}"
+                                       title="@lang('Press enter for edit')"
+                                       name=""
+                                       type="number"
+                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
+                                       data-id="{{ $dispatchRegister->id }}"
+                                       data-field="start_recorder"
+                                       class="input-sm form-control edit-input-recorder edit-input-value"
+                                       value="{{ $startRecorder }}">
                                 <div class="box-obs">
-                                    <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                                    <textarea
+                                            name=""
+                                            rows="3"
+                                            class="input-sm form-control edit-input-obs"
+                                            placeholder="@lang('Observations')"
                                     >{{ $obs->observation }}</textarea>
                                     @if($obs->updated_at)
-                                    <div class="text-muted text-center box-audit">
-                                        <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
-                                        <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
-                                    </div>
+                                        <div class="text-muted text-center box-audit">
+                                            <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
+                                            ·
+                                            <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                        </div>
                                     @endif
-                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
+                                            title="@lang('Cancel')">
                                         <i class="fa fa-times"></i>
                                     </button>
-                                    <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save"
+                                            title="@lang('Save')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
@@ -323,29 +398,44 @@
                         @php
                             $obs = $dispatchRegister->getObservation('end_recorder');
                         @endphp
-                        <div class="tooltips box-edit" data-title="@lang('End Recorder')">
+                        <div class="tooltips box-edit"
+                             data-title="@lang('End Recorder')">
                             <span class="box-info">
                                 <span class="">
                                     {{ $endRecorder }}
                                 </span>
                             </span>
-                            <div class="box-edit" style="display: none">
-                                <input id="edit-end-recorder-{{ $dispatchRegister->id }}" title="@lang('Press enter for edit')" name="" type="number"
-                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}" data-id="{{ $dispatchRegister->id }}" data-field="end_recorder"
-                                       class="input-sm form-control edit-input-recorder edit-input-value" value="{{ $endRecorder }}">
+                            <div class="box-edit"
+                                 style="display: none">
+                                <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
+                                       title="@lang('Press enter for edit')"
+                                       name=""
+                                       type="number"
+                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
+                                       data-id="{{ $dispatchRegister->id }}"
+                                       data-field="end_recorder"
+                                       class="input-sm form-control edit-input-recorder edit-input-value"
+                                       value="{{ $endRecorder }}">
                                 <div class="box-obs">
-                                    <textarea name="" rows="3" class="input-sm form-control edit-input-obs" placeholder="@lang('Observations')"
+                                    <textarea
+                                            name=""
+                                            rows="3"
+                                            class="input-sm form-control edit-input-obs"
+                                            placeholder="@lang('Observations')"
                                     >{{ $obs->observation }}</textarea>
                                     @if($obs->updated_at)
-                                    <div class="text-muted text-center box-audit">
-                                        <small style="font-size: 0.9rem">{{ $obs->user->username }}</small> ·
-                                        <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
-                                    </div>
+                                        <div class="text-muted text-center box-audit">
+                                            <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
+                                            ·
+                                            <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                        </div>
                                     @endif
-                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel" title="@lang('Cancel')">
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
+                                            title="@lang('Cancel')">
                                         <i class="fa fa-times"></i>
                                     </button>
-                                    <button class="btn btn-xs btn-success m-5 edit-btn-save" title="@lang('Save')">
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save"
+                                            title="@lang('Save')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
@@ -355,13 +445,17 @@
                         {{ $endRecorder }}
                     @endif
                 </td>
-                <td width="10%" class="text-center">
+                <td width="10%"
+                    class="text-center">
                     @if( $dispatchRegister->complete() )
-                        <span title="" class="{{ $invalid?'text-danger':'' }} tooltips" data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Round trip').' '.($endRecorder.' - '.$startRecorder) }}">
+                        <span title=""
+                              class="{{ $invalid?'text-danger':'' }} tooltips"
+                              data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Round trip').' '.($endRecorder.' - '.$startRecorder) }}">
                             {{ $endRecorder - $startRecorder }}
                         </span>
                         <hr class="m-0">
-                        <small class="{{ $invalid?'text-danger':'' }} text-bold tooltips" data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
+                        <small class="{{ $invalid?'text-danger':'' }} text-bold tooltips"
+                               data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
                             {{ $totalPassengersByRecorder }}
                         </small>
                     @else
@@ -373,23 +467,31 @@
             @endif
 
             @if($company->hasSensorCounter())
-                <td width="10%" class="text-center">
+                <td width="10%"
+                    class="text-center">
                     <div style="display: flex;">
                         <div style="width: 50%">
-                            <span class="tooltips" data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
+                            <span class="tooltips"
+                                  data-title="@lang('Round trip')"
+                                  style="font-size: 1.5rem !important;">
                                 {{ $dispatchRegister->passengersBySensor }}
                             </span>
                             <hr class="m-0">
-                            <small class="tooltips text-bold text-muted" data-title="@lang('Accumulated day')">
+                            <small class="tooltips text-bold text-muted"
+                                   data-title="@lang('Accumulated day')">
                                 {{ $totalPassengersBySensor }}
                             </small>
                         </div>
-                        <div class="{{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}" style="width: 50%">
-                            <span class="tooltips" data-title="@lang('Round trip')" style="font-size: 1.5rem !important;">
+                        <div class="{{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}"
+                             style="width: 50%">
+                            <span class="tooltips"
+                                  data-title="@lang('Round trip')"
+                                  style="font-size: 1.5rem !important;">
                                 {{ $dispatchRegister->passengersBySensorTotal }}
                             </span>
                             <hr class="m-0">
-                            <small class="tooltips text-bold text-muted" data-title="@lang('Accumulated day')">
+                            <small class="tooltips text-bold text-muted"
+                                   data-title="@lang('Accumulated day')">
                                 {{ $totalPassengersBySensorTotal }}
                             </small>
                         </div>
@@ -397,32 +499,45 @@
                 </td>
             @endif
             @if($company->hasSensorRecorderCounter())
-                <td width="10%" class="text-center">
-                    <span class="tooltips" data-title="@lang('Round trip')">
+                <td width="10%"
+                    class="text-center">
+                    <span class="tooltips"
+                          data-title="@lang('Round trip')">
                         {{ $dispatchRegister->passengersBySensorRecorder }}
                     </span>
                     <hr class="m-0">
-                    <small class="tooltips text-bold" data-title="@lang('Accumulated day')">
+                    <small class="tooltips text-bold"
+                           data-title="@lang('Accumulated day')">
                         {{ $totalPassengersBySensorRecorder }}
                     </small>
                 </td>
             @endif
 
-            <td width="15%" class="text-center">
+            <td width="15%"
+                class="text-center">
                 @if( Auth::user()->company->hasSeatSensorCounter())
-                <a href="#modal-seating-profile" data-toggle="modal" title="@lang('See profile seating report')" onclick="loadSeatingProfile('{{ route('report-passengers-taxcentral-by-dispatch',['id'=>$dispatchRegister->id]) }}')"
-                   class="btn yellow-crusta faa-parent animated-hover btn-circle btn-outline tooltips">
-                    <i class="fa fa-users faa-pulse"></i>
-                </a>
+                    <a href="#modal-seating-profile"
+                       data-toggle="modal"
+                       title="@lang('See profile seating report')"
+                       onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')"
+                       class="btn yellow-crusta faa-parent animated-hover btn-circle btn-outline tooltips">
+                        <i class="fa fa-users faa-pulse"></i>
+                    </a>
                 @endif
 
                 @if( Auth::user()->canMakeTakings() )
-                <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal" onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
-                   class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips m-b-5"
-                   data-original-title="<i class='fa fa-users faa-float animated'></i> @lang('Takings')" data-html="true">
-                    <i class="icon-briefcase faa-ring" style="margin-right: 0; margin-left: 0px"></i>
-                    <i class="fa fa-dollar faa-vertical" style="margin-right: 0px; margin-left: 0"></i>
-                </a>
+                    <a id="btn-taking-{{ $dispatchRegister->id }}"
+                       href="#modal-takings-passengers"
+                       data-toggle="modal"
+                       onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
+                       class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips m-b-5"
+                       data-original-title="<i class='fa fa-users faa-float animated'></i> @lang('Takings')"
+                       data-html="true">
+                        <i class="icon-briefcase faa-ring"
+                           style="margin-right: 0; margin-left: 0px"></i>
+                        <i class="fa fa-dollar faa-vertical"
+                           style="margin-right: 0px; margin-left: 0"></i>
+                    </a>
                 @endif
 
                 <a href="#modal-route-report"
@@ -436,22 +551,28 @@
 
                 <div class="p-t-5">
                     @if( Auth::user()->isSuperAdmin() )
-                        <button onclick="executeDAR({{ $dispatchRegister->id }})" class="btn btn-xs {{ $dispatchRegister->process_ard ? 'btn-warning' : 'btn-success' }} faa-parent animated-hover btn-circle tooltips"
-                                data-original-title="@lang('Execute DAR')" data-placement="bottom">
+                        <button onclick="executeDAR({{ $dispatchRegister->id }})"
+                                class="btn btn-xs {{ $dispatchRegister->process_ard ? 'btn-warning' : 'btn-success' }} faa-parent animated-hover btn-circle tooltips"
+                                data-original-title="@lang('Execute DAR')"
+                                data-placement="bottom">
                             <i class="fa fa-cogs faa-pulse"></i>
                         </button>
 
                         <a href="#modal-report-log"
-                           data-toggle="modal" data-placement="bottom"
+                           data-toggle="modal"
+                           data-placement="bottom"
                            onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
-                           class="btn btn-xs btn-info faa-parent animated-hover tooltips btn-circle" data-original-title="@lang('Show report details')">
+                           class="btn btn-xs btn-info faa-parent animated-hover tooltips btn-circle"
+                           data-original-title="@lang('Show report details')">
                             <i class="fa fa-code faa-pulse"></i>
                         </a>
 
                         <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
-                                data-original-title="@lang('Cancel turn')" data-placement="bottom"
+                                data-original-title="@lang('Cancel turn')"
+                                data-placement="bottom"
                                 data-confirm="@lang('Confirm action for discard dispatch turn')"
-                                data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}" data-id="{{ $dispatchRegister->id }}">
+                                data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
+                                data-id="{{ $dispatchRegister->id }}">
                             <i class="fa fa-times faa-shake"></i>
                         </button>
                     @endif
@@ -466,7 +587,10 @@
                                 $alert = true;
                             }
                         @endphp
-                        <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}" data-original-title="@lang('Locations') / @lang('Reports')" data-placement="bottom">{!! $totalLocations !!} / {!! $totalReports !!}</small>
+                        <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}"
+                               data-original-title="@lang('Locations') / @lang('Reports')"
+                               data-placement="bottom">{!! $totalLocations !!}
+                            / {!! $totalReports !!}</small>
                     @endif
                 </div>
             </td>
@@ -477,35 +601,36 @@
 
         <script>
             @if($offRoadPercent)
-                $('.icon-car-{{ $vehicle->id }}').removeClass('f-s-8').addClass('text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-passing animated');
+            $('.icon-car-{{ $vehicle->id }}').removeClass('f-s-8').removeClass('fa-car').addClass('fa-random text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-flash animated');
             @endif
 
-            @if($maxInvalidGPSPercent)
-                if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
-                    $('.car-ss-percent-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < $thresholdAlertSS ? 'white': 'danger' }} faa-pulse animated');
-                }
+                    @if($maxInvalidGPSPercent)
+            if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
+                $('.car-ss-percent-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < $thresholdAlertSS ? 'white': 'danger' }} faa-pulse animated');
+            }
             @endif
 
-            @if($lowerGPSReport)
-                if (parseFloat('{{ $lowerGPSReport }}') > 1) {
-                    $('.car-nr-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $lowerGPSReport < $thresholdAlertNR ? 'white': 'danger' }}');
-                }
+                    @if($lowerGPSReport)
+            if (parseFloat('{{ $lowerGPSReport }}') > 1) {
+                $('.car-nr-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $lowerGPSReport < $thresholdAlertNR ? 'white': 'danger' }}');
+            }
             @endif
         </script>
 
     @endforeach
     @if($dispatchRegisters->count())
-    <tr>
-        <td colspan="7">
+        <tr>
+            <td colspan="7">
 
-        </td>
-        <td class="text-center tooltips" data-title="@lang('Average'): @lang('Route time')">
-            {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$dispatchRegisters->count()) }}
-        </td>
-        <td colspan="3">
+            </td>
+            <td class="text-center tooltips"
+                data-title="@lang('Average'): @lang('Route time')">
+                {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$dispatchRegisters->count()) }}
+            </td>
+            <td colspan="3">
 
-        </td>
-    </tr>
+            </td>
+        </tr>
     @endif
     </tbody>
 </table>
@@ -516,28 +641,28 @@
     @if( Auth::user()->belongsToCootransol() )
     let modalExecuteDAR = $('#modal-execute-DAR');
 
-    function executeDAR(dispatchRegisterId){
+    function executeDAR(dispatchRegisterId) {
         modalExecuteDAR.modal('show');
         modalExecuteDAR.find('pre').html('@lang('This process can take several minutes')...');
         $.ajax({
             url: '{{ route('route-ajax-action') }}',
-            data:{
-                option:'executeDAR',
+            data: {
+                option: 'executeDAR',
                 dispatchRegisterId: dispatchRegisterId
             },
-            dataType:'json',
+            dataType: 'json',
             timeout: 0,
-            success:function(data){
-                if( data.success ){
-                    modalExecuteDAR.find('pre').html(data.infoProcess.totalNewReports+' @lang('locations have been processed')<br>@lang('Detected route'): '+data.infoProcess.routeName);
+            success: function (data) {
+                if (data.success) {
+                    modalExecuteDAR.find('pre').html(data.infoProcess.totalNewReports + ' @lang('locations have been processed')<br>@lang('Detected route'): ' + data.infoProcess.routeName);
                     gsuccess('@lang('Process executed successfully')');
-                }else{
+                } else {
                     let message = '@lang('An error occurred in the process. Contact your administrator')';
                     gerror(message);
                     modalExecuteDAR.find('pre').html(message + '<hr>Data: ' + JSON.stringify(data));
                 }
             },
-            error:function(){
+            error: function () {
                 gerror('@lang('An error occurred in the process. Contact your administrator')')
             }
         });

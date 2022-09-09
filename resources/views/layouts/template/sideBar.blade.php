@@ -313,23 +313,12 @@
                                 </a>
                             </li>
 
-                            @if( Auth::user()->isAdmin() ||  Auth::user()->belongsToTaxcentral() )
-                                <li class="has-sub menu-passengers-taxcentral">
-                                <a href="javascript:;" class="faa-parent animated-hover">
-                                    <b class="caret pull-right"></b>
-                                    <i class="fa fa-building faa-vertical"></i>
-                                    @lang('Taxcentral')
+                            <li class="has-sub menu-passengers-occupation">
+                                <a href="{{ route('report-passengers-occupation-report')  }}" class="faa-parent animated-hover">
+                                    <i class="fa fa-user-circle-o faa-vertical" aria-hidden="true"></i>
+                                    @lang('Occupation')
                                 </a>
-                                <ul class="sub-menu">
-                                    <li class="has-sub menu-passengers-taxcentral">
-                                        <a href="{{ route('report-passengers-taxcentral-report')  }}" class="faa-parent animated-hover">
-                                            <i class="fa fa-user-circle-o faa-vertical" aria-hidden="true"></i>
-                                            @lang('Passengers report')
-                                        </a>
-                                    </li>
-                                </ul>
                             </li>
-                            @endif
                         </ul>
                     </li>
                     <li class="has-sub menu-drivers">

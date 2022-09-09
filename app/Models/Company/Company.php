@@ -79,6 +79,20 @@ class Company extends Model
     const EXPRESO_PALMIRA = 39;
     const VALLEDUPAR = 41;
 
+    const ALL = [
+        self::PCW,
+        self::TRANSPUBENZA,
+        self::COOTRANSOL,
+        self::ALAMEDA,
+        self::MONTEBELLO,
+        self::URBANUS_MONTEBELLO,
+        self::TUPAL,
+        self::YUMBENOS,
+        self::COODETRANS,
+        self::EXPRESO_PALMIRA,
+        self::VALLEDUPAR
+    ];
+
     /**
      * @return mixed|string
      */
@@ -240,8 +254,9 @@ class Company extends Model
     {
         return collect([self::TRANSPUBENZA])->contains($this->id);
     }
-    
-    function getTypeCounters() {
+
+    function getTypeCounters()
+    {
         $counters = collect([]);
 
         if ($this->hasRecorderCounter()) $counters->push((object)['name' => 'recorders', 'icon' => 'icon-compass']);
@@ -256,7 +271,7 @@ class Company extends Model
         $label = __('Sensor recorder');
 
 
-        if(collect([
+        if (collect([
             self::TRANSPUBENZA
         ])->contains($this->id)) {
             $label = __('Taken passengers');
@@ -374,7 +389,47 @@ class Company extends Model
         return collect([self::ALAMEDA, self::TRANSPUBENZA])->contains($this->id);
     }
 
-    function canTakingsByAll() {
-        return collect([self::TRANSPUBENZA])->contains($this->id);
+    function canTakingsByAll()
+    {
+        return collect([self::TRANSPUBENZA, self::VALLEDUPAR])->contains($this->id);
+    }
+
+    function canManualTakings()
+    {
+        return collect([self::VALLEDUPAR])->contains($this->id);
+    }
+
+    function hasTakingsWithMultitariff()
+    {
+        return collect([self::VALLEDUPAR])->contains($this->id);
+    }
+
+    function getTakingsLabel($type)
+    {
+        $label = 'Other';
+
+        switch ($type) {
+            case 'control':
+                $label = collect([
+                    self::VALLEDUPAR => 'Peaje'
+                ])->get($this->id, 'Control');
+
+                break;
+            case 'bonus':
+                $label = collect([
+                    self::VALLEDUPAR => 'Conduce'
+                ])->get($this->id, 'Bonus');
+
+                break;
+        }
+
+        return __($label);
+    }
+
+    function canPhotoRecognition()
+    {
+        return collect(self::ALL)
+            ->forget(self::TRANSPUBENZA)
+            ->contains($this->id);
     }
 }

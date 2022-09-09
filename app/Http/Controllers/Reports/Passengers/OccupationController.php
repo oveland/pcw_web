@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Reports\Passengers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
 use App\Models\Routes\ControlPointsTariff;
@@ -9,26 +10,39 @@ use App\Models\Routes\DispatchRegister;
 use App\Models\Passengers\HistorySeat;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Routes\Route;
+use App\Services\Reports\Passengers\OccupationService;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
-class TaxCentralPassengerReportController extends Controller
+class OccupationController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @var OccupationService
+     */
+    private $service;
+
+    public function __construct(OccupationService $service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @return Factory|View
      */
     public function index()
     {
         if (Auth::user()->isAdmin()) {
             $companies = Company::active()->orderBy('short_name')->get();
         }
-        return view('reports.passengers.taxcentral.index', compact('companies'));
+        return view('reports.passengers.occupation.index', compact('companies'));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function show(Request $request)
     {
@@ -48,7 +62,7 @@ class TaxCentralPassengerReportController extends Controller
                 ->orderBy('departure_time')
                 ->get();
 
-            return view('reports.passengers.taxcentral.passengersReportByRoute', compact('dispatchRegisters'));
+            return view('reports.passengers.occupation.passengersReportByRoute', compact('dispatchRegisters'));
         }
         //$historySeats = $historySeats->whereBetween('active_time',[$dateReport.' '.$dispatchRegister->departure_time,$dateReport.' '.$dispatchRegister->arrival_time_scheduled]);
 
@@ -57,69 +71,17 @@ class TaxCentralPassengerReportController extends Controller
             ->get()->sortBy('active_time');
 
         if ($request->get('export')) $this->export($historySeats, $company, $dateReport, null);
-        return view('reports.passengers.taxcentral.passengersReportByAll', compact('historySeats'));
+        return view('reports.passengers.occupation.passengersReportByAll', compact('historySeats'));
     }
 
     public function showByDispatch(DispatchRegister $dispatchRegister, Request $request)
     {
         $thresholdKm = request()->get('thresholdKm');
+        $report = $this->service->getReportByDispatch($dispatchRegister, $thresholdKm);
 
-        $route = $dispatchRegister->route;
-        $routeCoordinates = Geolocation::getRouteCoordinates($route->url);
+        if ($request->get('export')) $this->export($report->historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
 
-        $dispatchArrivalTime = (DispatchRegister::COMPLETE == $dispatchRegister->status) ? $dispatchRegister->arrival_time : $dispatchRegister->arrival_time_scheduled;
-        $dispatchArrivalTime = ($dispatchArrivalTime > "23:59:59") ? "23:59:59" : $dispatchArrivalTime;
-
-        $initialTimeRange = StrTime::subStrTime($dispatchRegister->departure_time, '00:30:00');
-        $finalTimeRange = StrTime::addStrTime(($dispatchRegister->canceled ? $dispatchRegister->time_canceled : $dispatchArrivalTime), '00:30:00');
-
-        $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
-            ->where('date', '=', $dispatchRegister->date)
-            ->where('dispatch_register_id', '=', $dispatchRegister->id)
-            ->whereBetween('time',[$initialTimeRange,$finalTimeRange])
-            ->get()->sortBy('active_time');
-
-        $routeDistance = $dispatchRegister->route->distance * 1000;
-
-        $cpT = ControlPointsTariff::forRoute($route->id)->with([
-            'fromControlPoint',
-            'toControlPoint',
-        ])->get();
-
-        foreach ($historySeats as &$historySeat) {
-            if ($historySeat->complete == 1) {
-                //$busyDistance = $this->getBusyKm($historySeat, $routeCoordinates);                
-                $historySeat->active_km = $historySeat->active_km < $dispatchRegister->start_odometer ? 0 : ($historySeat->active_km - $dispatchRegister->start_odometer);
-
-                $historySeat->inactive_km = $historySeat->inactive_km - $dispatchRegister->start_odometer;
-                $historySeat->inactive_km = $historySeat->inactive_km < $routeDistance ? $historySeat->inactive_km : $routeDistance;
-
-                $historySeat->busy_km = $historySeat->inactive_km - $historySeat->active_km;
-            }
-
-            $tariffs = $cpT->map(function (ControlPointsTariff $t) use ($historySeat) {
-                $distanceToInitial = abs($historySeat->active_km - $t->fromControlPoint->distance_from_dispatch);
-                $distanceToFinal = abs($historySeat->inactive_km - $t->toControlPoint->distance_from_dispatch);
-
-                return (object) [
-                    'id' => $t->id,
-                    'difference' => $distanceToInitial + $distanceToFinal
-                ];
-            });
-
-            if($tariffs->count()) {
-                $tariff = $cpT->where('id', $tariffs->sortBy('difference')->first()->id)->first();
-                $historySeat->tariff = $tariff;
-            }
-
-        }
-
-        $historySeats = $historySeats->sortBy('tariff.fromControlPoint.order');
-
-
-        if ($request->get('export')) $this->export($historySeats, $dispatchRegister->route->company, $dispatchRegister->date, $dispatchRegister);
-
-        return view('reports.passengers.taxcentral.passengersReport', compact(['historySeats', 'dispatchRegister', 'dispatchArrivalTime', 'thresholdKm']));
+        return view('reports.passengers.occupation.passengersReport', compact('report'));
     }
 
     /**
@@ -181,7 +143,7 @@ class TaxCentralPassengerReportController extends Controller
                     }
                     $inactive_km += $prev_distance;
 
-                    if( $active_km < $inactive_km ){
+                    if ($active_km < $inactive_km) {
                         $found_inactive_seat_location = false;
                     }
                 }

@@ -295,11 +295,11 @@ Route::group(['middleware' => ['auth']], function () {
             });
 
             /* Router for Tax Central Reports */
-            Route::prefix('taxcentral')->group(function () {
-                Route::get('/', 'TaxCentralPassengerReportController@index')->name('report-passengers-taxcentral-report');
-                Route::get('/show', 'TaxCentralPassengerReportController@show')->name('report-passengers-taxcentral-search-report');
-                Route::any('/dispatch/show/{dispatchRegister}', 'TaxCentralPassengerReportController@showByDispatch')->name('report-passengers-taxcentral-by-dispatch');
-                Route::any('/seat/show/{historySeat}', 'TaxCentralPassengerReportController@showHistorySeat')->name('report-passengers-taxcentral-seat-detail');
+            Route::prefix('occupation')->group(function () {
+                Route::get('/', 'Reports\Passengers\OccupationController@index')->name('report-passengers-occupation-report');
+                Route::get('/show', 'Reports\Passengers\OccupationController@show')->name('report-passengers-occupation-search-report');
+                Route::any('/dispatch/show/{dispatchRegister}', 'Reports\Passengers\OccupationController@showByDispatch')->name('report-passengers-occupation-by-dispatch');
+                Route::any('/seat/show/{historySeat}', 'Reports\Passengers\OccupationController@showHistorySeat')->name('report-passengers-occupation-seat-detail');
             });
 
             Route::prefix(__('consolidated'))->group(function () {

@@ -9,7 +9,8 @@ use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\RouteTaking;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
-use App\Services\Reports\Routes\RouteService;
+use App\Services\Operation\Routes\Takings\RouteTakingsService;
+use App\Services\Reports\Passengers\OccupationService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -18,23 +19,28 @@ use Illuminate\View\View;
 class RouteTakingsController extends Controller
 {
     /**
-     * @var RouteService
+     * @var RouteTakingsService
      */
-    private $routeService;
+    private $service;
     /**
      * @var PCWAuthService
      */
     private $auth;
+    /**
+     * @var OccupationService
+     */
+    private $occupationService;
 
     /**
      * ReportRouteController constructor.
      * @param PCWAuthService $authService
-     * @param RouteService $routeService
+     * @param RouteTakingsService $service
      */
-    public function __construct(PCWAuthService $authService, RouteService $routeService)
+    public function __construct(PCWAuthService $authService, RouteTakingsService $service, OccupationService $occupationService)
     {
-        $this->routeService = $routeService;
+        $this->service = $service;
         $this->auth = $authService;
+        $this->occupationService = $occupationService;
     }
 
     /**
@@ -44,9 +50,10 @@ class RouteTakingsController extends Controller
     public function form(DispatchRegister $dispatchRegister)
     {
         $company = $dispatchRegister->route->company;
-        $fuelStations = $this->routeService->takings->getFuelStations($company);
+        $fuelStations = $this->service->getFuelStations($company);
+        $occupationReport = $this->occupationService->getReportByDispatch($dispatchRegister);
 
-        return view('operation.routes.takings.form', compact(['dispatchRegister', 'fuelStations']));
+        return view('operation.routes.takings.form', compact(['dispatchRegister', 'fuelStations', 'occupationReport']));
     }
 
     /**
@@ -83,7 +90,7 @@ class RouteTakingsController extends Controller
      */
     public function taking(Request $request, DispatchRegister $dispatchRegister)
     {
-        return response()->json($this->routeService->takings->taking($dispatchRegister, $request->all()));
+        return response()->json($this->service->taking($dispatchRegister, $request->all()));
     }
 
     /**
@@ -92,7 +99,7 @@ class RouteTakingsController extends Controller
      */
     public function delete(DispatchRegister $dispatchRegister)
     {
-        return response()->json($this->routeService->takings->deleteTakings($dispatchRegister));
+        return response()->json($this->service->deleteTakings($dispatchRegister));
     }
 
     /**

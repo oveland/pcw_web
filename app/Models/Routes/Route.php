@@ -73,53 +73,53 @@ class Route extends Model
         return config('app.simple_date_time_format');
     }
 
-    public function company()
+    function company()
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function controlPoints()
+    function controlPoints()
     {
         return $this->hasMany(ControlPoint::class)->orderBy('order', 'asc');
     }
 
-    public function belongsToCompany($company)
+    function belongsToCompany($company)
     {
         return $this->company->id == $company->id;
     }
 
-    public function scopeActive($query)
+    function scopeActive($query)
     {
         return $query->where('active', true);
     }
 
-    public function fringes($dayType = 1)
+    function fringes($dayType = 1)
     {
         return $this->hasMany(Fringe::class)->where('day_type_id', $dayType)->get();
     }
 
-    public function allFringes()
+    function allFringes()
     {
         return $this->hasMany(Fringe::class);
     }
 
-    public function currentLocations()
+    function currentLocations()
     {
         $currentRouteDispatchRegisters = $this->currentDispatchRegisters;
         return CurrentLocation::whereIn('dispatch_register_id', $currentRouteDispatchRegisters->pluck('dispatch_register_id'))->get();
     }
 
-    public function currentDispatchRegisters()
+    function currentDispatchRegisters()
     {
         return $this->hasMany(CurrentDispatchRegister::class);
     }
 
-    public function dispatch()
+    function dispatch()
     {
         return $this->belongsTo(Dispatch::class);
     }
 
-    public function getAPIFields($short = false)
+    function getAPIFields($short = false)
     {
         if ($short) {
             return (object)[
@@ -139,7 +139,7 @@ class Route extends Model
         return (object)$dataAPI;
     }
 
-    public function routeGoogle()
+    function routeGoogle()
     {
         return $this->hasOne(RouteGoogle::class, 'id_ruta', 'id');
     }
@@ -156,7 +156,7 @@ class Route extends Model
         }
     }
 
-    public function routeTariff()
+    function routeTariff()
     {
         return $this->hasOne(RouteTariff::class);
     }
@@ -176,13 +176,21 @@ class Route extends Model
         return $tariff;
     }
 
-    public function getDistanceInKmAttribute()
+    function getDistanceInKmAttribute()
     {
         return $this->distance;
     }
 
-    public function getDistanceInMetersAttribute()
+    function getDistanceInMetersAttribute()
     {
         return $this->distance_in_km * 1000;
+    }
+
+    function getControlPointsTariff()
+    {
+        return ControlPointsTariff::forRoute($this->id)->with([
+            'fromControlPoint',
+            'toControlPoint',
+        ])->get();
     }
 }

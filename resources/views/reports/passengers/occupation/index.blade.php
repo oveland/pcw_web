@@ -24,7 +24,7 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-taxcentral-search-report') }}">
+        <form class="col-md-12 form-search-report" action="{{ route('report-passengers-occupation-search-report') }}">
             <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
@@ -202,7 +202,7 @@
     @include('layouts.template.google.maps')
 
     <script type="application/javascript">
-        $('.menu-passengers, .menu-passengers-taxcentral').addClass('active-animated');
+        $('.menu-passengers, .menu-passengers-occupation').addClass('active-animated');
         var busMarker = null;
         var iconbus = '{{ asset('img/bus.png') }}';
 

@@ -9,7 +9,9 @@
 
     $takingsParent = $dispatchRegister->takings->parent;
     
-    $canTakingsByAll = !$takingsParent && $dispatchRegister->route->company->canTakingsByAll();
+    $canTakingsByAll = !$takingsParent && $company->canTakingsByAll();
+
+    $totalProduction = $company->hasTakingsWithMultitariff() ? $occupationReport->totalProduction : intval($dispatchRegister->takings->total_production);
 @endphp
 
 <div class="row form-takings">
@@ -25,7 +27,7 @@
                     <span>{{ $dispatchRegister->date }}</span>
                 </h4>
             </div>
-            @if(!$dispatchRegister->onlyControlTakings() && $dispatchRegister->complete())
+            @if(!$dispatchRegister->onlyControlTakings() && $dispatchRegister->complete() && !$company->canManualTakings())
                 <div class="col-md-12 no-padding m-t-10 form-takings-type">
                     <div class="form-takings_card form-takings_card_passengers form-takings_card_passengers__activated" data-type="{{ \App\Models\Routes\RouteTaking::TAKING_BY_ROUND_TRIP }}"
                          data-passengers-recorders="{{ $dispatchRegister->passengers->recorders->count }}"
@@ -114,7 +116,7 @@
         </div>
     </div>
 
-    @if($dispatchRegister->takings->passenger_tariff <= 0 && $dispatchRegister->route)
+    @if($dispatchRegister->takings->passenger_tariff <= 0 && $dispatchRegister->route && !$dispatchRegister->route->getControlPointsTariff()->count())
         <div class="bg-red text-white p-10 text-center" style="display: flow-root">
             <i class="fa fa-warning faa-passing animated"></i> <strong>@lang('Invalid passenger tariff')</strong>
             <div>
@@ -159,6 +161,32 @@
                 <input type="hidden" id="form_takings_delete" name="delete" value=""/>
                 {{ csrf_field() }}
 
+                @if($company->canManualTakings())
+                    <div class="divider m-b-0">
+                        <div>@lang('Manual count information')</div>
+                    </div>
+                    <div class="form-group has-info">
+                        <label for="total-production" class="col-md-5 control-label text-info">@lang('Manual total passengers')</label>
+                        <div class="col-md-7">
+                            <div class="input-icon">
+                                <i class="fa fa-dollar"></i>
+                                <input type="number" id="manual_total_passengers" class="form-control input-circle-right disabled" name="manual_total_passengers" value="{{ intval($dispatchRegister->takings->manual_total_passengers) }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-info">
+                        <label for="total-production" class="col-md-5 control-label text-info">@lang('Manual total production')</label>
+                        <div class="col-md-7">
+                            <div class="input-icon">
+                                <i class="fa fa-dollar"></i>
+                                <input type="number" class="form-control input-circle-right disabled" id="manual_total_production" name="manual_total_production" value="{{ intval($dispatchRegister->takings->manual_total_production) }}">
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <div class="divider m-t-40 m-b-0">
+                    <div>@lang('System count information')</div>
+                </div>
                 <div class="m-b-15">
                     <div class="takings_card_passengers_counter">
                         <div class="form-group m-0">
@@ -176,12 +204,12 @@
                     </div>
                 </div>
 
-                <div class="form-group m-t-10 m-b-5 p-t-10" style="border-top: 2px solid #d3d9d9">
+                <div class="form-group">
                     <label for="total-production" class="col-md-5 control-label">@lang('Total passengers')</label>
                     <div class="col-md-7">
                         <div class="input-icon">
                             <i class="fa fa-dollar"></i>
-                            <input type="number" id="total_passengers" disabled class="form-control input-circle-right disabled" name="total_production" value="{{ intval($passengersTakings->count) }}">
+                            <input type="number" id="total_passengers" disabled class="form-control input-circle-right disabled" name="total_passengers" value="{{ intval($passengersTakings->count) }}">
                         </div>
                     </div>
                 </div>
@@ -190,12 +218,15 @@
                     <div class="col-md-7">
                         <div class="input-icon">
                             <i class="fa fa-dollar"></i>
-                            <input type="number" disabled class="form-control input-circle-right disabled" id="total_production_takings" name="total_production" value="{{ $dispatchRegister->takings->total_production }}">
+                            <input type="number" readonly class="form-control input-circle-right disabled" id="total_production_takings" name="total_production" value="{{ $totalProduction }}">
                         </div>
                     </div>
                 </div>
-                <div class="form-group m-b-5 has-warning">
-                    <label for="control" class="col-md-5 control-label">@lang('Control')</label>
+                <div class="divider m-t-40 m-b-0">
+                    <div>@lang('Discounts')</div>
+                </div>
+                <div class="form-group has-warning">
+                    <label for="control" class="col-md-5 control-label">{{ $company->getTakingsLabel('control') }}</label>
                     <div class="col-md-7">
                         <div class="input-icon">
                             <i class="icon-bag"></i>
@@ -246,7 +277,7 @@
                 @endif
 
                 <div class="form-group m-b-5 has-warning">
-                    <label for="others" class="col-md-5 control-label">{{ __($dispatchRegister->getBonusLabel()) }}</label>
+                    <label for="others" class="col-md-5 control-label">{{ $company->getTakingsLabel('bonus') }}</label>
                     <div class="col-md-7">
                         <div class="input-icon">
                             <i class="icon-badge"></i>
@@ -265,7 +296,11 @@
                     </div>
                 </div>
 
-                <div class="form-group has-success m-t-20 m-b-5 p-t-20" style="border-top: 2px solid #d3d9d9">
+                <div class="divider m-t-40 m-b-0">
+                    <div>@lang('Totales')</div>
+                </div>
+
+                <div class="form-group has-success">
                     <label for="net_production" class="col-md-5 control-label">@lang('Net production')</label>
                     <div class="col-md-7">
                         <div class="input-icon">
@@ -313,7 +348,7 @@
 
                 @if($processTakings)
                     <hr>
-                    <div class="form-group m-t-10 p-t-10" style="border-top: 2px solid #d3d9d9">
+                    <div class="form-group">
                         <div class="col-md-offset-{{ $dispatchRegister->takings->isTaken() ? '3':'4' }} col-md-7">
                             <button type="submit" class="btn green btn-outline btn-circle">
                                 <i class="fa fa-save"></i>@lang('Save')
@@ -445,7 +480,7 @@
         const tariffPassenger = parseInt(tariffTakings.val());
         const totalPassengers = parseInt(passengersTakings.val());
 
-        const totalProduction = tariffPassenger * totalPassengers;
+        const totalProduction = {{ intval($totalProduction) }};
         const totalDiscounts = getTotalDiscounts();
         const netProduction = totalProduction - totalDiscounts;
         
@@ -630,6 +665,25 @@
 
     .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
         background-color: #e6fdff;
+    }
+
+    div.divider {
+        border-top: 2px solid #d3d9d9;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    div.divider div {
+        background: white;
+        width: fit-content;
+        margin: auto;
+        top: -14px;
+        position: relative;
+        padding: 3px 15px;
+        box-shadow: -1px 3px 6px 1px #e6e6e7;
+        border-radius: 50px;
+        color: #5c5c5c;
     }
 </style>
 
