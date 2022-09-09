@@ -120,10 +120,15 @@ class DispatchService
                 'showSensor' => $this->company->hasSeatSensorCounter(),
                 'showSensorRecorder' => $this->company->hasSensorRecorderCounter(),
                 'sensorRecorderLabel' => $this->company->getSensorRecorderCounterLabel(),
+                'canManualTakings' => $this->company->canManualTakings(),
+                'hasTakingsWithMultitariff' => $this->company->hasTakingsWithMultitariff(),
+                'labels' => [
+                    'control' => $this->company->getTakingsLabel('control'),
+                    'bonus' => $this->company->getTakingsLabel('bonus'),
+                ]
             ],
             'report' => $onlyTotals ? [] : $dispatchRegisters,
-            'totals' => $this->getTotals($dispatchRegisters),
-            'averages' => $onlyTotals ? [] : $this->getAverages($dispatchRegisters),
+            'totals' => $this->getTotals($dispatchRegisters)
         ];
     }
 
@@ -165,6 +170,14 @@ class DispatchService
             'totalProduction' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->totalProduction;
             }),
+
+            'manualPassengers' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->manualTotalPassengers;
+            }),
+            'manualProduction' => $dispatchRegisters->sum(function ($d) {
+                return $d->takings->manualTotalProduction;
+            }),
+
             'control' => $dispatchRegisters->sum(function ($d) {
                 return $d->takings->control;
             }),

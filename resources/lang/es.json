@@ -847,5 +847,11 @@
   "fixedPassengers": "valorFijoPasajeros",
   "Total gross": "Total bruto",
   "Search photos": "Buscar fotos",
-  "Search video": "Buscar video"
+  "Search video": "Buscar video",
+  "System": "Sistema",
+  "Manual": "Manual",
+  "Manual total passengers": "Total pasajeros manuales",
+  "Manual total production": "Total producción manuales",
+  "System count information": "Información conteo sistema",
+  "Manual count information": "Información conteo manual"
 }

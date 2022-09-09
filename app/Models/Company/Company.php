@@ -221,6 +221,16 @@ class Company extends Model
     }
 
     /*
+     * What companies that have scheduled mileage
+     *
+     * @return bool
+     */
+    function hasMileageScheduled()
+    {
+        return collect([self::ALAMEDA])->contains($this->id);
+    }
+
+    /*
      * What companies that have sensor counter
      *
      * @return bool
@@ -231,7 +241,8 @@ class Company extends Model
                 self::YUMBENOS,
                 self::EXPRESO_PALMIRA,
                 self::MONTEBELLO,
-                self::TRANSPUBENZA
+                self::TRANSPUBENZA,
+                self::VALLEDUPAR
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
 
@@ -400,7 +411,39 @@ class Company extends Model
 
     function canTakingsByAll()
     {
-        return collect([self::TRANSPUBENZA])->contains($this->id);
+        return collect([self::TRANSPUBENZA, self::VALLEDUPAR])->contains($this->id);
+    }
+
+    function canManualTakings()
+    {
+        return collect([self::VALLEDUPAR])->contains($this->id);
+    }
+
+    function hasTakingsWithMultitariff()
+    {
+        return collect([self::VALLEDUPAR])->contains($this->id);
+    }
+
+    function getTakingsLabel($type)
+    {
+        $label = 'Other';
+
+        switch ($type) {
+            case 'control':
+                $label = collect([
+                    self::VALLEDUPAR => 'Peaje'
+                ])->get($this->id, 'Control');
+
+                break;
+            case 'bonus':
+                $label = collect([
+                    self::VALLEDUPAR => 'Conduce'
+                ])->get($this->id, 'Bonus');
+
+                break;
+        }
+
+        return __($label);
     }
 
     function canPhotoRecognition()

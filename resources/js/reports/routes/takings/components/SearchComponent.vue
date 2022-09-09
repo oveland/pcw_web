@@ -181,6 +181,10 @@
 		right: 0 !important;
 	}
 
+	.menu-export {
+		z-index: 100000;
+	}
+
 	.menu-export .green{
 		color: #148500 !important;
 	}

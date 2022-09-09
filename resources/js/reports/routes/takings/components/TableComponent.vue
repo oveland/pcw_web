@@ -22,7 +22,7 @@
 						{{ $t('Driver code') }}
 					</small>
 				</th>
-				<th colspan="2">
+				<th>
 					<small>
 						<i class="fa fa-flag text-muted"></i><br>
 						<span>{{ $t('Route') }} | {{ $t('Round Trip') }}</span>
@@ -44,18 +44,38 @@
 					<small>
 						<i class="icon-users text-muted"></i><br>
 						<span>{{ $t('Passengers') }}</span>
+						<br>
+						<span>{{ $t('Manual') }}</span>
 					</small>
 				</th>
 				<th>
 					<small>
 						<i class="icon-briefcase"></i><br>
 						<span class="">{{ $t('Total production') }}</span>
+						<br>
+						<span>{{ $t('Manual') }}</span>
+					</small>
+				</th>
+				<th class="text-center">
+					<small>
+						<i class="icon-users text-muted"></i><br>
+						<span>{{ $t('Passengers') }}</span>
+						<br>
+						<span>{{ $t('System') }}</span>
 					</small>
 				</th>
 				<th>
 					<small>
 						<i class="icon-briefcase"></i><br>
-						<span class="">{{ $t('Control') }}</span>
+						<span class="">{{ $t('Total production') }}</span>
+						<br>
+						<span>{{ $t('System') }}</span>
+					</small>
+				</th>
+				<th>
+					<small>
+						<i class="icon-briefcase"></i><br>
+						<span class="">{{ options.labels.control }}</span>
 					</small>
 				</th>
 				<th>
@@ -79,7 +99,7 @@
 				<th>
 					<small>
 						<i class="icon-briefcase"></i><br>
-						<span class="">{{ $t('Various') }}</span>
+						<span class="">{{ options.labels.bonus }}</span>
 					</small>
 				</th>
 				<th>
@@ -137,10 +157,10 @@
 				</th>
 				<th v-if="r.forNormalTakings" class="bg-inverse text-white text-center">
 					<small>{{ r.route.name }}</small>
-				</th>
-				<th v-if="r.forNormalTakings" class="bg-inverse text-white text-center">
+					<br>
 					<small><i class="fa fa-retweet"></i> <span>{{ r.roundTrip }}</span></small>
 				</th>
+
 				<th v-if="r.forNormalTakings && options.showRecorders" class="text-center">
 					<small>{{ r.passengers.recorders.start }}</small>
 				</th>
@@ -149,7 +169,15 @@
 				</th>
 
 				<th class="text-center">
-					<small>{{ r.takings.passengerTariff | numberFormat('$0,0') }}</small>
+					<small v-if="options.hasTakingsWithMultitariff">{{ $t('•••') }}</small>
+					<small v-else>{{ r.takings.passengerTariff | numberFormat('$0,0') }}</small>
+				</th>
+
+				<th v-if="options.canManualTakings" class="text-center">
+					<small>{{ r.takings.manualTotalPassengers }}</small>
+				</th>
+				<th v-if="options.canManualTakings" class="text-center">
+					<small>{{ r.takings.manualTotalProduction }}</small>
 				</th>
 
 				<th v-if="r.forNormalTakings" class="text-center">
@@ -217,56 +245,18 @@
 					</div>
 				</td>
 			</tr>
-
-			<tr class="hide">
-				<td colspan="21" class="bg-inverse" style="height: 10px !important;;padding: 0;"></td>
-			</tr>
-			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''" class="hide">
-				<td :colspan=" options.showRecorders ? 8 : 6" class="bg-inverse text-white text-right text-bold text-uppercase">
-					<small><i class="fa fa-sliders text-muted"></i> {{ $t('Average') }}</small>
-				</td>
-				<td class="text-center text-bold">
-					<small>{{ averages.passengers.count }}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ averages.totalProduction | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ averages.control | numberFormat('$0,0')}}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ averages.fuel | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ averages.fuelGallons.toFixed(2) }}</small>
-				</td>
-				<td class="text-right">
-				</td>
-				<td class="text-right">
-					<small>{{ averages.bonus | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-right">
-					<small>{{ averages.others | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-bold text-right">
-					<small>{{ averages.netProduction | numberFormat('$0,0') }}</small>
-				</td>
-				<td class="text-bold text-right">
-					<small>{{ averages.advance | numberFormat('$0,0') }}</small>
-					<br>
-					<small class="text-muted tooltips" :data-title="$t('Passengers taken')"><i class="icon-users"></i> {{ averages.passengersTaken | numberFormat('0.0') }}</small>
-				</td>
-				<td class="text-bold text-right">
-					<small>{{ averages.balance | numberFormat('$0,0') }}</small>
-					<br>
-					<small class="text-muted 	tooltips" :data-title="$t('Passengers balance')"> <i class="icon-users"></i>{{ averages.passengersBalance | numberFormat('0.0') }}</small>
-				</td>
-			</tr>
 			</tbody>
+
 			<tfoot style="position: sticky; bottom: 0px">
 			<tr :class="totals.hasInvalidCounts ? 'bg-danger' : ''">
-				<th :colspan=" options.showRecorders ? 8 : 6" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
+				<th :colspan=" options.showRecorders ? 7 : 5" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
 					<small><i class="icon-layers"></i> {{ $t('Totals') }}</small>
+				</th>
+				<th class="bg-inverse text-white text-center text-bold" style="font-size: 1.1em !important;">
+					<small>{{ totals.manualPassengers }}</small>
+				</th>
+				<th class="bg-inverse text-white text-right">
+					<small>{{ totals.manualProduction | numberFormat('$0,0') }}</small>
 				</th>
 				<th class="bg-inverse text-white text-center text-bold" style="font-size: 1.1em !important;">
 					<small>{{ totals.passengers.count }}</small>

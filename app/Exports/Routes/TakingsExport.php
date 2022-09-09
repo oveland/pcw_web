@@ -73,6 +73,8 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
                 __('Observations') => $observations,                                                                # V CELL
                 __('User') => $user,                                                                                # W CELL
                 __('Updated at') => $updatedAt,                                                                     # X CELL
+                __('Manual total passengers') => $report->takings->manualTotalPassengers,                           # Y CELL
+                __('Manual total production') => $report->takings->manualTotalProduction,                           # Z CELL
             ];
         }
 
@@ -116,7 +118,7 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
 
         $workSheet->setCellValue('H' . $config->row->data->next, 'TOTAL');
         $workSheet->getStyle('H' . $config->row->data->next)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        foreach (['I', 'J', 'K', 'L', 'M', 'O', 'P', 'Q', 'R', 'S', 'T', 'U'] as $totalLetterPosition) {
+        foreach (['I', 'J', 'K', 'L', 'M', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'Y', 'Z'] as $totalLetterPosition) {
             $workSheet->setCellValue($totalLetterPosition . $config->row->data->next, '=SUM(' . $totalLetterPosition . $config->row->data->start . ':' . $totalLetterPosition . $config->row->data->end . ')');
 
             $workSheet->getStyle($totalLetterPosition . $config->row->data->next)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD);

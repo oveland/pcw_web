@@ -811,22 +811,24 @@ class DispatchRegister extends Model
     function getPassengersAttribute()
     {
         $passengers = collect([
-           'recorders' => $this->getPassengersByRecorder(),
-           'sensor' => $this->getPassengersBySensor(),
-           'takings' => $this->getPassengersByTakings(),
+            'recorders' => $this->getPassengersByRecorder(),
+            'sensor' => $this->getPassengersBySensor(),
+            'takings' => $this->getPassengersByTakings(),
         ]);
         $counter = $this->getCounterForTakings();
         $passengers->put('taken', $passengers->get($counter));
 
-        return (object) $passengers->toArray();
+        return (object)$passengers->toArray();
     }
 
-    function getPassengersTakings() {
+    function getPassengersTakings()
+    {
         $counter = $this->getCounterForTakings();
         return $this->passengers->$counter;
     }
 
-    function getPassengersBy($counter) {
+    function getPassengersBy($counter)
+    {
         return $this->passengers->$counter;
     }
 
@@ -871,7 +873,8 @@ class DispatchRegister extends Model
         ];
     }
 
-    function getPassengersByTakings() {
+    function getPassengersByTakings()
+    {
         return $this->getPassengersBySensorRecorder();
     }
 
@@ -900,6 +903,7 @@ class DispatchRegister extends Model
 
         if (!$takings) {
             $takings = new RouteTaking();
+            $takings->total_production = 0;
             $takings->dispatchRegister()->associate($this);
 
             $fuelStations = FuelStation::allByCompany($this->route->company);
@@ -907,7 +911,7 @@ class DispatchRegister extends Model
         }
 
         if (!$this->onlyControlTakings()) {
-            $passengers = $this->getPassengersBy( $this->getCounterForTakings() )->count;
+            $passengers = $this->getPassengersBy($this->getCounterForTakings())->count;
 
             $takings->passenger_tariff = $takings->passengerTariff($this->route);
             $totalProduction = $takings->passenger_tariff * $passengers;
@@ -916,7 +920,7 @@ class DispatchRegister extends Model
                 $totalProduction = $this->final_charge - $this->initial_charge;
             }
 
-            $takings->total_production = $totalProduction;
+            if (!$this->route->company->hasTakingsWithMultitariff()) $takings->total_production = $totalProduction;
         }
 
         $takings->fuel_tariff = $takings->fuelTariff($this->route);
@@ -1038,7 +1042,7 @@ class DispatchRegister extends Model
             ];
         }));
 
-        return (object) $accumulated->toArray();
+        return (object)$accumulated->toArray();
     }
 
     /**
@@ -1047,19 +1051,17 @@ class DispatchRegister extends Model
      * En caso contrario se retorna un valor por defecto
      * @return string
      */
-    function getCounterForTakings() {
+    function getCounterForTakings()
+    {
         $counterTakings = $this->routeTakings;
 
-        if($counterTakings && $counterTakings->isTaken()) return $counterTakings->counter;
+        if ($counterTakings && $counterTakings->isTaken()) return $counterTakings->counter;
 
-        return 'recorders'; // TODO: Se debe cambiar dinámicamente según el tipo de contador que tenga el vehículo
+        return 'recorders'; // TODO: Se debe cambiar dinámicamente según el tipo de contador por defecto que tenga el vehículo
     }
 
-    function getBonusLabel() {
-        return $this->route->company_id == Company::ALAMEDA ? 'Various' : 'Bonus';
-    }
-
-    function getTypeCounters() {
-        return $this->route->company->getTypeCounters();
+    function getTypeCounters()
+    {
+        return $this->route ? $this->route->company->getTypeCounters() : collect([]);
     }
 }

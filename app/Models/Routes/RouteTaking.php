@@ -59,6 +59,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $counter
  * @property string $type
  * @property int|null $parent_takings_id
+ * @property int|null $manual_total_production
+ * @property int|null $manual_total_passengers
  * @property-read RouteTaking $parent
  * @method static Builder|RouteTaking whereAdvance($value)
  * @method static Builder|RouteTaking whereBalance($value)
@@ -71,7 +73,7 @@ class RouteTaking extends Model
     const TAKING_BY_ALL = 2;
 
     protected $guarded = ['total_production', 'fuel_gallons', 'net_production'];
-    protected $fillable = ["passenger_tariff", "control", "fuel_tariff", "fuel", "others", "bonus", "advance", "balance", "observations", "fuel_station_id", "counter", "type", "parent_takings_id"];
+    protected $fillable = ["passenger_tariff", "control", "fuel_tariff", "fuel", "others", "bonus", "advance", "balance", "observations", "fuel_station_id", "counter", "type", "parent_takings_id", "manual_total_production", "manual_total_passengers"];
 
     function getDateFormat()
     {
@@ -187,11 +189,13 @@ class RouteTaking extends Model
             'balance' => $this->balance,
             'netProduction' => $this->net_production,
             'observations' => $this->observations,
+            'manualTotalProduction' => $this->manual_total_production,
+            'manualTotalPassengers' => $this->manual_total_passengers,
             'user' => $this->user ? $this->user->toArray(true) : null,
             'isTaken' => $this->isTaken(),
-            'fuelStation' => $this->fuelStation? $this->fuelStation->toArray() : (object)['name' => ''],
+            'fuelStation' => $this->fuelStation ? $this->fuelStation->toArray() : (object)['name' => ''],
             'hasParent' => $this->hasParent(),
-            'updatedAt' => $this->updated_at->toDateTimeString()
+            'updatedAt' => $this->updated_at ? $this->updated_at->toDateTimeString() : ""
         ];
     }
 
