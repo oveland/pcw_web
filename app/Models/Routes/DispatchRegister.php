@@ -1021,7 +1021,7 @@ class DispatchRegister extends Model
 
         $from = $from ?: $this->date;
 
-        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->route->company, $from, null, $this->route_id, $this->vehicle_id)
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->route->company, $from, null, null, $this->vehicle_id)
             ->completed()
             ->where('id', '<=', $this->id)
             ->get();
