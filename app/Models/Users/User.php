@@ -289,6 +289,7 @@ class User extends Authenticatable
             31580814, // JEFE RRHH
             2018101243, // ALEXANDERAL
             2018101262, // WILSONAL
+            67019334, // ANGELICA ANALISTA
 
             #TRANSPUBENZA
             2018101273, // SIMONTP
