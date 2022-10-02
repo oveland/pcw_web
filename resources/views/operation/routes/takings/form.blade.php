@@ -480,7 +480,13 @@
         const tariffPassenger = parseInt(tariffTakings.val());
         const totalPassengers = parseInt(passengersTakings.val());
 
-        const totalProduction = {{ intval($totalProduction) }};
+        let totalProduction = 0;
+        @if($company->hasTakingsWithMultitariff())
+            totalProduction = {{ intval($totalProduction) }};
+        @else
+            totalProduction = tariffPassenger * totalPassengers;
+        @endif
+
         const totalDiscounts = getTotalDiscounts();
         const netProduction = totalProduction - totalDiscounts;
         

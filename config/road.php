@@ -61,8 +61,7 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'google_api_token' => 'AIzaSyDmDwfAM8ID9sjcMayS-ihJ_tmpKvd4C9U', // Apps SMS
-//    'google_api_token' => 'AIzaSyCNNGhrjaS4zQFwWVfazS2600h9hV-QpSA', // PCW Apps
+    'google_api_token' => env('GOOGLE_API_KEY'),
 
     /*
     |--------------------------------------------------------------------------
