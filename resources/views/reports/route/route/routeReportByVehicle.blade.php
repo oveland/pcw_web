@@ -1,12 +1,14 @@
 @if(count($dispatchRegistersByVehicles))
-    <div class="alert alert-info p-t-5 container-alert-new-values" style="display: none;position: absolute;z-index: 10;">
+    <div class="alert alert-warning p-t-10 container-alert-new-values" style="display: none;position: absolute;z-index: 10;margin-top: 0">
         <strong>
-            <i class="fa fa-exclamation"></i> @lang('Registers updated')
+            <i class="fa fa-exclamation-circle"></i> @lang('Registers updated')
         </strong>
-        <button class="btn btn-info btn-xs" onclick="$('.form-search-report').submit()">
-            <i class="fa fa-refresh"></i>
+        <hr>
+        <p>@lang('Please refresh the report once you finish the update all data')</p>
+        <hr>
+        <button class="btn btn-warning btn-sm" onclick="$('.form-search-report').submit()">
+            <i class="fa fa-refresh"></i> @lang('Update')
         </button>
-        <p>@lang('Please refresh the report once you finish the fix bugs')</p>
     </div>
 
     <div class="panel panel-inverse">

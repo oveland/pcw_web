@@ -218,7 +218,7 @@ class Company extends Model
      */
     function hasRecorderCounter()
     {
-        return collect([self::ALAMEDA, self::TUPAL, self::PCW, self::TRANSPUBENZA])->contains($this->id);
+        return collect([self::ALAMEDA, self::TUPAL, self::PCW, self::TRANSPUBENZA, self::EXPRESO_PALMIRA])->contains($this->id);
     }
 
     /*
@@ -242,12 +242,13 @@ class Company extends Model
                 self::YUMBENOS,
                 self::MONTEBELLO,
                 self::TRANSPUBENZA,
-                self::EXPRESO_PALMIRA,
+//                self::EXPRESO_PALMIRA,
                 self::VALLEDUPAR,
                 self::ARMENIA,
                 self::VALLEDUPAR
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
+
     function hasPhoto()
     {
         return collect([
@@ -271,6 +272,7 @@ class Company extends Model
                 self::ARMENIA,
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
+
     /*
      * What companies that have seat sensor recorder counter
      *

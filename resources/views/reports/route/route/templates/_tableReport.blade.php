@@ -2,6 +2,8 @@
     $thresholdAlertSS = 1;
     $thresholdAlertNR = 2;
     $thresholdMinLocations = 300;
+
+    $isExpresoPalmira = $company->id == \App\Models\Company\Company::EXPRESO_PALMIRA;
 @endphp
 <!-- begin table -->
 <table id="table-report"
@@ -50,13 +52,15 @@
         @if( $company->hasRecorderCounter() )
             <th class="text-center">
                 <i class="fa fa-compass text-muted"></i><br>
-                {{ str_limit(__('Recorder'),5) }}
-                <br>
-                <small class="text-muted">
-                    @lang('Initial')
-                    <hr class="m-0">
-                    @lang('Final')
-                </small>
+                {{ str_limit(__($isExpresoPalmira ? 'Manual count' : 'Recorder'), 15) }}
+                @if(!$isExpresoPalmira)
+                    <br>
+                    <small class="text-muted">
+                        @lang('Initial')
+                        <hr class="m-0">
+                        @lang('Final')
+                    </small>
+                @endif
             </th>
             <th class="text-center">
                 <i class="icon-users text-muted"></i><br>
@@ -229,7 +233,7 @@
                             $driverInfo = trim($driverInfo);
                         @endphp
                         <div class="tooltips box-edit"
-                             data-title="@lang('Driver')">
+                             data-title="@lang('Edit') @lang('Driver')">
                         <span class="box-info">
                             <span class="{{ !$driverInfo?'text-danger text-bold':'' }} text-capitalize">
                                 {{ $driverInfo ?: __('None') }}
@@ -347,72 +351,77 @@
                 class="text-center">{{ $dispatchRegister->getRouteTime() }}</td>
 
             @if( $company->hasRecorderCounter() )
-                <td width="10%"
-                    class="p-r-0 p-l-0 text-center">
-                    @if( Auth::user()->canEditRecorders() )
-                        @php
-                            $obs = $dispatchRegister->getObservation('start_recorder');
-                        @endphp
-                        <div class="tooltips box-edit"
-                             data-title="@lang('Start Recorder')">
+                <td width="10%" class="p-r-0 p-l-0 text-center">
+                    @if(!$isExpresoPalmira)
+                        @if( Auth::user()->canEditRecorders())
+                            @php
+                                $obs = $dispatchRegister->getObservation('start_recorder');
+                            @endphp
+                            <div class="tooltips box-edit" data-title="@lang('Edit') @lang('Start Recorder')">
                             <span class="box-info">
                                 <span class="">
                                     {{ $startRecorder }}
                                 </span>
                             </span>
-                            <div class="box-edit"
-                                 style="display: none">
-                                <input id="edit-start-recorder-{{ $dispatchRegister->id }}"
-                                       title="@lang('Press enter for edit')"
-                                       name=""
-                                       type="number"
-                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
-                                       data-id="{{ $dispatchRegister->id }}"
-                                       data-field="start_recorder"
-                                       class="input-sm form-control edit-input-recorder edit-input-value"
-                                       value="{{ $startRecorder }}">
-                                <div class="box-obs">
+                                <div class="box-edit"
+                                     style="display: none">
+                                    <input id="edit-start-recorder-{{ $dispatchRegister->id }}"
+                                           title="@lang('Press enter for edit')"
+                                           name=""
+                                           type="number"
+                                           data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
+                                           data-id="{{ $dispatchRegister->id }}"
+                                           data-field="start_recorder"
+                                           class="input-sm form-control edit-input-recorder edit-input-value"
+                                           value="{{ $startRecorder }}">
+                                    <div class="box-obs">
                                     <textarea
                                             name=""
                                             rows="3"
                                             class="input-sm form-control edit-input-obs"
                                             placeholder="@lang('Observations')"
                                     >{{ $obs->observation }}</textarea>
-                                    @if($obs->updated_at)
-                                        <div class="text-muted text-center box-audit">
-                                            <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
-                                            ·
-                                            <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
-                                        </div>
-                                    @endif
-                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
-                                            title="@lang('Cancel')">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                    <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                            title="@lang('Save')">
-                                        <i class="fa fa-save"></i>
-                                    </button>
+                                        @if($obs->updated_at)
+                                            <div class="text-muted text-center box-audit">
+                                                <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
+                                                ·
+                                                <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
+                                            </div>
+                                        @endif
+                                        <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
+                                                title="@lang('Cancel')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <button class="btn btn-xs btn-success m-5 edit-btn-save"
+                                                title="@lang('Save')">
+                                            <i class="fa fa-save"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @else
-                        {{ $startRecorder }}
+                        @else
+                            {{ $startRecorder }}
+                        @endif
+                        <hr class="m-0">
                     @endif
-                    <hr class="m-0">
+
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
                         @php
                             $obs = $dispatchRegister->getObservation('end_recorder');
+
+                            $labelEndRecorder = $isExpresoPalmira ? __('Manual count') : __('End Recorder');
                         @endphp
-                        <div class="tooltips box-edit"
-                             data-title="@lang('End Recorder')">
+                        <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
                                 <span class="">
                                     {{ $endRecorder }}
+                                    @if($isExpresoPalmira)
+                                        <br>
+                                        <small class="tooltips text-muted" data-title="@lang('# Spreadsheet')" data-placement="bottom">{{ $obs->observation }}</small>
+                                    @endif
                                 </span>
                             </span>
-                            <div class="box-edit"
-                                 style="display: none">
+                            <div class="box-edit" style="display: none">
                                 <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
                                        title="@lang('Press enter for edit')"
                                        name=""
@@ -427,8 +436,7 @@
                                             name=""
                                             rows="3"
                                             class="input-sm form-control edit-input-obs"
-                                            placeholder="@lang('Observations')"
-                                    >{{ $obs->observation }}</textarea>
+                                            placeholder="{{ $isExpresoPalmira ? __('# Spreadsheet') : __('Observations') }}">{{ $obs->observation }}</textarea>
                                     @if($obs->updated_at)
                                         <div class="text-muted text-center box-audit">
                                             <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
@@ -449,6 +457,10 @@
                         </div>
                     @else
                         {{ $endRecorder }}
+                        @if($isExpresoPalmira)
+                            <br>
+                            <small class="tooltips text-muted" data-title="@lang('# Spreadsheet')" data-placement="bottom">{{ $obs->observation }}</small>
+                        @endif
                     @endif
                 </td>
                 <td width="10%"

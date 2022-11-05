@@ -291,11 +291,15 @@ class User extends Authenticatable
             2018101262, // WILSONAL
             67019334, // ANGELICA ANALISTA
 
-            #TRANSPUBENZA
+            #TRANSPUBENZA:
             2018101273, // SIMONTP
             2018100998, // TPSIS Local
-            1065834332 // SAMIR VALLEDUPAR
 
+            #VALLEDUPAR:
+            1065834332, // SAMIR
+
+            #EXPRESO PALMIRA:
+            2018101286, // EXPALMIRA
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();
@@ -315,6 +319,8 @@ class User extends Authenticatable
             #TRANSPUBENZA
             2018101273, // SIMONTP
 
+            #EXPRESO PALMIRA:
+            2018101286, // EXPALMIRA
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();

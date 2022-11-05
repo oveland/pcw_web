@@ -1195,11 +1195,9 @@ span.icon-report {
 }
 
 .box-edit .box-info:hover {
-    border: 1px solid gray;
-    border-radius: 6px;
     cursor: pointer;
-    -webkit-transition: all 0.2s;
-    transition: all 0.2s;
+    color: #0c199c;
+    font-weight: bold !important;
 }
 
 

@@ -840,6 +840,7 @@
   "Occupation": "Ocupación",
   "occupation": "ocupación",
   "Cancelled": "Cancelado",
-  "Active": "Activo",
-  "Description": "El vehiculo no tiene ubicaciones"
+  "Description": "El vehiculo no tiene ubicaciones",
+  "# Spreadsheet": "# Planilla",
+  "Manual count": "Conteo manual"
 }

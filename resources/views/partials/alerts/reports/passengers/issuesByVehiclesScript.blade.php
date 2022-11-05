@@ -79,7 +79,7 @@
                 success: function (data) {
                     if (data.success) {
                         gsuccess('@lang('Data updated successfully')');
-                        $('.container-alert-new-values').slideDown(1500);
+                        $('.container-alert-new-values').slideDown(100);
                         onSuccess(data);
                     } else {
                         gerror('@lang('Error updating data')');
