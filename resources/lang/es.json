@@ -840,5 +840,6 @@
   "Occupation": "Ocupación",
   "occupation": "ocupación",
   "Cancelled": "Cancelado",
-  "Active": "Activo"
+  "Active": "Activo",
+  "Description": "El vehiculo no tiene ubicaciones"
 }

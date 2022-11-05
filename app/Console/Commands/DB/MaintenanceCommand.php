@@ -39,73 +39,41 @@ class MaintenanceCommand extends Command
         $to = $this->option('to');
 
         return collect([
+//            [
+//                'from' => '2022-08-01',
+//                'to' => '2022-08-31',
+//                'tables' => [
+//                    'locations' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                    'reports' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                ]
+//            ],
+//            [
+//                'from' => '2022-09-01',
+//                'to' => '2022-09-30',
+//                'tables' => [
+//                    'locations' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                    'reports' => [
+//                        'release' => false,
+//                        'hasBackup' => false,
+//                        'restore' => false,
+//                    ],
+//                ]
+//            ],
             [
-                'from' => '2022-05-01',
-                'to' => '2022-05-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
-            [
-                'from' => '2022-06-01',
-                'to' => '2022-06-30',
-                'tables' => [
-                    'locations' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
-            [
-                'from' => '2022-07-01',
-                'to' => '2022-07-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
-            [
-                'from' => '2022-08-01',
-                'to' => '2022-08-31',
-                'tables' => [
-                    'locations' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                    'reports' => [
-                        'release' => false,
-                        'hasBackup' => false,
-                        'restore' => false,
-                    ],
-                ]
-            ],
-            [
-                'from' => '2022-09-01',
-                'to' => '2022-09-30',
+                'from' => '2022-10-01',
+                'to' => '2022-10-31',
                 'tables' => [
                     'locations' => [
                         'release' => false,

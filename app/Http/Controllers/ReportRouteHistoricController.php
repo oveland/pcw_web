@@ -371,6 +371,9 @@ class ReportRouteHistoricController extends Controller
             'config' => [
                 'events' => [
                     'panic' => $vehicle->company->id === Company::COODETRANS
+                ],
+                'show' => [
+                    'passengers' => Auth::user()->company_id != Company::EXPRESO_PALMIRA
                 ]
             ]
         ];

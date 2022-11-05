@@ -78,6 +78,7 @@ class Company extends Model
     const SOTRAVALLE = 35;
     const EXPRESO_PALMIRA = 39;
     const VALLEDUPAR = 41;
+    const ARMENIA = 42;
 
     const ALL = [
         self::PCW,
@@ -90,7 +91,8 @@ class Company extends Model
         self::YUMBENOS,
         self::COODETRANS,
         self::EXPRESO_PALMIRA,
-        self::VALLEDUPAR
+        self::VALLEDUPAR,
+        self::ARMENIA
     ];
 
     /**
@@ -238,13 +240,37 @@ class Company extends Model
     {
         return collect([
                 self::YUMBENOS,
-                self::EXPRESO_PALMIRA,
                 self::MONTEBELLO,
                 self::TRANSPUBENZA,
+                self::EXPRESO_PALMIRA,
+                self::VALLEDUPAR,
+                self::ARMENIA,
                 self::VALLEDUPAR
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
+    function hasPhoto()
+    {
+        return collect([
+                self::YUMBENOS,
+                self::EXPRESO_PALMIRA,
+                self::MONTEBELLO,
+                self::TRANSPUBENZA,
+                self::VALLEDUPAR,
+                self::ARMENIA
+            ])->contains($this->id) || auth()->user()->isAdmin();
+    }
 
+    function hasinfoTrip()
+    {
+        return collect([
+                self::YUMBENOS,
+                self::MONTEBELLO,
+                self::TRANSPUBENZA,
+                self::EXPRESO_PALMIRA,
+                self::VALLEDUPAR,
+                self::ARMENIA,
+            ])->contains($this->id) || auth()->user()->isAdmin();
+    }
     /*
      * What companies that have seat sensor recorder counter
      *
@@ -310,7 +336,7 @@ class Company extends Model
     */
     function hasSeatSensorCounter()
     {
-        return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW])->contains($this->id);
+        return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW, self::ARMENIA])->contains($this->id);
     }
 
     /**

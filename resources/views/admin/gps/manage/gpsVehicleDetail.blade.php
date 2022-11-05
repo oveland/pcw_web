@@ -14,7 +14,7 @@
             <i class="{{ $vehicleStatus->icon_class }}"></i> {{ $vehicleStatus->des_status }}
         </small>
     @else
-        <br><small class="badge badge-danger m-b-5">
+        <br><small class="badge badge-danger m-b-5 tooltips" data-html="true" data-title="@lang('Description')" >
             <i class="fa fa-tag"></i> @lang('New')
         </small>
     @endif

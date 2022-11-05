@@ -294,6 +294,8 @@ class User extends Authenticatable
             #TRANSPUBENZA
             2018101273, // SIMONTP
             2018100998, // TPSIS Local
+            1065834332 // SAMIR VALLEDUPAR
+
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();
@@ -312,6 +314,7 @@ class User extends Authenticatable
 
             #TRANSPUBENZA
             2018101273, // SIMONTP
+
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();
