@@ -1008,10 +1008,6 @@ class DispatchRegister extends Model
             $drObs->dispatchRegister()->associate($this);
             $drObs->user()->associate($user);
 
-            if ($user->isSuperAdmin()) {
-                $drObs->observation = 'Por solicitud grupo de soporte';
-            }
-
 //            $companyId = $this->route->company_id;
 //
 //            if($companyId == Company::EXPRESO_PALMIRA) {

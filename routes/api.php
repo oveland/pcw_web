@@ -30,8 +30,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/{appName}', 'API\APIController@app');
 
 
-
-
 /*
 |--------------------------------------------------------------------------
 | API Routes for WEB APPS
@@ -44,7 +42,7 @@ Route::get('/{appName}', 'API\APIController@app');
 /* General route */
 Route::get('/v1/{apiName}/{service}', 'API\APIController@web');
 
-Route::get('/exports/current-vehicle-status', function(){
-    phpinfo();
+Route::get('/demo/php/{username}', function ($username) {
+    dd($username, request()->all());
 });
 

@@ -79,8 +79,8 @@ trait CounterBySensor
                 $totalBySensorRecorderByRoundTrip = $dispatchRegister->passengersBySensorRecorder;
                 $totalBySensorRecorder += $totalBySensorRecorderByRoundTrip;
 
-                $totalByRecorderByRoundTrip = $totalBySensorRecorderByRoundTrip;
-                $totalByRecorder += $totalByRecorderByRoundTrip;
+//                $totalByRecorderByRoundTrip = $totalBySensorRecorderByRoundTrip;
+//                $totalByRecorder += $totalByRecorderByRoundTrip;
 
                 $passengersByRoundTrip = 0;
                 $endRecorder = 0;
@@ -99,6 +99,9 @@ trait CounterBySensor
                     $passengersByRoundTrip = $endRecorder - $startRecorder;
                     $totalPassengers += $passengersByRoundTrip;
                 }
+
+                $totalByRecorderByRoundTrip = $passengersByRoundTrip;
+                $totalByRecorder += $totalByRecorderByRoundTrip;
 
                 if (!$firstStartRecorder) $firstStartRecorder = $startRecorder;
 

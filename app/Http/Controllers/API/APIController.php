@@ -6,6 +6,7 @@ use App\Http\Controllers\MigrationController;
 use App\Services\API\Apps\MyRouteService;
 use App\Services\API\Apps\PCWProprietaryService;
 use App\Services\API\Apps\PCWTrackService;
+use App\Services\API\Web\Reports\PCWRouteService;
 use App\Services\API\Web\Reports\APIReportService;
 use App\Services\API\Web\PCWPassengersService;
 use Illuminate\Http\JsonResponse;
@@ -16,16 +17,18 @@ class APIController extends Controller
 {
     protected $apiReportService;
     protected $passengersService;
+    protected $routeService;
 
     /**
      * APIController constructor.
      * @param APIReportService $apiReportService
      * @param PCWPassengersService $passengersService
      */
-    public function __construct(APIReportService $apiReportService, PCWPassengersService $passengersService)
+    public function __construct(APIReportService $apiReportService, PCWPassengersService $passengersService, PCWRouteService $routeService)
     {
         $this->apiReportService = $apiReportService;
         $this->passengersService = $passengersService;
+        $this->routeService = $routeService;
     }
 
 
@@ -69,6 +72,10 @@ class APIController extends Controller
         switch ($api) {
             case 'passengers':
                 return $this->passengersService->serve($service, $request);
+                break;
+
+            case 'routes':
+                return $this->routeService->serve($service, $request);
                 break;
 
             case 'reports':
@@ -115,7 +122,10 @@ class APIController extends Controller
                 }
                 break;
             default:
-                abort(403);
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Not found'
+                ]);
                 break;
         }
     }
