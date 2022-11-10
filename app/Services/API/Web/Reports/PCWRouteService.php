@@ -96,11 +96,14 @@ class PCWRouteService implements APIWebInterface
         $report = $allDispatchRegisters->map(function (DispatchRegister $d) use ($passengersReport) {
             $passengersVehicle = $passengersReport->get($d->vehicle->id);
             $passengersRoundTrip = $passengersVehicle->history->get($d->id);
+            $pricePassengers= ($passengersRoundTrip->totalByRecorderByRoundTrip) * 10000;
 
             return [
                 'vehicle' => [
                     'id' => $d->vehicle->id,
+                    'number' => $d->vehicle->number,
                     'plate' => $d->vehicle->plate
+
                 ],
                 'route' => [
                     'id' => $d->route->id,
@@ -109,6 +112,7 @@ class PCWRouteService implements APIWebInterface
                 'passengers' => [
                     'manual' => $passengersRoundTrip->totalByRecorderByRoundTrip,
                     'sensor' => $passengersRoundTrip->totalBySensorByRoundTrip,
+                    'price $'=> $pricePassengers,
                     'spreadsheet' => $d->getObservation('end_recorder')->observation
                 ],
                 'dispatchRegister' => [
