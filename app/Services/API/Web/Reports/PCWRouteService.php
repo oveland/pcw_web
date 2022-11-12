@@ -11,6 +11,7 @@ namespace App\Services\API\Web\Reports;
 use App\Models\Company\Company;
 use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Routes\DispatchRegister;
+use App\Models\Routes\DrObservation;
 use App\Models\Users\User;
 use App\Services\API\Web\Contracts\APIWebInterface;
 use App\Traits\CounterByRecorder;
@@ -53,13 +54,31 @@ class PCWRouteService implements APIWebInterface
                 if ($company) {
                     $routeReport = $request->get('route');
                     $vehicleReport = $request->get('vehicle');
+                    $plateVehicle = $request->get('plate');
+                    $spreadsheetReport= $request->get('spreadsheet');
+
 
                     $vehicle = null;
-                    if (is_string($vehicleReport)) $vehicle = Vehicle::where('plate', $vehicleReport)->first();
-                    if (is_numeric($vehicleReport)) $vehicle = Vehicle::find($vehicleReport);
-                    $vehicleId = $vehicle && $vehicle->belongsToCompany($company) ? $vehicle->id : null;
+                    $vehiclePlate = null;
 
-                    if ($vehicle || !$vehicleReport) $report = $this->buildPassengersReport($company, $dateReport, $routeReport, $vehicleId);
+                    if (is_string($plateVehicle)) $vehiclePlate  = Vehicle::where('plate',  $plateVehicle)->first();
+                    if (is_numeric($vehicleReport)) $vehicle = Vehicle::where('number',$vehicleReport)->first();
+
+                    if($vehiclePlate && $vehiclePlate->belongsToCompany($company)){
+                            $vehicleId= $vehiclePlate->id;
+                        // dd('entra con placa',$vehicleId);
+                        }else if ($vehicle && $vehicle->belongsToCompany($company)){
+                             $vehicleId= $vehicle->id;
+                        //dd('entra con numero',$vehicleId);
+                        } else {
+                             $vehicleId= null;
+                        //dd('nada',$vehicleId);
+                    }
+
+                   // $vehicleId = $vehicle && $vehicle->belongsToCompany($company) ? $vehicle->id : null;
+
+
+                    if ($vehicle || !$vehicleReport) $report = $this->buildPassengersReport($company, $dateReport, $routeReport, $vehicleId, $spreadsheetReport);
                 }
 
                 return response()->json([
@@ -82,14 +101,33 @@ class PCWRouteService implements APIWebInterface
 
     }
 
-    public function buildPassengersReport(Company $company, $dateReport, $routeReport, $vehicleReport): Collection
+    public function buildPassengersReport(Company $company, $dateReport, $routeReport, $vehicleReport,$spreadsheetReport ): Collection
     {
-        $allDispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $routeReport, $vehicleReport)
+        if($spreadsheetReport){
+        $drId = DrObservation::where('field','registradora_llegada')->where('observation',$spreadsheetReport)->get()->pluck('dispatch_register_id');
+        $dr = DispatchRegister::whereIn('id',$drId)
             ->active()
             ->with('vehicle')
             ->with('route')
             ->orderBy('id')
             ->get();
+        $allDispatchRegisters = $dr;
+            //dd('etra a planilla');
+        }
+        else{
+            $allDispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $routeReport, $vehicleReport)
+                ->active()
+                ->with('vehicle')
+                ->with('route')
+                ->orderBy('id')
+                ->get();
+           // dd('etra a placa o numero vehiculo', $allDispatchRegisters);
+
+        }
+
+
+      //  $allDispatchRegisters = $dr; DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $routeReport, $vehicleReport)
+
 
         $passengersReport = CounterBySensor::report($allDispatchRegisters)->report;
 
