@@ -32,7 +32,6 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
         $params = $data->params;
         $dataReport = $data->report;
         foreach ($dataReport->report as $report) {
-
             $observations = $report->takings->observations;
 
             if (!$report->takings->isTaken && $report->forNormalTakings) {
@@ -40,14 +39,12 @@ class TakingsExport implements FromCollection, ShouldAutoSize, Responsable, With
             }
 
             $route = $report->onlyControlTakings ? __('Takings without dispatch turns') : $report->route->name;
-
             $user = "";
             $updatedAt = "";
             if ($report->takings->user) {
                 $user = trim($report->takings->user->username . ": " . $report->takings->user->name);
                 $updatedAt = $report->takings->updatedAt;
             }
-
             $dataExcel[] = [
                 __('N°') => count($dataExcel) + 1,                                                                  # A CELL
                 __('Date') => $report->date,                                                                        # B CELL

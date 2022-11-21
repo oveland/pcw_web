@@ -138,7 +138,7 @@ class RocketController extends Controller
 
                 return response()->json([
                     'company' => $company,
-                    'vehicles' => $company->vehicles,
+                    'vehicles' => $company->activeVehicles,
                     'companies' => $access->companies
                 ]);
                 break;

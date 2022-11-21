@@ -87,7 +87,7 @@ class ConfigProfileService
             $activate = $rActivate ?: self::THRESHOLD_ACTIVATE;
             $release = $rRelease ?: self::THRESHOLD_RELEASE;
 
-            if ($this->vehicle->id == 1873 && false) {
+            if ($this->vehicle->id == 1873) {
                 if ($this->profileSeat->camera == '1') {
                     $activate = 3;
                     $release = 4;
@@ -107,6 +107,46 @@ class ConfigProfileService
                 if (collect([13, 16])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 2;
                     $release = 15;
+                }
+            }
+
+           /* if ($this->vehicle->id == 2585) {
+                if ($this->profileSeat->camera == '1') {
+                    $activate = 1;
+                    $release = 10;
+                } else if ($this->profileSeat->camera == '2') {
+                    $activate = 2;
+                    $release = 6;
+                } else if ($this->profileSeat->camera == '3') {
+                    $activate = 1;
+                    $release = 10;
+                }
+
+            }*/
+
+            if ($this->vehicle->id == 2563) { // VH 5015 valledupar   OJO!!!!!!
+                if (collect([1,7,15])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 40;
+                }
+            }
+            if ($this->vehicle->id == 2576) { // VH 5013 valledupar   OJO!!!!!!
+                if (collect([1])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 40;
+                }
+            }
+            if ($this->vehicle->id == 5020) { // VH 5020 valledupar   OJO!!!!!!
+                if (collect([2])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 40;
+                }
+            }
+
+            if ($this->vehicle->id == 2582) { // VH 62 Armenia   OJO!!!!!!
+                if (collect([15,16,17,18])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 20;
                 }
             }
 

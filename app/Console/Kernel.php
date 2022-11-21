@@ -44,68 +44,101 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104710044')->everyFiveMinutes(); // Vehicle electric  Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=EP-001 --pa=2 --pr=2')->everyThirtyMinutes();
 
+            $schedule->command('syrus:sync-photos --imei=352557104744951')->everyFiveMinutes(); // Vehicle 2203  Expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ESY-699 --pa=2 --pr=5')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104791531')->everyFiveMinutes(); // Vehicle 2223  Expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ESY-708 --pa=2 --pr=5')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104743177')->everyFiveMinutes(); // Vehicle 2221  Expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ESY-707 --pa=2 --pr=5')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104743375')->everyFiveMinutes(); // Vehicle 2227  Expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ESY-710 --pa=2 --pr=5')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104787364')->everyFiveMinutes(); // Vehicle 2225  Expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ESY-709 --pa=2 --pr=5')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104790814')->everyFiveMinutes(); // Vehicle 2215  Expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ESY-709 --pa=2 --pr=5')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104735884')->everyFiveMinutes(); // Vehicle ----  Expreso Palmira falta confirmar y cambiar numero de VH
+            $schedule->command('rocket:count --vehicle-plate=ETK-677 --pa=2 --pr=5')->everyThirtyMinutes();
+
 
             /**********************************VALLEDUPAR*************************************************/
 
-            // $schedule->command('syrus:sync-photos --imei=352557100791261')->everyMinute(); // Vehicle 9011 Valledupar - vehiculo sale de circulacion
-            // $schedule->command('rocket:count --vehicle-plate=SMN-884 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('syrus:sync-photos --imei=352557100791261')->everyFiveMinutes(); // Vehicle 9011 Valledupar - vehiculo sale de circulacion
+            $schedule->command('rocket:count --vehicle-plate=SMN-884 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104511442')->everyFiveMinutes(); // Vehicle 5017 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=FXS-240 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=FXS-240 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557100775223')->everyFiveMinutes(); // Vehicle 5000 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WCY-762 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-762 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104506194')->everyFiveMinutes(); // Vehicle 5005 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WCY-768 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-768 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104487122')->everyFiveMinutes(); // Vehicle 5006 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WYC-769 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WYC-769 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104504983')->everyFiveMinutes(); // Vehicle 5008 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WCY-770 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-770 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104506293')->everyFiveMinutes(); // Vehicle 5009 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WCY-771 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-771 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557100803918')->everyFiveMinutes(); // Vehicle 5015 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WNL-372 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WNL-372 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557100775694')->everyFiveMinutes(); // Vehicle 5001 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WCY-763 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-763 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104510469')->everyFiveMinutes(); // Vehicle 6060 2 camaras Valledupar
-            $schedule->command('rocket:count --vehicle-plate=GIM-079 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=GIM-079 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104513166')->everyFiveMinutes(); // Vehicle 6040 2 camaras  Valledupar
-            $schedule->command('rocket:count --vehicle-plate=GIM-077 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=GIM-077 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557100791261')->everyFiveMinutes(); // Vehicle 6070 2 camaras  Valledupar
-            $schedule->command('rocket:count --vehicle-plate=GIM-080 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=GIM-080 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104818375')->everyFiveMinutes(); // Vehicle 6050 2 camaras  Valledupar
-            $schedule->command('rocket:count --vehicle-plate=GIM-078 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=GIM-078 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104826311')->everyFiveMinutes(); // Vehicle 5018   Valledupar
-            $schedule->command('rocket:count --vehicle-plate=FXS-241 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=FXS-241 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104483022')->everyFiveMinutes(); // Vehicle 5002   Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WCY-764 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-764 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104507192')->everyFiveMinutes(); // Vehicle 5004   Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WCY-766 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-766 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104510162')->everyFiveMinutes(); // Vehicle 5020   Valledupar
-            $schedule->command('rocket:count --vehicle-plate=FXS-261 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=FXS-261 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104505592')->everyFiveMinutes(); // Vehicle 5007   Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WCY-767 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-767 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104511103')->everyFiveMinutes(); // Vehicle 5013   Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WNL-369 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WNL-369 --pa=2 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104474138')->everyFiveMinutes(); // Vehicle 5019   Valledupar
-            $schedule->command('rocket:count --vehicle-plate=FXS-260 --pa=2 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=FXS-260 --pa=2 --pr=20')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104501203')->everyFiveMinutes(); // Vehicle 5014   Valledupar
+            $schedule->command('rocket:count --vehicle-plate=WNL-370 --pa=2 --pr=20')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557100804700')->everyFiveMinutes(); // Vehicle 7001   Valledupar
+            $schedule->command('rocket:count --vehicle-plate=TJW-190 --pa=2 --pr=20')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104504736')->everyFiveMinutes(); // Vehicle 7003   Valledupar
+            $schedule->command('rocket:count --vehicle-plate=TJW-192 --pa=2 --pr=20')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104489797')->everyFiveMinutes(); // Vehicle 5003   Valledupar
+            $schedule->command('rocket:count --vehicle-plate=WCY-765 --pa=2 --pr=20')->everyThirtyMinutes();
 
 
             /**********************************TRANSPUBENZA*************************************************/
@@ -130,6 +163,20 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104524049')->everyFiveMinutes();
             $schedule->command('syrus:sync-photos --imei=352557104477982')->everyFiveMinutes();
             $schedule->command('syrus:sync-photos --imei=352557104552792')->everyFiveMinutes();
+
+            /**********************************ARMENIA*************************************************/
+            $schedule->command('syrus:sync-photos --imei=352557104525327')->everyFiveMinutes(); // Vehicle 62   ARMENIA
+            $schedule->command('rocket:count --vehicle-plate=TJA-310 --pa=2 --pr=4')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104506590')->everyFiveMinutes(); // Vehicle 68   ARMENIA
+            $schedule->command('rocket:count --vehicle-plate=TJA-234 --pa=2 --pr=4')->everyThirtyMinutes();
+
+            /**********************************IBAGUE*************************************************/
+            $schedule->command('syrus:sync-photos --imei=352557104743722')->everyFiveMinutes(); // Vehicle 027 IBAGUE
+            $schedule->command('rocket:count --vehicle-plate=TGN-356 --pa=2 --pr=4')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104743730')->everyFiveMinutes(); // Vehicle 041 IBAGUE
+            $schedule->command('rocket:count --vehicle-plate=TJB-127 --pa=2 --pr=4')->everyThirtyMinutes();
 
 
         } else {
