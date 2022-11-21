@@ -248,6 +248,16 @@ class Company extends Model
                 Self::ARMENIA
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
+    function hasPhoto()
+    {
+        return collect([
+                self::YUMBENOS,
+                self::EXPRESO_PALMIRA,
+                self::MONTEBELLO,
+                self::TRANSPUBENZA,
+                self::VALLEDUPAR
+            ])->contains($this->id) || auth()->user()->isAdmin();
+    }
 
     /*
      * What companies that have seat sensor recorder counter
