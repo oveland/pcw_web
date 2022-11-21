@@ -61,6 +61,9 @@ class LMServiceProvider extends ServiceProvider
                     break;
                 case Company::COODETRANS:
                     $syncService = new BEASyncService($company, $repository);
+
+                case Company::ALAMEDA:
+                    $syncService = new BEASyncService($company, $repository);
                     break;
             }
 
