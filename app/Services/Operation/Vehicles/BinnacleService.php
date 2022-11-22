@@ -14,7 +14,7 @@ use App\Models\Vehicles\Binnacles\Type;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleIssue;
 use App\Models\Vehicles\VehicleIssueType;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Auth;
 use Carbon\Carbon;
 use DB;

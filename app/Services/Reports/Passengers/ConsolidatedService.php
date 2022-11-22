@@ -18,7 +18,7 @@ use App\Models\Routes\Route;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Carbon\Carbon;
 
 class ConsolidatedService

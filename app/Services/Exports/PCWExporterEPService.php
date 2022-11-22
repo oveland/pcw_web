@@ -1,69 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oscar
- * Date: 3/10/2017
- * Time: 4:58 PM
- */
 
-namespace App\Services;
+namespace App\Services\Exports;
 
-use Excel;
-
-class PCWExporterService
+class PCWExporterEPService extends PCWExporterService
 {
-    public static $fontStyle = 'Segoe UI Light';
-    public static $fontColorInverse = '#eeeeee';
-    public static $fontColorLink = '#0d0dff';
-
-    /**
-     * General exporter table from view
-     *
-     * @param $dataExport
-     * @param null $options
-     */
-    public static function excel($dataExport, $options = null)
-    {
-        $dataExport = (object)$dataExport;
-
-        Excel::create($dataExport->fileName, function ($excel) use ($dataExport, $options) {
-            /* SHEETS */
-            $excel = self::createHeaders($excel, $dataExport);
-            $excel = self::createSheet($excel, $dataExport, false, $options);
-        })->export('xlsx');
-    }
-
-    /**
-     * Save excel file and returns storage path
-     *
-     * @param $dataExport
-     * @param null $options
-     * @return string
-     */
-    public static function store($dataExport, $options = null)
-    {
-        $dataExport = (object)$dataExport;
-        $fileName = str_replace([' ', '-'], '_', $dataExport->fileName);
-        $fileExtension = 'xlsx';
-        $excel = Excel::create($fileName, function ($excel) use ($dataExport, $options) {
-            /* SHEETS */
-            $excel = self::createHeaders($excel, $dataExport);
-            $excel = self::createSheet($excel, $dataExport, false, $options);
-        })->store($fileExtension);
-
-        return "$excel->storagePath/$fileName.$fileExtension";
-    }
-
-    public static function createHeaders($excel, $dataExport)
-    {
-        /* INFO DOCUMENT */
-        $excel->setTitle($dataExport->title);
-        $excel->setCreator(__('PCW Ditech Integradores Tecnológicos'))->setCompany(__('PCW Ditech Integradores Tecnológicos'));
-        $excel->setDescription($dataExport->subTitle);
-
-        return $excel;
-    }
-
     public static function createSheet($excel, $dataExport, $disableFilters = false, $options = null)
     {
         $sheetTitle = isset($dataExport->sheetTitle) ? $dataExport->sheetTitle : $dataExport->subTitle;
@@ -80,6 +20,7 @@ class PCWExporterService
 
             $sheet->setCellValue('A1', $dataExport->title);
             $sheet->setCellValue('A2', $dataExport->subTitle);
+
             $sheet->fromArray($dataExport->data, null, 'A3', true, true);
 
             $sheet = self::sheetCustomReport($sheet, $config, $options);
@@ -107,7 +48,7 @@ class PCWExporterService
                 $cells->setValignment('center');
                 $cells->setAlignment('center');
                 //$cells->setBackground('#0e6d62');
-               // $cells->setFontColor(self::$fontColorInverse);
+                // $cells->setFontColor(self::$fontColorInverse);
                 $cells->setFont(array(
                     'family' => self::$fontStyle,
                     'size' => '14',
@@ -122,7 +63,7 @@ class PCWExporterService
                 $cells->setValignment('center');
                 $cells->setAlignment('center');
                 //$cells->setBackground('#0d4841');
-               // $cells->setFontColor(self::$fontColorInverse);
+                // $cells->setFontColor(self::$fontColorInverse);
                 $cells->setFont(array(
                     'family' => self::$fontStyle,
                     'size' => '14',
@@ -136,7 +77,7 @@ class PCWExporterService
                 $cells->setValignment('center');
                 $cells->setAlignment('center');
                 //$cells->setBackground('#0d4841');
-               // $cells->setFontColor(self::$fontColorInverse);
+                // $cells->setFontColor(self::$fontColorInverse);
                 $cells->setFont(array(
                     'family' => self::$fontStyle,
                     'size' => '14',
@@ -150,7 +91,7 @@ class PCWExporterService
     {
         $lastRow = $config->totalRows + 1;
         $starData = $config->startIndex + 1;
-        $position =$config->totalRows + 3;
+        $position = $config->totalRows + 3;
         $firma = $config->totalRows + 15;
         $sheet->setSize('A' . $starData . ':' . $config->lastLetter . $lastRow, 10, 1000);
         $sheet->setSize('B' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
@@ -163,8 +104,8 @@ class PCWExporterService
         $sheet->setSize('J' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
         $sheet->setSize('K' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
         //firma
-        $f='I'.$firma.":".'J'.$firma;
-        $sheet->mergeCells($f,function ($cells) {
+        $f = 'I' . $firma . ":" . 'J' . $firma;
+        $sheet->mergeCells($f, function ($cells) {
             $cells->setValignment('center');
             $cells->setAlignment('center');
             $cells->setFont(array(
@@ -174,7 +115,7 @@ class PCWExporterService
             ));
         });
 
-        $sheet->cells($f,function ($cells) {
+        $sheet->cells($f, function ($cells) {
             $cells->setValignment('center');
             $cells->setAlignment('center');
             $cells->setBorder('thin');
@@ -184,10 +125,10 @@ class PCWExporterService
                 //'bold' => true
             ));
         });
-        $sheet->setCellValue("I23","FIRMA");
+        $sheet->setCellValue("I23", "FIRMA");
 
-        $totals='G'.$position.":".'K'.$position;
-        $sheet->cells( $totals,function ($cells) {
+        $totals = 'G' . $position . ":" . 'K' . $position;
+        $sheet->cells($totals, function ($cells) {
             $cells->setValignment('center');
             $cells->setAlignment('center');
             $cells->setFont(array(
@@ -198,9 +139,10 @@ class PCWExporterService
         });
 
         $sheet->setColumnFormat(array(
-            'I5:I39'=>'$ #.##0;-$ #.##0'
+            'I5:I39' => '$ #.##0;-$ #.##0'
         ));
-        $sheet->cells( 'A' . $starData . ':' . $config->lastLetter . $lastRow,function ($cells) {
+
+        $sheet->cells('A' . $starData . ':' . $config->lastLetter . $lastRow, function ($cells) {
             $cells->setValignment('center');
             $cells->setAlignment('center');
             //$cells->setBackground('#0d4841');
@@ -256,18 +198,19 @@ class PCWExporterService
                     $sheet->setCellValue("N$i", "=M$i+" . (($i > $starData) ? ("N" . ($i - 1)) : "0"));
                 }*/
                 for ($i = $starData; $i < $lastRow; $i++) {
-                $sheet->setCellValue("I$i", "=H$i*10000"); }
+                    $sheet->setCellValue("I$i", "=H$i*10000");
+                }
 
                 $sheet->setCellValue("G$position", "TOTALES");
-                $sheet->setCellValue("H$position","=SUM(H$starData:H$lastRow)");
-                $sheet->setCellValue("I$position","=SUM(I$starData:I$lastRow)");
-                $sheet->setCellValue("J$position","=J$starData");
-                $sheet->setCellValue("K$position","=K$starData");
-               /* $diference=$lastRow-$starData;
+                $sheet->setCellValue("H$position", "=SUM(H$starData:H$lastRow)");
+                $sheet->setCellValue("I$position", "=SUM(I$starData:I$lastRow)");
+                $sheet->setCellValue("J$position", "=J$starData");
+                $sheet->setCellValue("K$position", "=K$starData");
+                /* $diference=$lastRow-$starData;
 
-                for ($var = $starData; $var <= $diference; $var++) {
-                        $r=$starData+$var;
-                    $sheet->setCellValue("C$r","$var"); }*/
+                 for ($var = $starData; $var <= $diference; $var++) {
+                         $r=$starData+$var;
+                     $sheet->setCellValue("C$r","$var"); }*/
 
                 break;
 
@@ -476,27 +419,6 @@ class PCWExporterService
                 });
                 break;
         }
-        return $sheet;
-    }
-
-    public static function styleFooter($sheet, $config)
-    {
-        $lastRow = $config->totalRows + 1;
-        /* STYLE FOR TOTAL ROW */
-        $sheet->setHeight($lastRow, 25);
-        //$sheet->mergeCells("A$lastRow:B$lastRow");
-        $sheet->cells("A$lastRow:" . $config->lastLetter . $lastRow, function ($cells) {
-            $cells->setValignment('center');
-            $cells->setAlignment('center');
-            $cells->setBackground('#0d4841');
-            $cells->setFontColor(self::$fontColorInverse);
-            $cells->setFont(array(
-                'family' => self::$fontStyle,
-                'size' => '12',
-                'bold' => true
-            ));
-        });
-
         return $sheet;
     }
 }

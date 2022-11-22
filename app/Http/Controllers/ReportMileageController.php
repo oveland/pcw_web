@@ -6,7 +6,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Services\Auth\PCWAuthService;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use App\Models\Vehicles\Vehicle;
 use Excel;
 use Illuminate\Http\Request;

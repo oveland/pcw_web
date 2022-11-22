@@ -8,7 +8,7 @@ use App\Models\Vehicles\LocationToday;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleStatus;
 use App\Services\Auth\PCWAuthService;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Auth;
 use Carbon\Carbon;
 use Exception;

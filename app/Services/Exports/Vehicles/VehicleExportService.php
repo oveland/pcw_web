@@ -2,7 +2,7 @@
 
 namespace App\Services\Exports\Vehicles;
 
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Carbon\Carbon;
 use Excel;
 

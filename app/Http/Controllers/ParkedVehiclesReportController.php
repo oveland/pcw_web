@@ -6,7 +6,7 @@ use App\Models\Company\Company;
 use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Vehicles\ParkingReport;
 use App\Services\Auth\PCWAuthService;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Auth;
 use Illuminate\Http\Request;
 use Route;

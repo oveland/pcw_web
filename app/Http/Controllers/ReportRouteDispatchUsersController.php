@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Route;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use App\Traits\CounterByRecorder;
 use App\Models\Users\User;
 use Auth;

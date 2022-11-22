@@ -6,7 +6,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Auth;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;

@@ -5,7 +5,7 @@ namespace App\Services\Operation\Vehicles;
 use App\Models\Company\Company;
 use App\Models\Vehicles\Memos\Memo;
 use App\Models\Vehicles\Vehicle;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

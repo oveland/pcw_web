@@ -12,7 +12,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Utils\Geolocation;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;

@@ -5,7 +5,7 @@ namespace App\Services\Operation\Vehicles;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Vehicles\VehicleIssue;
 use App\Models\Vehicles\VehicleIssueType;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use DB;
 use Throwable;
 

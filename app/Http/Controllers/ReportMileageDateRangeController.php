@@ -7,7 +7,7 @@ use App\Models\Company\Company;
 use App\Models\Vehicles\VehicleIssue;
 use App\Models\Vehicles\VehicleIssueType;
 use App\Services\Auth\PCWAuthService;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use App\Services\PCWTime;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;

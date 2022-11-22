@@ -107,11 +107,11 @@ class ReportRouteController extends Controller
 
         switch ($typeReport) {
             case 'group-vehicles':
-                if ($request->get('export')) $this->routeService->export->groupedRouteReport($dispatchRegistersByVehicles, $dateReport);
+                if ($request->get('export')) $this->routeService->getExporter($company)->groupedRouteReport($dispatchRegistersByVehicles, $dateReport);
                 $view = 'reports.route.route.routeReportByVehicle';
                 break;
             default:
-                if ($request->get('export')) $this->routeService->export->ungroupedRouteReport($dispatchRegistersByVehicles, $dateReport);
+                if ($request->get('export')) $this->routeService->getExporter($company)->ungroupedRouteReport($dispatchRegistersByVehicles, $dateReport);
                 $view = 'reports.route.route.routeReportByAll';
                 break;
 

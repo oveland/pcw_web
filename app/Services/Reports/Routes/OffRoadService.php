@@ -8,7 +8,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Excel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;

@@ -6,7 +6,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Routes\Route;
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use App\Traits\CounterByRecorder;
 use App\Models\Vehicles\Vehicle;
 use Auth;

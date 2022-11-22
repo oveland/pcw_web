@@ -22,7 +22,7 @@ use App\Services\Reports\Routes\SpeedingService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 
-use App\Services\PCWExporterService;
+use App\Services\Exports\PCWExporterService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Excel;
