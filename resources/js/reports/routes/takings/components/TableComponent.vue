@@ -40,7 +40,7 @@
 						<span>{{ $t('Tariff') }}</span>
 					</small>
 				</th>
-				<th class="text-center">
+				<th v-if="options.canManualTakings" class="text-center">
 					<small>
 						<i class="icon-users text-muted"></i><br>
 						<span>{{ $t('Passengers') }}</span>
@@ -48,7 +48,7 @@
 						<span>{{ $t('Manual') }}</span>
 					</small>
 				</th>
-				<th>
+				<th v-if="options.canManualTakings">
 					<small>
 						<i class="icon-briefcase"></i><br>
 						<span class="">{{ $t('Total production') }}</span>
@@ -252,10 +252,10 @@
 				<th :colspan=" options.showRecorders ? 7 : 5" class="bg-inverse text-white text-right text-bold uppercase" style="font-size: 1.1em !important;">
 					<small><i class="icon-layers"></i> {{ $t('Totals') }}</small>
 				</th>
-				<th class="bg-inverse text-white text-center text-bold" style="font-size: 1.1em !important;">
+				<th v-if="options.canManualTakings" class="bg-inverse text-white text-center text-bold" style="font-size: 1.1em !important;">
 					<small>{{ totals.manualPassengers }}</small>
 				</th>
-				<th class="bg-inverse text-white text-right">
+				<th v-if="options.canManualTakings" class="bg-inverse text-white text-right">
 					<small>{{ totals.manualProduction | numberFormat('$0,0') }}</small>
 				</th>
 				<th class="bg-inverse text-white text-center text-bold" style="font-size: 1.1em !important;">

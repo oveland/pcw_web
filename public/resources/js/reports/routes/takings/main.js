@@ -6501,33 +6501,37 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c("th", { staticClass: "text-center" }, [
-                  _c("small", [
-                    _c("i", { staticClass: "icon-users text-muted" }),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("span", [_vm._v(_vm._s(_vm.$t("Passengers")))]),
-                    _vm._v(" "),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("span", [_vm._v(_vm._s(_vm.$t("Manual")))])
-                  ])
-                ]),
+                _vm.options.canManualTakings
+                  ? _c("th", { staticClass: "text-center" }, [
+                      _c("small", [
+                        _c("i", { staticClass: "icon-users text-muted" }),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", [_vm._v(_vm._s(_vm.$t("Passengers")))]),
+                        _vm._v(" "),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", [_vm._v(_vm._s(_vm.$t("Manual")))])
+                      ])
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
-                _c("th", [
-                  _c("small", [
-                    _c("i", { staticClass: "icon-briefcase" }),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("span", {}, [
-                      _vm._v(_vm._s(_vm.$t("Total production")))
-                    ]),
-                    _vm._v(" "),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("span", [_vm._v(_vm._s(_vm.$t("Manual")))])
-                  ])
-                ]),
+                _vm.options.canManualTakings
+                  ? _c("th", [
+                      _c("small", [
+                        _c("i", { staticClass: "icon-briefcase" }),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", {}, [
+                          _vm._v(_vm._s(_vm.$t("Total production")))
+                        ]),
+                        _vm._v(" "),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("span", [_vm._v(_vm._s(_vm.$t("Manual")))])
+                      ])
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _c("th", { staticClass: "text-center" }, [
                   _c("small", [
@@ -7044,36 +7048,40 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _c(
-                      "th",
-                      {
-                        staticClass:
-                          "bg-inverse text-white text-center text-bold",
-                        staticStyle: { "font-size": "1.1em !important" }
-                      },
-                      [
-                        _c("small", [
-                          _vm._v(_vm._s(_vm.totals.manualPassengers))
-                        ])
-                      ]
-                    ),
+                    _vm.options.canManualTakings
+                      ? _c(
+                          "th",
+                          {
+                            staticClass:
+                              "bg-inverse text-white text-center text-bold",
+                            staticStyle: { "font-size": "1.1em !important" }
+                          },
+                          [
+                            _c("small", [
+                              _vm._v(_vm._s(_vm.totals.manualPassengers))
+                            ])
+                          ]
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
-                    _c(
-                      "th",
-                      { staticClass: "bg-inverse text-white text-right" },
-                      [
-                        _c("small", [
-                          _vm._v(
-                            _vm._s(
-                              _vm._f("numberFormat")(
-                                _vm.totals.manualProduction,
-                                "$0,0"
+                    _vm.options.canManualTakings
+                      ? _c(
+                          "th",
+                          { staticClass: "bg-inverse text-white text-right" },
+                          [
+                            _c("small", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("numberFormat")(
+                                    _vm.totals.manualProduction,
+                                    "$0,0"
+                                  )
+                                )
                               )
-                            )
-                          )
-                        ])
-                      ]
-                    ),
+                            ])
+                          ]
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
                     _c(
                       "th",
