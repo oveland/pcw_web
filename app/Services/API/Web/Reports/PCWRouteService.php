@@ -104,7 +104,7 @@ class PCWRouteService implements APIWebInterface
     public function buildPassengersReport(Company $company, $dateReport, $routeReport, $vehicleReport,$spreadsheetReport ): Collection
     {
         if($spreadsheetReport){
-        $drId = DrObservation::where('field','registradora_llegada')->where('observation',$spreadsheetReport)->get()->pluck('dispatch_register_id');
+        $drId = DrObservation::where('field','registradora_llegada')->where('observation',$spreadsheetReport)->get()->pluck('observation');
         $dr = DispatchRegister::whereIn('id',$drId)
             ->active()
             ->with('vehicle')
