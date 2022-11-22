@@ -233,7 +233,7 @@ class MigrationController extends Controller
             $route->as_group = $routeOLD->as_group;
             $route->route_id = $routeOLD->route_id;
 
-            if($route->id == 204) {
+            if ($route->id == 204) {
                 dump($routeOLD);
             }
 
@@ -423,47 +423,52 @@ class MigrationController extends Controller
                 $vehicle = new Vehicle();
                 $new = true;
             }
-            $vehicle->id = $vehicleOLD->id_crear_vehiculo;
-            $vehicle->plate = $vehicleOLD->placa;
-            $vehicle->number = $vehicleOLD->num_vehiculo;
-            $vehicle->company_id = $vehicleOLD->empresa;
-            $vehicle->active = $vehicleOLD->estado == 1;
-            $vehicle->in_repair = $vehicleOLD->en_taller == 1;
-            $vehicle->observations = $vehicleOLD->observaciones;
-            $vehicle->proprietary_id = $vehicleOLD->proprietary_id;
-            $vehicle->driver_id = $vehicleOLD->conductor_id;
-            $vehicle->tags = $vehicleOLD->tags;
-
-            $vehicle->save();
-
             try {
+                $vehicle->id = $vehicleOLD->id_crear_vehiculo;
+                $vehicle->plate = $vehicleOLD->placa;
+                $vehicle->number = $vehicleOLD->num_vehiculo;
+                $vehicle->company_id = $vehicleOLD->empresa;
+                $vehicle->active = $vehicleOLD->estado == 1;
+                $vehicle->in_repair = $vehicleOLD->en_taller == 1;
+                $vehicle->observations = $vehicleOLD->observaciones;
+                $vehicle->proprietary_id = $vehicleOLD->proprietary_id;
+                $vehicle->driver_id = $vehicleOLD->conductor_id;
+                $vehicle->tags = $vehicleOLD->tags;
+
+                $vehicle->save();
                 $new ? $totalCreated++ : $totalUpdated++;
-
-                /* Migrate data for gps_vehicle */
-
-                $gpsVehicleNew = false;
-                $gpsVehicle = GpsVehicle::whereVehicleId($vehicleOLD->id_crear_vehiculo)->get()->first();
-                if (!$gpsVehicle) {
-                    $gpsVehicle = new GpsVehicle();
-                    $gpsVehicleNew = true;
-                }
-                $gpsVehicle->imei = ($vehicleOLD->imei_gps && $vehicleOLD->imei_gps != 0) ? $vehicleOLD->imei_gps : $vehicleOLD->placa;
-                $gpsVehicle->vehicle_id = $vehicleOLD->id_crear_vehiculo;
-
-                try {
-                    $gpsVehicle->save();
-                    $gpsVehicleNew ? $gpsVehicleTotalCreated++ : $gpsVehicleTotalUpdated++;
-                } catch (Exception $e_gps) {
-                    $gpsVehicleTotalErrors++;
-                    dd('GPS VEHICLE ERROR: ', $e_gps->getMessage());
-                }
-            } catch (QueryException $e) {
-                $totalErrors++;
-                // dump($e->getMessage());
-            } catch (\PDOException $e) {
-                $totalErrors++;
-                dump($e->getMessage());
             }
+            catch (\Exception $e) {
+                $totalErrors++;
+            }
+//            try {
+//
+//                /* Migrate data for gps_vehicle */
+//
+//                $gpsVehicleNew = false;
+//                $gpsVehicle = GpsVehicle::whereVehicleId($vehicleOLD->id_crear_vehiculo)->get()->first();
+//                if (!$gpsVehicle) {
+//                    $gpsVehicle = new GpsVehicle();
+//                    $gpsVehicleNew = true;
+//                }
+//                // Se comenta siguiente l?nea por sospecha de errores en que se establece placa por defecto en varios vh de varias empresas
+//                //$gpsVehicle->imei = ($vehicleOLD->imei_gps && $vehicleOLD->imei_gps != 0) ? $vehicleOLD->imei_gps : $vehicleOLD->placa;
+//                $gpsVehicle->vehicle_id = $vehicleOLD->id_crear_vehiculo;
+//
+//                try {
+//                    $gpsVehicle->save();
+//                    $gpsVehicleNew ? $gpsVehicleTotalCreated++ : $gpsVehicleTotalUpdated++;
+//                } catch (Exception $e_gps) {
+//                    $gpsVehicleTotalErrors++;
+//                    dd('GPS VEHICLE ERROR: ', $e_gps->getMessage());
+//                }
+//            } catch (QueryException $e) {
+//                $totalErrors++;
+//                // dump($e->getMessage());
+//            } catch (\PDOException $e) {
+//                $totalErrors++;
+//                dump($e->getMessage());
+//            }
         }
 
         dd([
@@ -472,10 +477,6 @@ class MigrationController extends Controller
             'Total Errors' => $totalErrors,
             'Company' => $migrateCompany,
             'Vehicle' => $migrateVehicle,
-            '------------------------------',
-            'Gps Vehicle Total Created' => $gpsVehicleTotalCreated,
-            'Gps Vehicle Total Updated' => $gpsVehicleTotalUpdated,
-            'Gps Vehicle Total Errors' => $gpsVehicleTotalErrors,
         ]);
     }
 

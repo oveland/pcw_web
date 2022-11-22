@@ -6,6 +6,8 @@ namespace App\Services\Exports\Routes;
 
 use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
+use App\Models\Routes\DrObservation;
+use App\Models\Users;
 use App\Models\Vehicles\Vehicle;
 use App\Services\PCWExporterService;
 use App\Traits\CounterByRecorder;
@@ -36,31 +38,36 @@ class RouteExportService
                 foreach ($dispatchRegisters as $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
-
                     $endRecorder = $historyCounter->endRecorder;
                     $startRecorder = $historyCounter->startRecorder;
                     $totalRoundTrip = $historyCounter->passengersByRoundTrip;
                     $totalPassengersByRoute = $historyCounter->totalPassengersByRoute;
-
+                    $idDispacth = $dispatchRegister->id;
                     $deadTime = $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '';
+                    $spreadsheet = DrObservation::where('dispatch_register_id',$idDispacth)->get()->pluck('observation')->first();
+                    $user = DrObservation::where('dispatch_register_id',$idDispacth)->get()->pluck('user_id')->first();
+                    $username = Users\User::where('id',$user)->get()->pluck('name')->first();
 
                     $dataExcel[] = [
                         __('Date') => $dispatchRegister->date,                                                          # A CELL
                         __('Route') => $route->name,                                                                    # A CELL
                         __('Round Trip') => $dispatchRegister->round_trip,                                              # B CELL
-                        __('Driver') => $dispatchRegister->driverName(),                        # C CELL
+                       // __('Driver') => $dispatchRegister->driverName(),                        # C CELL
                         __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
-                        __('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # E CELL
+                        //__('Arrival Time Scheduled') => StrTime::toString($dispatchRegister->arrival_time_scheduled),   # E CELL
                         __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # F CELL
-                        __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # G CELL
+                       // __('Arrival Time Difference') => StrTime::toString($dispatchRegister->arrival_time_difference), # G CELL
                         __('Route Time') => $dispatchRegister->getRouteTime(),                                          # H CELL
                         __('Status') => $dispatchRegister->status,                                                     # I CELL
-                        __('Start Rec.') => intval($startRecorder),                                                    # J CELL
-                        __('End Rec.') => intval($endRecorder),                                                        # K CELL
+                       // __('Start Rec.') => intval($startRecorder),                                                    # J CELL
+                      //  __('End Rec.') => intval($endRecorder),                                                        # K CELL
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                          # L CELL
-                        __('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # M CELL
-                        __('Vehicles without route') => intval($dispatchRegister->available_vehicles),                 # N CELL
-                        __('Dead time') => $deadTime,                 # O CELL
+                        __('Valor pasaje')=>'' ,                          # L CELL
+                        __('N° planilla')=>$spreadsheet,                          # L CELL
+                        __('usuario')=>$username,                          # L CELL
+                        //__('Pass.') . " " . __('Day') => intval($totalPassengersByRoute),                         # M CELL
+                       // __('Vehicles without route') => intval($dispatchRegister->available_vehicles),                 # N CELL
+                      //  __('Dead time') => $deadTime,                 # O CELL
                     ];
 
                     $totalDeadTime = $deadTime ? StrTime::addStrTime($totalDeadTime, $deadTime) : $totalDeadTime;

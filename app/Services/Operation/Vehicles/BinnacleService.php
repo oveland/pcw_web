@@ -182,7 +182,7 @@ class BinnacleService
             $isNotifiableByMileage = $binnacle->isNotifiableByMileage();
             $isNotifiableByDate = $binnacle->date && $binnacle->date->isToday();
 
-            return $companyNotifications && ($isNotifiableByMileage || $isNotifiableByDate);
+            return $companyNotifications && !$binnacle->completed && ($isNotifiableByMileage || $isNotifiableByDate);
         });
 
         return $notifications->sortBy('date');
