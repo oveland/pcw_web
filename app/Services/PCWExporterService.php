@@ -106,8 +106,8 @@ class PCWExporterService
             $sheet->cells('A1:' . $config->lastLetter . '1', function ($cells) {
                 $cells->setValignment('center');
                 $cells->setAlignment('center');
-                $cells->setBackground('#0e6d62');
-                $cells->setFontColor(self::$fontColorInverse);
+                //$cells->setBackground('#0e6d62');
+               // $cells->setFontColor(self::$fontColorInverse);
                 $cells->setFont(array(
                     'family' => self::$fontStyle,
                     'size' => '14',
@@ -121,11 +121,11 @@ class PCWExporterService
             $sheet->cells('A2:' . $config->lastLetter . '2', function ($cells) {
                 $cells->setValignment('center');
                 $cells->setAlignment('center');
-                $cells->setBackground('#0d4841');
-                $cells->setFontColor(self::$fontColorInverse);
+                //$cells->setBackground('#0d4841');
+               // $cells->setFontColor(self::$fontColorInverse);
                 $cells->setFont(array(
                     'family' => self::$fontStyle,
-                    'size' => '12',
+                    'size' => '14',
                     'bold' => true
                 ));
             });
@@ -135,11 +135,11 @@ class PCWExporterService
             $sheet->cells('A' . $startIndex . ':' . $config->lastLetter . $startIndex, function ($cells) {
                 $cells->setValignment('center');
                 $cells->setAlignment('center');
-                $cells->setBackground('#0d4841');
-                $cells->setFontColor(self::$fontColorInverse);
+                //$cells->setBackground('#0d4841');
+               // $cells->setFontColor(self::$fontColorInverse);
                 $cells->setFont(array(
                     'family' => self::$fontStyle,
-                    'size' => '12',
+                    'size' => '14',
                     'bold' => true
                 ));
             });
@@ -150,7 +150,67 @@ class PCWExporterService
     {
         $lastRow = $config->totalRows + 1;
         $starData = $config->startIndex + 1;
+        $position =$config->totalRows + 3;
+        $firma = $config->totalRows + 15;
+        $sheet->setSize('A' . $starData . ':' . $config->lastLetter . $lastRow, 10, 1000);
+        $sheet->setSize('B' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
+        $sheet->setSize('D' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        $sheet->setSize('E' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        $sheet->setSize('F' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        $sheet->setSize('G' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        $sheet->setSize('H' . $starData . ':' . $config->lastLetter . $lastRow, 15, 1000);
+        $sheet->setSize('I' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
+        $sheet->setSize('J' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        $sheet->setSize('K' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
+        //firma
+        $f='I'.$firma.":".'J'.$firma;
+        $sheet->mergeCells($f,function ($cells) {
+            $cells->setValignment('center');
+            $cells->setAlignment('center');
+            $cells->setFont(array(
+                'family' => self::$fontStyle,
+                'size' => '24',
+                'bold' => true
+            ));
+        });
 
+        $sheet->cells($f,function ($cells) {
+            $cells->setValignment('center');
+            $cells->setAlignment('center');
+            $cells->setBorder('thin');
+            $cells->setFont(array(
+                'family' => self::$fontStyle,
+                'size' => '24',
+                //'bold' => true
+            ));
+        });
+        $sheet->setCellValue("I23","FIRMA");
+
+        $totals='G'.$position.":".'K'.$position;
+        $sheet->cells( $totals,function ($cells) {
+            $cells->setValignment('center');
+            $cells->setAlignment('center');
+            $cells->setFont(array(
+                'family' => self::$fontStyle,
+                'size' => '24',
+                'bold' => true
+            ));
+        });
+
+        $sheet->setColumnFormat(array(
+            'I5:I39'=>'$ #.##0;-$ #.##0'
+        ));
+        $sheet->cells( 'A' . $starData . ':' . $config->lastLetter . $lastRow,function ($cells) {
+            $cells->setValignment('center');
+            $cells->setAlignment('center');
+            //$cells->setBackground('#0d4841');
+            // $cells->setFontColor(self::$fontColorInverse);
+            $cells->setFont(array(
+                'family' => self::$fontStyle,
+                'size' => '18',
+                //'bold' => true
+            ));
+        });
         switch ($config->type) {
             case 'passengerReportTotalFooter':
                 // Set general formulas
@@ -191,10 +251,24 @@ class PCWExporterService
 
             case 'routeReportByVehicle':
                 // Set general formulas
-                for ($i = $starData; $i < $lastRow; $i++) {
+                /*for ($i = $starData; $i < $lastRow; $i++) {
                     $sheet->setCellValue("M$i", "=L$i-K$i");
                     $sheet->setCellValue("N$i", "=M$i+" . (($i > $starData) ? ("N" . ($i - 1)) : "0"));
-                }
+                }*/
+                for ($i = $starData; $i < $lastRow; $i++) {
+                $sheet->setCellValue("I$i", "=H$i*10000"); }
+
+                $sheet->setCellValue("G$position", "TOTALES");
+                $sheet->setCellValue("H$position","=SUM(H$starData:H$lastRow)");
+                $sheet->setCellValue("I$position","=SUM(I$starData:I$lastRow)");
+                $sheet->setCellValue("J$position","=J$starData");
+                $sheet->setCellValue("K$position","=K$starData");
+               /* $diference=$lastRow-$starData;
+
+                for ($var = $starData; $var <= $diference; $var++) {
+                        $r=$starData+$var;
+                    $sheet->setCellValue("C$r","$var"); }*/
+
                 break;
 
             case 'routeReportUngrouped':
