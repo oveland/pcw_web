@@ -92,7 +92,7 @@ class PCWExporterEPService extends PCWExporterService
         $lastRow = $config->totalRows + 1;
         $starData = $config->startIndex + 1;
         $position = $config->totalRows + $config->startIndex;
-        $firma = $config->totalRows + 15;
+        $firma =$position + 10;
         $sheet->setSize('A' . $starData . ':' . $config->lastLetter . $lastRow, 10, 1000);
         $sheet->setSize('B' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
         $sheet->setSize('D' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
@@ -103,6 +103,7 @@ class PCWExporterEPService extends PCWExporterService
         $sheet->setSize('I' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
         $sheet->setSize('J' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
         $sheet->setSize('K' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
+        
         //firma
         $f = 'I' . $firma . ":" . 'J' . $firma;
         $sheet->mergeCells($f, function ($cells) {
@@ -125,12 +126,32 @@ class PCWExporterEPService extends PCWExporterService
                 //'bold' => true
             ));
         });
-        $sheet->setCellValue("I$position", "FIRMA");
+        $sheet->setCellValue("I$firma", "FIRMA");
 
         $totals = 'G' . $position . ":" . 'K' . $position;
         $sheet->cells($totals, function ($cells) {
             $cells->setValignment('center');
             $cells->setAlignment('center');
+            $cells->setFont(array(
+                'family' => self::$fontStyle,
+                'size' => '24',
+                'bold' => true
+            ));
+        });
+        $sheet->setCellValue("B$position", "VUELTAS TOTALES=");
+        $sheet->setCellValue("C$position", "=C$config->totalRows");
+        $sheet->cells('C' . $position,function ($cells) {
+            $cells->setValignment('left');
+            $cells->setAlignment('left');
+            $cells->setFont(array(
+                'family' => self::$fontStyle,
+                'size' => '24',
+                'bold' => true
+            ));
+        });
+        $sheet->cells('B' . $position, function ($cells) {
+            $cells->setValignment('right');
+            $cells->setAlignment('right');
             $cells->setFont(array(
                 'family' => self::$fontStyle,
                 'size' => '24',
