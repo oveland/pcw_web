@@ -40,8 +40,7 @@ class ManagePassengersByRecorderController extends Controller
                             $drObs->old_value = $dr->$field;
                             $drObs->value = $value;
                             $drObs->observation = $observation;
-                            $dr->user()->associate($user);
-
+                            $drObs->user()->associate($user);
                             $success = $drObs->save();
                         }
                     }
