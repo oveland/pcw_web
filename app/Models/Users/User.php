@@ -85,6 +85,11 @@ class User extends Authenticatable
         'updated_at',
     ];
 
+    function getNameAttribute($name)
+    {
+        return trim($name);
+    }
+
     /**
      * @return BelongsTo
      */

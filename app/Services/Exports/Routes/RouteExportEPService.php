@@ -32,21 +32,24 @@ class RouteExportEPService extends RouteExportService
 
                 $totalDeadTime = '00:00:00';
 
-                foreach ($dispatchRegisters as $dispatchRegister) {
+                foreach ($dispatchRegisters as $iteration => $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
                     $totalRoundTrip = $historyCounter->passengersByRoundTrip;
-                    $idDispatch = $dispatchRegister->id;
                     $deadTime = $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '';
 
-                    $spreadsheet = DrObservation::where('dispatch_register_id', $idDispatch)->get()->pluck('observation')->first();
-                    $user = DrObservation::where('dispatch_register_id', $idDispatch)->get()->pluck('user_id')->first();
-                    $username = User::where('id', $user)->get()->pluck('name')->first();
+                    $drObservation = $dispatchRegister->getObservation('registradora_llegada');
+
+                    $spreadsheet = $drObservation->observation;
+                    $username = $drObservation->user ? $drObservation->user->name : '';
+
+                    //$roundTrip = $dispatchRegister->round_trip;
+                    $roundTrip = $iteration + 1;
 
                     $dataExcel[] = [
                         __('Date') => $dispatchRegister->date,                                                          # A CELL
                         __('Route') => $route->name,                                                                    # B CELL
-                        __('Round Trip') => $dispatchRegister->round_trip,                                              # C CELL
+                        __('Round Trip') => $roundTrip,                                                                 # C CELL
                         __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
                         __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # E CELL
                         __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
@@ -54,7 +57,7 @@ class RouteExportEPService extends RouteExportService
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
                         __('Valor pasaje') => '',                                                                       # I CELL
                         __('N° planilla') => $spreadsheet,                                                              # J CELL
-                        __('usuario') => $username,                                                                     # K CELL
+                        __('Usuario') => $username,                                                                     # K CELL
                     ];
 
                     $totalDeadTime = $deadTime ? StrTime::addStrTime($totalDeadTime, $deadTime) : $totalDeadTime;

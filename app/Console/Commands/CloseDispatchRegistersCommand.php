@@ -39,7 +39,7 @@ class CloseDispatchRegistersCommand extends Command
     {
         $query = "
             UPDATE registrodespacho SET cancelado = TRUE, h_reg_cancelado = '23:59:59', observaciones = 'No terminó. Finaliza jornada' 
-            WHERE observaciones like '%En camin%' AND (id_empresa = 21 OR id_empresa = 30) AND fecha = current_date - 1 
+            WHERE observaciones like '%En camin%' AND (id_empresa = 21 OR id_empresa = 30 or id_empresa = 39) AND fecha = current_date - 1 
         ";
 
         \DB::statement($query);

@@ -1002,11 +1002,11 @@ class DispatchRegister extends Model
         $drObs = $this->hasOne(DrObservation::class)->where('field', $field)->first();
 
         if (!$drObs) {
-            $user = Auth::user();
+            //$user = Auth::user();
             $drObs = new DrObservation();
             $drObs->field = $field;
             $drObs->dispatchRegister()->associate($this);
-            $drObs->user()->associate($user);
+            //$drObs->user()->associate($user);
 
 //            $companyId = $this->route->company_id;
 //

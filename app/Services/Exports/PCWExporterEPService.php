@@ -91,7 +91,7 @@ class PCWExporterEPService extends PCWExporterService
     {
         $lastRow = $config->totalRows + 1;
         $starData = $config->startIndex + 1;
-        $position = $config->totalRows + 3;
+        $position = $config->totalRows + $config->startIndex;
         $firma = $config->totalRows + 15;
         $sheet->setSize('A' . $starData . ':' . $config->lastLetter . $lastRow, 10, 1000);
         $sheet->setSize('B' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
@@ -125,7 +125,7 @@ class PCWExporterEPService extends PCWExporterService
                 //'bold' => true
             ));
         });
-        $sheet->setCellValue("I23", "FIRMA");
+        $sheet->setCellValue("I$position", "FIRMA");
 
         $totals = 'G' . $position . ":" . 'K' . $position;
         $sheet->cells($totals, function ($cells) {
@@ -139,7 +139,7 @@ class PCWExporterEPService extends PCWExporterService
         });
 
         $sheet->setColumnFormat(array(
-            'I5:I39' => '$ #.##0;-$ #.##0'
+            'I4:I39' => '$#,##0_-'
         ));
 
         $sheet->cells('A' . $starData . ':' . $config->lastLetter . $lastRow, function ($cells) {
