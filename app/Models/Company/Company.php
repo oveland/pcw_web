@@ -79,6 +79,7 @@ class Company extends Model
     const EXPRESO_PALMIRA = 39;
     const VALLEDUPAR = 41;
     const ARMENIA = 42;
+    const IBAGUE = 43;
 
     const ALL = [
         self::PCW,
@@ -92,7 +93,8 @@ class Company extends Model
         self::COODETRANS,
         self::EXPRESO_PALMIRA,
         self::VALLEDUPAR,
-        self::ARMENIA
+        self::ARMENIA,
+        self::IBAGUE,
     ];
 
     /**
@@ -245,7 +247,9 @@ class Company extends Model
 //                self::EXPRESO_PALMIRA,
                 self::VALLEDUPAR,
                 self::ARMENIA,
-                self::VALLEDUPAR
+                self::VALLEDUPAR,
+                self::IBAGUE
+
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
 
@@ -257,7 +261,8 @@ class Company extends Model
                 self::MONTEBELLO,
                 self::TRANSPUBENZA,
                 self::VALLEDUPAR,
-                self::ARMENIA
+                self::ARMENIA,
+                self::IBAGUE
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
 
@@ -270,6 +275,7 @@ class Company extends Model
                 self::EXPRESO_PALMIRA,
                 self::VALLEDUPAR,
                 self::ARMENIA,
+                self::IBAGUE
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
 
@@ -338,7 +344,7 @@ class Company extends Model
     */
     function hasSeatSensorCounter()
     {
-        return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW, self::ARMENIA])->contains($this->id);
+        return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW, self::ARMENIA,self::IBAGUE,self::IBAGUE])->contains($this->id);
     }
 
     /**
