@@ -68,7 +68,7 @@ class RouteExportEPService extends RouteExportService
                 $dataExport = (object)[
                     'fileName' => __('Dispatch report') . " V $dateReport",
                     'title' => __('Dispatch report') . " | $dateReport",
-                    'subTitle' => "$vehicle->number | $vehicle->plate" . ". " . __('Total dead time') . ": $totalDeadTime",
+                    'subTitle' => "$vehicle->number | $vehicle->plate" . ". ",
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
                     'type' => 'routeReportByVehicle'

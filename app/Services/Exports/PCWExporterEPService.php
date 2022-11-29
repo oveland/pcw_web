@@ -4,6 +4,7 @@ namespace App\Services\Exports;
 
 class PCWExporterEPService extends PCWExporterService
 {
+
     public static function createSheet($excel, $dataExport, $disableFilters = false, $options = null)
     {
         $sheetTitle = isset($dataExport->sheetTitle) ? $dataExport->sheetTitle : $dataExport->subTitle;
@@ -17,9 +18,8 @@ class PCWExporterEPService extends PCWExporterService
                 'lastLetter' => $letters[count(array_keys($dataExport->data[0])) - 1],
                 'totalRows' => count($dataExport->data) + $startIndex,
             ];
-
-            $sheet->setCellValue('A1', $dataExport->title);
-            $sheet->setCellValue('A2', $dataExport->subTitle);
+            $sheet->setCellValue('A1', "TRANSPORTES EXPRESO PALMIRA        ".$dataExport->title);
+            $sheet->setCellValue('A2', $dataExport->subTitle."  RUTA AEROPUERTO");
 
             $sheet->fromArray($dataExport->data, null, 'A3', true, true);
 
@@ -138,7 +138,7 @@ class PCWExporterEPService extends PCWExporterService
                 'bold' => true
             ));
         });
-        $sheet->setCellValue("B$position", "VUELTAS TOTALES=");
+        $sheet->setCellValue("B$position", "TOTAL VUELOS=");
         $sheet->setCellValue("C$position", "=C$config->totalRows");
         $sheet->cells('C' . $position,function ($cells) {
             $cells->setValignment('left');
