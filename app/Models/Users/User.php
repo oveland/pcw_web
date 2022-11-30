@@ -128,6 +128,11 @@ class User extends Authenticatable
         return $this->id == 625565 || $this->id == 2018101280;     // OVELAND, OLMER
     }
 
+    public function isExpreso()
+    {
+        return $this->id == 2018101286 || $this->id == 2018101362 ;
+    }
+
     /**
      * @return bool
      */

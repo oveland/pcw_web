@@ -242,6 +242,7 @@
                             <div class="box-edit"
                                  style="display: none">
                                 @php
+                                dd($dispatchRegister);
                                     $obs = $dispatchRegister->getObservation('driver_code');
                                 @endphp
                                 <input id="edit-start-recorder-{{ $dispatchRegister->id }}"
@@ -568,7 +569,7 @@
                 </a>
 
                 <div class="p-t-5">
-                    @if( Auth::user()->isSuperAdmin() )
+                    @if( Auth::user()->isSuperAdmin())
                         <button onclick="executeDAR({{ $dispatchRegister->id }})"
                                 class="btn btn-xs {{ $dispatchRegister->process_ard ? 'btn-warning' : 'btn-success' }} faa-parent animated-hover btn-circle tooltips"
                                 data-original-title="@lang('Execute DAR')"
@@ -594,7 +595,16 @@
                             <i class="fa fa-times faa-shake"></i>
                         </button>
                     @endif
-
+                    @if( Auth::user()->isExpreso() )
+                            <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
+                                    data-original-title="@lang('Cancel turn')"
+                                    data-placement="bottom"
+                                    data-confirm="@lang('Confirm action for discard dispatch turn')"
+                                    data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
+                                    data-id="{{ $dispatchRegister->id }}">
+                                <i class="fa fa-times faa-shake"></i>
+                            </button>
+                        @endif
                     @if( Auth::user()->isSuperAdmin() )
                         @php
                             $totalLocations = $dispatchRegister->locations()->count();
