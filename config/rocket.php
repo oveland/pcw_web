@@ -1116,16 +1116,16 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 15],
+                            'range' => [0, 30],
                             'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [15, 60],
+                            'range' => [30, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [60, 70],
@@ -1189,13 +1189,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 30],
+                            'range' => [0, 20],
                             'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => false
                         ],
                         [
-                            'range' => [30, 40],
+                            'range' => [20, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
@@ -1214,12 +1214,12 @@ return [
                         ]
                     ],
                     'box' => [
-                        'ld' => 2.5,                                # Min relation height/width for Large Detection
-                        'mld' => 2,                                 # Min width percent (about of image size) for Large Detection
+                        'ld' => 5,                                # Min relation height/width for Large Detection
+                        'mld' => 5,                                 # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
-                            'rs' => 3.5,                            # Min relation height/width for Overlap Detection
+                            'rs' => 1.0,                            # Min relation height/width for Overlap Detection
                             'rsw' => 15,                            # Min percent height for Overlap Detection when rs
                         ]
                     ],

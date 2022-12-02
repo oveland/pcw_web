@@ -80,6 +80,7 @@ class Company extends Model
     const EXPRESO_PALMIRA = 39;
     const VALLEDUPAR = 41;
     const ARMENIA = 42;
+    const IBAGUE = 43;
 
     const ALL = [
         self::PCW,
@@ -93,7 +94,8 @@ class Company extends Model
         self::COODETRANS,
         self::EXPRESO_PALMIRA,
         self::VALLEDUPAR,
-        self::ARMENIA
+        self::ARMENIA,
+        self::IBAGUE
     ];
 
     /**
