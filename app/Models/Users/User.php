@@ -309,7 +309,9 @@ class User extends Authenticatable
             1065834332, // SAMIR
 
             #EXPRESO PALMIRA:
-            2018101286, // EXPALMIRA
+            2018101286, //yuri
+            2018101362,  // Paola
+
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();
@@ -330,7 +332,8 @@ class User extends Authenticatable
             2018101273, // SIMONTP
 
             #EXPRESO PALMIRA:
-            2018101286, // EXPALMIRA
+            2018101286, // Yuri
+            2018101362, // Paola
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();

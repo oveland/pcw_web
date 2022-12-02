@@ -242,7 +242,6 @@
                             <div class="box-edit"
                                  style="display: none">
                                 @php
-                                dd($dispatchRegister);
                                     $obs = $dispatchRegister->getObservation('driver_code');
                                 @endphp
                                 <input id="edit-start-recorder-{{ $dispatchRegister->id }}"
@@ -595,7 +594,7 @@
                             <i class="fa fa-times faa-shake"></i>
                         </button>
                     @endif
-                    @if( Auth::user()->isExpreso() )
+                   {{-- @if( Auth::user()->isExpreso() )
                             <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
                                     data-original-title="@lang('Cancel turn')"
                                     data-placement="bottom"
@@ -604,7 +603,7 @@
                                     data-id="{{ $dispatchRegister->id }}">
                                 <i class="fa fa-times faa-shake"></i>
                             </button>
-                        @endif
+                        @endif--}}
                     @if( Auth::user()->isSuperAdmin() )
                         @php
                             $totalLocations = $dispatchRegister->locations()->count();
