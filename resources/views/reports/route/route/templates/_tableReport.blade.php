@@ -352,11 +352,11 @@
 
             @if( $company->hasRecorderCounter() )
                 <td width="10%" class="p-r-0 p-l-0 text-center">
+                    @php
+                        $obs = $dispatchRegister->getObservation('start_recorder');
+                    @endphp
                     @if(!$isExpresoPalmira)
                         @if( Auth::user()->canEditRecorders())
-                            @php
-                                $obs = $dispatchRegister->getObservation('start_recorder');
-                            @endphp
                             <div class="tooltips box-edit" data-title="@lang('Edit') @lang('Start Recorder')">
                             <span class="box-info">
                                 <span class="">
@@ -405,12 +405,12 @@
                         <hr class="m-0">
                     @endif
 
-                    @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
-                        @php
-                            $obs = $dispatchRegister->getObservation('end_recorder');
+                    @php
+                        $obs = $dispatchRegister->getObservation('end_recorder');
+                        $labelEndRecorder = $isExpresoPalmira ? __('Manual count') : __('End Recorder');
+                    @endphp
 
-                            $labelEndRecorder = $isExpresoPalmira ? __('Manual count') : __('End Recorder');
-                        @endphp
+                    @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
                         <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
                                 <span class="">
