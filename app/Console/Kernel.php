@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('rocket:count --vehicle-plate=EP-001 --pa=2 --pr=2')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104744951')->everyFiveMinutes(); // Vehicle 2203  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ESY-699 --pa=2 --pr=5')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ESY-699 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104791531')->everyFiveMinutes(); // Vehicle 2223  Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=ESY-708 --pa=2 --pr=5')->everyThirtyMinutes();
@@ -176,6 +176,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104489797')->everyFiveMinutes(); // Vehicle 5003   Valledupar
             $schedule->command('rocket:count --vehicle-plate=WCY-765 --pa=2 --pr=20')->everyThirtyMinutes();
 
+            $schedule->command('syrus:sync-photos --imei=352557104504751')->everyFiveMinutes(); // Vehicle 5011   Valledupar
+            $schedule->command('rocket:count --vehicle-plate=WCY-829 --pa=2 --pr=20')->everyThirtyMinutes();
+
 
             /**********************************TRANSPUBENZA*************************************************/
 
@@ -211,8 +214,8 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104743722')->everyFiveMinutes(); // Vehicle 027 IBAGUE
             $schedule->command('rocket:count --vehicle-plate=TGN-356 --pa=2 --pr=4')->everyThirtyMinutes();
 
-            $schedule->command('syrus:sync-photos --imei=352557104743730')->everyFiveMinutes(); // Vehicle 041 IBAGUE
-            $schedule->command('rocket:count --vehicle-plate=TJB-127 --pa=2 --pr=4')->everyThirtyMinutes();
+            $schedule->command('syrus:sync-photos --imei=352557104755908')->everyFiveMinutes(); // Vehicle 041 IBAGUE
+            $schedule->command('rocket:count --vehicle-plate=TJB-127 --pa=3 --pr=20')->everyThirtyMinutes();
 
 
         } else {

@@ -150,6 +150,13 @@ class ConfigProfileService
                 }
             }
 
+            if ($this->vehicle->id == 2601) { // VH 041 IBAGUE   OJO!!!!!!
+                if (collect([1])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 20;
+                }
+            }
+
 //            if (collect([9, 10, 11, 12, 13, 14, 19, 20, 21,22, 23])->contains(intval($number))) {
 //                $activate = $rActivate ? $rActivate : 5;
 //                $release = $rActivate ? $rActivate : 5;
