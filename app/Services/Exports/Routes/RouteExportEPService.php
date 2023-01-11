@@ -46,14 +46,20 @@ class RouteExportEPService extends RouteExportService
                     //$roundTrip = $dispatchRegister->round_trip;
                     $roundTrip = $iteration + 1;
 
+
+                    //tarifas para diferentes rutas al exportar en excel 11/01/2023
                     $tarifRoute=null;
+                    $nameRute=null;
                     $routeId= $dispatchRegister->route_id;
-                    if ($routeId==279||$routeId==280){
+                    if ($routeId==279||$routeId==280){ //Ruta Palmira
                         $tarifRoute=4800;
-                    }elseif ($routeId==282||$routeId==283){
+                        $nameRute="RUTA PALMIRA";
+                    }elseif ($routeId==282||$routeId==283){ //Ruta Aeropuerto
                         $tarifRoute=11000;
+                        $nameRute="RUTA AEROPUERTO";
                     }else{
                         $tarifRoute="Parametrizar valor pasaje";
+                        $nameRute="RUTA : ";
                     }
 
                     $dataExcel[] = [
@@ -65,7 +71,7 @@ class RouteExportEPService extends RouteExportService
                         __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
                         __('Status') => $dispatchRegister->status,                                                      # G CELL
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
-                        __('Valor pasaje') => $tarifRoute,                                                                       # I CELL
+                        __('Valor pasaje') => '',                                                                       # I CELL
                         __('N° planilla') => $spreadsheet,                                                              # J CELL
                         __('Usuario') => $username,                                                                     # K CELL
                     ];
@@ -82,7 +88,8 @@ class RouteExportEPService extends RouteExportService
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
                     'type' => 'routeReportByVehicle',
-                    'tariff'=>$tarifRoute
+                    'tariff'=>$tarifRoute,
+                    'nameRute'=>$nameRute
                 ];
 
                 /* SHEETS */

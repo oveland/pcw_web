@@ -18,9 +18,10 @@ class PCWExporterEPService extends PCWExporterService
                 'lastLetter' => $letters[count(array_keys($dataExport->data[0])) - 1],
                 'totalRows' => count($dataExport->data) + $startIndex,
                 'tariff'=>$dataExport->tariff,
+                'nameRute'=>$dataExport->nameRute,
             ];
             $sheet->setCellValue('A1', "TRANSPORTES EXPRESO PALMIRA        ".$dataExport->title);
-            $sheet->setCellValue('A2', $dataExport->subTitle."  RUTA AEROPUERTO");
+            $sheet->setCellValue('A2', $dataExport->subTitle.$config->nameRute);
 
             $sheet->fromArray($dataExport->data, null, 'A3', true, true);
 
