@@ -17,6 +17,7 @@ class PCWExporterEPService extends PCWExporterService
                 'startIndex' => $startIndex,
                 'lastLetter' => $letters[count(array_keys($dataExport->data[0])) - 1],
                 'totalRows' => count($dataExport->data) + $startIndex,
+                'tariff'=>$dataExport->tariff,
             ];
             $sheet->setCellValue('A1', "TRANSPORTES EXPRESO PALMIRA        ".$dataExport->title);
             $sheet->setCellValue('A2', $dataExport->subTitle."  RUTA AEROPUERTO");
@@ -218,9 +219,9 @@ class PCWExporterEPService extends PCWExporterService
                     $sheet->setCellValue("M$i", "=L$i-K$i");
                     $sheet->setCellValue("N$i", "=M$i+" . (($i > $starData) ? ("N" . ($i - 1)) : "0"));
                 }*/
-               // for ($i = $starData; $i < $lastRow; $i++) {
-                   // $sheet->setCellValue("I$i", "=H$i*11000");
-               // }
+                for ($i = $starData; $i < $lastRow; $i++) {
+                    $sheet->setCellValue("I$i", "=H$i*$config->tariff");
+                }
 
                 $sheet->setCellValue("G$position", "TOTALES");
                 $sheet->setCellValue("H$position", "=SUM(H$starData:H$lastRow)");

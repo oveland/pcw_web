@@ -81,7 +81,8 @@ class RouteExportEPService extends RouteExportService
                     'subTitle' => "$vehicle->number | $vehicle->plate" . ". ",
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
-                    'type' => 'routeReportByVehicle'
+                    'type' => 'routeReportByVehicle',
+                    'tariff'=>$tarifRoute
                 ];
 
                 /* SHEETS */
