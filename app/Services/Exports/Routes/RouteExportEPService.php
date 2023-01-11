@@ -46,6 +46,16 @@ class RouteExportEPService extends RouteExportService
                     //$roundTrip = $dispatchRegister->round_trip;
                     $roundTrip = $iteration + 1;
 
+                    $tarifRoute=null;
+                    $routeId= $dispatchRegister->route_id;
+                    if ($routeId==279||$routeId==280){
+                        $tarifRoute=4800;
+                    }elseif ($routeId==282||$routeId==283){
+                        $tarifRoute=11000;
+                    }else{
+                        $tarifRoute="Parametrizar valor pasaje";
+                    }
+
                     $dataExcel[] = [
                         __('Date') => $dispatchRegister->date,                                                          # A CELL
                         __('Route') => $route->name,                                                                    # B CELL
@@ -55,7 +65,7 @@ class RouteExportEPService extends RouteExportService
                         __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
                         __('Status') => $dispatchRegister->status,                                                      # G CELL
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
-                        __('Valor pasaje') => '',                                                                       # I CELL
+                        __('Valor pasaje') => $tarifRoute,                                                                       # I CELL
                         __('N° planilla') => $spreadsheet,                                                              # J CELL
                         __('Usuario') => $username,                                                                     # K CELL
                     ];

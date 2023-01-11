@@ -218,9 +218,9 @@ class PCWExporterEPService extends PCWExporterService
                     $sheet->setCellValue("M$i", "=L$i-K$i");
                     $sheet->setCellValue("N$i", "=M$i+" . (($i > $starData) ? ("N" . ($i - 1)) : "0"));
                 }*/
-                for ($i = $starData; $i < $lastRow; $i++) {
-                    $sheet->setCellValue("I$i", "=H$i*11000");
-                }
+               // for ($i = $starData; $i < $lastRow; $i++) {
+                   // $sheet->setCellValue("I$i", "=H$i*11000");
+               // }
 
                 $sheet->setCellValue("G$position", "TOTALES");
                 $sheet->setCellValue("H$position", "=SUM(H$starData:H$lastRow)");
