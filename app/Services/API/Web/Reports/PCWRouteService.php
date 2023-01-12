@@ -1,27 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oscar
- * Date: 17/06/2018
- * Time: 11:08 PM
- */
 
 namespace App\Services\API\Web\Reports;
 
 use App\Models\Company\Company;
-use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\DrObservation;
-use App\Models\Users\User;
 use App\Services\API\Web\Contracts\APIWebInterface;
-use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class PCWRouteService implements APIWebInterface
 {
@@ -36,19 +26,39 @@ class PCWRouteService implements APIWebInterface
         }
     }
 
+    function getDateRange($dateReport, $spreadsheetReport): object
+    {
+        $now = Carbon::now()->toDateString();
+        $initial = $dateReport ?: $now;
+        $final = $initial;
+
+        if ($spreadsheetReport) {
+            $drObservations = DrObservation::where('observation', $spreadsheetReport)
+                ->with('dispatchRegister')
+                ->get();
+
+            $initial = $drObservations->min('dispatchRegister.date');
+            $final = $drObservations->max('dispatchRegister.date');
+        }
+
+        return (object)[
+            'initial' => $initial,
+            'final' => $final
+        ];
+    }
+
     /**
      * @param $service
      * @param Request $request
      * @return JsonResponse
      */
-    public function serve($service, Request $request): JsonResponse
+    function serve($service, Request $request): JsonResponse
     {
         switch ($service) {
             case 'report-dispatch':
                 $report = collect([]);
 
-                $dateReport = $request->get('date');
-                $dateReport = $dateReport ?: Carbon::now()->toDateString();
+                $dateReportRequest = $request->get('date');
 
                 $company = $this->getCompany($request->get('company'));
                 if ($company) {
@@ -57,6 +67,10 @@ class PCWRouteService implements APIWebInterface
                     $plateVehicle = $request->get('plate');
                     $spreadsheetReport = $request->get('spreadsheet');
 
+                    $dateRange = $this->getDateRange($dateReportRequest, $spreadsheetReport);
+
+                    $dateInitialReport = $dateRange->initial;
+                    $dateEndReport = $dateRange->final;
 
                     $vehicle = null;
                     $vehiclePlate = null;
@@ -66,25 +80,19 @@ class PCWRouteService implements APIWebInterface
 
                     if ($vehiclePlate && $vehiclePlate->belongsToCompany($company)) {
                         $vehicleId = $vehiclePlate->id;
-                        // dd('entra con placa',$vehicleId);
                     } else if ($vehicle && $vehicle->belongsToCompany($company)) {
                         $vehicleId = $vehicle->id;
-                        //dd('entra con numero',$vehicleId);
                     } else {
                         $vehicleId = null;
-                        //dd('nada',$vehicleId);
                     }
 
-                    // $vehicleId = $vehicle && $vehicle->belongsToCompany($company) ? $vehicle->id : null;
-
-
-                    if ($vehicle || !$vehicleReport) $report = $this->buildPassengersReport($company, $dateReport, $routeReport, $vehicleId, $spreadsheetReport);
+                    if ($vehicle || !$vehicleReport) $report = $this->buildPassengersReport($company, $dateReportRequest, $dateInitialReport, $dateEndReport, $routeReport, $vehicleId, $spreadsheetReport);
                 }
 
                 return response()->json([
                     'error' => false,
                     'data' => (object)[
-                        'date' => $dateReport,
+                        'date' => $dateReportRequest,
                         'company' => $company ? $company->name : null,
                         'reports' => $report
                     ]
@@ -101,14 +109,20 @@ class PCWRouteService implements APIWebInterface
 
     }
 
-    public function buildPassengersReport(Company $company, $dateReport, $routeReport, $vehicleReport, $spreadsheetReport): Collection
+    public function buildPassengersReport(Company $company, $dateReportRequest, $dateInitialReport, $dateEndReport, $routeReport, $vehicleReport, $spreadsheetReport): Collection
     {
-        $allDispatchRegisters = DispatchRegister::whereCompanyAndDateAndRouteIdAndVehicleId($company, $dateReport, $routeReport, $vehicleReport)
+        $allDispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateInitialReport, $dateEndReport, $routeReport, $vehicleReport)
             ->active()
             ->with('vehicle')
             ->with('route')
             ->orderBy('id')
             ->get();
+
+        if ($dateReportRequest) {
+            $allDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($dateReportRequest) {
+                return $d->date == $dateReportRequest;
+            });
+        }
 
         if ($spreadsheetReport) {
             $allDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($spreadsheetReport) {
