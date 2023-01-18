@@ -37,8 +37,8 @@ class PCWRouteService implements APIWebInterface
                 ->with('dispatchRegister')
                 ->get();
 
-            $initial = $drObservations->min('dispatchRegister.date');
-            $final = $drObservations->max('dispatchRegister.date');
+            $initial = $drObservations->min('dispatchRegister.date') ?: $initial;
+            $final = $drObservations->max('dispatchRegister.date') ?: $final;
         }
 
         return (object)[
@@ -134,7 +134,12 @@ class PCWRouteService implements APIWebInterface
         return $allDispatchRegisters->map(function (DispatchRegister $d) use ($passengersReport) {
             $passengersVehicle = $passengersReport->get($d->vehicle->id);
             $passengersRoundTrip = $passengersVehicle->history->get($d->id);
-            $pricePassengers = ($passengersRoundTrip->totalByRecorderByRoundTrip) * 11000;
+
+            $totalPassengers = $passengersRoundTrip->totalByRecorderByRoundTrip;
+
+            // TODO: Cambiar cuando se haga recaudo:
+            $tariffPassenger = $d->route->tariff->passenger;
+            $totalProduction = $tariffPassenger * $totalPassengers;
 
             return [
                 'vehicle' => [
@@ -148,10 +153,12 @@ class PCWRouteService implements APIWebInterface
                     'name' => $d->route->name
                 ],
                 'passengers' => [
-                    'manual' => $passengersRoundTrip->totalByRecorderByRoundTrip,
-                    'sensor' => $passengersRoundTrip->totalBySensorByRoundTrip,
-                    'price $' => $pricePassengers,
-                    'spreadsheet' => $d->getObservation('end_recorder')->observation
+                    'spreadsheet' => $d->getObservation('end_recorder')->observation,
+                    'tariff' => $tariffPassenger,
+                    'total' => $totalPassengers,
+                    'totalProduction' => $totalProduction,
+                    //'totalSensor' => $passengersRoundTrip->totalBySensorByRoundTrip,
+                    //'totalProductionSensor' => $totalProductionSensor,
                 ],
                 'dispatchRegister' => [
                     'id' => $d->id,
@@ -167,6 +174,6 @@ class PCWRouteService implements APIWebInterface
                     'mileage' => $d->getRouteDistance()
                 ]
             ];
-        });
+        })->values();
     }
 }
