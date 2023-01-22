@@ -25,7 +25,8 @@
 
 <!-- BEGIN "GLOBAL"PAGE LEVEL PLUGINS -->
 <script src="{{ asset('assets/global/plugins/bootstrap-toastr/toastr.min.js') }}" type="text/javascript"></script>
-<script src="{{asset('assets/plugins/fullcalendar/lib/moment.min.js')}}"></script>
+<script src="{{asset('assets/plugins/moment/moment.min.js')}}"></script>
+<script src="{{asset('assets/plugins/moment/moment-with-locales.js')}}"></script>
 <!-- END "GLOBAL"PAGE LEVEL PLUGINS -->
 
 <template id="loading">
@@ -41,8 +42,9 @@
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
+<script src="{{asset('assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
+<script src="{{asset('assets/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.es.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-eonasdan-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
-{{--<script src="{{asset('assets/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.es.js')}}"></script>--}}
 <script src="{{asset('assets/plugins/gritter/js/jquery.gritter.js')}}"></script>
 
 <script src="{{asset('assets/plugins/bootstrap-select/bootstrap-select.min.js')}}"></script>

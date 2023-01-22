@@ -842,5 +842,6 @@
   "Cancelled": "Cancelado",
   "Description": "El vehiculo no tiene ubicaciones",
   "# Spreadsheet": "# Planilla",
-  "Manual count": "Conteo manual"
+  "Manual count": "Conteo manual",
+  "By range time": "Por rango horario"
 }

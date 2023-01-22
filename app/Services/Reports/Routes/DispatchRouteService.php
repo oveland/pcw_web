@@ -81,14 +81,18 @@ class DispatchRouteService
      * @param bool $completedTurns
      * @param bool $noTakenTurns
      * @param string $initialTime
-     * @param string $finaTime
+     * @param string $finalTime
      * @return DispatchRegister[]|Builder[]|Collection
      */
-    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false, $initialTime = '00:00', $finaTime = '23:59', $activeTurns = true, $cancelledTurns = false)
+    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false, $initialTime = '00:00', $finalTime = '23:59', $activeTurns = true, $cancelledTurns = false)
     {
         $dispatchRegisters = $this->all($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $activeTurns, $cancelledTurns);
 
-        $dispatchRegisters = $dispatchRegisters->where('departure_time', '>=', "$initialTime:00")->where('departure_time', '<=', "$finaTime:00");
+        if($dateEndReport) {
+            $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) use ($dateReport, $dateEndReport, $initialTime, $finalTime) {
+                return "$dr->date $dr->departure_time" >= "$dateReport $initialTime:00" && "$dr->date $dr->departure_time" <= "$dateEndReport $finalTime:59";
+            });
+        }
 
         if ($noTakenTurns) {
             $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) {
