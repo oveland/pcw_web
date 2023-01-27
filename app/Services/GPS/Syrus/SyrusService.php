@@ -172,7 +172,7 @@ class SyrusService
             if (Str::startsWith($fileName, '1')) {
                 return '2';
             } else if (Str::startsWith($fileName, '2')) {
-                return '2';
+                return '1';
             } else if (Str::startsWith($fileName, '3')) {
                 return '3';
             }
@@ -194,6 +194,16 @@ class SyrusService
                 return '2';
             } else if (Str::startsWith($fileName, '1')) {
                 return '3';
+            }
+        }
+
+        if ($imei == '352557104789550') {
+            if (Str::startsWith($fileName, '1')) {
+                return '1';
+            } else if (Str::startsWith($fileName, '2')) {
+                return '3';
+            } else if (Str::startsWith($fileName, '3')) {
+                return '2';
             }
         }
 
