@@ -105,7 +105,7 @@ class PCWExporterEPService extends PCWExporterService
         $sheet->setSize('I' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
         $sheet->setSize('J' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
         $sheet->setSize('K' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
-        
+
         //firma
         $f = 'I' . $firma . ":" . 'J' . $firma;
         $sheet->mergeCells($f, function ($cells) {
@@ -221,7 +221,7 @@ class PCWExporterEPService extends PCWExporterService
                     $sheet->setCellValue("N$i", "=M$i+" . (($i > $starData) ? ("N" . ($i - 1)) : "0"));
                 }*/
                 for ($i = $starData; $i < $lastRow; $i++) {
-                    $sheet->setCellValue("I$i", "=H$i*$config->tariff");
+                    $sheet->setCellValue("I$i", "=H$i*".intval($config->tariff));
                 }
 
                 $sheet->setCellValue("G$position", "TOTALES");
