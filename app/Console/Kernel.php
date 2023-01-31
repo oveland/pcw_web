@@ -135,7 +135,7 @@ class Kernel extends ConsoleKernel
 
             //$schedule->command('syrus:sync-photos --imei=352557100775223')->everyFiveMinutes(); // Vehicle 5000 Valledupar GPS antiguo 1 camara
             $schedule->command('syrus:sync-photos --imei=352557104789550')->everyFiveMinutes(); // Vehicle 5000 Valledupar 3 camaras
-            $schedule->command('rocket:count --vehicle-plate=WCY-762 --pa=2 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=WCY-762 --pa=2 --pr=7')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104506194')->everyFiveMinutes(); // Vehicle 5005 Valledupar
             $schedule->command('rocket:count --vehicle-plate=WCY-768 --pa=2 --pr=20')->everyThirtyMinutes();

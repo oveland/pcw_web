@@ -3,6 +3,7 @@
 
 namespace App\Models\Apps\Rocket\Traits;
 
+use App\Models\Company\Company;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
@@ -117,22 +118,43 @@ trait PhotoEncode
 
 
         if ($withTitle) {
-            $image->rectangle($image->width() / 2 - 90, 4, $image->width() / 2 + 90, 40, function ($draw) {
-                $draw->background('rgba(0, 0, 0, 0.5)');
+            if ($this->vehicle->id == 2617){
+                $image->rectangle($image->width() / 1 - 90, 4, $image->width() / 1+ 90, 40, function ($draw) {
+                $draw->background('rgba(0, 0, 0, 0.0)');
             });
-            $image->text(__('CAMERA') . " $this->side", $image->width() / 2, 20, function ($font) {
-                $font->color('#ffff00');
-                $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
-                $font->size(14);
-                $font->align('center');
-            });
-            $image->text($this->date->toDateTimeString(), $image->width() / 2, 35, function ($font) {
-                $font->color('#ffff00');
-                $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
-                $font->size(14);
-                $font->align('center');
-            });
+                $image->text(__('CAMERA') . " $this->side",  100, 25, function ($font) {
+                    $font->color('#ffff00');
+                    $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
+                    $font->size(8);
+                    $font->align('center');
+                });
+                $image->text($this->date->toDateTimeString(),  100, 45, function ($font) {
+                    $font->color('#ffff00');
+                    $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
+                    $font->size(11);
+                    $font->align('center');
+                });}
+            else{
+                $image->rectangle($image->width() / 2 - 90, 4, $image->width() / 2 + 90, 40, function ($draw) {
+                    $draw->background('rgba(0, 0, 0, 0.5)');
+                });
+                $image->text(__('CAMERA') . " $this->side", $image->width() / 2, 20, function ($font) {
+                    $font->color('#ffff00');
+                    $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
+                    $font->size(14);
+                    $font->align('center');
+                });
+                $image->text($this->date->toDateTimeString(), $image->width() / 2, 35, function ($font) {
+                    $font->color('#ffff00');
+                    $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
+                    $font->size(14);
+                    $font->align('center');
+                });
+            }
+
         }
+
+
 
         $image = $encode ? $image->encode($encode) : $image;
 
@@ -173,10 +195,16 @@ trait PhotoEncode
                 });
 
                 $counted = $countedSeating->contains($zone->number);
-                $image->text($zone->number, $center->left * $percentWidth, $center->top * $percentHeight, function ($font) use ($counted) {
-                    $font->color($counted ? '#00f9ff' : '#ffff00');
+                $color = $counted ? '#00f9ff' : '#ffff00';
+                $fontSize = 24;
+
+                if($this->vehicle->company_id == Company::EXPRESO_PALMIRA) $color = 'rgba(255, 255, 0, 0.6)';
+                if($this->vehicle->id ==2617 && $this->side==1 ) $fontSize = 24;
+
+                $image->text($zone->number, $center->left * $percentWidth, $center->top * $percentHeight, function ($font) use ($counted, $color, $fontSize) {
+                    $font->color($color);
                     $font->file(Storage::path('Apps/Rocket/Profiles/Fonts/Serpentine.ttf'));
-                    $font->size(24);
+                    $font->size($fontSize);
                     $font->align('center');
                 });
             }
@@ -184,6 +212,8 @@ trait PhotoEncode
 
         return $image;
     }
+
+
 
     /**
      * @param null $encode

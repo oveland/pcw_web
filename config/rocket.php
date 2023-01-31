@@ -1119,7 +1119,7 @@ return [
                             'range' => [0, 30],
                             'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [30, 60],
@@ -1192,7 +1192,7 @@ return [
                             'range' => [0, 20],
                             'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [20, 40],
