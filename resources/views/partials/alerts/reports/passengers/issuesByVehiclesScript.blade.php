@@ -56,12 +56,14 @@
 
             let inputObs = boxEdit.find('.edit-input-obs');
 
-            if(inputObs.val().trim()) {
+
+            if(inputObs.val().trim() || input.data('single')) {
+                console.log("data",input.data('single'));
                 let dispatchRegisterId = input.data('id');
                 let dispatchRegisterField = input.data('field');
                 let dispatchRegisterValue = input.val();
                 let url = input.data('url');
-                let obs = inputObs.val();
+                let obs = inputObs.val()?.trim();
 
                 editFieldDr(url, dispatchRegisterId, dispatchRegisterField, dispatchRegisterValue, obs, function (data) {
                     boxEdit.find('.box-info').show().find('span').text(data.value);
