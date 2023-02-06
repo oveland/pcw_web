@@ -130,7 +130,7 @@ class User extends Authenticatable
 
     public function isExpreso()
     {
-        return $this->id == 2018101286 || $this->id == 2018101362 || $this->id ==2018101369 ;
+        return $this->id == 2018101286 || $this->id == 2018101362 || $this->id ==2018101369 || $this->id ==2018101372 ;
     }
 
     /**
@@ -312,6 +312,7 @@ class User extends Authenticatable
             2018101286, //yuri
             2018101362,  // Paola
             2018101369, // henny
+            2018101372, // Dora
 
         ];
 
@@ -336,6 +337,7 @@ class User extends Authenticatable
             2018101286, // Yuri
             2018101362, // Paola
             2018101369, //henny
+            2018101372, //Dora
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();

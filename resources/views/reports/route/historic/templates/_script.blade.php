@@ -105,8 +105,8 @@
                 path = this.iconPassenger;
                 scale = .04;
 
-                fillColor = '#40ffc7';
-                strokeColor = '#000b47';
+                fillColor = '#84ff00';
+                strokeColor = '#081a00';
 
                 if (reportLocation.passengers.countedAscents && reportLocation.passengers.countedDescents) {
                     // path = this.iconPassengerInOut;
@@ -114,8 +114,8 @@
                     strokeColor = '#470020';
                 } else {
                     if (reportLocation.passengers.countedAscents) {
-                        fillColor = '#84ff00';
-                        strokeColor = '#7e002e';
+                        fillColor = '#11bdfa';
+                        strokeColor = '#000b47';
                     } else if (reportLocation.passengers.countedDescents) {
                         fillColor = '#ff6900';
                         strokeColor = '#530000';
@@ -123,7 +123,7 @@
                 }
 
                 zIndex = 1000;
-                // animation = google.maps.Animation.BOUNCE;
+                animation = google.maps.Animation.BOUNCE;
             }
 
             return {

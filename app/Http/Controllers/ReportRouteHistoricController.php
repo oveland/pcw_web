@@ -192,9 +192,9 @@ class ReportRouteHistoricController extends Controller
                     }
 
                     $countedAscents = $passenger->ascents_in_round_trip ?? false;
-//                    if ($passenger->counted) $countedAscents = false;
-//                    $countedDescents = $passenger->descents_in_round_trip ?? false;
-                    $countedDescents = false;
+                    if ($passenger->counted) $countedAscents = false;
+                    $countedDescents = $passenger->descents_in_round_trip && Auth::user()->isAdmin() ?? false;
+                    //$countedDescents = false;
 
                     if ($tariff) {
                         $counted = ($totalPassengers - $prevTotalPassengers);
