@@ -23,7 +23,7 @@ class RouteExportEPService extends RouteExportService
      */
     public function groupedRouteReport($vehiclesDispatchRegisters, $dateReport)
     {
-        Excel::create(__('Dispatch report') . " B " . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
+        Excel::create(__('Dispatch report') . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
                 $vehicleCounter = CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegisters);
@@ -31,6 +31,8 @@ class RouteExportEPService extends RouteExportService
                 $lastArrivalTime = null;
 
                 $totalDeadTime = '00:00:00';
+                $tarifRoute = "";
+                $nameRute = "";
 
                 foreach ($dispatchRegisters as $iteration => $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
@@ -45,21 +47,19 @@ class RouteExportEPService extends RouteExportService
 
                     //$roundTrip = $dispatchRegister->round_trip;
                     $roundTrip = $iteration + 1;
-
-
+                    $tarifRoute = "";
+                    $nameRute = "";
                     //tarifas para diferentes rutas al exportar en excel 11/01/2023
-                    $tarifRoute=null;
-                    $nameRute=null;
-                    $routeId= $dispatchRegister->route_id;
-                    if ($routeId==279||$routeId==280){ //Ruta Palmira
-                        $tarifRoute=4800;
-                        $nameRute="RUTA PALMIRA";
-                    }elseif ($routeId==282||$routeId==283){ //Ruta Aeropuerto
-                        $tarifRoute=11000;
-                        $nameRute="RUTA AEROPUERTO";
-                    }else{
-                        $tarifRoute="Parametrizar valor pasaje";
-                        $nameRute="RUTA : ";
+                    $routeId = $dispatchRegister->route_id;
+                    if ($routeId == 279 || $routeId == 280) { //Ruta Palmira
+                        $tarifRoute = 4800;
+                        $nameRute = "RUTA PALMIRA";
+                    } elseif ($routeId == 282 || $routeId == 283) { //Ruta Aeropuerto
+                        $tarifRoute = 11000;
+                        $nameRute = "RUTA AEROPUERTO";
+                    } else {
+                        $tarifRoute = "Parametrizar valor pasaje";
+                        $nameRute = "RUTA : ";
                     }
 
                     $dataExcel[] = [
@@ -72,7 +72,7 @@ class RouteExportEPService extends RouteExportService
                         __('Status') => $dispatchRegister->status,                                                      # G CELL
                         __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
                         __('Valor pasaje') => '',                                                                       # I CELL
-                        __('N° planilla') => $spreadsheet,                                                              # J CELL
+                        __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
                         __('Usuario') => $username,                                                                     # K CELL
                     ];
 
@@ -84,12 +84,12 @@ class RouteExportEPService extends RouteExportService
                 $dataExport = (object)[
                     'fileName' => __('Dispatch report') . " V $dateReport",
                     'title' => __('Dispatch report') . " | $dateReport",
-                    'subTitle' => "$vehicle->number | $vehicle->plate" . ". ",
+                    'subTitle' => "$vehicle->number | $vehicle->plate",
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
                     'type' => 'routeReportByVehicle',
-                    'tariff'=>$tarifRoute,
-                    'nameRute'=>$nameRute
+                    'tariff' => $tarifRoute,
+                    'nameRute' => $nameRute
                 ];
 
                 /* SHEETS */

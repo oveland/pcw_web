@@ -17,7 +17,7 @@
             </h6>
 
             <div class="panel-heading-btn pull-right">
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ $dateReport }}&date-end-report={{ $dateEndReport }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=ungrouped-vehicles&export=true"
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ urlencode($dateTimeRequest) }}&date-end-report={{ urlencode($dateTimeEndRequest) }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&type-report=ungrouped-vehicles&export=true"
                    class="btn green btn-circle tooltips"
                    data-title="@lang('Export ungrouped report') | @lang('Excel')">
                     <i class="fa fa-download"></i>

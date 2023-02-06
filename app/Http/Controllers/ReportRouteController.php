@@ -70,13 +70,16 @@ class ReportRouteController extends Controller
      */
     public function show(Request $request)
     {
-        $dateTimeRequest = collect(explode(' ', $request->get('date-report')));
-        $dateTimeEndRequest = collect(explode(' ', $request->get('date-end-report')));
+        $dateTimeRequest = $request->get('date-report');
+        $dateTimeEndRequest = $request->get('date-end-report');
+
+        $dateTimeRequestArray = collect(explode(' ', $dateTimeRequest));
+        $dateTimeEndRequestArray = collect(explode(' ', $dateTimeEndRequest));
 
         $company = $this->authService->getCompanyFromRequest($request);
-        $dateReport = $dateTimeRequest->get(0);
+        $dateReport = $dateTimeRequestArray->get(0);
         $withEndDate = $request->get('with-end-date');
-        $dateEndReport = $withEndDate ? $dateTimeEndRequest->get(0) : null;
+        $dateEndReport = $withEndDate ? $dateTimeEndRequestArray->get(0) : null;
         $typeReport = $request->get('type-report');
         $routeReport = $request->get('route-report');
         $vehicleReport = $request->get('vehicle-report');
@@ -90,8 +93,8 @@ class ReportRouteController extends Controller
         //$initialTime = $timeRange->get(0);
         //$finalTime = $timeRange->get(1);
 
-        $initialTime = $dateTimeRequest->get(1);
-        $finalTime = $dateTimeEndRequest->get(1);
+        $initialTime = $dateTimeRequestArray->get(1);
+        $finalTime = $dateTimeEndRequestArray->get(1);
 
         $onlyLastLap = $request->get('last-laps');
 
@@ -128,6 +131,9 @@ class ReportRouteController extends Controller
             'reportsByVehicle',
             'company',
             'dateReport',
+            'dateEndReport',
+            'dateTimeRequest',
+            'dateTimeEndRequest',
             'dateEndReport',
             'withEndDate',
             'routeReport',

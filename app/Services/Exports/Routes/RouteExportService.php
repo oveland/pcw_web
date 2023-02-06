@@ -76,8 +76,9 @@ class RouteExportService
                     'data' => $dataExcel,
                     'type' => 'routeReportByVehicle'
                 ];
+
                 /* SHEETS */
-                $excel = PCWExporterService::createHeaders($excel, $dataExport);
+                //$excel = PCWExporterService::createHeaders($excel, $dataExport);
                 $excel = PCWExporterService::createSheet($excel, $dataExport);
             }
         })->download('xlsx');
