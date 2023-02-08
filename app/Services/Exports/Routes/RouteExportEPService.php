@@ -52,7 +52,7 @@ class RouteExportEPService extends RouteExportService
                     //tarifas para diferentes rutas al exportar en excel 11/01/2023
                     $routeId = $dispatchRegister->route_id;
                     if ($routeId == 279 || $routeId == 280) { //Ruta Palmira
-                        $tarifRoute = 4800;
+                        $tarifRoute = 4500;
                         $nameRute = "RUTA PALMIRA";
                     } elseif ($routeId == 282 || $routeId == 283) { //Ruta Aeropuerto
                         $tarifRoute = 11000;
