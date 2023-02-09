@@ -104,9 +104,8 @@
                 rotation = 0;
                 path = this.iconPassenger;
                 scale = .04;
-
-                fillColor = '#84ff00';
-                strokeColor = '#081a00';
+                fillColor = 'rgba(0,0,0,0)';
+                strokeColor = 'rgba(0,0,0,0)';
 
                 if (reportLocation.passengers.countedAscents && reportLocation.passengers.countedDescents) {
                     // path = this.iconPassengerInOut;
@@ -117,8 +116,8 @@
                         fillColor = '#11bdfa';
                         strokeColor = '#000b47';
                     } else if (reportLocation.passengers.countedDescents) {
-                        fillColor = '#ff6900';
-                        strokeColor = '#530000';
+                        fillColor = 'rgba(0,0,0,0)';
+                        strokeColor = 'rgba(83,0,0,0)';
                     }
                 }
 

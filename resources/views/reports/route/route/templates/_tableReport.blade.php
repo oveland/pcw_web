@@ -1,3 +1,4 @@
+
 @php
     $thresholdAlertSS = 1;
     $thresholdAlertNR = 2;
@@ -476,7 +477,8 @@
                                         <i class="fa fa-times"></i>
                                     </button>
                                     <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                            title="@lang('Save')">
+                                            title="@lang('Save')"
+                                            onclick="return confirm('¿Estas segura que los datos son correctos?')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
@@ -604,7 +606,9 @@
                                     <i class="fa fa-times"></i>
                                 </button>
                                 <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                        title="@lang('Save')">
+                                        title="@lang('Save')"
+                                        onclick="return confirm('¿Estas segura que los datos son correctos?')">
+
                                     <i class="fa fa-save"></i>
                                 </button>
                             </div>
@@ -625,7 +629,7 @@
             <td class="text-center">
                 <small class="tooltips text-bold"
                        data-title="@lang('Diferencia conteo Visual - conteo Sistema ')">
-                    {{  $diferencePassenger }}
+                    {{  $diferencePassenger}}
                 </small>
             </td>
 
@@ -776,7 +780,8 @@
     </tbody>
 </table>
 <!-- end table -->
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert2.all.min.js"></script>
 <script type="application/javascript">
 
     @if( Auth::user()->belongsToCootransol() )
@@ -817,6 +822,14 @@
         modalBody.html($('.loading').html()).load(url);
     }
     @endif
+    function confirmacion(){
+        let respuesta=confirm("El numero de planilla es el correcto")
+        if (respuesta==true){
+            return true
+        }else {
+            return false
+        }
+    }
 
     $('.html-observations').each(function (i, el) {
         const content = $(el).find('a').data('content');
