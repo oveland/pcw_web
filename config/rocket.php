@@ -1116,13 +1116,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 30],
+                            'range' => [0, 35],
                             'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
                         ],
                         [
-                            'range' => [30, 60],
+                            'range' => [35, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
@@ -1158,12 +1158,12 @@ return [
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 120,                            # Percent of height when Normal Detection
-                            'ld' => 150                              # Percent of height when Large Detection
+                            'nd' => 100,                            # Percent of height when Normal Detection
+                            'ld' => 100                              # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
-                            'nd' => 50,                             # Percent top of point center when Normal Detection
-                            'ld' => 40                              # Percent top of point center when Large Detection
+                            'nd' => 75,                             # Percent top of point center when Normal Detection
+                            'ld' => 50                             # Percent top of point center when Large Detection
                         ]
                     ]
                 ]

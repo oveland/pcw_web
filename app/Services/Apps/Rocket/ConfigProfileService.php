@@ -171,7 +171,7 @@ class ConfigProfileService
             if ($this->vehicle->id == 2556) { // VH  5000 valledupar   OJO!!!!!!
                 if (collect([1,2])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 1;
-                    $release = 5;
+                    $release = 8;
                 }
             }
 
