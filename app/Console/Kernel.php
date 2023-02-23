@@ -122,8 +122,12 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104744845')->everyFiveMinutes(); // Vehicle 6823  Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=ETK-150 --pa=3 --pr=20')->everyThirtyMinutes();
 
-                $schedule->command('syrus:sync-photos --imei=352557104743201')->everyFiveMinutes(); // Vehicle 2739  Expreso Palmira
+            $schedule->command('syrus:sync-photos --imei=352557104743201')->everyFiveMinutes(); // Vehicle 2739  Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=KUK-565 --pa=1 --pr=10')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104791168')->everyFiveMinutes(); // Vehicle 2661  Expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=KUL-983 --pa=1 --pr=10')->everyThirtyMinutes();
+
 
             /**********************************VALLEDUPAR*************************************************/
 
