@@ -109,7 +109,7 @@ class ConfigProfileService
                     $release = 15;
                 }
             }
-
+            
             if ($this->vehicle->id == 2614) {
                 if ($this->profileSeat->camera == '3') {
                     $activate = 3;

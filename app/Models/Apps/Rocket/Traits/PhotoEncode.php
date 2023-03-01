@@ -118,7 +118,7 @@ trait PhotoEncode
 
 
         if ($withTitle) {
-            if ($this->vehicle->id == 2617){
+            if ($this->vehicle->company_id=== 39){
                 $image->rectangle($image->width() / 1 - 90, 4, $image->width() / 1+ 90, 40, function ($draw) {
                 $draw->background('rgba(0, 0, 0, 0.0)');
             });
