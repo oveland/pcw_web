@@ -63,43 +63,43 @@ class Kernel extends ConsoleKernel
             $schedule->command('rocket:count --vehicle-plate=ESY-709 --pa=2 --pr=5')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104735884')->everyFiveMinutes(); // Vehicle 6005  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-677 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-677 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104791572')->everyFiveMinutes(); // Vehicle 6001  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-674 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-674 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104727170')->everyFiveMinutes(); // Vehicle 6003  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-676 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-676 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104792299')->everyFiveMinutes(); // Vehicle 6007  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-678 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-678 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104743839')->everyFiveMinutes(); // Vehicle 6009  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-680 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-680 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104709301')->everyFiveMinutes(); // Vehicle 6011  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-673 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-673 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104791028')->everyFiveMinutes(); // Vehicle 6015  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-679 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-679 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104791564')->everyFiveMinutes(); // Vehicle 6601  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-563 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-563 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104787240')->everyFiveMinutes(); // Vehicle 6603  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-569 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-569 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104743243')->everyFiveMinutes(); // Vehicle 6609  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-572 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-572 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104743052')->everyFiveMinutes(); // Vehicle 6611  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-573 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-573 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104727600')->everyFiveMinutes(); // Vehicle 6605  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-570 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-570 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104743219')->everyFiveMinutes(); // Vehicle 6607  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ETK-571 --pa=3 --pr=20')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ETK-571 --pa=10 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104787257')->everyFiveMinutes(); // Vehicle 1741  Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=WHV-817 --pa=3 --pr=20')->everyThirtyMinutes();
@@ -123,11 +123,16 @@ class Kernel extends ConsoleKernel
             $schedule->command('rocket:count --vehicle-plate=ETK-150 --pa=3 --pr=20')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104743201')->everyFiveMinutes(); // Vehicle 2739  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=KUK-565 --pa=1 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=KUK-565 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104791168')->everyFiveMinutes(); // Vehicle 2661  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=KUL-983 --pa=1 --pr=10')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=KUL-983 --pa=2 --pr=10')->everyThirtyMinutes();
 
+            $schedule->command('syrus:sync-photos --imei=352557104477982')->everyFiveMinutes();  // Vehicle 2691  Expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=KUK-643 --pa=2 --pr=10')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104736338')->everyFiveMinutes(); // Vehicle 2741 expreso palmira
+            $schedule->command('rocket:count --vehicle-plate=SPK-388 --pa=2 --pr=20')->everyThirtyMinutes();
 
             /**********************************VALLEDUPAR*************************************************/
 
@@ -208,6 +213,8 @@ class Kernel extends ConsoleKernel
             $schedule->command('rocket:count --vehicle-plate=WCY-829 --pa=2 --pr=20')->everyThirtyMinutes();
 
 
+
+
             /**********************************TRANSPUBENZA*************************************************/
 
             $schedule->command('syrus:sync-photos --imei=352557103568914')->everyFiveMinutes();
@@ -228,7 +235,6 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104525327')->everyFiveMinutes();
             $schedule->command('syrus:sync-photos --imei=352557104517878')->everyFiveMinutes();
             $schedule->command('syrus:sync-photos --imei=352557104524049')->everyFiveMinutes();
-            $schedule->command('syrus:sync-photos --imei=352557104477982')->everyFiveMinutes();
             $schedule->command('syrus:sync-photos --imei=352557104552792')->everyFiveMinutes();
             $schedule->command('syrus:sync-photos --imei=352557104790517')->everyFiveMinutes();
 
