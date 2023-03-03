@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services\GPS\Syrus;
+namespace App\Services\GPS\Service4G;
 
 
 use App\Models\Apps\Rocket\Photo;
@@ -20,7 +20,7 @@ use Symfony\Component\ErrorHandler\Error\FatalError;
 use Log;
 use App\Models\Apps\Rocket\SyncStatus;
 
-class SyrusService
+class Service4G
 {
     function readyToSync($imei)
     {
@@ -63,7 +63,7 @@ class SyrusService
         $vehicle = $gpsVehicle->vehicle;
 
         $waitSeconds = random_int(0, 240);
-        Log::info("Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
+        Log::info("Sync photo from API GPS 4G and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
         sleep($waitSeconds);
         Log::info("        • Start sync for vehicle $vehicle->number");
 
@@ -75,7 +75,7 @@ class SyrusService
         $path = "$imei/images";
         $response->put('imei', $imei);
 
-        $storage = Storage::disk('syrus');
+        $storage = Storage::disk('4G');
         $files = collect($storage->files($path));
 
         Log::info("         • Vehicle #$vehicle->number total FPT photos: " . $files->count());
@@ -84,7 +84,7 @@ class SyrusService
         foreach ($files as $index => $file) {
             $fileName = collect(explode('/', $file))->last();
 
-            if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
+            if (Str::endsWith($file, '.jpg') && !Photo::where('uid', $file)->first()) {
                 $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
 
@@ -114,7 +114,7 @@ class SyrusService
                     $process = $service->saveImageData([
                         'date' => $date,
                         'img' => $image->encode('data-url'),
-                        'type' => 'syrus',
+                        'type' => '4G',
                         'side' => $side,
                         'uid' => $fileName
                     ]);
