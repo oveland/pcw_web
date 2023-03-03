@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console\Commands\Service4G;
+namespace App\Console\Commands\Syrus;
 
 use App\Models\Company\Company;
-use App\Services\GPS\Service4G\Service4G;
+use App\Services\GPS\Syrus\SyrusService;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
@@ -14,7 +14,7 @@ class Sync4GPhotoCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'Service4G:sync-photos {--imei=} {--date=}';
+    protected $signature = '4G:sync-photos {--imei=} {--date=}';
 
     /**
      * The console command description.

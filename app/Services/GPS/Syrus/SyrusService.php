@@ -96,7 +96,6 @@ class SyrusService
 
                 }
 
-
                 $date = Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString();
 
                 $photoEvent = PhotoEvent::whereImei($imei)->whereUid($fileName)->first();
