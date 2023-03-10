@@ -56,13 +56,13 @@ class Service4G extends SyrusService
 
         $response = collect([
             'success' => true,
-            'message' => "Success sync",
+            'message' => "Success sync 4G",
         ]);
 
         $path = "$imei/192.168.1.45/2023-02-17";
         $response->put('imei', $imei);
 
-        $storage = Storage::disk('4G');
+        $storage = Storage::disk('Sync4G');
         $files = collect($storage->files($path));
 
         Log::info("         • Vehicle #$vehicle->number total FPT photos: " . $files->count());
