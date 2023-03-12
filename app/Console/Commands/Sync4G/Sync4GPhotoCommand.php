@@ -4,6 +4,7 @@ namespace App\Console\Commands\Sync4G;
 
 use App\Models\Company\Company;
 use App\Services\GPS\Service4G\Service4G;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
@@ -51,10 +52,9 @@ Sync4GPhotoCommand extends Command
     {
         $imei = $this->option('imei');
         $date = $this->option('date');
-
-
+        $date4G = $date ?: Carbon::now()->toDateString();
          if ($imei) {
-            $response = $this->Service4G->syncPhoto($imei);
+            $response = $this->Service4G->syncPhoto($imei,$date4G);
             $this->info($response);
         }
     }

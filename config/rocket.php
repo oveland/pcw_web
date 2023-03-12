@@ -980,13 +980,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 20],
+                            'range' => [0, 40],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
                         ],
                         [
-                            'range' => [20, 60],
+                            'range' => [40, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
@@ -1047,13 +1047,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 50],
+                            'range' => [0, 40],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
                         ],
                         [
-                            'range' => [50, 75],
+                            'range' => [40, 75],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true

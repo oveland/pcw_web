@@ -29,7 +29,7 @@ class Service4G extends SyrusService
      * @throws FileNotFoundException
      * @throws Exception
      */
-    function syncPhoto($imei): Collection
+    function syncPhoto($imei,$date4G): Collection
     {
         if (!$this->readyToSync($imei)) return collect([
             'success' => false,
@@ -93,10 +93,6 @@ class Service4G extends SyrusService
                 if (!$fileHasError) {
                     $image = Image::make($storage->get($file));
 
-                    /*if ($vehicle->id == 1873 && intval($side) === 2) { // Corrige el giro de la c?mara vh 02 Montebello
-                        $image = $image->rotate(180);
-                    }*/
-
                     $process = $service->saveImageData([
                         'date' => $date,
                         'img' => $image->encode('data-url'),
@@ -136,73 +132,7 @@ class Service4G extends SyrusService
         if ($gps) $numberCamerasVehicle = $gps->vehicle->cameras()->count();
 
         if ($numberCamerasVehicle == 1) return '1';
-
-        if ($imei == '352557100791261') {
-            if (Str::startsWith($fileName, '1')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '3';
-            }
-        }
-        if ($imei == '352557104743722') {
-            if (Str::startsWith($fileName, '1')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '3';
-            }
-        }
-        if ($imei == '352557104791572') {
-            if (Str::startsWith($fileName, '1')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '3';
-            }
-        }
-        if ($imei == '352557104755908') {
-            if (Str::startsWith($fileName, '1')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '3';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '1';
-            }
-        }
-
-        if ($imei == '352557104727170') {
-            if (Str::startsWith($fileName, '2')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '1')) {
-                return '3';
-            }
-        }
-
-        if ($imei == '352557104789550') {
-            if (Str::startsWith($fileName, '1')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '3';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '2';
-            }
-        }
-
-
-
-        if (Str::startsWith($fileName, '1')) {
-            return '1';
-        } else if (Str::startsWith($fileName, '2')) {
-            return '2';
-        } else if (Str::startsWith($fileName, '3')) {
-            return '3';
-        }
+        
 
         return '0';
     }
