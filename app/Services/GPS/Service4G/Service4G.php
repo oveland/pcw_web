@@ -29,7 +29,7 @@ class Service4G extends SyrusService
      * @throws FileNotFoundException
      * @throws Exception
      */
-    function syncPhoto($imei,$date4G): Collection
+    function syncPhoto($imei): Collection
     {
         if (!$this->readyToSync($imei)) return collect([
             'success' => false,
