@@ -59,7 +59,7 @@ class Service4G extends SyrusService
             'message' => "Success sync 4G",
         ]);
 
-        $path = "$imei/192.168.1.45/2023-02-17";
+        $path = "$imei/192.168.1.45/2023-02-21";
         $response->put('imei', $imei);
 
         $storage = Storage::disk('Sync4G');
@@ -127,12 +127,12 @@ class Service4G extends SyrusService
 
     function getSide($fileName, $imei)
     {
-        $numberCamerasVehicle = 0;
-        $gps = GpsVehicle::where('imei', $imei)->first();
-        if ($gps) $numberCamerasVehicle = $gps->vehicle->cameras()->count();
-
-        if ($numberCamerasVehicle == 1) return '1';
-        
+        $fileNames= explode('_', $fileName);
+        if ($fileNames[2] == 'ch3') return '1';
+        if ($fileNames[2] == 'ch4') return '2';
+        if ($fileNames[2] == 'ch5') return '3';
+        if ($fileNames[2] == 'ch7') return '4';
+        if ($fileNames[2] == 'ch8') return '5';
 
         return '0';
     }
