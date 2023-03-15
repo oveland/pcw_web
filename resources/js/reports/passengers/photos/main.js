@@ -54,6 +54,14 @@ let adminRocketView = new Vue({
                 {
                     id: '3',
                     name: 'Cámara 3'
+                },
+                {
+                    id: '4',
+                    name: 'Cámara 4'
+                },
+                {
+                    id: '5',
+                    name: 'Cámara 5'
                 }
             ]
         },
