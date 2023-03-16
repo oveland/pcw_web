@@ -244,7 +244,7 @@ class Company extends Model
                 self::YUMBENOS,
                 self::MONTEBELLO,
                 self::TRANSPUBENZA,
-//                self::EXPRESO_PALMIRA,
+                self::EXPRESO_PALMIRA,
                 self::VALLEDUPAR,
                 self::ARMENIA,
                 self::VALLEDUPAR,
