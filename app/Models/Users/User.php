@@ -130,7 +130,9 @@ class User extends Authenticatable
 
     public function isExpreso()
     {
-        return $this->id == 2018101286 || $this->id == 2018101362 || $this->id ==2018101369 || $this->id ==2018101372 || $this->id ==2018101377;
+        return $this->id == 2018101286 || $this->id == 2018101362 || $this->id ==2018101369 || $this->id ==2018101372 || $this->id ==2018101377
+            || $this->id == 2018101383 || $this->id == 2018101382 || $this->id == 2018101381 ||$this->id == 2018101380
+            ||$this->id == 2018101379 || $this->id == 2018101378;
     }
 
     /**
@@ -313,7 +315,15 @@ class User extends Authenticatable
             2018101362,  // Paola
             2018101369, // henny
             2018101372, // Dora
-            2018101377, // Diana
+            2018101377,// Diana
+            2018101383,
+            2018101382,
+            2018101381,
+            2018101380,// nuevos usuarios EP
+            2018101379,
+            2018101378,
+
+
 
         ];
 
@@ -340,6 +350,13 @@ class User extends Authenticatable
             2018101369, //henny
             2018101372, //Dora
             2018101377, //diana
+            2018101383,
+            2018101382,
+            2018101381, // nuevos usuarios EP
+            2018101380,
+            2018101379,
+            2018101378,
+
         ];
 
         return in_array($this->id, $usersCan) || $this->isAdmin();

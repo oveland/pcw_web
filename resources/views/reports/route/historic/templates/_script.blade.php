@@ -542,7 +542,7 @@
                 if (trip.index <= index) {
                     html += `<li class="${classLast}">
                         <small>
-                            <span><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${ this.report.config.show.passengers ? trip.passengers.inRoundTrip : ''}</span>
+                            <span><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${trip.passengers.inRoundTrip}</span>
                         </small>
                     </li>`;
                 }
