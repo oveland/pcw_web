@@ -236,7 +236,7 @@
     }
 
     .counter-event {
-        font-size: 0.9rem !important;
+        font-size: 1.7rem !important;
     }
 
     .counter-event.activated{
@@ -249,6 +249,6 @@
         position: absolute;
         width: 100%;
         display: block;
-        top: 15px;
+        top: 24px;
     }
 </style>

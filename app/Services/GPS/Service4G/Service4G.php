@@ -41,7 +41,7 @@ class Service4G extends SyrusService
         $service = new PhotoService();
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
-
+        
         if (!$gpsVehicle) return collect([
             'success' => false,
             'message' => "Imei $imei is not associated with a vehicle",
@@ -49,7 +49,7 @@ class Service4G extends SyrusService
 
         $vehicle = $gpsVehicle->vehicle;
 
-        $waitSeconds = random_int(0, 240);
+        $waitSeconds = random_int(0,5);
         Log::info("Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
         sleep($waitSeconds);
         Log::info("        • Start sync for vehicle $vehicle->number");
@@ -58,8 +58,8 @@ class Service4G extends SyrusService
             'success' => true,
             'message' => "Success sync 4G",
         ]);
-
-        $path = "$imei/192.168.1.45/2023-02-21";
+        $deviceID = $gpsVehicle->device_id;
+        $path = "$deviceID/2023-03-16";
         $response->put('imei', $imei);
 
         $storage = Storage::disk('Sync4G');

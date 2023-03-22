@@ -48,19 +48,19 @@ class Kernel extends ConsoleKernel
             $schedule->command('rocket:count --vehicle-plate=ESY-699 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104791531')->everyFiveMinutes(); // Vehicle 2223  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ESY-708 --pa=2 --pr=5')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ESY-708 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104743177')->everyFiveMinutes(); // Vehicle 2221  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ESY-707 --pa=2 --pr=5')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ESY-707 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104743375')->everyFiveMinutes(); // Vehicle 2227  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ESY-710 --pa=2 --pr=5')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ESY-710 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104787364')->everyFiveMinutes(); // Vehicle 2225  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ESY-709 --pa=2 --pr=5')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ESY-709 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104743441')->everyFiveMinutes(); // Vehicle 2215  Expreso Palmira
-            $schedule->command('rocket:count --vehicle-plate=ESY-704 --pa=2 --pr=5')->everyThirtyMinutes();
+            $schedule->command('rocket:count --vehicle-plate=ESY-704 --pa=2 --pr=10')->everyThirtyMinutes();
 
             $schedule->command('syrus:sync-photos --imei=352557104735884')->everyFiveMinutes(); // Vehicle 6005  Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=ETK-677 --pa=10 --pr=20')->everyThirtyMinutes();
