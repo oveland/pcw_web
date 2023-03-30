@@ -117,6 +117,7 @@ class User extends Authenticatable
                 //|| $this->id == 1130648973    // BRIAN
                 || $this->id == 2018101255      // LEANDRO
                 || $this->id == 2018101280      // OLMER
+                || $this->id == 2018101359
             );
     }
 

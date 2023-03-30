@@ -10,6 +10,7 @@ use App\Models\Users\User;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Exports\PCWExporterEPService;
 use App\Traits\CounterByRecorder;
+use Auth;
 use Excel;
 
 class RouteExportEPService extends RouteExportService
@@ -47,34 +48,66 @@ class RouteExportEPService extends RouteExportService
 
                     //$roundTrip = $dispatchRegister->round_trip;
                     $roundTrip = $iteration + 1;
-                    $tarifRoute = "";
+                    $tarifRoute = 4500;
                     $nameRute = "";
                     //tarifas para diferentes rutas al exportar en excel 11/01/2023
                     $routeId = $dispatchRegister->route_id;
-                    if ($routeId == 279 || $routeId == 280) { //Ruta Palmira
+                    switch ($routeId){
+                        case $routeId ==279 || $routeId ==280:
+                            $tarifRoute = 4500;
+                            $nameRute = "RUTA PALMIRA";
+                            break;
+                        case $routeId ==272 || $routeId ==271:
+                            $tarifRoute = 4500;
+                            $nameRute = "RUTA PALMIRA ";
+                            break;
+                        case  $routeId == 282 || $routeId == 283:
+                            $tarifRoute = 11000;
+                            $nameRute = "RUTA AEROPUERTO";
+                            break;
+                    }
+                    /*if ($routeId == 279 or $routeId == 280 or $routeId == 272 or $routeId == 271 ) { //Ruta Palmira
                         $tarifRoute = 4500;
                         $nameRute = "RUTA PALMIRA";
                     } elseif ($routeId == 282 || $routeId == 283) { //Ruta Aeropuerto
                         $tarifRoute = 11000;
                         $nameRute = "RUTA AEROPUERTO";
-                    } else {
+                    }
+                    else {
                         $tarifRoute = "Parametrizar valor pasaje";
                         $nameRute = "RUTA : ";
+                    }*/
+                    if (Auth::user()->isSuperAdmin()){
+                        $dataExcel[] = [
+                            __('Date') => $dispatchRegister->date,                                                          # A CELL
+                            __('Route') => $route->name,                                                                    # B CELL
+                            __('Round Trip') => $roundTrip,                                                                 # C CELL
+                            __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
+                            __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # E CELL
+                            __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
+                            __('Status') => $dispatchRegister->status,                                                      # G CELL
+                            __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
+                            __('Valor pasaje') => '',                                                                       # I CELL
+                            __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
+                            __('#sensor') => $dispatchRegister->final_sensor_counter,                                                                     # K CELL
+                        ];
+                    }else{
+                        $dataExcel[] = [
+                            __('Date') => $dispatchRegister->date,                                                          # A CELL
+                            __('Route') => $route->name,                                                                    # B CELL
+                            __('Round Trip') => $roundTrip,                                                                 # C CELL
+                            __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
+                            __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # E CELL
+                            __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
+                            __('Status') => $dispatchRegister->status,                                                      # G CELL
+                            __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
+                            __('Valor pasaje') => '',                                                                       # I CELL
+                            __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
+                            __('Usuario') => $username,
+                        ];
                     }
 
-                    $dataExcel[] = [
-                        __('Date') => $dispatchRegister->date,                                                          # A CELL
-                        __('Route') => $route->name,                                                                    # B CELL
-                        __('Round Trip') => $roundTrip,                                                                 # C CELL
-                        __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
-                        __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # E CELL
-                        __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
-                        __('Status') => $dispatchRegister->status,                                                      # G CELL
-                        __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
-                        __('Valor pasaje') => '',                                                                       # I CELL
-                        __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
-                        __('Usuario') => $username,                                                                     # K CELL
-                    ];
+
 
                     $totalDeadTime = $deadTime ? StrTime::addStrTime($totalDeadTime, $deadTime) : $totalDeadTime;
 
