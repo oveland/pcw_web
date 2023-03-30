@@ -56,10 +56,29 @@ class GPSCheckServerCommand extends Command
         $this->issues = collect([]);
 
         $this->checkGPSServer();
+        $this->checkRecognitionServer();
+
         $this->checkDatabaseServer();
         $this->checkTCPConnections();
 
+
         $this->sendAlerts();
+    }
+
+    public function checkRecognitionServer()
+    {
+        $isServerOK = false;
+        try {
+            $client = new Client(['base_uri' => 'http://100.20.192.70:5005/']);
+            $response = $client->get('/');
+
+            if ($response->getStatusCode() == 200) $isServerOK = true;
+        } catch (\Exception $x) {
+        }
+
+        if (!$isServerOK) {
+            $this->issues->push("Recognition Server OpenCV is down! $this->now");
+        }
     }
 
     public function checkTCPConnections()
