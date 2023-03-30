@@ -137,6 +137,24 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104736338')->everyFiveMinutes(); // Vehicle 2741 expreso palmira
             $schedule->command('rocket:count --vehicle-plate=SPK-388 --pa=2 --pr=10')->everyThirtyMinutes();
 
+            $schedule->command('syrus:sync-photos --imei=352557104787356')->everyFiveMinutes(); // Vehicle 6619  expreso palmira
+            $schedule->command('rocket:count --vehicle-plate=ETK-812 --pa=2 --pr=10')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104791069')->everyFiveMinutes(); // Vehicle  expreso 6617 palmira
+            $schedule->command('rocket:count --vehicle-plate=ETK-811 --pa=2 --pr=10')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104791234')->everyFiveMinutes(); // Vehicle  expreso 6621 palmira
+            $schedule->command('rocket:count --vehicle-plate=ETK-813 --pa=2 --pr=10')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104743391')->everyFiveMinutes(); // Vehicle  expreso 6623 palmira
+            $schedule->command('rocket:count --vehicle-plate=ETK-814 --pa=2 --pr=10')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104787208')->everyFiveMinutes(); // Vehicle  expreso 2735 palmira
+            $schedule->command('rocket:count --vehicle-plate=KUL-706 --pa=2 --pr=10')->everyThirtyMinutes();
+
+            $schedule->command('syrus:sync-photos --imei=352557104744696')->everyFiveMinutes(); // Vehicle  expreso 6615 palmira
+            $schedule->command('rocket:count --vehicle-plate=ETK-810 --pa=2 --pr=10')->everyThirtyMinutes();
+
             /**********************************VALLEDUPAR*************************************************/
 
             $schedule->command('syrus:sync-photos --imei=352557100791261')->everyFiveMinutes(); // Vehicle 9011 Valledupar - vehiculo sale de circulacion
