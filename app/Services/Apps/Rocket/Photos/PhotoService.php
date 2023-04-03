@@ -553,7 +553,7 @@ class PhotoService
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip WHERE id_registro = $drId AND id_empresa <> 39");
             if ($this->vehicle->id==2607){
-                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, rocket_max_criteria = $countMaxByRoundTrip WHERE id_registro = $drId");
+                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, edited_info = $countMaxByRoundTrip WHERE id_registro = $drId");
             }
         }
 
