@@ -106,7 +106,7 @@
                 @lang('Pasajeros Planilla')
             </th>
         @endif
-        @if(Auth::user()->isSuperAdmin()){
+        @if(Auth::user()->isSuperAdmin())
             <th class="text-center">
                 <i class="fa fa-file  fa-3x fa-fw"></i><br>
                 @lang('Dif. Planilla')
@@ -618,7 +618,7 @@
                 @endif
             </td>
 
-            @if(Auth::user()->isSuperAdmin()){
+            @if(Auth::user()->isSuperAdmin())
             <td class="text-center">
                 <small class="tooltips text-bold"
                        data-title="@lang('Diferencia conteo Visual - conteo Planilla ')">
@@ -645,7 +645,6 @@
                     {{  $diferencePassenger * 11000}}
                 </small>
             </td>
-            }
             @endif
 
             <td width="15%"
@@ -780,8 +779,6 @@
     </tbody>
 </table>
 <!-- end table -->
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="sweetalert2.all.min.js"></script>
 <script type="application/javascript">
 
     @if( Auth::user()->belongsToCootransol() )
