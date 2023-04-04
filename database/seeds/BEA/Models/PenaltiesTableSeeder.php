@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Company\Company;
-use App\Services\BEA\BEASyncService;
+use App\Services\LM\Sources\BEA\DEFSyncService;
 use Illuminate\Database\Seeder;
 
 class PenaltiesTableSeeder extends Seeder
@@ -11,15 +11,15 @@ class PenaltiesTableSeeder extends Seeder
      */
     private $company;
     /**
-     * @var BEASyncService
+     * @var DEFSyncService
      */
     private $sync;
 
     /**
      * DiscountsTableSeeder constructor.
-     * @param BEASyncService $sync
+     * @param \App\Services\LM\BEA\DEFSyncService $sync
      */
-    public function __construct(BEASyncService $sync)
+    public function __construct(DEFSyncService $sync)
     {
         $this->company = Company::find(Company::PAPAGAYO);
         $this->sync = $sync;

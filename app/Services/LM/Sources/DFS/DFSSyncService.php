@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\DFS;
+namespace App\Services\LM\Sources\DFS;
 
 use App\Facades\DFSDB;
 use App\Http\Controllers\Utils\Geolocation;
@@ -19,6 +19,8 @@ use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Throwable;
+use function collect;
+use function config;
 
 class DFSSyncService extends SyncService
 {

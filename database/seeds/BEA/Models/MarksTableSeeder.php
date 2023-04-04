@@ -1,17 +1,17 @@
 <?php
 
 use App\Models\Company\Company;
-use App\Services\BEA\BEASyncService;
+use App\Services\LM\Sources\BEA\DEFSyncService;
 use Illuminate\Database\Seeder;
 
 class MarksTableSeeder extends Seeder
 {
     /**
-     * @var BEASyncService
+     * @var DEFSyncService
      */
     private $sync;
 
-    public function __construct(BEASyncService $sync)
+    public function __construct(DEFSyncService $sync)
     {
         $this->sync = $sync;
         $this->sync->company = Company::find(Company::PAPAGAYO);

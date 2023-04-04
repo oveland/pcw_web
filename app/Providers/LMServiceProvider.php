@@ -3,13 +3,15 @@
 namespace App\Providers;
 
 use App\Models\Company\Company;
-use App\Services\DFS\DFSSyncService;
+use App\Services\LM\Sources\Alameda\APIService;
+use App\Services\LM\Sources\BEA\BEASyncService;
+use App\Services\LM\Sources\DFS\DFSSyncService;
 use App\Services\LM\LMRepository;
 use App\Services\LM\LMService;
-use App\Services\BEA\BEASyncService;
+use App\Services\LM\Sources\Alameda\AlamedaSyncService;
 use App\Services\LM\CommissionService;
-use App\Services\BEA\DBService as BEADatabase;
-use App\Services\DFS\DBService as DFSDatabase;
+use App\Services\LM\Sources\BEA\DBService as BEADatabase;
+use App\Services\LM\Sources\DFS\DBService as DFSDatabase;
 use App\Services\LM\DiscountService;
 use App\Services\LM\PenaltyService;
 use App\Services\LM\Reports\LMReportService;
@@ -43,10 +45,14 @@ class LMServiceProvider extends ServiceProvider
             return new DFSDatabase();
         });
 
+        $this->app->bind('lm.api.alameda', function () {
+            return new APIService();
+        });
+
         $this->app->bind('lm.service', function ($app, $params) {
             $user = Auth::user();
             $dbId = $user ? $user->show_db_id : 1;
-            if(isset($params['db_id']) && $params['db_id']) {
+            if (isset($params['db_id']) && $params['db_id']) {
                 $dbId = $params['db_id'];
             }
 
@@ -61,9 +67,9 @@ class LMServiceProvider extends ServiceProvider
                     break;
                 case Company::COODETRANS:
                     $syncService = new BEASyncService($company, $repository);
-
+                    break;
                 case Company::ALAMEDA:
-                    $syncService = new BEASyncService($company, $repository);
+                    $syncService = new AlamedaSyncService($company, $repository);
                     break;
             }
 

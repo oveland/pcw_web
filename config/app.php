@@ -258,6 +258,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
 
         'BEADB' => App\Facades\BEADB::class,
+        'AlamedaAPI' => App\Facades\AlamedaAPI::class,
     ],
 
     /*

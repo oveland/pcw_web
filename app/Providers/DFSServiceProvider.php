@@ -3,10 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Company\Company;
-use App\Services\DFS\DFSSyncService;
+use App\Services\LM\Sources\DFS\DFSSyncService;
 use App\Services\LM\LMRepository;
 use App\Services\LM\LMService;
-use App\Services\BEA\BEASyncService;
 use App\Services\LM\CommissionService;
 use App\Services\LM\DiscountService;
 use App\Services\LM\PenaltyService;

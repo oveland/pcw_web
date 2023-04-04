@@ -1,23 +1,21 @@
 <?php
 
-use App\Facades\BEADB;
 use App\Models\Company\Company;
-use App\Models\Drivers\Driver;
-use App\Services\BEA\BEASyncService;
+use App\Services\LM\Sources\BEA\DEFSyncService;
 use Illuminate\Database\Seeder;
 
 class DriversTableSeeder extends Seeder
 {
     /**
-     * @var BEASyncService
+     * @var \App\Services\LM\Sources\BEA\DEFSyncService
      */
     private $sync;
 
     /**
      * DriversTableSeeder constructor.
-     * @param BEASyncService $sync
+     * @param DEFSyncService $sync
      */
-    public function __construct(BEASyncService $sync)
+    public function __construct(DEFSyncService $sync)
     {
         $this->sync = $sync;
         $this->sync->company = Company::find(Company::PAPAGAYO);

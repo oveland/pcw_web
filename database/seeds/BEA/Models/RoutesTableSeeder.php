@@ -1,19 +1,17 @@
 <?php
 
-use App\Facades\BEADB;
 use App\Models\Company\Company;
-use App\Models\Routes\Route;
-use App\Services\BEA\BEASyncService;
+use App\Services\LM\Sources\BEA\DEFSyncService;
 use Illuminate\Database\Seeder;
 
 class RoutesTableSeeder extends Seeder
 {
     /**
-     * @var BEASyncService
+     * @var \App\Services\LM\Sources\BEA\DEFSyncService
      */
     private $sync;
 
-    public function __construct(BEASyncService $sync)
+    public function __construct(DEFSyncService $sync)
     {
         $this->sync = $sync;
         $this->sync->company = Company::find(Company::PAPAGAYO);

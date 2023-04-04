@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\BEA;
+namespace App\Console\Commands\LM;
 
 use App\Mail\BEA\ConsolidatedDailyReportMail;
 use App\Models\Company\Company;
@@ -16,7 +16,7 @@ class ConsolidatedDailyReportMailCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'send-mail-bea:daily {--company=30} {--prev-days=1} {--date=} {--prod=}';
+    protected $signature = 'lm:send-mail:daily {--company=30} {--prev-days=1} {--date=} {--prod=}';
 
     /**
      * The console command description.

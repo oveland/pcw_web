@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services\BEA;
+namespace App\Services\LM\Sources\BEA;
 
 use App\Services\LM\BD\Database as LMDatabase;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use function collect;
 
 class DBService extends LMDatabase
 {

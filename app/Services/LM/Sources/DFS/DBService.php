@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Services\DFS;
+namespace App\Services\LM\Sources\DFS;
 
 use App\Services\LM\BD\Database as LMDatabase;
 use DB;
 use Exception;
 use Illuminate\Support\Collection;
+use function collect;
 
 class DBService extends LMDatabase
 {

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\BEA;
+namespace App\Services\LM\Sources\Alameda;
 
+use App\Facades\AlamedaAPI;
 use App\Facades\BEADB;
 use App\Models\LM\Mark;
 use App\Models\LM\Trajectory;
@@ -17,8 +18,10 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Throwable;
+use function collect;
+use function config;
 
-class BEASyncService extends SyncService
+class AlamedaSyncService extends SyncService
 {
     protected $type = 'bea';
 
@@ -109,9 +112,11 @@ class BEASyncService extends SyncService
         $maxSequence = collect(DB::select("SELECT max(id_rutas) max FROM ruta"))->first()->max + 1;
         DB::statement("ALTER SEQUENCE routes_id_seq RESTART WITH $maxSequence");
 
-        $routes = BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_RUTA");
+        $routes = AlamedaAPI::getRoutes();
 
         $this->log("Sync " . $routes->count() . " routes from LM");
+
+        dd('$routes ', $routes);
 
         foreach ($routes as $routeBEA) {
             $this->validateRoute($routeBEA->CRU_IDRUTA, $routeBEA);
@@ -120,6 +125,45 @@ class BEASyncService extends SyncService
         $maxSequence = Route::max('id') + 1;
         DB::statement("ALTER SEQUENCE ruta_id_rutas_seq RESTART WITH $maxSequence");
     }
+
+    /**
+     * @param $routeMLId
+     * @param $data
+     * @return Route|null
+     * @throws Exception
+     */
+    private function validateRoute($routeMLId, $data = null)
+    {
+        $route = Route::where('bea_id', $routeMLId)
+            ->where('db_id', $this->dbId)
+            ->where('company_id', $this->company->id)->first();
+
+        if (!$route) {
+            $route = new Route();
+            $route->dispatch_id = 27;
+            $route->distance = 0;
+            $route->road_time = 0;
+            $route->url = 'none';
+            $route->active = true;
+            $route->company_id = $this->company->id;
+            $route->created_at = Carbon::now();
+            $route->name = "ML | $data->name";
+
+            $this->log("Migrated route with bea_id = $route->bea_id");
+        }
+
+        $route->bea_id = $data->id;
+        $route->db_id = $this->dbId;
+
+        $route->updated_at = Carbon::now();
+
+        if (!$route->save()) {
+            throw new Exception("Error on validation save ROUTE with id: $data->id");
+        }
+
+        return $route;
+    }
+
 
     /**
      * Sync A_DERROTERO >> bea_trajectories
@@ -343,51 +387,6 @@ class BEASyncService extends SyncService
         }
 
         return $trajectory;
-    }
-
-    /**
-     * @param $routeBEAId
-     * @param $data
-     * @return Route|integer|null
-     * @throws Exception
-     */
-    private function validateRoute($routeBEAId, $data = null)
-    {
-        $route = null;
-        if ($routeBEAId) {
-            $routeBEA = $data ?: BEADB::for($this->company, $this->dbId)->select("SELECT * FROM C_RUTA WHERE CRU_IDRUTA = $routeBEAId")->first();
-            if ($routeBEA) {
-
-                $route = Route::where('bea_id', $routeBEAId)
-                    ->where('db_id', $this->dbId)
-                    ->where('company_id', $this->company->id)->first();
-
-                if (!$route) {
-                    $route = new Route();
-                    $route->dispatch_id = 46;
-                    $route->distance = 0;
-                    $route->road_time = 0;
-                    $route->url = 'none';
-                    $route->active = true;
-                    $route->company_id = $this->company->id;
-                    $route->created_at = Carbon::now();
-
-                    $this->log("Migrated route with bea_id = $route->bea_id");
-                }
-
-                $route->bea_id = $routeBEA->CRU_IDRUTA;
-                $route->db_id = $this->dbId;
-                $route->name = "BEA | $routeBEA->CRU_DESCRIPCION";
-
-                $route->updated_at = Carbon::now();
-
-                if (!$route->save()) {
-                    throw new Exception("Error on validation save ROUTE with id: $routeBEA->CRU_IDRUTA");
-                }
-            }
-        }
-
-        return $route;
     }
 
     /**
