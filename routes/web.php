@@ -14,6 +14,8 @@
 use App\Models\Company\Company;
 use App\Models\Users\User;
 use App\Models\Vehicles\Vehicle;
+use App\Services\Auth\PCWAuthService;
+
 
 Auth::routes();
 
@@ -470,37 +472,22 @@ Route::prefix(__('link'))->group(function () {
         return view('reports.route.route.templates._externalLinks', compact('link'));
     })->name('link-report-route-chart-view');
 
-    // Url temporal. Because excel url on consolidated mail report was generated with url for historic view, instead of url for chart view on the month of March
-    // TODO: Delete next code on July 2019
-
-    /*Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic') . '/{dispatchRegister}', function (Illuminate\Http\Request $request, $first) {
-        $user = \App\Models\Users\User::find($first);
-
-        if(!$user){
-            return redirect(route('report-route-chart-view',['dispatchRegister' => $first, 'location' => 0]));
-        }
-        Auth::login($user, true);
-        return redirect(route('report-route-historic'));
-    });*/
-
-
     Route::any(__('reports') . '/' . __('routes') . '/' . __('url-historic') . '/{user}', function (User $user) {
-        Auth::login($user, true);
+        (new PCWAuthService(null))->authGuest($user, true);
         $hideMenu = $user->company->id == App\Models\Company\Company::COOTRANSOL && $user->isDispatcher() ? true : null;
 
         return redirect(route('report-route-historic'))->with('hide-menu', $hideMenu);
     })->name('link-report-route-historic-path');
 
     Route::get(__('url-operation') . "/" . __('url-vehicles') . "/" . __('vehicle-issues') . "/current/{company}/{user}", function (Company $company, User $user) {
-        Auth::login($user, true);
+        (new PCWAuthService(null))->authGuest($user, true);
         return redirect(route('operation-vehicles-issues-current', ['company' => $company->id]));
     });
 
     Route::get(__('url-operation') . "/" . __('url-vehicles') . "/" . __('vehicle-issues') . "/{user}", function (User $user, Request $request) {
-        if (Auth::guest()) Auth::login($user, true);
+        (new PCWAuthService(null))->authGuest($user, true);
         return redirect(route('report-vehicles-issues'))->with(['hide-menu' => true]);
     });
 
     Route::post("{user}/operation/vehicles/issues/{vehicle}/create", 'VehicleIssuesController@createFromOldPlatform');
 });
-

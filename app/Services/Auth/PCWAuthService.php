@@ -121,4 +121,10 @@ class PCWAuthService
 
         return $company->users;
     }
+
+    function authGuest(User $user = null, $remember = false, $force = false)
+    {
+        $user = $user ?: User::find(625565); // TODO: Change for security sessions for Laravel commands
+        if ((Auth::guest() || $force) && $user) Auth::login($user, $remember);
+    }
 }

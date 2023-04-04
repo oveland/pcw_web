@@ -13,6 +13,7 @@ use App\Models\Passengers\CurrentSensorPassengers;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Proprietaries\Proprietary;
 use App\Services\API\Apps\Contracts\APIAppsInterface;
+use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Traits\CounterByRecorder;
 use App\Traits\CounterBySensor;
@@ -236,8 +237,8 @@ class PCWProprietaryService implements APIAppsInterface
     public static function checkSession(Proprietary $proprietary)
     {
         $user = $proprietary->user;
-        if ($user && Auth::guest()) {
-            Auth::login($user);
-        }
+
+        $authService = new PCWAuthService(null);
+        $authService->authGuest($user);
     }
 }

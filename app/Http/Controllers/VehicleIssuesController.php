@@ -212,7 +212,7 @@ class VehicleIssuesController extends Controller
      */
     public function createFromOldPlatform(User $user, Vehicle $vehicle, Request $request)
     {
-        if (Auth::guest()) Auth::login($user, true);
+        $this->auth->authGuest($user, true);
         return $this->create($vehicle, $request);
     }
 

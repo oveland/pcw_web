@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\DispatchReportMail;
 use App\Models\Company\Company;
 use App\Models\Users\User;
+use App\Services\Auth\PCWAuthService;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -26,16 +27,21 @@ class DispatchReportMailCommand extends Command
      * @var string
      */
     protected $description = 'Sends dispatches route report mail';
+    /**
+     * @var PCWAuthService
+     */
+    private $authService;
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(PCWAuthService $authService)
     {
         parent::__construct();
-        Auth::login(User::find(625565));
+        $this->authService = $authService;
+        $this->authService->authGuest();
     }
 
     public function __destruct()
