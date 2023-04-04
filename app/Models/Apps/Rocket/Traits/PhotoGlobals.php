@@ -83,9 +83,7 @@ trait PhotoGlobals
     public function getAPIFields($encodeImage = 'url', $withEffects = true, $withMask = false)
     {
         $dispatchRegister = $this->dispatchRegister;
-
         $location = Location::select(['distance','date'])->where('id', $this->location_id)->first();
-
         if ($dispatchRegister) {
             $dispatchRegister = (object)[
                 'id' => $dispatchRegister->id,

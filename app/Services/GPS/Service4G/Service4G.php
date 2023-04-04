@@ -1,13 +1,14 @@
 <?php
 
 
-namespace App\Services\GPS\Syrus;
+namespace App\Services\GPS\Service4G;
 
 
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\PhotoEvent;
 use App\Models\Vehicles\GpsVehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
+use App\Services\GPS\Syrus\SyrusService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -20,23 +21,9 @@ use Symfony\Component\ErrorHandler\Error\FatalError;
 use Log;
 use App\Models\Apps\Rocket\SyncStatus;
 
-class SyrusService
+class Service4G extends SyrusService
 {
-    function readyToSync($imei)
-    {
-        $syncStatus = SyncStatus::where('imei', $imei)->first();
-        if (!$syncStatus) return true;
 
-        return !$syncStatus->busy || $syncStatus->updated_at->diffInMinutes() > 30;
-    }
-
-    function setStatus($imei, $busy)
-    {
-        $syncStatus = SyncStatus::where('imei', $imei)->first();
-        if (!$syncStatus) $syncStatus = new SyncStatus(['imei' => $imei]);
-        $syncStatus->busy = $busy;
-        $syncStatus->save();
-    }
 
     /**
      * @throws FileNotFoundException
@@ -54,7 +41,7 @@ class SyrusService
         $service = new PhotoService();
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
-
+        
         if (!$gpsVehicle) return collect([
             'success' => false,
             'message' => "Imei $imei is not associated with a vehicle",
@@ -62,20 +49,20 @@ class SyrusService
 
         $vehicle = $gpsVehicle->vehicle;
 
-        $waitSeconds = random_int(0, 240);
+        $waitSeconds = random_int(0,5);
         Log::info("Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
         sleep($waitSeconds);
         Log::info("        • Start sync for vehicle $vehicle->number");
 
         $response = collect([
             'success' => true,
-            'message' => "Success sync",
+            'message' => "Success sync 4G",
         ]);
-
-        $path = "$imei/images";
+        $deviceID = $gpsVehicle->device_id;
+        $path = "$deviceID/2023-03-16";
         $response->put('imei', $imei);
 
-        $storage = Storage::disk('syrus');
+        $storage = Storage::disk('Sync4G');
         $files = collect($storage->files($path));
 
         Log::info("         • Vehicle #$vehicle->number total FPT photos: " . $files->count());
@@ -84,7 +71,7 @@ class SyrusService
         foreach ($files as $index => $file) {
             $fileName = collect(explode('/', $file))->last();
 
-            if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
+            if (Str::endsWith($file, '.jpg') && !Photo::where('uid', $file)->first()) {
                 $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
 
@@ -105,10 +92,6 @@ class SyrusService
 
                 if (!$fileHasError) {
                     $image = Image::make($storage->get($file));
-
-                    /*if ($vehicle->id == 1873 && intval($side) === 2) { // Corrige el giro de la c?mara vh 02 Montebello
-                        $image = $image->rotate(180);
-                    }*/
 
                     $process = $service->saveImageData([
                         'date' => $date,
@@ -144,78 +127,12 @@ class SyrusService
 
     function getSide($fileName, $imei)
     {
-        $numberCamerasVehicle = 0;
-        $gps = GpsVehicle::where('imei', $imei)->first();
-        if ($gps) $numberCamerasVehicle = $gps->vehicle->cameras()->count();
-
-        if ($numberCamerasVehicle == 1) return '1';
-
-        if ($imei == '352557100791261') {
-            if (Str::startsWith($fileName, '1')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '3';
-            }
-        }
-        if ($imei == '352557104743722') {
-            if (Str::startsWith($fileName, '1')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '3';
-            }
-        }
-        if ($imei == '352557104791572') {
-            if (Str::startsWith($fileName, '1')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '3';
-            }
-        }
-        if ($imei == '352557104755908') {
-            if (Str::startsWith($fileName, '1')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '3';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '1';
-            }
-        }
-
-        if ($imei == '352557104727170') {
-            if (Str::startsWith($fileName, '2')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '1')) {
-                return '3';
-            }
-        }
-
-        if ($imei == '352557104789550') {
-            if (Str::startsWith($fileName, '1')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '3';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '2';
-            }
-        }
-
-
-
-        if (Str::startsWith($fileName, '1')) {
-            return '1';
-        } else if (Str::startsWith($fileName, '2')) {
-            return '2';
-        } else if (Str::startsWith($fileName, '3')) {
-            return '3';
-        }
+        $fileNames= explode('_', $fileName);
+        if ($fileNames[2] == 'ch3') return '1';
+        if ($fileNames[2] == 'ch4') return '2';
+        if ($fileNames[2] == 'ch5') return '3';
+        if ($fileNames[2] == 'ch7') return '4';
+        if ($fileNames[2] == 'ch8') return '5';
 
         return '0';
     }

@@ -73,6 +73,9 @@ return [
         'syrus' => [
             'driver' => 'local',
             'root' => env('GPS_DEVICES_SYRUS_FTP_BASE_PATH'),
+        ],'Sync4G' => [
+            'driver' => 'local',
+            'root' => env('GPS_DEVICES_4G_FTP_BASE_PATH'),
         ],
     ],
 

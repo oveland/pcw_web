@@ -122,7 +122,8 @@
                     this.seatOccupied = draw.profile.seatOccupied;
                 }
             },
-            clearBusySeating(draw) {
+
+          clearBusySeating(draw) {
                 draw.selectedClass = '';
                 this.busySeating = [];
             },
@@ -165,9 +166,11 @@
     }
 
     .container-photo .zone-detection small {
-        font-size: 0.5em;
-        color: #e2e1e1;
-        float: left;
+      font-size: 1rem;
+      color: #ffcd00;
+      float: left;
+      background: #000000a3;
+      font-weight: 700;
     }
 
     .container-photo .zone-detection.selected, .container-photo .zone-detection-center.selected {

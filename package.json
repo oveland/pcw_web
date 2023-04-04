@@ -30,7 +30,6 @@
     "bootstrap-vue": "^2.15.0",
     "konva": "^6.0.0",
     "laravel-echo": "^1.11.3",
-    "node-sass": "^4.14.1",
     "numeral": "^2.0.6",
     "pusher-js": "^5.1.1",
     "sweetalert2": "^9.17.2",

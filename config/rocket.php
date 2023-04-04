@@ -980,13 +980,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 20],
+                            'range' => [0, 40],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
                         ],
                         [
-                            'range' => [20, 60],
+                            'range' => [40, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
@@ -1047,13 +1047,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 50],
+                            'range' => [0, 40],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
                         ],
                         [
-                            'range' => [50, 75],
+                            'range' => [40, 75],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
@@ -1116,16 +1116,16 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 15],
+                            'range' => [0, 35],
                             'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
-                            'range' => [15, 60],
+                            'range' => [35, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
                             'range' => [60, 70],
@@ -1158,12 +1158,12 @@ return [
                     ],
                     'draw' => [
                         'heightFromWidth' => [
-                            'nd' => 120,                            # Percent of height when Normal Detection
-                            'ld' => 150                              # Percent of height when Large Detection
+                            'nd' => 100,                            # Percent of height when Normal Detection
+                            'ld' => 100                              # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
-                            'nd' => 50,                             # Percent top of point center when Normal Detection
-                            'ld' => 40                              # Percent top of point center when Large Detection
+                            'nd' => 75,                             # Percent top of point center when Normal Detection
+                            'ld' => 50                             # Percent top of point center when Large Detection
                         ]
                     ]
                 ]
@@ -1189,13 +1189,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 30],
+                            'range' => [0, 20],
                             'color' => 'blue',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => false
+                            'count' => true
                         ],
                         [
-                            'range' => [30, 40],
+                            'range' => [20, 40],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
@@ -1214,12 +1214,12 @@ return [
                         ]
                     ],
                     'box' => [
-                        'ld' => 2.5,                                # Min relation height/width for Large Detection
-                        'mld' => 2,                                 # Min width percent (about of image size) for Large Detection
+                        'ld' => 5,                                # Min relation height/width for Large Detection
+                        'mld' => 5,                                 # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
-                            'rs' => 3.5,                            # Min relation height/width for Overlap Detection
+                            'rs' => 1.0,                            # Min relation height/width for Overlap Detection
                             'rsw' => 15,                            # Min percent height for Overlap Detection when rs
                         ]
                     ],
@@ -1420,12 +1420,12 @@ return [
                         ]
                     ],
                     'box' => [
-                        'ld' => 6,                                # Min relation height/width for Large Detection
-                        'mld' => 10,                                # Min width percent (about of image size) for Large Detection
+                        'ld' => 2,                                # Min relation height/width for Large Detection
+                        'mld' => 1,                                # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection
-                            'rs' => 3.5,                            # Min relation height/width for Overlap Detection
+                            'rs' => 1.0,                            # Min relation height/width for Overlap Detection
                             'rsw' => 15,                            # Min percent height for Overlap Detection when rs
                         ]
                     ],
@@ -1487,8 +1487,8 @@ return [
                         ]
                     ],
                     'box' => [
-                        'ld' => 5,                                # Min relation height/width for Large Detection
-                        'mld' => 5,                                 # Min width percent (about of image size) for Large Detection
+                        'ld' => 2,                                # Min relation height/width for Large Detection
+                        'mld' => 1,                                 # Min width percent (about of image size) for Large Detection
                         'od' => [
                             'width' => 10,                          # Min percent width for Overlap Detection
                             'height' => 60,                         # Min percent height for Overlap Detection

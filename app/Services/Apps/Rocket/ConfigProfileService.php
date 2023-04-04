@@ -109,20 +109,32 @@ class ConfigProfileService
                     $release = 15;
                 }
             }
-
-           /* if ($this->vehicle->id == 2585) {
-                if ($this->profileSeat->camera == '1') {
-                    $activate = 1;
-                    $release = 10;
-                } else if ($this->profileSeat->camera == '2') {
+            
+            if ($this->vehicle->id == 2614) {
+                if ($this->profileSeat->camera == '3') {
+                    $activate = 3;
+                    $release = 4;
+                  }
+                if (collect([20])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 2;
-                    $release = 6;
-                } else if ($this->profileSeat->camera == '3') {
-                    $activate = 1;
-                    $release = 10;
+                    $release = 48;
+                    }
                 }
 
-            }*/
+
+            /* if ($this->vehicle->id == 2585) {
+                 if ($this->profileSeat->camera == '1') {
+                     $activate = 1;
+                     $release = 10;
+                 } else if ($this->profileSeat->camera == '2') {
+                     $activate = 2;
+                     $release = 6;
+                 } else if ($this->profileSeat->camera == '3') {
+                     $activate = 1;
+                     $release = 10;
+                 }
+
+             }*/
 
             if ($this->vehicle->id == 2563) { // VH 5015 valledupar   OJO!!!!!!
                 if (collect([1,7,15])->contains(intval($number))) { // Asientos con poca cobertura
@@ -149,6 +161,20 @@ class ConfigProfileService
                     $release = 20;
                 }
             }
+
+            if ($this->vehicle->id == 2601) { // VH 041 IBAGUE   OJO!!!!!!
+                if (collect([1])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 20;
+                }
+            }
+            if ($this->vehicle->id == 2556) { // VH  5000 valledupar   OJO!!!!!!
+                if (collect([1,2])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 8;
+                }
+            }
+
 
 //            if (collect([9, 10, 11, 12, 13, 14, 19, 20, 21,22, 23])->contains(intval($number))) {
 //                $activate = $rActivate ? $rActivate : 5;

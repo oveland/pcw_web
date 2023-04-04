@@ -541,15 +541,20 @@ class PhotoService
 
         foreach ($drIds as $drId) {
             $countByRoundTrip = 0;
+            $countMaxByRoundTrip = 0;
             foreach ($historicByCameras as $historicCamera) {
                 $data = $historicCamera->get($drId);
                 if ($data && $data->sortBy('date')->last()) {
                     $countByRoundTrip = $countByRoundTrip + $data->sortBy('time')->last()->passengers->totalInRoundTrip;
+                    $countMaxByRoundTrip = $countMaxByRoundTrip + $data->sortBy('time')->last()->passengers->maxPersonByRoundtrip;
                 }
             }
 
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip WHERE id_registro = $drId AND id_empresa <> 39");
+            if ($this->vehicle->id==2607){
+                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, edited_info = $countMaxByRoundTrip WHERE id_registro = $drId");
+            }
         }
 
 
@@ -849,6 +854,7 @@ class PhotoService
                 $criteriaCount = 'averages';
                 $criteriaCount = 'topologies';
 
+
                 switch ($criteriaCount) {
                     case 'averages':
                         ###### AVERAGES BETWEEN TOPOLOGIES AND FACES MAX CRITERIA
@@ -867,6 +873,7 @@ class PhotoService
                         #### Default Count by topologies
                         $personsByRoundTrip = $personsByRoundTripT;
                         $totalPersons = $totalPersonsT;
+                        $maxPersonByRoundtrip = $rekognitionCounts->get('faces')->max->value;
                         break;
                 }
 
@@ -905,6 +912,7 @@ class PhotoService
                         'total' => $totalPersons,
                         'totalSumOccupied' => $totalSumOccupied,
                         'totalSumReleased' => $totalSumReleased,
+                        'maxPersonByRoundtrip' => $maxPersonByRoundtrip,
                     ]
                 ]);
 
