@@ -28,11 +28,11 @@ class RocketServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->bind('rocket.photo.rekognition.persons', function ($app, $params) {
-            return new PersonsRekognitionService(new PersonsZone(), $params['profileSeating']);
+            return new PersonsRekognitionService(new PersonsZone(), $params['profileSeating'], $params['configProfile']);
         });
 
         $this->app->bind('rocket.photo.rekognition.faces', function ($app, $params) {
-            return new FacesRekognitionService(new FacesZone(), $params['profileSeating']);
+            return new FacesRekognitionService(new FacesZone(), $params['profileSeating'], $params['configProfile']);
         });
     }
 }

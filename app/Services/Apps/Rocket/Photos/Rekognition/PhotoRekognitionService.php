@@ -3,6 +3,7 @@
 
 namespace App\Services\Apps\Rocket\Photos\Rekognition;
 
+use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Services\Apps\Rocket\ConfigProfileService;
@@ -36,11 +37,11 @@ abstract class PhotoRekognitionService
      * @param ProfileSeat $profileSeat
      * @throws Exception
      */
-    function __construct(PhotoZone $photoZone, ProfileSeat $profileSeat)
+    function __construct(PhotoZone $photoZone, ProfileSeat $profileSeat, ConfigProfile $configProfile)
     {
         $this->photoZone = $photoZone;
 
-        $configService = new ConfigProfileService($profileSeat);
+        $configService = new ConfigProfileService($profileSeat, $configProfile);
         $this->config = $configService->type($this->type);
         $this->profileSeat = $profileSeat;
     }
@@ -145,7 +146,7 @@ abstract class PhotoRekognitionService
             return collect(range($rangeArray->first(), $rangeArray->last()))->contains($confidence);
         })->first());
 
-        $count = $rule->get('count') && !$boxZone->overlap && !$boxZone->largeDetection;
+        $count = $rule->get('count') && !$boxZone->overlap && !$boxZone->largeDetection && !$boxZone->invalidSize;
 
         if (!$count) {
             $rule->put('color', 'rgba(255, 50, 55, 0.78)');
@@ -155,6 +156,10 @@ abstract class PhotoRekognitionService
             $rule->put('color', 'rgba(3, 168, 255, 0.78)');
         }
 
+        if ($boxZone->invalidSize) {
+            $rule->put('color', 'rgba(137, 138, 135, 0.1)');
+        }
+
         $background = ($count ? $rule->get('background') : 'rgba(137, 138, 135, 0.1)');
 
         $rule->put('count', $count && !$boxZone->overlap);
@@ -162,6 +167,7 @@ abstract class PhotoRekognitionService
         $rule->put('background', $background);
         $rule->put('largeDetection', $boxZone->largeDetection);
         $rule->put('relationSize', $boxZone->relationSize);
+        $rule->put('invalidSize', $boxZone->invalidSize);
 
         return (object)$rule->toArray();
     }
@@ -174,11 +180,8 @@ abstract class PhotoRekognitionService
     {
         $boundingBox = (object)$boundingBox;
 
-        $largeDetection = false;
         $configBox = $this->config->photo->rekognition->box;
-        $cameraConfig = collect($this->config->cameras)->get($this->profileSeat->camera);
-        $processLargeDetection = $cameraConfig->largeDetection ?? false;
-        $processMaxWidth = $cameraConfig->processMaxWidth ?? false;
+        $cameraConfig = (object)$this->config->camera;
 
         $width = $boundingBox->width;
         $height = $boundingBox->height;
@@ -196,13 +199,13 @@ abstract class PhotoRekognitionService
         }
 
         $relationSize = $heightOrig / $width;
+        $largeDetection = $cameraConfig->largeDetection && $relationSize >= $configBox->ld;
 
-        if ($processLargeDetection) {
-            $largeDetection = $relationSize >= $configBox->ld || ($boundingBox->top < 45 && $width > $processMaxWidth); // CAUTION: $width > 25 works as overlap
-        }
+        $type = $this->type;
+        $criteriaWidthSize = $cameraConfig->processWidthSize->$type;
+        $invalidSize = $width > $criteriaWidthSize->maxWidth || $width < $criteriaWidthSize->minWidth;
 
         $overlap = false;
-
         if ($this->type == 'persons') {
             //        $overlap = false;
 //
@@ -232,7 +235,7 @@ abstract class PhotoRekognitionService
 
         $overlap = false;
 
-        return (object)compact(['overlap', 'relationSize', 'largeDetection']);
+        return (object)compact(['overlap', 'relationSize', 'largeDetection', 'invalidSize']);
     }
 
     /**
@@ -274,6 +277,7 @@ abstract class PhotoRekognitionService
                         }
 
                         $recognition->profileStr = $profileOccupation->seating->pluck('number')->implode(', ');
+                        $personDraws[] = $recognition;
                     }
 
                     if ($recognition->overlap) {
@@ -281,7 +285,6 @@ abstract class PhotoRekognitionService
                         $overlap = true;
                     }
                 }
-                $personDraws[] = $recognition;
             }
         }
 

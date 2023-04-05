@@ -27,21 +27,21 @@ class ConfigProfileService
     private $configProfile;
 
     /**
-     * ConfigProfileService constructor.
      * @param ProfileSeat $profileSeat
+     * @param ConfigProfile $configProfile
      */
-    function __construct(ProfileSeat $profileSeat)
+    function __construct(ProfileSeat $profileSeat, ConfigProfile $configProfile = null)
     {
         $this->profileSeat = $profileSeat;
         $this->vehicle = $this->profileSeat->vehicle;
-        $this->configProfile = $this->vehicle->configProfile;
+        $this->configProfile = $configProfile;
     }
 
     /**
      * @param $type
      * @return object
      */
-    public function type($type)
+    function type($type)
     {
         $c = json_decode(json_encode($this->getConfigProfile()->type($type), JSON_FORCE_OBJECT), false);
         return $c;
@@ -50,32 +50,18 @@ class ConfigProfileService
     /**
      * @return ConfigProfile
      */
-    public function getConfigProfile()
+    function getConfigProfile()
     {
-        $config = $this->configProfile;
-
-        if (!$config) {
-            $config = new ConfigProfile();
-            $config->vehicle()->associate($this->vehicle);
-            $config->config = $this->mergeWithProfileSeating();
-            $config->save();
-        } else {
-            $config->config = $this->mergeWithProfileSeating();
-        }
-
-        return $config;
+//        $this->configProfile->config = $this->buildConfigProfile($this->profileSeat->camera);
+        return $this->configProfile;
     }
 
     /**
      * @return array
      */
-    private function mergeWithProfileSeating()
+    function buildConfigProfile($camera)
     {
         $config = config('rocket.' . $this->vehicle->company_id);
-
-//        foreach ($config as $type => &$configType) {
-//
-//        }
 
         $seatingConfig = [];
         foreach ($this->profileSeat->occupation as $seat) {
@@ -87,49 +73,26 @@ class ConfigProfileService
             $activate = $rActivate ?: self::THRESHOLD_ACTIVATE;
             $release = $rRelease ?: self::THRESHOLD_RELEASE;
 
-            if ($this->vehicle->id == 1873) {
-                if ($this->profileSeat->camera == '1') {
-                    $activate = 3;
-                    $release = 4;
-                } else if ($this->profileSeat->camera == '2') {
-                    $activate = 2;
-                    $release = 10;
-                } else if ($this->profileSeat->camera == '3') {
-                    $activate = 2;
-                    $release = 10;
-                }
-
-                if (collect([5])->contains(intval($number))) { // Asientos con poca cobertura
-                    $activate = 1;
-                    $release = 15;
-                }
-
-                if (collect([13, 16])->contains(intval($number))) { // Asientos con poca cobertura
-                    $activate = 2;
-                    $release = 15;
-                }
-            }
-            
             if ($this->vehicle->id == 2614) {
-                if ($this->profileSeat->camera == '3') {
+                if ($camera == '3') {
                     $activate = 3;
                     $release = 4;
-                  }
+                }
                 if (collect([20])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 2;
                     $release = 48;
-                    }
                 }
+            }
 
 
             /* if ($this->vehicle->id == 2585) {
-                 if ($this->profileSeat->camera == '1') {
+                 if ($camera == '1') {
                      $activate = 1;
                      $release = 10;
-                 } else if ($this->profileSeat->camera == '2') {
+                 } else if ($camera == '2') {
                      $activate = 2;
                      $release = 6;
-                 } else if ($this->profileSeat->camera == '3') {
+                 } else if ($camera == '3') {
                      $activate = 1;
                      $release = 10;
                  }
@@ -137,7 +100,7 @@ class ConfigProfileService
              }*/
 
             if ($this->vehicle->id == 2563) { // VH 5015 valledupar   OJO!!!!!!
-                if (collect([1,7,15])->contains(intval($number))) { // Asientos con poca cobertura
+                if (collect([1, 7, 15])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 1;
                     $release = 40;
                 }
@@ -156,7 +119,7 @@ class ConfigProfileService
             }
 
             if ($this->vehicle->id == 2582) { // VH 62 Armenia   OJO!!!!!!
-                if (collect([15,16,17,18])->contains(intval($number))) { // Asientos con poca cobertura
+                if (collect([15, 16, 17, 18])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 1;
                     $release = 20;
                 }
@@ -169,7 +132,7 @@ class ConfigProfileService
                 }
             }
             if ($this->vehicle->id == 2556) { // VH  5000 valledupar   OJO!!!!!!
-                if (collect([1,2])->contains(intval($number))) { // Asientos con poca cobertura
+                if (collect([1, 2])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 1;
                     $release = 8;
                 }
@@ -186,17 +149,17 @@ class ConfigProfileService
 //                $release = $rActivate ? $rActivate : 3;
 //            }
             $persistenceRoutes = null;
-        /*    if ($this->vehicle->id == 2357) {
-                $persistenceRoutes = [
-                    279 => ['a' => 3, 'r' => 20],
-                    280 => ['a' => 3, 'r' => 20],
+            /*    if ($this->vehicle->id == 2357) {
+                    $persistenceRoutes = [
+                        279 => ['a' => 3, 'r' => 20],
+                        280 => ['a' => 3, 'r' => 20],
 
-                    285 => ['a' => 10, 'r' => 80],
-                    286 => ['a' => 10, 'r' => 80],
-                    287 => ['a' => 10, 'r' => 80],
-                    288 => ['a' => 10, 'r' => 80],
-                ];
-            }*/
+                        285 => ['a' => 10, 'r' => 80],
+                        286 => ['a' => 10, 'r' => 80],
+                        287 => ['a' => 10, 'r' => 80],
+                        288 => ['a' => 10, 'r' => 80],
+                    ];
+                }*/
 
             $seatingConfig[$number] = [
                 'persistence' => compact(['activate', 'release']),
@@ -205,20 +168,32 @@ class ConfigProfileService
         }
 
         $config['seating'] = $seatingConfig;
-        $config['cameras'] = (object)[
-            '1' => [
-                'largeDetection' => true,
-                'processMaxWidth' => 40,
+
+        $cameraConfig = [
+            'processWidthSize' => [
+                'faces' => [
+                    'maxWidth' => 0.5 * collect($this->profileSeat->occupation)->average('width'),
+                    'minWidth' => 0.1 * collect($this->profileSeat->occupation)->average('width'),
+                ],
+                'persons' => [
+                    'maxWidth' => 1.8 * collect($this->profileSeat->occupation)->average('width'),
+                    'minWidth' => 0.5 * collect($this->profileSeat->occupation)->average('width'),
+                ]
             ],
-            '2' => [
-                'largeDetection' => false,
-                'processMaxWidth' => 30,
-            ],
-            '3' => [
-                'largeDetection' => false,
-                'processMaxWidth' => 30
-            ],
+//            'processWidthSize' => [
+//                'faces' => [
+//                    'maxWidth' => 2 * collect($this->profileSeat->occupation)->average('width'),
+//                    'minWidth' => 0 * collect($this->profileSeat->occupation)->average('width'),
+//                ],
+//                'persons' => [
+//                    'maxWidth' => 2 * collect($this->profileSeat->occupation)->average('width'),
+//                    'minWidth' => 0 * collect($this->profileSeat->occupation)->average('width'),
+//                ]
+//            ],
+            'largeDetection' => true
         ];
+
+        $config['camera'] = $cameraConfig;
 
         return $config;
     }

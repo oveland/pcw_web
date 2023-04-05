@@ -11,6 +11,7 @@ use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\DispatcherVehicle;
+use App\Services\Apps\Rocket\ConfigProfileService;
 use App\Services\Reports\Passengers\SeatDistributionService;
 use App\Services\Reports\Passengers\Seats\SeatTopology;
 use Carbon\Carbon;
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Sofa\Eloquence\Eloquence;
 use Sofa\Eloquence\Mappable;
+use function foo\func;
 
 /**
  * App\Models\Vehicles\Vehicle
@@ -74,6 +76,7 @@ use Sofa\Eloquence\Mappable;
  * @property-read ConfigProfile|null $configProfile
  * @property-read ProfileSeat $profile_seating
  * @property-read ProfileSeat|null $profileSeat
+ * @property-read VehicleCamera[]|null $cameras
  */
 class Vehicle extends Model
 {
@@ -298,7 +301,7 @@ class Vehicle extends Model
     }
 
     /**
-     * @return HasOne
+     * @return HasOne | ConfigProfile
      */
     public function configProfile()
     {
@@ -315,35 +318,60 @@ class Vehicle extends Model
 
     public function getProfileSeating($camera = 'all', $date = null)
     {
-        $profileSeat = $this->profileSeat()
+        $profileSeating = $this->profileSeat()
             ->where('date', $date)
             ->where('camera', $camera)
-            ->with('vehicle', 'vehicle.configProfile')
+            ->with('vehicle')
             ->first();
 
-        if (!$profileSeat) {
-            $profileSeat = new ProfileSeat();
-            $profileSeat->vehicle()->associate($this);
-            $profileSeat->camera = $camera;
-            $profileSeat->date = $date;
-            $profileSeat->occupation = [];
-            $profileSeat->save();
+        if (!$profileSeating) {
+            $profileSeating = new ProfileSeat();
+            $profileSeating->vehicle()->associate($this);
+            $profileSeating->camera = $camera;
+            $profileSeating->date = $date;
+            $profileSeating->occupation = [];
+            $profileSeating->save();
         }
 
-        if(!count($profileSeat->occupation)){
+        if (!count($profileSeating->occupation)) {
             $profileSeatDefault = $this->profileSeat()
                 ->where('date', null)
                 ->where('camera', $camera)
                 ->first();
 
-            $profileSeat->occupation = $profileSeatDefault ? $profileSeatDefault->occupation : [];
-            $profileSeat->save();
+            $profileSeating->occupation = $profileSeatDefault ? $profileSeatDefault->occupation : [];
+            $profileSeating->save();
         }
 
-        return $profileSeat;
+        return $profileSeating;
     }
 
-    function cameras() {
+    public function getConfigProfile($camera = 'all', $date = null, ProfileSeat $profileSeating): ConfigProfile
+    {
+        $configProfile = $this->configProfile()
+            ->where('date', $date)
+            ->where('camera', $camera)
+            ->with('vehicle')
+            ->first();
+
+        $configProfileService = new ConfigProfileService($profileSeating, $configProfile);
+
+        if (!$configProfile) {
+            $configProfile = new ConfigProfile();
+            $configProfile->date = $date;
+            $configProfile->camera = $camera;
+            $configProfile->vehicle()->associate($this);
+            $configProfile->config = $configProfileService->buildConfigProfile($camera);
+            $configProfile->save();
+        }
+
+//        $configProfile->config = $configProfileService->buildConfigProfile($camera);
+
+        return $configProfile;
+    }
+
+    function cameras()
+    {
         return $this->hasMany(VehicleCamera::class);
     }
 }

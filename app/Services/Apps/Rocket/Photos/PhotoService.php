@@ -99,11 +99,16 @@ class PhotoService
             $profileSeating = $this->vehicle->getProfileSeating($this->camera, $this->date);
             $profileSeating->setPersistence($this->persistence);
 
-            $this->seatOccupationService = new SeatOccupationService($profileSeating);
+            $configProfile = $this->vehicle->getConfigProfile($this->camera, $this->date, $profileSeating);
+
+            $this->seatOccupationService = new SeatOccupationService($configProfile);
 
             $this->recognitionServices = collect([]);
             foreach (['persons', 'faces'] as $type) {
-                $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", ['profileSeating' => $profileSeating]));
+                $this->recognitionServices->put($type, App::make("rocket.photo.rekognition.$type", [
+                    'profileSeating' => $profileSeating,
+                    'configProfile' => $configProfile,
+                ]));
             }
         }
     }
@@ -552,7 +557,7 @@ class PhotoService
 
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip WHERE id_registro = $drId AND id_empresa <> 39");
-            if ($this->vehicle->id==2607){
+            if ($this->vehicle->id == 2607) {
                 DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, edited_info = $countMaxByRoundTrip WHERE id_registro = $drId");
             }
         }

@@ -3,6 +3,7 @@
 
 namespace App\Services\Apps\Rocket;
 
+use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Apps\Rocket\ProfileSeat;
 use Illuminate\Support\Collection;
 
@@ -14,13 +15,11 @@ class SeatOccupationService
     private $configSeating;
 
     /**
-     * ConfigProfileService constructor.
-     * @param ProfileSeat $profileSeat
+     * @param ConfigProfile $configProfile
      */
-    function __construct(ProfileSeat $profileSeat)
+    function __construct(ConfigProfile $configProfile)
     {
-        $configService = new ConfigProfileService($profileSeat);
-        $this->configSeating = collect($configService->getConfigProfile()->config)->get('seating');
+        $this->configSeating = collect($configProfile->config)->get('seating');
     }
 
     /**
@@ -52,7 +51,7 @@ class SeatOccupationService
 
                 $a = $seatReleaseThreshold;
 
-                if($routeId && $configSeat['persistenceRoutes'] && isset($configSeat['persistenceRoutes'][$routeId])) {
+                if ($routeId && $configSeat['persistenceRoutes'] && isset($configSeat['persistenceRoutes'][$routeId])) {
                     $seatReleaseThreshold = $configSeat['persistenceRoutes'][$routeId]['r'];
                     $seatActivateThreshold = $configSeat['persistenceRoutes'][$routeId]['a'];
                 }
@@ -102,7 +101,7 @@ class SeatOccupationService
                 $configSeat = $this->configSeating[$seat];
 
                 $seatActivateThreshold = $configSeat['persistence']['activate'];
-                if($routeId && $configSeat['persistenceRoutes'] && isset($configSeat['persistenceRoutes'][$routeId])) {
+                if ($routeId && $configSeat['persistenceRoutes'] && isset($configSeat['persistenceRoutes'][$routeId])) {
                     $seatActivateThreshold = $configSeat['persistenceRoutes'][$routeId]['a'];
                 }
 

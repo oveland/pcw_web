@@ -25,8 +25,9 @@ trait PhotoGlobals
     public function photoRekognitionService($type)
     {
         $profileSeating = $this->vehicle->getProfileSeating($this->side);
+        $configProfile = $this->vehicle->getConfigProfile($this->side, $this->date, $profileSeating);
 
-        return App::make("rocket.photo.rekognition.$type", ['profileSeating' => $profileSeating]);
+        return App::make("rocket.photo.rekognition.$type", ['profileSeating' => $profileSeating, 'configProfile' => $configProfile]);
     }
 
     public function getDateAttribute($date)
@@ -83,7 +84,7 @@ trait PhotoGlobals
     public function getAPIFields($encodeImage = 'url', $withEffects = true, $withMask = false)
     {
         $dispatchRegister = $this->dispatchRegister;
-        $location = Location::select(['distance','date'])->where('id', $this->location_id)->first();
+        $location = Location::select(['distance', 'date'])->where('id', $this->location_id)->first();
         if ($dispatchRegister) {
             $dispatchRegister = (object)[
                 'id' => $dispatchRegister->id,
