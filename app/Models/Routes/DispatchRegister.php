@@ -1002,15 +1002,17 @@ class DispatchRegister extends Model
         $drObs = $this->hasOne(DrObservation::class)->where('field', $field)->first();
 
         if (!$drObs) {
-            $user = Auth::user();
+            //$user = Auth::user();
             $drObs = new DrObservation();
             $drObs->field = $field;
             $drObs->dispatchRegister()->associate($this);
-            $drObs->user()->associate($user);
+            //$drObs->user()->associate($user);
 
-            if ($user->isSuperAdmin()) {
-                $drObs->observation = 'Por solicitud grupo de soporte';
-            }
+//            $companyId = $this->route->company_id;
+//
+//            if($companyId == Company::EXPRESO_PALMIRA) {
+//                $drObs->observation = 'Conteo manual';
+//            }
         }
 
         return $drObs;
@@ -1021,7 +1023,7 @@ class DispatchRegister extends Model
 
         $from = $from ?: $this->date;
 
-        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->route->company, $from, null, $this->route_id, $this->vehicle_id)
+        $dispatchRegisters = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($this->route->company, $from, null, null, $this->vehicle_id)
             ->completed()
             ->where('id', '<=', $this->id)
             ->get();
