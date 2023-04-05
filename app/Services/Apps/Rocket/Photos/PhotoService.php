@@ -394,6 +394,7 @@ class PhotoService
     {
         $dr = DispatchRegister::where('date', $photo->date->toDateString())
             ->where('vehicle_id', $photo->vehicle->id)
+            ->where('route_id', '<>', null)
             ->where('departure_time', '<=', $photo->date->toTimeString())
 //                ->where('arrival_time', '>=', $photo->date->toTimeString())
             ->orderByDesc('departure_time')
@@ -425,8 +426,13 @@ class PhotoService
 //            ->whereBetween('id', [104073, 104173])
             //->where('id', 53717);
 //            ->where('dispatch_register_id', '>', 1833559)
+            ->with('dispatchRegister')
             ->limit(2000)
-            ->get();
+            ->get()
+            ->map(function (Photo $photo) {
+                $photo->dispatchRegister()->associate(($photo->dispatchRegister->route_id ?? null) ? $photo->dispatchRegister : null);
+                return $photo;
+            });
     }
 
     function processMultiTariff(Collection $allHistoric)
