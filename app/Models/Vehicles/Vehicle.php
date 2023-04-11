@@ -346,7 +346,7 @@ class Vehicle extends Model
         return $profileSeating;
     }
 
-    public function getConfigProfile($camera = 'all', $date = null, ProfileSeat $profileSeating): ConfigProfile
+    public function getConfigProfile($camera = 'all', $date = null, ProfileSeat $profileSeating, $reloadParams = true): ConfigProfile
     {
         $configProfile = $this->configProfile()
             ->where('date', $date)
@@ -365,7 +365,7 @@ class Vehicle extends Model
             $configProfile->save();
         }
 
-//        $configProfile->config = $configProfileService->buildConfigProfile($camera);
+        if ($reloadParams) $configProfile->config = $configProfileService->buildConfigProfile($camera);
 
         return $configProfile;
     }
