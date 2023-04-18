@@ -1,5 +1,5 @@
 FROM ubuntu:20.04
-LABEL maintainer="Oveland ™ <oscarivelan@gmail.com>"
+LABEL maintainer="Oveland ™"
 
 ARG php_version
 ARG ng_root

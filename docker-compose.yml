@@ -1,15 +1,21 @@
 version: '3.8'
 
 networks:
-  pcw:
-    name: pcw.net
+  default:
+    name: ${DOCKER_NET_NAME}
+    driver: bridge
+  gps_db_net:
+    name: ${DOCKER_DB_NET}
     external: true
 
 services:
-  ne_web:
+  web_server:
     container_name: ${APP_NICK}
     networks:
-      - pcw
+      - default
+      - gps_db_net
+    depends_on:
+      - db_server
     build:
       context: .docker
       args:
