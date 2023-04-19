@@ -2,20 +2,18 @@ version: '3.8'
 
 networks:
   default:
+    name: ${DOCKER_NET_NAME}
     driver: bridge
-    driver_opts:
-      com.docker.network.driver.mtu: 9001
+  gps_db_net:
+    name: ${DOCKER_DB_NET}
+    external: true
 
 services:
   web_server:
-    hostname: s
-    container_name: beta
+    container_name: ${APP_NICK}
     networks:
       - default
-    extra_hosts:
-      - main:192.168.12.43
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
+      - gps_db_net
     build:
       context: .docker
       args:
@@ -33,10 +31,10 @@ services:
       NG_EXTERNAL_PORT: ${DOCKER_NG_EXTERNAL_PORT}
       NG_ROOT: ${DOCKER_NG_ROOT}
     ports:
-      - "${DOCKER_NG_EXTERNAL_PORT}:${DOCKER_NG_PORT}"
+      - ${DOCKER_NG_EXTERNAL_PORT}:${DOCKER_NG_PORT}
     volumes:
       - ./:/var/www/${DOCKER_NG_ROOT}/
       - ${GPS_DEVICES_SYRUS_FTP_BASE_PATH}:${GPS_DEVICES_SYRUS_FTP_BASE_PATH}
-      - ./docker/home:/home/root/
+      - ${GPS_DEVICES_4G_FTP_BASE_PATH}:${GPS_DEVICES_4G_FTP_BASE_PATH}
     restart: always
     command: /bin/bash -c "/tmp/configure.sh && tail -f /dev/null"

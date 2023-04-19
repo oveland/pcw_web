@@ -18,7 +18,7 @@ bash php-fpm;
 #write out current crontab
 crontab -l > tmpcron
 #echo new cron into cron file
-echo "* * * * * /usr/bin/php /var/www/beta/artisan schedule:run >> /dev/null 2>&1" >> tmpcron
+echo "* * * * * /usr/bin/php /var/www/$NG_ROOT/artisan schedule:run >> /dev/null 2>&1" >> tmpcron
 #install new cron file
 crontab tmpcron
 rm tmpcron

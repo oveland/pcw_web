@@ -1,5 +1,5 @@
 FROM ubuntu:20.04
-LABEL maintainer="Oveland ™ <oscarivelan@gmail.com>"
+LABEL maintainer="Oveland ™"
 
 ARG php_version
 ARG ng_root
@@ -72,8 +72,8 @@ RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php')
     && rm -rf /tmp/composer-setup.php
 
 # Install node
-#RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-#RUN apt install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt install -y nodejs
 
 # Copy script for general congis like auto run php and nginx server
 COPY config/configure.sh /tmp/
