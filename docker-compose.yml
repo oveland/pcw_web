@@ -14,8 +14,6 @@ services:
     networks:
       - default
       - gps_db_net
-    depends_on:
-      - db_server
     build:
       context: .docker
       args:
