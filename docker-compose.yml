@@ -34,5 +34,6 @@ services:
       - ${DOCKER_NG_EXTERNAL_PORT}:${DOCKER_NG_PORT}
     volumes:
       - ./:/var/www/${DOCKER_NG_ROOT}/
+      - ${PATH_INSTALL}/storage/:/app/storage/
     restart: always
     command: /bin/bash -c "/tmp/configure.sh && tail -f /dev/null"
