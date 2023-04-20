@@ -34,7 +34,6 @@ services:
       - ${DOCKER_NG_EXTERNAL_PORT}:${DOCKER_NG_PORT}
     volumes:
       - ./:/var/www/${DOCKER_NG_ROOT}/
-      - ${GPS_DEVICES_SYRUS_FTP_BASE_PATH}:${GPS_DEVICES_SYRUS_FTP_BASE_PATH}
-      - ${GPS_DEVICES_4G_FTP_BASE_PATH}:${GPS_DEVICES_4G_FTP_BASE_PATH}
+      - ${PATH_INSTALL}/storage/:/app/storage/
     restart: always
     command: /bin/bash -c "/tmp/configure.sh && tail -f /dev/null"
