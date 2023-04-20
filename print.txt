@@ -1,0 +1,350 @@
+   33  git rm conductores/Sin\ t�\M--tulo.jpg
+   34  git rm doc_sopnovedad/Sin\ t�\M--tulo.png
+   35  git rm doc_sopnovedad/Sin\ t�\M--tulo...png
+   38  rm -r route
+   74  rm index.html
+   80  rm 136
+   81  rm -r 136
+  110  rm -r Angular
+  115  rm 90c28bd1e15cae303aed9e8b3ec70573462918
+  116  rm -r 90c28bd1e15cae303aed9e8b3ec70573462918
+  117  rm -rf 90c28bd1e15cae303aed9e8b3ec70573462918
+  118  sudo rm -rf 90c28bd1e15cae303aed9e8b3ec70573462918
+  120  sudo rm -rf .git
+  121  rm -r developer
+  122  rm -rf Angular
+  123  rm -rf lib
+  128  rm gps.log
+  129  rm cobanLog.txt
+  130  rm cobanLog.log
+  177  rm app/Console/Commands/CehckGPSServerCommand.php
+  224  cd ~/Library/Preferences/PhpStorm2019.2/options
+  227  open terminal.xml
+  230  cd PhpStorm2019.1/options
+  233  cd PhpStorm2019.2/options
+  244  rm bagisto-bagisto-v0.1.8-0-g8c8399e.zip
+  245  rm com.dts.freefireth_900203995_NormalPackage2_445.exe
+  254  rm -r vaniloapp
+  275  sudo rm -r -f /Library/Developer/CommandLineTools
+  294  rm child_classic.zip
+  303  rm *.txt
+  304  rm *.log
+  348  rm -r gitCredentials
+  371  rm /usr/local/var/mysql/*
+  375  sudo rm -r *
+  378  rm -R *
+  379  sudo rm *
+  381  rm *
+  382  rm -r *
+  383  rm -r mysql
+  398  sudo rm /usr/local/mysql
+  399  sudo rm -rf /usr/local/mysql*
+  400  sudo rm ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+  401  sudo rm -rf /Library/StartupItems/MySQLCOM
+  403  rm -rf ~/Library/PreferencePanes/My*
+  404  sudo rm -rf /Library/Receipts/mysql*
+  405  sudo rm -rf /Library/Receipts/MySQL*
+  406  sudo rm -rf /private/var/db/receipts/*mysql*
+  408  sudo rm /usr/local/mysql\nsudo rm -rf /usr/local/var/mysql\nsudo rm -rf /usr/local/mysql*\nsudo rm ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist\nsudo rm -rf /Library/StartupItems/MySQLCOM\nsudo rm -rf /Library/PreferencePanes/My*
+  413  sudo rm -rf /usr/local/bin/mysql
+  414  sudo rm -rf /usr/local/var/mysql
+  415  rm /usr/local/etc/my.cnf
+  416  sudo rm -rf /Library/PreferencePanes/My*
+  417  sudo rm /usr/local/mysql\nsudo rm -rf /usr/local/mysql*\nsudo rm -rf /Library/StartupItems/MySQLCOM\nsudo rm -rf /Library/PreferencePanes/My*\nsudo rm -rf /Library/Receipts/mysql*\nsudo rm -rf /Library/Receipts/MySQL*
+  420  ps -ax | grep mysql\nbrew remove mysql\nbrew cleanup\nsudo rm /usr/local/mysql\nsudo rm -rf /usr/local/var/mysql\nsudo rm -rf /usr/local/mysql*\nsudo rm ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist\nsudo rm -rf /Library/StartupItems/MySQLCOM\nsudo rm -rf /Library/PreferencePanes/My*\nlaunchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+  421  rm -rf ~/Library/PreferencePanes/My*\nsudo rm -rf /Library/Receipts/mysql*\nsudo rm -rf /Library/Receipts/MySQL*\nsudo rm -rf /private/var/db/receipts/*mysql*
+  455  rm -r MundoRuedas
+  456  sudo rm -r MundoRuedas
+  489  rm -r /usr/local/etc/php
+  503  docker rm sleepy_fermat
+  504  docker rm \n
+  505  docker rm gifted_goldberg\n
+  506  docker rm cranky_boyd
+  517  docker rm -f server
+  519  docker rm -f db
+  524  docker image rm hello-world
+  538  rm README.md
+  539  docker-compose rm sf4_app
+  540  docker network rm ovelandnet
+  541  docker rm ubuntu:oveland
+  542  docker rm sweet_borg
+  543  docker rm sharop_johnson
+  544  docker rm sharp_johnson
+  595  rm app/config/parameters.yml
+  596  rm app/config/parameters.php
+  601  rm Mundoruedas* -r
+  602  rm -r Mundoruedas*
+  603  sudo rm -r Mundoruedas*
+  606  docker rm -f ${docker ps -ap}
+  607  docker rm -f $(docker ps -ap)
+  608  docker rm $(docker ps -ap)
+  611  docker container rm $(docker ps -aq)
+  615  docker network rm mundoruedassindemo_default
+  627  rm -r Mundoruedas
+  628  sudo rm -r Mundoruedas
+  632  rm -r MundoruedasWithDocker
+  645  git clone https://github.com/rendiix/termux-adb-fastboot.git
+  646  cd termux-adb-fastboot
+  653  cd Downloads/platform-tools
+  656  rm -r termux-adb-fastboot
+  657  sudo rm -r termux-adb-fastboot
+  660  brew cask install android-platform-tools
+  664  /Users/oscar/Downloads/platform-tools/adb ; exit;
+  672  /usr/local/Caskroom/android-platform-tools/29.0.6/platform-tools/adb ; exit;
+  691  fastboot orm unlock
+  717  sudo rm -r MundoruedasWithDocker
+  718  sudo rm -r PrestaShop
+  719  sudo rm -r docker
+  720  sudo rm -r docker-compose.yml
+  733  sudo rm -r MundoruedasProd
+  743  rm /usr/local/bin/apktool.bat
+  751  rm com.kingroot.kinguser-1
+  752  rm com.kingroot.kinguser-1 -r
+  753  rm -r com.kingroot.kinguser-1
+  831  rm -r MundoruedasOLD
+  832  sudo rm -r MundoruedasOLD
+  842  rm -r trackw
+  843  sudo rm -r trackw
+  915  rm pdo_firebird.so
+  916  rm -r php*
+  917  sudo rm -r php-7.2.30
+  918  sudo rm -r etc
+  919  sudo rm -r us
+  920  sudo rm -r usr
+  921  rm .localized
+  922  rm ~$RozoNuevo.xlsx
+  949  rm MR*
+  954  cd PhpStorm
+ 1020  rm -r driverApp
+ 1054  docker rm ${docke ps -aq}
+ 1055  docker rm ${docker ps -aq}
+ 1056  docker rm $(docker ps -aq)
+ 1136  rm storage/logs/query.log
+ 1149  docker-compose build --force-rm
+ 1179  rm -r db-backup
+ 1282  rm .DS_Store
+ 1283  rm php/.DS_Store
+ 1284  rm v3/.DS_Store
+ 1504  rm id_rsa
+ 1505  rm id_rsa.pub
+ 1521  rm ivan
+ 1592  gcommit "Add Advance and Balance Passengers into Route Takings Form"
+ 1782  gcommit "Admin permissions on pags"
+ 1806  gcommt "Ajustes diseno. Permisos para Admin y Reportes"
+ 1808  gcommit "Ajustes diseno. Permisos para Admin y Reportes"
+ 1830  rm .git/index.lock
+ 1990  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/PostgreSQL/9.5/bin/:/Library/Apple/usr/bin:/usr/local/opt/php@7.2/sbin:/usr/local/opt/php@7.2/bin:/usr/local/opt/php@7.3/sbin:/usr/local/opt/php@7.3/bin:/usr/local/opt/mysql@5.7/bin:/Users/oscar/.sdkman/candidates/grails/current/bin:/Library/Frameworks/Firebird.framework/Resources/bin:/Users/oscar/Library/Android/sdk/tools/bin:/Users/oscar/Library/Android/sdk/platform-tools:/Users/oscar/Library/Android/sdk/emulator
+ 2666  npm install @tailwindcss/custom-forms --save-dev
+ 2680  gcommit "Si no se ha realizado cierre de turno, el sistema no deberá permitir el"
+ 3000  gcommit "Normalice Takings models"
+ 3005  gcommit "Normalice Takings Models"
+ 3010  gcommit "Normalice Takings Models 2"
+ 3244  npm install @vueform/multiselect
+ 3532  git clone https://github.com/parzibyte/print-receipt-thermal-printer.git
+ 3864  docker rm 6e8b8132f6a0
+ 3865  sudo docker rm 6e8b8132f6a0
+ 3869  docker rm 6e8b8132f6a0
+ 4152  docker rm ${docker ps}
+ 4160  docker rm 47d15b6a0414
+ 4162  docker rm 6411ed49e563
+ 4163  docker rm 79b973222dc9
+ 4195  docker rm ee047357b8c1
+ 4306  rm storage/app/Apps/Rocket/Profiles/Mask/.DS_Store
+ 4386  npm install @tailwindcss/forms
+ 4387  npm install @tailwindcss/forms --save-dev
+ 4573  gcommit "STQ-33. Se ajustan formatos y horas al momento de despachar y anular un turno"
+ 4790  sudo rm -rf /Library/Developer/CommandLineTools
+ 4823  rm /usr/local/opt/openssl/*
+ 4824  rm -r /usr/local/opt/openssl/*
+ 4830  rm -r bin
+ 4831  sudo rm -r bin
+ 4832  sudo rm -r lib
+ 4893  rm public/js/app.js.LICENSE.txt
+ 5001  gcommit "MC Permissios"
+ 5015  rm dbstq.tar.gz
+ 5034  rm -r dbbakcup
+ 5036  rm -r db
+ 5103  rm dbstq.tar.gz
+ 5109  rm -r db
+ 5267  rm *.jpeg
+ 5713  rm -r node_modules
+ 5714  rm package*
+ 5941  docker pull flochtililoch/armv7l-node
+ 5949  rm node_modules.zip
+ 6075  rm -r python-onvif
+ 6076  sudo rm -r python-onvif
+ 6118  curl -X POST \\n  -H 'Content-Type: application/x-www-form-urlencoded' \\n  -d 'client_id=4cwdacrf8bduzj2oelrjiwi9z7w1ilmb&client_secret=kbbxws0yj265hl01r059ers8tnd2gpwmo1ao74sllt0gpdsd7vahgcxsi349exit&grant_type=client_credentials' \\n  https://www.nyckel.com/connect/token
+ 6151  rm .DS_Store
+ 6156  rm .DS_Store
+ 6157  rm storage/.DS_Store
+ 6159  rm public/.DS_Store
+ 6160  rm storage/app/.DS_Store
+ 6161  rm storage/app/Apps/.DS_Store
+ 6162  rm storage/app/Apps/Rocket/.DS_Store
+ 6184  npm install -D tailwindcss@latest \\n  @tailwindcss/typography@latest \\n  @tailwindcss/forms@latest \\n  @tailwindcss/aspect-ratio@latest \\n  @tailwindcss/line-clamp@latest \\n  postcss@latest \\n  autoprefixer@latest
+ 6221  npm install -D tailwindcss@latest \\n  @tailwindcss/typography@latest \\n  @tailwindcss/forms@latest \\n  @tailwindcss/aspect-ratio@latest \\n  @tailwindcss/line-clamp@latest \\n  postcss@latest \\n  autoprefixer@latest
+ 6222  npm install -D @tailwindcss/forms@latest
+ 6263  rm storage/logs/laravel.log
+ 6276  rm .docker/data/db/*
+ 6277  sudo rm .docker/data/db/*
+ 6278  sudo rm -r .docker/data/db/*
+ 6284  rm docker-compose-sail.yml
+ 6286  rm -r docker
+ 6295  docker exec -it prm.nginx bash
+ 6407  gcommit "PRM-47. Se crea estructura base del proyecto con vistas y formulario"
+ 6438  docker exec -it prm.nginx bash
+ 6448  rm .DS_Store
+ 6449  rm public/.DS_Store
+ 6459  rm bootstrap/cache/*
+ 6462  rm bootstrap/cache/config.php
+ 6463  rm bootstrap/cache/services.php 
+ 6511  docker exec -it prm.nginx bash
+ 6520  docker exec -it prm.nginx bash
+ 6530  docker exec -it prm.nginx bash
+ 6544  docker exec -it prm.nginx bash
+ 6553  docker exec -it prm.nginx bash
+ 6562  exec -it prm.nginx bash
+ 6563  docker exec -it prm.nginx bash
+ 6633  rm -r android
+ 6663  rm -r android
+ 6664  rm  -r dist
+ 6706  docker exec -it prm.nginx bash
+ 6726  rm .DS_Store
+ 6789  git remote rm origin
+ 6911  docker exec -it prm.nginx bash
+ 6966  sudo rm -r android
+ 6971  sudo rm -r node_modules
+ 6973  sudo rm -r node_modules
+ 7051  rm storage/app/Apps/Rocket/Profiles/Mask/.DS_Store
+ 7145  gcommit "Se modifica estructura de permisos de acceso"
+ 7161  art make:middelware Permissions
+ 7162  art make:middleware Permissions
+ 7163  art make:model Models/System/Permissions
+ 7164  art make:migration add_column_permissions_to_users_table --table=users
+ 7172  gcommit "Ajustes menores a sistema de permisos. Se deja ingresar a aquellas páginas que no están restringidas en la tabala permisos_users"
+ 7208  gcommit "Se culmina con estructura de permisos para NE"
+ 7236  gcommit "Se reactiva guardado de datos en formulario de login"
+ 7243  gcommit "Se fuerza a formulario de login a guardar datos de autocompletado"
+ 7443  rm storage/app/Apps/Rocket/Profiles/Mask/.DS_Store
+ 7561  rm .git
+ 7562  rm -r .git
+ 7563  sudo rm -r .git
+ 7589  git rm --cached __pycache__/tracker.cpython-39.pyc
+ 7654  git rm --cached data.csv
+ 7909  sudo rm .git
+ 7910  sudo rm -r .git
+ 8076  rm .DS_Store
+ 8432  git rm -r --cached .git
+ 8433  git rm -r --cached .idea
+ 8466  rm -r node_modules
+ 8472  rm -r node_modules
+ 8536  rm storage/logs/laravel.log
+ 8671  rm -rf node_modules
+ 8710  rm -rf android
+ 8726  rm -rf node_modules
+ 8757  . webstorm
+ 8841  rm  -rf android
+ 8898  git rm android/.idea/
+ 8899  git rm android/.idea/ -r
+ 8901  sudo git rm android/.idea/ -r
+ 8903  sudo git rm -r android/.idea/
+ 8905  sudo git rm -r android/.idea
+ 8906  sudo git rm -rf android/.idea
+ 9023  ./ webstorm
+ 9024  . webstorm
+ 9168  . webstorm
+ 9187  npm install --unsafe-perm -g node-sass
+ 9213  npm install --unsafe-perm node-sass
+ 9288  sdkmanager "platform-tools" "platforms;android-26"\n
+ 9371  ionic cordova platform add android
+ 9497  rm .DS_Store
+ 9498  rm ./*.DS_Store
+ 9499  rm ./app/.DS_Store
+ 9503  rm database/.DS_Store
+ 9504  rm resources/.DS_Store
+ 9559  rm -r vendor
+ 9616  rm -r .next
+ 9625  rm -r .next
+ 9636  rm -r .next
+ 9641  rm .DS_Store
+ 9643  rm app/.DS_Store
+ 9644  rm resources/.DS_Store
+ 9646  rm database/.DS_Store
+ 9660  rm test.sh
+ 9705  rm database/migrations/2023_04_04_002602_add_column_app_config_profiles_table.php
+ 9822  docker stop prm.nginx
+ 9823  docker stop prm.db
+ 9834  rm .DS_Store
+ 9855  docker network rm oneplus_sail
+ 9856  docker network rm pcw-parking-tw2_sail
+ 9857  docker network rm pcw.net
+ 9858  docker network rm 6bbacacef261
+ 9859  docker network rm c72194659479
+ 9861  docker network rm 7287585dde54
+ 9862  docker network rm 03a7a92a18da
+ 9863  docker network rm 01d3a62fffe8
+ 9864  docker network rm 311d674e2064
+ 9865  docker network rm 80d296b84509
+ 9866  docker network rm a2dda536a0e1
+ 9868  docker network rm f73cfaf282f9
+ 9870  docker network rm 6bbacacef261
+ 9872  docker network rm 7287585dde54
+ 9873  docker network rm a825c66c115e
+ 9874  docker network rm 03a7a92a18da
+ 9882  docker rm dbcc0ce92732
+ 9885  docker rm  cc540600cf11
+ 9920  docker rm b821c6497f18
+ 9958  rm GPS_PROD_20230414.sql
+ 9959  rm GPS.sql
+ 9983  rm GPS.sql
+10102* git rm GPS.sql
+10103* git rm .docker/data/backups/GPS.sql
+10104* git rm .docker/data/backups/GPS_Schema.sql
+10110* rm .git
+10111* rm .git -r
+10112* sudo rm .git -r
+10114* sudo rm -r .git
+10140* . webstorm
+10182* git rm --cached .DS_Store
+10185* git rm --cached .DS_Store
+10198* sudo rm -r .git
+10206* rm -r .docker/data
+10210* rm **/.DS_Store
+10213* rm -r .idea
+10217* rm -r archivo\ de\ configuracion\ posgret
+10224* rm -r tareas*
+10228* rm **/.DS_Store
+10233* rm -r archivo\ de\ configuracion\ posgret
+10235* rm -r conductores
+10246* rm -r .git
+10247* sudo rm -r .git
+10291* rm .DS_Store
+10359* git rm --cached php/configInterfaz.php
+10478* rm .DS_Store
+10479* rm .env
+10482* rm -r pcw_gps
+10483* sudo rm -r pcw_gps
+10493* rm -r pcw_gps
+10494* sudo rm -r pcw_gps
+10498* sudo rm -r pcw_gps
+10500* sudo rm -r pcw_gps
+10549* find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+10558* find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+10562  find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+rm -rf public/assets/global/plugins/socicon
+rm -df public/assets/global/plugins/amcharts
+rm -rf public/assets/global/plugins/amcharts
+rm -rf public/assets/global/plugins/cubeportfolio
+rm -rf public/assets/global/plugins/datatables
+rm -rf public/assets/global/plugins/ckeditor
+  rm -rf public/assets/global/plugins/mapplic
+  rm -rf public/assets/global/plugins/codemirror
+  rm -rf public/assets/global/plugins/echarts
+  rm -rf public/assets/global/plugins/highmaps
+  rm -rf public/assets/global/plugins/highstock
+ rm -rf public/assets/global/plugins/jcrop
+ rm -rf public/assets/global/plugins/highcharts
+ rm -rf public/assets/global/plugins/revo-slider
+ rm -rf public/assets/global/plugins/icheck
+rm -rf public/assets/global/plugins/fullcalendar
+rm -rf public/assets/global/plugins/plupload
