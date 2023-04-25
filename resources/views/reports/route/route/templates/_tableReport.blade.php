@@ -436,13 +436,19 @@
                         $obs = $dispatchRegister->getObservation('end_recorder');
                         $labelEndRecorder = $isExpresoPalmira ? __('Manual count') : __('End Recorder');
                         $diferencePassenger=$dispatchRegister->final_sensor_counter - $dispatchRegister->end_recorder;
+                        $spreadsheetPassengers1 = $dispatchRegister->getObservation('spreadsheet_passengers')->value;
                     @endphp
 
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
                         <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
                                 <span class="">
-                                    {{ $endRecorder }}
+                                    @if(!$isExpresoPalmira)
+                                        {{ $endRecorder }}
+                                    @else
+{{--                                      {{ $endRecorder > $spreadsheetPassengers1 ? $endRecorder: $spreadsheetPassengers1 }}--}}
+                                        {{ $endRecorder }}
+                                    @endif
                                     @if($isExpresoPalmira)
                                         <br>
                                         <small class="tooltips text-muted" data-title="@lang('# Spreadsheet')" data-placement="bottom">{{ $obs->observation }}</small>
