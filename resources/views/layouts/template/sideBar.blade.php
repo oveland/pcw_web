@@ -34,67 +34,67 @@
             </li>
 
             @if( Auth::user()->canAdmin())
-            <li class="has-sub {{ $baseMenu == __('url-administration')?'active':'' }}">
-                <a href="#" class="faa-parent animated-hover">
-                    <i class="fa fa-cogs faa-horizontal"></i>
-                    <span>@lang('Administration')</span>
-                </a>
-                <ul class="sub-menu">
-                    <li class="has-sub menu-administration-vehicles">
-                        <a href="javascript:;" class="faa-parent animated-hover">
-                            <b class="caret pull-right"></b>
-                            <i class="fa fa-bus faa-vertical"></i>
-                            @lang('Vehicles')
-                        </a>
-                        <ul class="sub-menu">
-                            <li class="has-sub menu-administration-vehicles-peak-and-plate">
-                                <a href="{{ route('admin-vehicles-peak-and-plate')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-ban faa-vertical" aria-hidden="true"></i>
-                                    @lang('Peak and Plate')
+                <li class="has-sub {{ $baseMenu == __('url-administration')?'active':'' }}">
+                    <a href="#" class="faa-parent animated-hover">
+                        <i class="fa fa-cogs faa-horizontal"></i>
+                        <span>@lang('Administration')</span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="has-sub menu-administration-vehicles">
+                            <a href="javascript:;" class="faa-parent animated-hover">
+                                <b class="caret pull-right"></b>
+                                <i class="fa fa-bus faa-vertical"></i>
+                                @lang('Vehicles')
+                            </a>
+                            <ul class="sub-menu">
+                                <li class="has-sub menu-administration-vehicles-peak-and-plate">
+                                    <a href="{{ route('admin-vehicles-peak-and-plate')  }}" class="faa-parent animated-hover">
+                                        <i class="fa fa-ban faa-vertical" aria-hidden="true"></i>
+                                        @lang('Peak and Plate')
+                                    </a>
+                                </li>
+                                <li class="has-sub menu-administration-vehicles-maintenance">
+                                    <a href="{{ route('admin-vehicles-maintenance')  }}" class="faa-parent animated-hover">
+                                        <i class="fa fa-wrench faa-wrench" aria-hidden="true"></i>
+                                        @lang('Maintenance')
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        @if( Auth::user()->canAdminGPS() )
+                            <li class="has-sub menu-administration-gps">
+                                <a href="javascript:;" class="faa-parent animated-hover">
+                                    <b class="caret pull-right"></b>
+                                    <i class="fa fa-podcast faa-vertical"></i>
+                                    @lang('GPS')
                                 </a>
+                                <ul class="sub-menu">
+                                    <li class="has-sub menu-administration-gps-manage">
+                                        <a href="{{ route('admin-gps-manage')  }}" class="faa-parent animated-hover">
+                                            <i class="fa fa-signal faa-vertical" aria-hidden="true"></i>
+                                            @lang('Manage')
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li class="has-sub menu-administration-vehicles-maintenance">
-                                <a href="{{ route('admin-vehicles-maintenance')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-wrench faa-wrench" aria-hidden="true"></i>
-                                    @lang('Maintenance')
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    @if( Auth::user()->canAdminGPS() )
-                    <li class="has-sub menu-administration-gps">
-                        <a href="javascript:;" class="faa-parent animated-hover">
-                            <b class="caret pull-right"></b>
-                            <i class="fa fa-podcast faa-vertical"></i>
-                            @lang('GPS')
-                        </a>
-                        <ul class="sub-menu">
-                            <li class="has-sub menu-administration-gps-manage">
-                                <a href="{{ route('admin-gps-manage')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-signal faa-vertical" aria-hidden="true"></i>
-                                    @lang('Manage')
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endif
-                    <li class="has-sub menu-administration-proprietaries">
-                        <a href="javascript:;" class="faa-parent animated-hover">
-                            <b class="caret pull-right"></b>
-                            <i class="fa fa-user faa-vertical"></i>
-                            @lang('Proprietaries')
-                        </a>
-                        <ul class="sub-menu">
-                            <li class="has-sub menu-administration-proprietaries-manage">
-                                <a href="{{ route('admin-proprietaries-manage')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-user-plus faa-vertical" aria-hidden="true"></i>
-                                    @lang('Manage')
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+                        @endif
+                        <li class="has-sub menu-administration-proprietaries">
+                            <a href="javascript:;" class="faa-parent animated-hover">
+                                <b class="caret pull-right"></b>
+                                <i class="fa fa-user faa-vertical"></i>
+                                @lang('Proprietaries')
+                            </a>
+                            <ul class="sub-menu">
+                                <li class="has-sub menu-administration-proprietaries-manage">
+                                    <a href="{{ route('admin-proprietaries-manage')  }}" class="faa-parent animated-hover">
+                                        <i class="fa fa-user-plus faa-vertical" aria-hidden="true"></i>
+                                        @lang('Manage')
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
             @endif
 
             <li class="has-sub {{ $baseMenu == __('url-operation')?'active':'' }}">
@@ -198,12 +198,12 @@
                                 </a>
                             </li>
                             @if( Auth::user()->isAdmin() )
-                            <li class="has-sub menu-report-vehicles-status">
-                                <a href="{{ route('report-vehicle-status')  }}" class="faa-parent animated-hover">
-                                    <i class="fa fa-podcast blue faa-burst" aria-hidden="true"></i>
-                                    @lang('Status')
-                                </a>
-                            </li>
+                                <li class="has-sub menu-report-vehicles-status">
+                                    <a href="{{ route('report-vehicle-status')  }}" class="faa-parent animated-hover">
+                                        <i class="fa fa-podcast blue faa-burst" aria-hidden="true"></i>
+                                        @lang('Status')
+                                    </a>
+                                </li>
                             @endif
                         </ul>
                     </li>
@@ -344,21 +344,21 @@
                     </li>
 
                     @if( Auth::user()->isAdmin() )
-                    <li class="has-sub menu-logs">
-                        <a href="javascript:;" class="faa-parent animated-hover">
-                            <b class="caret pull-right"></b>
-                            <i class="fa fa-user faa-vertical"></i>
-                            @lang('Users')
-                        </a>
-                        <ul class="sub-menu">
-                            <li class="has-sub menu-logs">
-                                <a href="{{ route('report.users.activity')  }}">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                    @lang('Access log')
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <li class="has-sub menu-logs">
+                            <a href="javascript:;" class="faa-parent animated-hover">
+                                <b class="caret pull-right"></b>
+                                <i class="fa fa-user faa-vertical"></i>
+                                @lang('Users')
+                            </a>
+                            <ul class="sub-menu">
+                                <li class="has-sub menu-logs">
+                                    <a href="{{ route('report.users.activity')  }}">
+                                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                        @lang('Access log')
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     @endif
                 </ul>
             </li>

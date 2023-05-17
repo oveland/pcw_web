@@ -56,7 +56,7 @@ class GPSCheckServerCommand extends Command
         $this->issues = collect([]);
 
         $this->checkGPSServer();
-        $this->checkRecognitionServer();
+//        $this->checkRecognitionServer();
 
         $this->checkDatabaseServer();
         $this->checkTCPConnections();
@@ -69,6 +69,7 @@ class GPSCheckServerCommand extends Command
     {
         $isServerOK = false;
         try {
+            sleep(10);
             $client = new Client(['base_uri' => 'http://100.20.192.70:5005/']);
             $response = $client->get('/');
 
