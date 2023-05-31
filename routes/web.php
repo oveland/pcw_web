@@ -72,6 +72,10 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::put('/update/{maintenanceVehicle}', 'MaintenanceVehicleController@update')->name('admin-vehicles-maintenance-update');
                 Route::delete('/delete/{company}', 'MaintenanceVehicleController@delete')->name('admin-vehicles-maintenance-delete');
             });
+            Route::prefix(__('topologies'))->group(function () {
+                Route::get('/', 'TopologySeatController@index')->name('admin-vehicles-topologies');
+                Route::get('/table', 'TopologySeatController@table')->name('admin-vehicles-table');
+            });
         });
 
         Route::prefix(__('gps'))->group(function () {
@@ -199,7 +203,6 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/image/{location}', 'ReportRouteOffRoadController@getImageFromCoordinate')->name('report-route-off-road-geolocation-image');
                 Route::post('/is-fake/{location}', 'ReportRouteOffRoadController@markLocationAsFakeOffRoad')->name('report-route-off-road-is-fake');
             });
-
             /* Control Points report */
             Route::prefix(__('control-points'))->group(function () {
                 Route::get('/', 'ControlPointsReportController@index')->name('report-route-control-points');

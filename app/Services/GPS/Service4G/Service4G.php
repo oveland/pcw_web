@@ -41,7 +41,7 @@ class Service4G extends SyrusService
         $service = new PhotoService();
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
-        
+
         if (!$gpsVehicle) return collect([
             'success' => false,
             'message' => "Imei $imei is not associated with a vehicle",
@@ -49,23 +49,24 @@ class Service4G extends SyrusService
 
         $vehicle = $gpsVehicle->vehicle;
 
-        $waitSeconds = random_int(0,5);
-        Log::info("Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
+        $waitSeconds = random_int(0, 40);
+        $this->log("Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
         sleep($waitSeconds);
-        Log::info("        • Start sync for vehicle $vehicle->number");
+        $this->log("        • Start sync for vehicle $vehicle->number");
 
         $response = collect([
             'success' => true,
             'message' => "Success sync 4G",
         ]);
         $deviceID = $gpsVehicle->device_id;
-        $path = "$deviceID/2023-03-16";
+        $date4G = carbon::now()->toDateString();
+        $path = "$deviceID/$date4G";
         $response->put('imei', $imei);
 
         $storage = Storage::disk('Sync4G');
         $files = collect($storage->files($path));
 
-        Log::info("         • Vehicle #$vehicle->number total FPT photos: " . $files->count());
+        $this->log("         • Vehicle #$vehicle->number total FPT photos: " . $files->count());
 
         $saveFiles = collect([]);
         foreach ($files as $index => $file) {
@@ -108,7 +109,7 @@ class Service4G extends SyrusService
                     } else {
                         $extra = $process->response->message;
                     }
-                    Log::info("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra");
+                    $this->log("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra");
 
                     $saveFiles->push($process->response->message);
                 } else {
@@ -127,7 +128,14 @@ class Service4G extends SyrusService
 
     function getSide($fileName, $imei)
     {
-        $fileNames= explode('_', $fileName);
+        $fileNames = explode('_', $fileName);
+        if ($imei = '352557104727915') {
+            if ($fileNames[2] == 'ch1') return '1';
+            if ($fileNames[2] == 'ch2') return '2';
+            if ($fileNames[2] == 'ch3') return '4';
+            if ($fileNames[2] == 'ch4') return '3';
+            if ($fileNames[2] == 'ch5') return '5';
+        }
         if ($fileNames[2] == 'ch3') return '1';
         if ($fileNames[2] == 'ch4') return '2';
         if ($fileNames[2] == 'ch5') return '3';
@@ -135,5 +143,10 @@ class Service4G extends SyrusService
         if ($fileNames[2] == 'ch8') return '5';
 
         return '0';
+    }
+
+    function log($message)
+    {
+        Log::channel('sync4g')->info("[Service4G] $message");
     }
 }

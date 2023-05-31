@@ -81,6 +81,12 @@
                                             @lang('Maintenance')
                                         </a>
                                     </li>
+                                    <li class="nav-item menu-administration-vehicles-maintenance">
+                                    <a href="{{ route('admin-vehicles-topologies')  }}" class="faa-parent animated-hover nav-link">
+                                        <i class="fa fa-wrench faa-wrench" aria-hidden="true"></i>
+                                        @lang('Topolgia de asientos')
+                                    </a>
+                                    </li>
                                 </ul>
                             </li>
                             @if( Auth::user()->canAdminGPS() )

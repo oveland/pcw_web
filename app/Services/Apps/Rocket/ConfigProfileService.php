@@ -4,6 +4,8 @@ namespace App\Services\Apps\Rocket;
 
 use App\Models\Apps\Rocket\ConfigProfile;
 use App\Models\Apps\Rocket\ProfileSeat;
+use App\Models\Routes\DispatchRegister;
+use App\Models\Routes\Route;
 use App\Models\Vehicles\Vehicle;
 
 class ConfigProfileService
@@ -83,21 +85,8 @@ class ConfigProfileService
                     $release = 48;
                 }
             }
-
-
-            /* if ($this->vehicle->id == 2585) {
-                 if ($camera == '1') {
-                     $activate = 1;
-                     $release = 10;
-                 } else if ($camera == '2') {
-                     $activate = 2;
-                     $release = 6;
-                 } else if ($camera == '3') {
-                     $activate = 1;
-                     $release = 10;
-                 }
-
-             }*/
+           
+           // dd($vehicleRoute);
 
             if ($this->vehicle->id == 2563) { // VH 5015 valledupar   OJO!!!!!!
                 if (collect([1, 7, 15])->contains(intval($number))) { // Asientos con poca cobertura
@@ -111,7 +100,7 @@ class ConfigProfileService
                     $release = 40;
                 }
             }
-            if ($this->vehicle->id == 5020) { // VH 5020 valledupar   OJO!!!!!!
+            if ($this->vehicle->id == 2574) { // VH 5020 valledupar   OJO!!!!!!
                 if (collect([2])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 1;
                     $release = 40;
@@ -135,6 +124,7 @@ class ConfigProfileService
                 if (collect([1, 2])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 1;
                     $release = 8;
+
                 }
             }
 
@@ -149,15 +139,17 @@ class ConfigProfileService
 //                $release = $rActivate ? $rActivate : 3;
 //            }
             $persistenceRoutes = null;
-            /*    if ($this->vehicle->id == 2357) {
+               /* if ($this->vehicle->company_id == 39) {
                     $persistenceRoutes = [
-                        279 => ['a' => 3, 'r' => 20],
-                        280 => ['a' => 3, 'r' => 20],
+                        279 => ['a' => 2, 'r' => 20],
+                        280 => ['a' => 2, 'r' => 20],
 
-                        285 => ['a' => 10, 'r' => 80],
-                        286 => ['a' => 10, 'r' => 80],
-                        287 => ['a' => 10, 'r' => 80],
-                        288 => ['a' => 10, 'r' => 80],
+                        285 => ['a' => 2, 'r' => 20],
+                        286 => ['a' => 2, 'r' => 20],
+
+                        282 => ['a' => 2, 'r' => 20],
+                        283 => ['a' => 2, 'r' => 20],
+
                     ];
                 }*/
 

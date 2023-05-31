@@ -57,10 +57,14 @@ class CountCommand extends Command
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
             if ($vehicle) {
-                $this->log("Start process count: Vehicle = $vehicle->number • Camera = $camera • Date = $date");
+                $initial = Carbon::now();
+                $this->log("Start count: Vehicle = $vehicle->number • Camera = $camera • Date = $date");
                 $response = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date)->processCount();
-                $this->log($response->toJson());
-                $this->log("Count finished! **** ");
+                $response['vh'] = $vehicle->number;
+                $passengers = $response['total'];
+                $photos = $response['totalPhotos'];
+                $elapsed = Carbon::now()->diffInSeconds($initial);
+                $this->log("Count finished! Vehicle = $vehicle->number • Camera = $camera • Date = $date • $passengers passengers • $photos photos • In $elapsed seconds");
             } else {
                 $this->log("Plate $vehiclePlate doesnt associated with a vehicle!");
             }
@@ -79,6 +83,6 @@ class CountCommand extends Command
         $date = Carbon::now()->toDateTimeString();
         $this->info("$date • $message");
 //        Log::useDailyFiles(storage_path().'/logs/rocket.log', 10);
-        Log::info(" Rocket • $date • $message" );
+        Log::info("[Rocket count] $message" );
     }
 }

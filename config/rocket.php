@@ -980,13 +980,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 40],
+                            'range' => [0, 30],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => true
+                            'count' => false
                         ],
                         [
-                            'range' => [40, 60],
+                            'range' => [30, 60],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
@@ -1047,13 +1047,13 @@ return [
                 'rekognition' => [
                     'rules' => [
                         [
-                            'range' => [0, 40],
+                            'range' => [0, 30],
                             'color' => 'red',
                             'background' => 'rgba(137, 138, 135, 0.1)',
-                            'count' => true
+                            'count' => false
                         ],
                         [
-                            'range' => [40, 75],
+                            'range' => [30, 75],
                             'color' => 'orange',
                             'background' => 'rgba(137, 138, 135, 0.1)',
                             'count' => true
@@ -1087,8 +1087,8 @@ return [
                             'ld' => 200                             # Percent of height when Large Detection
                         ],
                         'centerTopFromHeight' => [
-                            'nd' => 10,                             # Percent top of point center when Normal Detection
-                            'ld' => 30                              # Percent top of point center when Large Detection
+                            'nd' => 50,                             # Percent top of point center when Normal Detection
+                            'ld' => 50                              # Percent top of point center when Large Detection
                         ]
                     ]
                 ]

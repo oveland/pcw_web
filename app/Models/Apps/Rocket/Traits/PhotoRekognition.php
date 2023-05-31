@@ -31,8 +31,7 @@ trait PhotoRekognition
                 switch ($type) {
                     case 'persons_and_faces':
                         $success = $this->process('persons');
-                        $success = $success && $this->process('faces');
-
+                        if ($success) $success = $this->process('faces');
                         break;
                     default:
                         $success = $this->process($type);
@@ -79,10 +78,11 @@ trait PhotoRekognition
             }
 
             $success = true;
+            Log::info("__________________________ Recognition OK $type " . $this->vehicle->number);
         } catch (Exception $e) {
             $success = false;
-            dd($e);
-            //Log::error("??? ERROR ON processRekognition ", $e->getMessage());
+            $vn = $this->vehicle->number;
+            Log::info(" ------------------- $vn Photo $this->id ERROR ON processRekognition Error code: " . $e->getCode());
         }
 
         return $success;

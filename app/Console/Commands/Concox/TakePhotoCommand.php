@@ -6,6 +6,7 @@ use App\Services\Apps\Concox\ConcoxService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Log;
+use Storage;
 
 class TakePhotoCommand extends Command
 {
@@ -46,14 +47,20 @@ class TakePhotoCommand extends Command
      */
     public function handle()
     {
-        $camera = $this->option('camera');
+        $storage = Storage::disk('syrus');
+        $files = collect($storage->files("352557104743383/images"));
 
-        if ($camera == 2) sleep(10);
+        $files->map(function ($file) use ($storage) {
+            dump($file. " xxxx ". Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString());
+        });
 
-        $this->logData("Concox request and sync photo camera: $camera");
-        $this->logData($this->concoxService->takePhoto($camera));
-        sleep(15);
-        $this->logData($this->concoxService->syncPhotos($camera, 90, 50));
+        $files = $files->sortBy(function ($file) use ($storage) {
+            return Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString();
+        });
+
+        $files->map(function ($file) use ($storage) {
+            dump($file. " ---> ". Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString());
+        });
 
         return null;
     }

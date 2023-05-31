@@ -3,9 +3,12 @@
 namespace App\Console\Commands\Syrus;
 
 use App\Models\Company\Company;
+use App\Models\Vehicles\GpsVehicle;
 use App\Services\GPS\Syrus\SyrusService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Log;
 
 class SyncPhotoCommand extends Command
 {
@@ -59,16 +62,31 @@ class SyncPhotoCommand extends Command
             foreach ($vehicles as $vehicle) {
                 $gps = $vehicle->gpsVehicle;
                 if ($gps) {
-                    $message = "Sync vehicle $vehicle->number imei $gps->imei";
-                    dump($message);
-                    $this->info($message);
-                    $response = $this->syrusService->syncPhoto($gps->imei);
-                    $this->info($response);
+                    $this->log(" * $company->short_name | Start vehicle $vehicle->number imei $gps->imei");
+//                    $response = $this->syrusService->syncPhoto($gps->imei);
+//                    $this->info($response);
+                    $this->log(" * $company->short_name | End vehicle $vehicle->number imei $gps->imei");
                 }
             }
         } else if ($imei) {
-            $response = $this->syrusService->syncPhoto($imei);
-            $this->info($response);
+            $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
+            if ($gpsVehicle && $gpsVehicle->vehicle) {
+                $vehicle = $gpsVehicle->vehicle;
+                $company = $vehicle->company;
+                $this->log("$company->short_name | Start vehicle $vehicle->number($vehicle->id) imei $imei");
+                $response = $this->syrusService->syncPhoto($imei);
+                $this->log($response);
+                $success = $response->get('success');
+                $message = $response->get('message');
+                $this->log("$company->short_name | End vehicle $vehicle->number($vehicle->id) imei $imei | Success: $success | $message");
+            }
         }
+    }
+
+    function log($message)
+    {
+        $date = Carbon::now()->toDateTimeString();
+        $this->info("$date | $message");
+        Log::channel('rocket')->info("[Syrus3G sync] $message");
     }
 }

@@ -51,10 +51,22 @@ return [
         ],
 
         'rocket' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/rocket.log'),
             'level' => 'debug',
-            'days' => 1,
+//            'days' => 1,
+        ],
+        'sync3g' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sync3g.log'),
+            'level' => 'debug',
+//            'days' => 1,
+        ],
+        'sync4g' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sync4g.log'),
+            'level' => 'debug',
+//            'days' => 1,
         ],
 
         'daily' => [

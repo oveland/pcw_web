@@ -62,10 +62,10 @@ class SyrusService
 
         $vehicle = $gpsVehicle->vehicle;
 
-        $waitSeconds = random_int(0, 240);
-        Log::info("Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
+        $waitSeconds = random_int(0, 15);
+
+        $this->log("• Start sync for vehicle $vehicle->number in $waitSeconds");
         sleep($waitSeconds);
-        Log::info("        • Start sync for vehicle $vehicle->number");
 
         $response = collect([
             'success' => true,
@@ -76,9 +76,12 @@ class SyrusService
         $response->put('imei', $imei);
 
         $storage = Storage::disk('syrus');
-        $files = collect($storage->files($path));
+        $files = collect($storage->files($path))->sortBy(function ($file) use ($storage) {
+            return Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString();
+        });
 
-        Log::info("         • Vehicle #$vehicle->number total FPT photos: " . $files->count());
+        $this->log("    • Vehicle #$vehicle->number ($imei) total FPT photos: " . $files->count());
+
 
         $saveFiles = collect([]);
         foreach ($files as $index => $file) {
@@ -118,16 +121,25 @@ class SyrusService
                         'uid' => $fileName
                     ]);
 
-                    $extra = "";
-                    if ($process->response->success === true) {
-                        $storage->delete($file);
-                        if ($photoEvent) $photoEvent->delete();
-                    } else {
-                        $extra = $process->response->message;
-                    }
-                    Log::info("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra");
+                    $success = $process->response->success;
+                    $message = $process->response->message;
 
-                    $saveFiles->push($process->response->message);
+                    $extra = "";
+                    if ($success === true) {
+                        $deleted = $storage->delete($file);
+                        if (!$deleted) $extra = ". Error photo NOT deleted!";
+                        if ($photoEvent) $photoEvent->delete();
+                        $message .= $extra;
+                    } else {
+                        $extra = $message;
+                    }
+
+                    $this->log("             • Vh #$vehicle->number($vehicle->id)[$imei] photo $fileName saved($success): #" . ($index + 1) . "/" . $files->count() . " $extra");
+
+                    $response['success'] = $success;
+                    $response['message'] = $message;
+
+                    $saveFiles->push($message);
                 } else {
                     $storage->delete($file);
                     if ($photoEvent) $photoEvent->delete();
@@ -208,7 +220,6 @@ class SyrusService
         }
 
 
-
         if (Str::startsWith($fileName, '1')) {
             return '1';
         } else if (Str::startsWith($fileName, '2')) {
@@ -218,5 +229,10 @@ class SyrusService
         }
 
         return '0';
+    }
+
+    function log($message)
+    {
+        Log::channel('sync3g')->info("[SyrusService] $message");
     }
 }
