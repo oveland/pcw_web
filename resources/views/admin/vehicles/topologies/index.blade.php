@@ -70,7 +70,7 @@
         <!-- begin search form -->
         <form>
             <div class="panel panel-inverse">
-                <button id="btnLlamarControlador" class="btn btn-primary">Llamar Controlador</button>
+                <button class="btn btn-success btn-sm btn-search-report" id="btnLlamarControlador">Cargar Tabla</button>
             </div>
             <div class="panel-body p-b-15">
                 <div class="form-input-flat">
@@ -111,14 +111,17 @@
     <div class="report-container col-md-12"></div>
     <!-- end content report -->
     </div>
+    <div>
+        <div id="tableContainer"></div>
+    </div>
     <!-- end row -->
 
     <!-- Include template for show modal report with char and historic route coordinates -->
 
     <!-- end template -->
-
+    @include('admin.vehicles.topologies._table')
 @endsection
-@include('admin.vehicles.topologies._table')
+
 
 @section('scripts')
 
@@ -167,14 +170,28 @@
                     url: '{{ route('admin-vehicles-table') }}',
                     method: 'GET',
                     success: function (response) {
-                        // Realizar acciones con la respuesta del controlador
                     },
                     error: function (xhr, status, error) {
-                        // Manejar errores
                     }
                 });
             });
         });
+        $(document).ready(function() {
+            // Lógica para cargar la tabla al hacer clic en un botón
+            $('#btnLoadTable').click(function() {
+                $.ajax({
+                    url: 'admin-vehicles-table', // Reemplaza esto con la ruta hacia tu controlador que devuelve los datos de la tabla
+                    method: 'GET', // O el método HTTP que corresponda
+                    success: function(response) {
+                        // Actualiza el contenido del contenedor con la respuesta del servidor
+                        $('#tableContainer').html(response);
+                    },
+                    error: function(xhr, status, error) {
+                        // Maneja el error si la solicitud no se completó correctamente
+                        console.log(error);
+                    }
+                });
+            });
 
         function loadRouteReport(company) {
             var routeSelect = $('#route-report');
