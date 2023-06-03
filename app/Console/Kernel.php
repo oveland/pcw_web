@@ -177,6 +177,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104812519')->everyFiveMinutes()->runInBackground(); // Vehicle  expreso Palmira 2209
             $schedule->command('rocket:count --vehicle-plate=ESY-702 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
 
+            //$schedule->command('syrus:sync-photos --imei=352557104755908')->everyFiveMinutes()->runInBackground(); // Vehicle  expreso Palmira 2767
+           // $schedule->command('rocket:count --vehicle-plate=KUL-890 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
+
             /**********************************VALLEDUPAR*************************************************/
 
             $schedule->command('syrus:sync-photos --imei=352557100791261')->everyFiveMinutes()->runInBackground(); // Vehicle 9011 Valledupar - vehiculo sale de circulacion
