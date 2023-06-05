@@ -16,17 +16,15 @@ TopologySeatController extends Controller {
             $companies = Company::active()->orderBy('short_name', 'asc')->get();
             $vehicles = Vehicle::whereCompanyId('39')->get();
         }
-        $caso= TopologiesSeats::all()->get()->first;
-        //dd($caso);
 
         return view('admin.vehicles.topologies.index', compact('companies'),compact('vehicles'));
 
     }
-    public function table(){
-        //$resultados=  DB::table('topologies_seats')->get()->first();
-        $prueba = TopologiesSeats::all();
-        dd($prueba);
-        return view('admin.vehicles.topologies._table',compact($prueba));
+    public function table()
+    {
+        $topologies = TopologiesSeats::all();
+        dd($topologies);
+        return view('admin.vehicles.topologies._table',compact('topologies'));
 
     }
 }

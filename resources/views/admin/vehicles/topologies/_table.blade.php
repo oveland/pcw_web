@@ -22,22 +22,20 @@
     </thead>
     <tbody>
 
-
-
+        @foreach($topologies as $topologie)
             <tr>
-                <td class="text-center">{{'hola'}}</td>
+                <td class="text-center">{{$topologie->vehicle_id}}</td>
 
 
-                <td class="text-center">{{ 'Asientos' }}</td>
+                <td class="text-center">{{$topologie->number_seats }}</td>
 
 
-                <td class="text-center">{{ 'Camaras' }}</td>
+                <td class="text-center">{{$topologie->number_cam}}</td>
 
 
-                <td class="text-center">{{ 'IR' }}</td>
+                <td class="text-center">{{$topologie->number_ir}}</td>
             </tr>
-
-
+        @endforeach
     </tbody>
 </table>
 

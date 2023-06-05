@@ -68,9 +68,11 @@
     <!-- begin row -->
     <div class="row">
         <!-- begin search form -->
-        <form>
-            <div class="panel panel-inverse">
-                <button class="btn btn-success btn-sm btn-search-report" id="btnLlamarControlador">Cargar Tabla</button>
+        <form class="col-md-12 form-search-report" action="{{ route('admin-vehicles-table') }}">
+            <div >
+                <button type="submit" class="btn btn-success btn-sm btn-search-report">
+                    <i class="fa fa-search"></i> @lang('Search report')
+                </button>
             </div>
             <div class="panel-body p-b-15">
                 <div class="form-input-flat">
@@ -104,29 +106,29 @@
                     </div>
                 </div>
             </div>
-    </form>
-    <!-- end search form -->
-    <hr class="hr">
-    <!-- begin content report -->
-    <div class="report-container col-md-12"></div>
-    <!-- end content report -->
+        </form>
+        <!-- end search form -->
+        <hr class="hr">
+        <!-- begin content report -->
+        <div class="report-container col-md-12"></div>
+        <!-- end content report -->
     </div>
     <div>
-        <div id="tableContainer"></div>
+        <div id="report-container"></div>
     </div>
+
     <!-- end row -->
 
     <!-- Include template for show modal report with char and historic route coordinates -->
 
     <!-- end template -->
-    @include('admin.vehicles.topologies._table')
+{{-- @include('admin.vehicles.topologies._table')--}}
 @endsection
 
 
 @section('scripts')
 
     <script type="application/javascript">
-        $('.menu-routes, .menu-report-control-points').addClass('active-animated');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
@@ -148,61 +150,8 @@
                 }
             });
 
-            $('#date-report, #type-report, #route-report, #company-report').change(function () {
-                var form = $('.form-search-report');
-                $('.report-container').slideUp();
-                if (form.isValid(false)) {
-                    form.submit();
-                }
-            });
-
-            $('#company-report').change(function () {
-                loadRouteReport($(this).val());
-            });
-
-            @if(!Auth::user()->isAdmin())
-            loadRouteReport(null);
-            @endif
         });
-        $(document).ready(function () {
-            $('#btnLlamarControlador').click(function () {
-                $.ajax({
-                    url: '{{ route('admin-vehicles-table') }}',
-                    method: 'GET',
-                    success: function (response) {
-                    },
-                    error: function (xhr, status, error) {
-                    }
-                });
-            });
-        });
-        $(document).ready(function() {
-            // Lógica para cargar la tabla al hacer clic en un botón
-            $('#btnLoadTable').click(function() {
-                $.ajax({
-                    url: 'admin-vehicles-table', // Reemplaza esto con la ruta hacia tu controlador que devuelve los datos de la tabla
-                    method: 'GET', // O el método HTTP que corresponda
-                    success: function(response) {
-                        // Actualiza el contenido del contenedor con la respuesta del servidor
-                        $('#tableContainer').html(response);
-                    },
-                    error: function(xhr, status, error) {
-                        // Maneja el error si la solicitud no se completó correctamente
-                        console.log(error);
-                    }
-                });
-            });
 
-        function loadRouteReport(company) {
-            var routeSelect = $('#route-report');
-            routeSelect.html($('#select-loading').html()).trigger('change.select2');
-            routeSelect.load('{{ route('route-ajax-action') }}', {
-                option: 'loadRoutes',
-                company: company
-            }, function () {
-                routeSelect.trigger('change.select2');
-            });
-        }
 
     </script>
 @endsection

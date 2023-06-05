@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::prefix(__('topologies'))->group(function () {
                 Route::get('/', 'TopologySeatController@index')->name('admin-vehicles-topologies');
                 Route::get('/table', 'TopologySeatController@table')->name('admin-vehicles-table');
+                //Route::get('admin/vehicles/topologies/table', [\App\Http\Controllers\TopologySeatController::class, 'table'])->name('admin.vehicles.topologies.table');
             });
         });
 
