@@ -167,6 +167,7 @@ class SeatOccupationService
                     break;
                 default:
                     $data->pa = 0;
+                    $data->photoSeq = 0;
                     break;
             }
 
