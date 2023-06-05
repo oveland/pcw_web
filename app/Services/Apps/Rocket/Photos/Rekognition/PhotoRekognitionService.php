@@ -258,6 +258,7 @@ abstract class PhotoRekognitionService
 
         $personDraws = collect([]);
         $seatingOccupied = collect([]);
+        $seatingCounts = collect([]);
 
         $count = true;
         $overlap = false;
@@ -288,7 +289,20 @@ abstract class PhotoRekognitionService
             }
         }
 
-        $occupationPercent = $this->profileSeat->occupation->count() ? 100 * $seatingOccupied->count() / $this->profileSeat->occupation->count() : 0;
+        $seatingProfileOccupation = collect($this->profileSeat->occupation);
+        $occupationPercent = $seatingProfileOccupation->count() ? 100 * $seatingOccupied->count() / $seatingProfileOccupation->count() : 0;
+
+        $seatingProfileOccupation->each(function ($seat) use ($seatingCounts) {
+            $seat = (object)$seat;
+            $seatingCounts->put($seat->number, (object)[
+                'id' => $seat->id,
+                'number' => $seat->number,
+                'pa' => 0, // persistence activations
+                'pr' => 0, // persistence releases
+                'counted' => false,
+                'photoSeq' => 0,
+            ]);
+        });
 
         $occupation->type = $this->type;
         $occupation->draws = $personDraws;
@@ -299,6 +313,7 @@ abstract class PhotoRekognitionService
         $occupation->percentLevel = $this->getOccupationLevel($occupationPercent);
         $occupation->seatingOccupied = $seatingOccupied;
         $occupation->seatingOccupiedStr = $seatingOccupied->count() ? $seatingOccupied->keys()->sort()->implode(', ') : "";
+        $occupation->seatingCounts = $seatingCounts;
 
         return $occupation;
     }
