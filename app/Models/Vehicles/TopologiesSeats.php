@@ -37,9 +37,9 @@ class TopologiesSeats extends Model
     {
         return $this->belongsTo(Company::class);
     }
-   public function vehicle()
+    public function vehicle()
     {
-        return $this->belongsTo(Vehicle::class,'vehicle_id');
+        return $this->belongsTo(Vehicle::class);
     }
 
 }

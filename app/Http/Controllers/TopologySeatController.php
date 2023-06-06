@@ -19,6 +19,7 @@ TopologySeatController extends Controller {
 
         return view('admin.vehicles.topologies.index', compact('companies'),compact('vehicles'));
 
+
     }
     public function table()
     {
