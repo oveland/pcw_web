@@ -122,7 +122,7 @@ return [
     |
     */
 
-    'cookie' => env('APP_SESSION_COOKIE_NAME', 'laravel_session'),
+    'cookie' => env('APP_SESSION_COOKIE_NAME', 'beta_session'),
 
     /*
     |--------------------------------------------------------------------------
@@ -161,7 +161,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', null),
+    'secure' => env('SESSION_SECURE_COOKIE', false),
 
     /*
     |--------------------------------------------------------------------------

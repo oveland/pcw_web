@@ -129,6 +129,9 @@
 @section('scripts')
 
     <script type="application/javascript">
+        $('.menu-routes, .menu-off-road-report').addClass('active-animated');
+        let form = $('.form-search-report');
+        let mainContainer = $('.report-container');
 
         $(document).ready(function () {
             $('.form-search-report').submit(function (e) {
@@ -151,6 +154,10 @@
             });
 
         });
+        $('#vehicle-report').change(function () {
+            mainContainer.slideUp(100);
+        });
+
 
 
     </script>

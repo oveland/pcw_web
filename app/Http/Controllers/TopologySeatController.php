@@ -24,7 +24,6 @@ TopologySeatController extends Controller {
     public function table()
     {
         $topologies = TopologiesSeats::all();
-        dd($topologies);
         return view('admin.vehicles.topologies._table',compact('topologies'));
 
     }
