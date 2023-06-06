@@ -160,7 +160,7 @@ class SeatOccupationService
                     break;
                 case 'in':
                     if ($seatingOccupiedInfo && $seatingOccupiedInfo->detected) {
-                        $data->pa = $prevData->pa + 1;
+                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence < 70 ? 0.5 : 1);
                     } else {
                         $data->pa = $prevData->pa;
                     }
