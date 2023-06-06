@@ -274,6 +274,11 @@ abstract class PhotoRekognitionService
                         $recognition->profile = $profileOccupation;
 
                         if ($profileOccupation->seatOccupied) {
+                            $confidence = $recognition->confidence;
+                            $seatingOccupiedPrev = $seatingOccupied->get($profileOccupation->seatOccupied->number);
+                            if ($seatingOccupiedPrev && $seatingOccupiedPrev->confidence > $confidence) $confidence = $seatingOccupiedPrev->confidence;
+                            $profileOccupation->seatOccupied->confidence = $confidence;
+
                             $seatingOccupied->put($profileOccupation->seatOccupied->number, $profileOccupation->seatOccupied);
                         }
 
