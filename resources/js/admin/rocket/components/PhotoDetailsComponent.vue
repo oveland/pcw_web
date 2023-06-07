@@ -15,7 +15,7 @@
 						<span class="title">
 							<i class="fa fa-flag"></i>
 						</span>
-						<span class="detail">{{ photo.details.dispatchRegister.route.name }}</span>,
+						<span class="detail">{{ photo.details.dispatchRegister.route.name }} ({{ photo.drStatus }})</span>,
 						<span class="detail">{{ $t('Round trip')}} {{ photo.details.dispatchRegister.round_trip }}</span>,
 						<span class="detail">{{ $t('Turn') }} {{ photo.details.dispatchRegister.turn }}</span>
                     </p>

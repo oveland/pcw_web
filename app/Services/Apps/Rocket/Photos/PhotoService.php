@@ -862,6 +862,7 @@ class PhotoService
                     'camera' => $photo->side,
                     'time' => $photo->date->format('H:i:s.u') . '' . $photo->id,
                     'drId' => $statusDR->getDRId(),
+                    'drStatus' => $statusDR->text,
                     'details' => $details,
                     'rekognitionCounts' => $rekognitionCounts,
                     'prevDetails' => $prevDetails,

@@ -42,6 +42,7 @@ class SeatOccupationService
      */
     private function persistenceRelease(&$currentOccupied, $prevOccupied, $withOverlap = false, StatusDR $statusDR)
     {
+        if ($statusDR->start) $prevOccupied = collect([]);
 
         if (!$withOverlap) {
             $routeId = $statusDR->getRouteId();
@@ -89,6 +90,8 @@ class SeatOccupationService
      */
     private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false, StatusDR $statusDR)
     {
+        if ($statusDR->start) $prevOccupied = collect([]);
+
         if (!$withOverlap) {
             $routeId = $statusDR->getRouteId();
 
@@ -156,12 +159,12 @@ class SeatOccupationService
 
             switch ($statusDR->text) {
                 case 'start':
-                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence < 70 ? 0.5 : 3;
+                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence > 70 ? 3 : 0.5;
                     break;
                 case 'in':
                     if ($seatingOccupiedInfo && $seatingOccupiedInfo->detected) {
                         $step = $prevData->pa == 0 ? 3 : 1;
-                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence < 70 ? 0.5 : $step);
+                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence > 70 ? $step : 0.5);
                     } else {
                         $data->pa = $prevData->pa;
                     }
@@ -179,7 +182,7 @@ class SeatOccupationService
             $averageCount = $seatingActivated->average('pa');
 
 //            $data->counted = $averageCount > 0 && $data->pa >= $averageCount * 0.3; // && $seatingActivated->count() > 1;
-            $data->counted = $averageCount > 0 && $data->pa >= $averageCount * 0.3 && ($data->pa / $data->photoSeq) > 0.3;
+            $data->counted = $averageCount > 0 && $data->pa >= $averageCount * 0.3;// && ($data->pa / $data->photoSeq) > 0.3;
 //            $data->counted = $data->pa >= 2;
 
             $seatingCounts->put($seat, $data);
