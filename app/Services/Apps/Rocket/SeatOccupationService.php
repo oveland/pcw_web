@@ -156,11 +156,12 @@ class SeatOccupationService
 
             switch ($statusDR->text) {
                 case 'start':
-                    if ($seatingOccupiedInfo) $data->pa = 1;
+                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence < 70 ? 0.5 : 3;
                     break;
                 case 'in':
                     if ($seatingOccupiedInfo && $seatingOccupiedInfo->detected) {
-                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence < 70 ? 0.5 : 1);
+                        $step = $prevData->pa == 0 ? 3 : 1;
+                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence < 70 ? 0.5 : $step);
                     } else {
                         $data->pa = $prevData->pa;
                     }

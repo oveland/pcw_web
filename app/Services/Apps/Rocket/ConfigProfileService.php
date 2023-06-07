@@ -168,7 +168,7 @@ class ConfigProfileService
                     'minWidth' => 0.1 * collect($this->profileSeat->occupation)->average('width'),
                 ],
                 'persons' => [
-                    'maxWidth' => 1.8 * collect($this->profileSeat->occupation)->average('width'),
+                    'maxWidth' => 1.3 * collect($this->profileSeat->occupation)->average('width'),
                     'minWidth' => 0.5 * collect($this->profileSeat->occupation)->average('width'),
                 ]
             ],
