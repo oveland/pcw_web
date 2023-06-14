@@ -106,6 +106,8 @@ abstract class PhotoRekognitionService
                 'height' => $height,
                 'heightOrig' => $heightOrig,
                 'largeDetection' => $rule->largeDetection,
+                'widthSeatingAverage' => $rule->widthSeatingAverage,
+                'invalidSize' => $rule->invalidSize,
                 'left' => $left,
                 'top' => $top,
                 'center' => (object)[
@@ -134,9 +136,9 @@ abstract class PhotoRekognitionService
      */
     protected function processDrawRule($confidence, $boundingBox)
     {
-        $confidence = intval($confidence);
+        $boxZone = $this->processBoxZone($boundingBox, $confidence);
 
-        $boxZone = $this->processBoxZone($boundingBox);
+        $confidence = intval($confidence);
 
         $rules = collect($this->config->photo->rekognition->rules);
 
@@ -168,6 +170,7 @@ abstract class PhotoRekognitionService
         $rule->put('largeDetection', $boxZone->largeDetection);
         $rule->put('relationSize', $boxZone->relationSize);
         $rule->put('invalidSize', $boxZone->invalidSize);
+        $rule->put('widthSeatingAverage', $boxZone->widthSeatingAverage);
 
         return (object)$rule->toArray();
     }
@@ -176,7 +179,7 @@ abstract class PhotoRekognitionService
      * @param $boundingBox > Values are in percent. Relative to photo image size processed with AWS Rekognition
      * @return object
      */
-    protected function processBoxZone($boundingBox)
+    protected function processBoxZone($boundingBox, $confidence)
     {
         $boundingBox = (object)$boundingBox;
 
@@ -206,7 +209,7 @@ abstract class PhotoRekognitionService
         $invalidSize = $width > $criteriaWidthSize->maxWidth || $width < $criteriaWidthSize->minWidth;
 
         $overlap = false;
-        if ($this->type == 'persons') {
+//        if ($this->type == 'persons') {
             //        $overlap = false;
 //
 //        if (isset($boundingBox->center)) {
@@ -224,18 +227,18 @@ abstract class PhotoRekognitionService
 //                $overlap = $overlap || ($heightOrig > 30 && $width > 10);
 //            }
 //        }
-        } else if ($this->type == 'faces') {
-            if (isset($boundingBox->center) && $boundingBox->center->top < 20) {
-                $overlap = ($height > 11 && $width > 6);
-            } else {
-                $overlap = ($height > 20 && $width > 11);
-            }
+//        } else if ($this->type == 'faces') {
+//            if (isset($boundingBox->center) && $boundingBox->center->top < 20) {
+//                $overlap = ($height > 11 && $width > 6);
+//            } else {
+//                $overlap = ($height > 20 && $width > 11);
+//            }
+//
+//        }
 
-        }
+        $widthSeatingAverage = $cameraConfig->widthSeatingAverage;
 
-        $overlap = false;
-
-        return (object)compact(['overlap', 'relationSize', 'largeDetection', 'invalidSize']);
+        return (object)compact(['overlap', 'relationSize', 'largeDetection', 'invalidSize', 'widthSeatingAverage']);
     }
 
     /**
@@ -256,7 +259,7 @@ abstract class PhotoRekognitionService
     {
         $occupation = (object)$occupation;
 
-        $personDraws = collect([]);
+        $draws = collect([]);
         $seatingOccupied = collect([]);
         $seatingCounts = collect([]);
 
@@ -283,7 +286,7 @@ abstract class PhotoRekognitionService
                         }
 
                         $recognition->profileStr = $profileOccupation->seating->pluck('number')->implode(', ');
-                        $personDraws[] = $recognition;
+                        $draws[] = $recognition;
                     }
 
                     if ($recognition->overlap) {
@@ -310,7 +313,7 @@ abstract class PhotoRekognitionService
         });
 
         $occupation->type = $this->type;
-        $occupation->draws = $personDraws;
+        $occupation->draws = $draws;
         $occupation->count = $count;
         $occupation->withOverlap = $overlap;
         $occupation->persons = $seatingOccupied->count();

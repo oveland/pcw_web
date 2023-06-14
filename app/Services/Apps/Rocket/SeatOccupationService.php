@@ -30,8 +30,9 @@ class SeatOccupationService
     function processPersistenceSeating($currentOccupation, $prevOccupation, StatusDR $statusDR)
     {
         $this->persistenceRelease($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap, $statusDR);
-        $this->persistenceActivate($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, false, $statusDR);
+        $this->persistenceActivate($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, false, $statusDR, $currentOccupation->seatingCounts);
         $this->totalPersistenceCounts($currentOccupation->seatingCounts, $prevOccupation->seatingCounts, $currentOccupation->seatingOccupied, $statusDR);
+        $this->persistenceActivate($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, false, $statusDR, $currentOccupation->seatingCounts);
     }
 
     /**
@@ -88,7 +89,7 @@ class SeatOccupationService
      * @param bool $withOverlap
      * @param StatusDR $statusDR
      */
-    private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false, StatusDR $statusDR)
+    private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false, StatusDR $statusDR, $seatingCounts)
     {
         if ($statusDR->start) $prevOccupied = collect([]);
 
@@ -118,9 +119,11 @@ class SeatOccupationService
                         $counterActivate++;
                         $newData->put('detected', true);
                     } else if (!$persistentPrev) {
-                        $counterActivate = 1;
+                        $counterActivate = $seatingCounts->get($seat)->pa >= 2 ? $seatActivateThreshold : 1;
                         $newData->put('detected', true);
                     }
+
+                    $counted = $counterActivate >= $seatActivateThreshold;
 
                     $prevCounterActivate = $persistentPrev ? collect($persistentPrev)->get('counterActivate') : 0;
                     $risingEvent = $counterActivate > $prevCounterActivate;
@@ -129,7 +132,7 @@ class SeatOccupationService
                     $newData->put('initialCount', $counterActivate == $seatActivateThreshold - 2);
                     $newData->put('beforeCount', $counterActivate == $seatActivateThreshold - 1);
                     $newData->put('activated', $counterActivate == $seatActivateThreshold && $risingEvent);
-                    $newData->put('counted', $counterActivate >= $seatActivateThreshold);
+                    $newData->put('counted', $counted);
                     $newData->put('seatActivateThreshold', $seatActivateThreshold);
                     $newData->put('risingEvent', $risingEvent);
 
@@ -159,12 +162,13 @@ class SeatOccupationService
 
             switch ($statusDR->text) {
                 case 'start':
-                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence > 70 ? 3 : 0.5;
+//                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence > 70 ? 3 : 0.5;
+                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence > 70 ? 3 : 1;
                     break;
                 case 'in':
                     if ($seatingOccupiedInfo && $seatingOccupiedInfo->detected) {
                         $step = $prevData->pa == 0 ? 3 : 1;
-                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence > 70 ? $step : 0.5);
+                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence > 70 ? $step : 1);
                     } else {
                         $data->pa = $prevData->pa;
                     }
@@ -180,10 +184,13 @@ class SeatOccupationService
             });
 
             $averageCount = $seatingActivated->average('pa');
+            $averageCount = 1;
 
-//            $data->counted = $averageCount > 0 && $data->pa >= $averageCount * 0.3; // && $seatingActivated->count() > 1;
-            $data->counted = $averageCount > 0 && $data->pa >= $averageCount * 0.3;// && ($data->pa / $data->photoSeq) > 0.3;
-//            $data->counted = $data->pa >= 2;
+            $data->counted =
+                $averageCount > 0
+//                && $data->pa >= $averageCount * 0.3
+                && $data->pa >= 2;
+//                && ($data->pa / $data->photoSeq) > 0.1;
 
             $seatingCounts->put($seat, $data);
         }
