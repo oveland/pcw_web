@@ -766,8 +766,10 @@ class PhotoService
             $prevOccupation = $this->getOccupation($prevPhoto);
             $prevDetails = $prevPhoto->getAPIFields('url');
 
-            $personsByRoundTripT = 0;
-            $totalPersonsT = 0;
+            $personsByRoundTripT1 = 0;
+            $personsByRoundTripT2 = 0;
+            $totalPersonsT1 = 0;
+            $totalPersonsT2 = 0;
             $totalSumOccupied = 0;
             $totalSumReleased = 0;
             $maxPersonByRoundTrip = 0;
@@ -802,16 +804,21 @@ class PhotoService
                 $prevSeatingCounted = $this->seatOccupationService->getSeatingCounted($prevOccupation->seatingCounts, $currentOccupation->withOverlap);
 
                 if ($statusDR->isActive()) {
-                    $newPersons = $seatingActivated->count(); // By Criteria of Topologies by persistence
-                    $newPersons = $statusDR->start ? $seatingCounted->count() : $seatingCounted->count() - $prevSeatingCounted->count(); // By Criteria of Topologies 2 (Nivel de llenado de Vasos)
+                    $newPersonsT1 = $seatingActivated->count(); // By Criteria of Topologies by persistence
+                    $newPersonsT2 = $statusDR->start ? $seatingCounted->count() : $seatingCounted->count() - $prevSeatingCounted->count(); // By Criteria of Topologies 2 (Nivel de llenado de Vasos)
+
+//                    $newPersons = max($newPersons, $newPersons2);
 
                     if ($statusDR->start) {
-                        $personsByRoundTripT = $newPersons;
+                        $personsByRoundTripT1 = $newPersonsT1;
+                        $personsByRoundTripT2 = $newPersonsT2;
                     } else {
-                        $personsByRoundTripT += $newPersons;
+                        $personsByRoundTripT1 += $newPersonsT1;
+                        $personsByRoundTripT2 += $newPersonsT2;
                     }
 
-                    $totalPersonsT += $newPersons;
+                    $totalPersonsT1 += $newPersonsT1;
+                    $totalPersonsT2 += $newPersonsT2;
                 }
 
                 $this->processLockCam($photo, $counterLock, $alertLockCam);
@@ -824,13 +831,18 @@ class PhotoService
                 $criteriaCount = 'averages';
                 $criteriaCount = 'topologies';
 
+//                $totalPersonsT = max($totalPersonsT1, $totalPersonsT2);
+//                $personsByRoundTripT = max($personsByRoundTripT1, $personsByRoundTripT2);
+
+                $totalPersonsT = $totalPersonsT1;
+                $personsByRoundTripT = $personsByRoundTripT1;
 
                 switch ($criteriaCount) {
                     case 'averages':
                         ###### AVERAGES BETWEEN TOPOLOGIES AND FACES MAX CRITERIA
                         $maximumCriteria = $rekognitionCounts->get('faces');
                         $personsByRoundTrip = ceil((($personsByRoundTripT ?: $maximumCriteria->max->value) + $maximumCriteria->max->value) / 2);
-                        $totalPersons = ceil((($totalPersonsT ?: $maximumCriteria->total) + $maximumCriteria->total) / 2);
+                        $totalPersons = ceil((($totalPersonsT1 ?: $maximumCriteria->total) + $maximumCriteria->total) / 2);
                         break;
                     case 'max':
                         ###### FACES MAX CRITERIA

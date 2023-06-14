@@ -85,8 +85,8 @@ class ConfigProfileService
                     $release = 48;
                 }
             }
-           
-           // dd($vehicleRoute);
+
+            // dd($vehicleRoute);
 
             if ($this->vehicle->id == 2563) { // VH 5015 valledupar   OJO!!!!!!
                 if (collect([1, 7, 15])->contains(intval($number))) { // Asientos con poca cobertura
@@ -139,19 +139,19 @@ class ConfigProfileService
 //                $release = $rActivate ? $rActivate : 3;
 //            }
             $persistenceRoutes = null;
-               /* if ($this->vehicle->company_id == 39) {
-                    $persistenceRoutes = [
-                        279 => ['a' => 2, 'r' => 20],
-                        280 => ['a' => 2, 'r' => 20],
+            /* if ($this->vehicle->company_id == 39) {
+                 $persistenceRoutes = [
+                     279 => ['a' => 2, 'r' => 20],
+                     280 => ['a' => 2, 'r' => 20],
 
-                        285 => ['a' => 2, 'r' => 20],
-                        286 => ['a' => 2, 'r' => 20],
+                     285 => ['a' => 2, 'r' => 20],
+                     286 => ['a' => 2, 'r' => 20],
 
-                        282 => ['a' => 2, 'r' => 20],
-                        283 => ['a' => 2, 'r' => 20],
+                     282 => ['a' => 2, 'r' => 20],
+                     283 => ['a' => 2, 'r' => 20],
 
-                    ];
-                }*/
+                 ];
+             }*/
 
             $seatingConfig[$number] = [
                 'persistence' => compact(['activate', 'release']),
@@ -161,28 +161,31 @@ class ConfigProfileService
 
         $config['seating'] = $seatingConfig;
 
+        $widthSeatingAverage = collect($this->profileSeat->occupation)->average('width');
+
         $cameraConfig = [
             'processWidthSize' => [
                 'faces' => [
-                    'maxWidth' => 0.5 * collect($this->profileSeat->occupation)->average('width'),
-                    'minWidth' => 0.1 * collect($this->profileSeat->occupation)->average('width'),
+                    'maxWidth' => 0.6 * $widthSeatingAverage,
+                    'minWidth' => 0.1 * $widthSeatingAverage,
                 ],
                 'persons' => [
-                    'maxWidth' => 1.3 * collect($this->profileSeat->occupation)->average('width'),
-                    'minWidth' => 0.5 * collect($this->profileSeat->occupation)->average('width'),
+                    'maxWidth' => 1.8 * $widthSeatingAverage,
+                    'minWidth' => 0.5 * $widthSeatingAverage,
                 ]
             ],
 //            'processWidthSize' => [
 //                'faces' => [
-//                    'maxWidth' => 2 * collect($this->profileSeat->occupation)->average('width'),
-//                    'minWidth' => 0 * collect($this->profileSeat->occupation)->average('width'),
+//                    'maxWidth' => 2 * $widthSeatingAverage,
+//                    'minWidth' => 0 * $widthSeatingAverage,
 //                ],
 //                'persons' => [
-//                    'maxWidth' => 2 * collect($this->profileSeat->occupation)->average('width'),
-//                    'minWidth' => 0 * collect($this->profileSeat->occupation)->average('width'),
+//                    'maxWidth' => 2 * $widthSeatingAverage,
+//                    'minWidth' => 0 * $widthSeatingAverage,
 //                ]
 //            ],
-            'largeDetection' => true
+            'largeDetection' => true,
+            'widthSeatingAverage' => $widthSeatingAverage
         ];
 
         $config['camera'] = $cameraConfig;
