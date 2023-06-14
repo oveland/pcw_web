@@ -183,6 +183,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557100790404')->everyFiveMinutes()->runInBackground(); // Vehicle  expreso Palmira 2205
             $schedule->command('rocket:count --vehicle-plate=ESY-700 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
 
+            $schedule->command('syrus:sync-photos --imei=352557104790814')->everyFiveMinutes()->runInBackground(); // Vehicle 2201  expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ESY-698 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
+
 
 
             /**********************************VALLEDUPAR*************************************************/

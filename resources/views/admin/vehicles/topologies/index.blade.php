@@ -69,11 +69,7 @@
     <div class="row">
         <!-- begin search form -->
         <form class="col-md-12 form-search-report" action="{{ route('admin-vehicles-table') }}">
-            <div >
-                <button type="submit" class="btn btn-success btn-sm btn-search-report">
-                    <i class="fa fa-search"></i> @lang('Search report')
-                </button>
-            </div>
+
             <div class="panel-body p-b-15">
                 <div class="form-input-flat">
                     @if(Auth::user()->isAdmin())
@@ -101,6 +97,29 @@
                             <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12" data-with-all="true">
                                 @include('partials.selects.vehicles', compact('vehicles'), ['withAll' => true])
                             </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="camera" >@lang('Camara ')</label>
+                        <div class="form-group">
+                            <select name="cameras" id="cameras" class="default-select2 form-control col-md-12" data-with-all="true">
+                                <option value="all">Todas</option>
+                                <option value="1">Camara 1</option>
+                                <option value="2">Camara 2</option>
+                                <option value="3">Camara 3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2" >
+                    <div class="form-group">
+                        <label></label>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-sm btn-search-report">
+                                <i class="fa fa-search"></i> @lang('Search report')
+                            </button>
                         </div>
                     </div>
                 </div>
