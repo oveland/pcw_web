@@ -298,11 +298,9 @@ class User extends Authenticatable
             #ALAMEDA:
             999457, // GERENCIALAMEDA
             98914189, // JEFE OPERATIVO
-            2018101214, // JORGEPB
             31580814, // JEFE RRHH
-            2018101243, // ALEXANDERAL
             2018101262, // WILSONAL
-            67019334, // ANGELICA ANALISTA
+            2018101388, //  DEYSY
 
             #TRANSPUBENZA:
             2018101273, // SIMONTP
@@ -337,10 +335,9 @@ class User extends Authenticatable
             #ALAMEDA:
             999457, // GERENCIALAMEDA
             98914189, // JEFE OPERATIVO
-            2018101214, // JORGEPB
             31580814, // JEFE RRHH
-            2018101243, // ALEXANDERAL
             2018101262, // WILSONAL
+            2018101354, // MIGUEL
 
             #TRANSPUBENZA
             2018101273, // SIMONTP

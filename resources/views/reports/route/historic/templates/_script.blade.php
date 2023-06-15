@@ -9,6 +9,7 @@
             this.currentLocation = null;
             this.historicLocations = [];
             this.controlPoints = [];
+            this.geofenceDispatches = [];
             this.markerBus = null;
 
             this.historicPath = null;
@@ -178,6 +179,8 @@
             } else {
                 gwarning("@lang("No registers found")");
             }
+
+            if (this.report.config.show.geofenceDispatches) this.addGeofenceDispatches(this.report.config.dispatches);
         }
 
         addKml(url) {
@@ -197,10 +200,13 @@
         addControlPoints(list) {
             this.removeControlPoints();
 
-            for(let controlPoint of list) {
+            for (let controlPoint of list) {
                 this.controlPoints.push(new google.maps.Marker({
                     map: this.map,
-                    position: {lat: parseFloat(controlPoint.latitude), lng: parseFloat(controlPoint.longitude)},
+                    position: {
+                        lat: parseFloat(controlPoint.latitude),
+                        lng: parseFloat(controlPoint.longitude)
+                    },
                     icon: this.controlPointIcon[controlPoint.trajectory],
                     title: controlPoint.name,
                     zIndex: 10000,
@@ -209,11 +215,39 @@
         }
 
         removeControlPoints() {
-            for(let controlPoint of this.controlPoints) {
+            for (let controlPoint of this.controlPoints) {
                 controlPoint.setMap(null);
             }
 
             this.controlPoints = [];
+        }
+
+        addGeofenceDispatches(list) {
+            this.removeGeofenceDispatches();
+
+            for (let dispatch of list) {
+                this.geofenceDispatches.push(new google.maps.Circle({
+                    strokeColor: dispatch.color,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: dispatch.color,
+                    fillOpacity: 0.35,
+                    map: this.map,
+                    center: {
+                        lat: parseFloat(dispatch.latitude),
+                        lng: parseFloat(dispatch.longitude),
+                    },
+                    radius: dispatch.radius,
+                }));
+            }
+        }
+
+        removeGeofenceDispatches() {
+            for (let geofence of this.geofenceDispatches) {
+                geofence.setMap(null);
+            }
+
+            this.geofenceDispatches = [];
         }
 
         addHistoricMarker(r) {
@@ -237,7 +271,10 @@
                 icon: icon,
                 zIndex: svg.zIndex,
                 animation: svg.animation,
-                position: {lat: parseFloat(r.latitude), lng: parseFloat(r.longitude)}
+                position: {
+                    lat: parseFloat(r.latitude),
+                    lng: parseFloat(r.longitude)
+                }
             });
         }
 
@@ -258,7 +295,10 @@
                 title: r.vehicleStatus.status + " " + r.time,
                 map: this.map,
                 icon: icon,
-                position: {lat: parseFloat(r.latitude), lng: parseFloat(r.longitude)}
+                position: {
+                    lat: parseFloat(r.latitude),
+                    lng: parseFloat(r.longitude)
+                }
             });
         }
 
@@ -542,7 +582,7 @@
                 if (trip.index <= index) {
                     html += `<li class="${classLast}">
                         <small>
-                            <span><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName} • ${trip.passengers.inRoundTrip}</span>
+                            <span><i class="fa fa-exchange"></i> ${trip.roundTrip} ${trip.routeName}</span>
                         </small>
                     </li>`;
                 }

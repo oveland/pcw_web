@@ -587,10 +587,7 @@
                                      data-placement="bottom" title="@lang('Count passengers')">
                                     @if(Auth::user()->isAdmin() && false)
                                         <small class="passengers-label p-0 hidden-xs" style="display: block">
-                                            <span class="passengers-frame-container">
-                                                <i class="fa fa-clock-o"></i>
-                                                <span class="passengers-frame p-0">Frame counter</span>
-                                            </span>
+                                            
                                         </small>
                                     @endif
 
@@ -696,22 +693,24 @@
                              @endif
                              --}}
 
-                             @if(Auth::user()->isAdmin() || Auth::user()->isExpreso())
+                            @if(Auth::user()->isAdmin() || Auth::user()->isExpreso())
 
-                             <div class="play-controls text-center m-t-5">
-                                 <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-1" data-placement="bottom" title="@lang('Hasta evento de activación')" onclick="setEvent(1)" data-color="green-jungle" ontouchstart="setEvent(1)">
+                                <div class="play-controls text-center m-t-5">
+                                 <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-1"
+                                       data-placement="bottom" title="@lang('Hasta evento de activación')"
+                                       onclick="setEvent(1)" data-color="green-jungle" ontouchstart="setEvent(1)">
                                      <i class="fa fa-user text-info"></i>
                                  </span>
 
-                                {{-- <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-2" data-placement="bottom" title="@lang('Hasta evento de conteo')" onclick="setEvent(2)" data-color="green" ontouchstart="setEvent(2)">
-                                     <i class="fa fa-user text-lime"></i>
-                                 </span>
+                                    {{-- <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-2" data-placement="bottom" title="@lang('Hasta evento de conteo')" onclick="setEvent(2)" data-color="green" ontouchstart="setEvent(2)">
+                                         <i class="fa fa-user text-lime"></i>
+                                     </span>
 
-                                 <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-3" data-placement="bottom" title="@lang('Hasta evento de activación o conteo')" onclick="setEvent(3)" data-color="warning"  ontouchstart="setEvent(3)">
-                                     <i class="fa fa-user text-purple"></i>
-                                 </span>--}}
-                             </div>
-                             @endif
+                                     <span class="btn btn-default btn-xs btn-circle btn-backward tooltips m-0 faa-parent animated-hover event event-3" data-placement="bottom" title="@lang('Hasta evento de activación o conteo')" onclick="setEvent(3)" data-color="warning"  ontouchstart="setEvent(3)">
+                                         <i class="fa fa-user text-purple"></i>
+                                     </span>--}}
+                                </div>
+                            @endif
                         </div>
                     @endif
                 </div>

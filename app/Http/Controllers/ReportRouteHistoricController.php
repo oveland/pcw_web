@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company\Company;
+use App\Models\Routes\Dispatch;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\LocationToday;
 use App\Models\Vehicles\Vehicle;
@@ -373,8 +374,17 @@ class ReportRouteHistoricController extends Controller
                     'panic' => $vehicle->company->id === Company::COODETRANS
                 ],
                 'show' => [
-                    'passengers' => Auth::user()->company_id != Company::EXPRESO_PALMIRA
-                ]
+                    'passengers' => Auth::user()->company_id != Company::EXPRESO_PALMIRA,
+                    'geofenceDispatches' => Auth::user()->isAdmin(),
+                ],
+                'dispatches' => $vehicle->company->dispatches()->where('active', true)->get()->map(function (Dispatch $d) {
+                    return (object)[
+                        'latitude' => $d->latitude,
+                        'longitude' => $d->longitude,
+                        'radius' => $d->radio_geofence,
+                        'color' => '#ff8700'
+                    ];
+                })
             ]
         ];
     }
@@ -433,7 +443,7 @@ class ReportRouteHistoricController extends Controller
                 if ($type == 'activated' && $total) {
                     foreach ($seatingList as $activated) {
                         $seatingCounted[$activated] = [
-                            'total' => (intval( isset($seatingCounted[$activated]) ? $seatingCounted[$activated]['total'] : 0 )) + 1,
+                            'total' => (intval(isset($seatingCounted[$activated]) ? $seatingCounted[$activated]['total'] : 0)) + 1,
                             'new' => true
                         ];
                     }
