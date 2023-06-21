@@ -53,7 +53,7 @@
         @if( $company->hasRecorderCounter() )
             <th class="text-center">
                 <i class="fa fa-compass text-muted"></i><br>
-                {{ str_limit(__($isExpresoPalmira ? 'Manual Count' : 'Recorder'), 15) }}
+                {{ str_limit(__($isExpresoPalmira ? 'Conteo Manual ' : 'Recorder'), 15) }}
                 @if(!$isExpresoPalmira)
                     <br>
                     <small class="text-muted">
@@ -73,6 +73,13 @@
                 </small>
             </th>
         @endif
+
+            @if($isExpresoPalmira)
+            <th>
+                <i class="icon-users text-muted">
+                </i><br>{{"Diferencia"}}
+            </th>
+            @endif
 
         @if($company->hasSensorCounter())
             <th>
@@ -106,22 +113,28 @@
                 @lang('Pasajeros Planilla')
             </th>
         @endif
+        {{-- @if(Auth::user()->isSuperAdmin())
+             <th class="text-center">
+                 <i class="fa fa-file  fa-3x fa-fw"></i><br>
+                 @lang('Dif. Planilla')
+             </th>
+             <th class="text-center">
+                 <i class="icon-users text-muted"></i><br>
+                 @lang('Dif. Sistema')
+             </th>
+             <th class="text-center">
+                 <i class="fa fa-dollar text-muted"></i><br>
+                 @lang('Planilla')
+             </th>
+             <th class="text-center">
+             <i class="fa fa-dollar text-muted"></i><br>
+             @lang('Sistema')
+             </th>
+         @endif--}}
         @if(Auth::user()->isSuperAdmin())
             <th class="text-center">
-                <i class="fa fa-file  fa-3x fa-fw"></i><br>
-                @lang('Dif. Planilla')
-            </th>
-            <th class="text-center">
                 <i class="icon-users text-muted"></i><br>
-                @lang('Dif. Sistema')
-            </th>
-            <th class="text-center">
-                <i class="fa fa-dollar text-muted"></i><br>
-                @lang('Planilla')
-            </th>
-            <th class="text-center">
-            <i class="fa fa-dollar text-muted"></i><br>
-            @lang('Sistema')
+                @lang('Conteo Maximos')
             </th>
         @endif
         <th width="10%">
@@ -378,7 +391,7 @@
                 class="text-center">{{ $dispatchRegister->getRouteTime() }}</td>
 
             @if( $company->hasRecorderCounter() )
-                <td width="10%" class="p-r-0 p-l-0 text-center">
+                <td width="10%" class="p-r-0 p-l-0 text-center" style="background:  #b7f4ff " >
                     @php
                         $obs = $dispatchRegister->getObservation('start_recorder');
                     @endphp
@@ -440,7 +453,7 @@
                     @endphp
 
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
-                        <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
+                            <div class="tooltips box-edit"            data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
                                 <span class="">
                                     @if(!$isExpresoPalmira)
@@ -451,7 +464,7 @@
                                     @endif
                                     @if($isExpresoPalmira)
                                         <br>
-                                        <small class="tooltips text-muted" data-title="@lang('# Spreadsheet')" data-placement="bottom">{{ $obs->observation }}</small>
+                                        <small class="tooltips text-muted" style="color: #0c0c0c" data-title="@lang('# Spreadsheet')" data-placement="bottom">{{ $obs->observation }}</small>
                                     @endif
                                 </span>
                             </span>
@@ -493,8 +506,8 @@
                     @else
                         {{ $endRecorder }}
                         @if($isExpresoPalmira)
-                            <br>
-                            <small class="tooltips text-muted" data-title="@lang('# Spreadsheet')" data-placement="bottom">{{ $obs->observation }}</small>
+                            <br >
+                            <small  class="tooltips text-muted" style="color: black !important;" data-title="@lang('# Spreadsheet')" data-placement="bottom">{{ $obs->observation }}</small>
                         @endif
                     @endif
                 </td>
@@ -518,12 +531,29 @@
                     @endif
                 </td>
             @endif
+            @php
+                $spreadsheetPassengers1 = $dispatchRegister->getObservation('spreadsheet_passengers')->value;
+            @endphp
+                @if($isExpresoPalmira)
+                <td width="5%" class="text-center">
+                    @if(($dispatchRegister->passengersBySensor - $spreadsheetPassengers1) >=3 || ($dispatchRegister->passengersBySensor - $spreadsheetPassengers1)<=-3 )
+                        <span style="color: darkred; font-weight: 900">
+                        {{$dispatchRegister->passengersBySensor - $spreadsheetPassengers1}}
+                        </span>
+                        @else
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span style="color: black; font-weight: 900">
+                        {{$dispatchRegister->passengersBySensor - $spreadsheetPassengers1}}
+                        </span>
+                    @endif
+
+                </td>
+                @endif
 
             @if($company->hasSensorCounter())
-                <td width="10%"
+                <td width="8%"
                     class="text-center">
                     <div style="display: flex;">
-                        <div style="width: 50%">
+                        <div style="width: 100%">
                             <span class="tooltips"
                                   data-title="@lang('Round trip')"
                                   style="font-size: 1.5rem !important;">
@@ -551,6 +581,7 @@
                     </div>
                 </td>
             @endif
+
             @if($company->hasSensorRecorderCounter())
                 <td width="10%"
                     class="text-center">
@@ -565,21 +596,21 @@
                     </small>
                 </td>
             @endif
-            <td width="10%" class="p-r-0 p-l-0 text-center">
+
+            <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff"  >
                 @php
                     $obs = $dispatchRegister->getObservation('end_recorder');
                     $labelEndRecorder = $isExpresoPalmira ? __('Pasajeros planilla') : __('End Recorder');
                     $diferencePassenger =$dispatchRegister->end_recorder - $dispatchRegister->final_sensor_counter;
                     $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
                     $prueba= $dispatchRegister->end_recorder - $spreadsheetPassengers->value;
+                    $countMax = $dispatchRegister->edited_info;
                 @endphp
 
                 @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
                     <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
-                                <span class="">
-                                    {{ $spreadsheetPassengers->value ?: 0 }}
-                                </span>
+                                {{ $spreadsheetPassengers->value ?: 0 }}
                             </span>
                         <div class="box-edit" style="display: none">
                             <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
@@ -624,7 +655,7 @@
                 @endif
             </td>
 
-            @if(Auth::user()->isSuperAdmin())
+           {{-- @if(Auth::user()->isSuperAdmin())
             <td class="text-center">
                 <small class="tooltips text-bold"
                        data-title="@lang('Diferencia conteo Visual - conteo Planilla ')">
@@ -651,6 +682,14 @@
                     {{  $diferencePassenger * 11000}}
                 </small>
             </td>
+            @endif--}}
+            @if(Auth::user()->isSuperAdmin())
+                <td class="text-center">
+                    <small class="tooltips text-bold"
+                           data-title="@lang('Conteo por maximos')">
+                        {{$countMax ? : 0}}
+                    </small>
+                </td>
             @endif
 
             <td width="15%"
