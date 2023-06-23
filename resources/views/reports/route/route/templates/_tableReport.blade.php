@@ -777,7 +777,7 @@
                             }
                         @endphp
                         <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}"
-                               data-original-title="@lang('Locations') / @lang('Reports')"
+                               data-original-title="@lang('Locations') / @lang('Photos')"
                                data-placement="bottom"
                         >
                             <i class="fa fa-location-arrow"></i> {!! $totalLocations !!} <i class="fa fa-camera"></i> {!! $totalPhotos !!}
