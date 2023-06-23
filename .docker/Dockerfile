@@ -79,4 +79,6 @@ RUN apt install -y nodejs
 COPY config/configure.sh /tmp/
 RUN ["chmod", "+x", "/tmp/configure.sh"]
 
+RUN apt install libpng-dev -y
+
 WORKDIR /var/www/${ng_root}

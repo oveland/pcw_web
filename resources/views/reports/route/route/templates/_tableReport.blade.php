@@ -2,7 +2,7 @@
 @php
     $thresholdAlertSS = 1;
     $thresholdAlertNR = 2;
-    $thresholdMinLocations = 300;
+    $thresholdMinLocations = 100;
 
     $isExpresoPalmira = $company->id == \App\Models\Company\Company::EXPRESO_PALMIRA;
 @endphp
@@ -769,6 +769,7 @@
                         @php
                             $totalLocations = $dispatchRegister->locations()->count();
                             $totalReports = $dispatchRegister->reports()->count();
+                            $totalPhotos = $dispatchRegister->photos()->count();
                             $alert = false;
                             if($totalLocations < $thresholdMinLocations) {
                                 $lowerGPSReport++;
@@ -777,8 +778,10 @@
                         @endphp
                         <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}"
                                data-original-title="@lang('Locations') / @lang('Reports')"
-                               data-placement="bottom">{!! $totalLocations !!}
-                            / {!! $totalReports !!}</small>
+                               data-placement="bottom"
+                        >
+                            <i class="fa fa-location-arrow"></i> {!! $totalLocations !!} <i class="fa fa-camera"></i> {!! $totalPhotos !!}
+                        </small>
                     @endif
                 </div>
             </td>
