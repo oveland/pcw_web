@@ -6,12 +6,14 @@ use App\Models\Company\Company;
 use App\Services\LM\Sources\Alameda\APIService;
 use App\Services\LM\Sources\BEA\BEASyncService;
 use App\Services\LM\Sources\DFS\DFSSyncService;
+use App\Services\LM\Sources\EP\EPSyncService;
 use App\Services\LM\LMRepository;
 use App\Services\LM\LMService;
 use App\Services\LM\Sources\Alameda\AlamedaSyncService;
 use App\Services\LM\CommissionService;
 use App\Services\LM\Sources\BEA\DBService as BEADatabase;
 use App\Services\LM\Sources\DFS\DBService as DFSDatabase;
+use App\Services\LM\Sources\EP\DBService as EPDatabase;
 use App\Services\LM\DiscountService;
 use App\Services\LM\PenaltyService;
 use App\Services\LM\Reports\LMReportService;
@@ -45,6 +47,10 @@ class LMServiceProvider extends ServiceProvider
             return new DFSDatabase();
         });
 
+        $this->app->bind('ep.db', function () {
+            return new EPDatabase();
+        });
+
         $this->app->bind('lm.api.alameda', function () {
             return new APIService();
         });
@@ -63,7 +69,8 @@ class LMServiceProvider extends ServiceProvider
             $syncService = null;
             switch ($company->id) {
                 case Company::EXPRESO_PALMIRA:
-                    $syncService = new DFSSyncService($company, $repository);
+                    if($dbId == 1) $syncService = new EPSyncService($company, $repository);
+                    else $syncService = new DFSSyncService($company, $repository);
                     break;
                 case Company::COODETRANS:
                     $syncService = new BEASyncService($company, $repository);
