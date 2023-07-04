@@ -21,7 +21,7 @@ class SyncCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'lm:sync {--company=21} {--type=all} {--db-id=1}';
+    protected $signature = 'lm:sync {--company=39} {--type=test} {--db-id=1}';
 
     /**
      * The console command description.

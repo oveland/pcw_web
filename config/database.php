@@ -65,7 +65,7 @@ return [
             'prefix' => '',
             'schema' => 'public',
             'sslmode' => 'prefer',
-            'timezone'  => 'America/Bogota',
+            'timezone' => 'America/Bogota',
         ],
 
         'GPS_MONTH' => [
@@ -140,20 +140,35 @@ return [
                 'password' => env('BEADB_PASSWORD_MONTEBELLO', 'bea00001'),
             ],
         ],
-
-        'DFS' => [
+        'LM' => [
             'EXPRESO_PALMIRA' => [
-                'driver'   => 'sqlsrv',
-                'host'     => env( 'DFSDB_HOST_EP' ),
-                'port'     => env( 'DFSDB_PORT_EP' ),
-                'database' => env( 'DFSDB_DB_EP' ),
-                'username' => env( 'DFSDB_USERNAME_EP' ),
-                'password' => env( 'DFSDB_PASSWORD_EP' ),
-                'prefix'   => '',
-                'charset'  => 'SQL_Latin1_General_CP1_CI_AS',
-                'pooling'  => false,
+                'db_id' => 1,
+                'company_id' => App\Models\Company\Company::EXPRESO_PALMIRA,
+                'driver' => 'sqlsrv',
+                'host' => env('DFSDB_HOST_EP'),
+                'port' => env('DFSDB_PORT_EP'),
+                'database' => env('DFSDB_DB_EP'),
+                'username' => env('DFSDB_USERNAME_EP'),
+                'password' => env('DFSDB_PASSWORD_EP'),
+                'prefix' => '',
+                'encrypt' => 'no',
+                'charset' => 'SQL_Latin1_General_CP1_CI_AS',
+                'pooling' => false,
             ],
-        ],
+            'DFS_EXPRESO_PALMIRA' => [
+                'db_id' => 2,
+                'company_id' => App\Models\Company\Company::EXPRESO_PALMIRA,
+                'driver' => 'sqlsrv',
+                'host' => env('DFSDB_HOST_EP'),
+                'port' => env('DFSDB_PORT_EP'),
+                'database' => env('DFSDB_DB_EP'),
+                'username' => env('DFSDB_USERNAME_EP'),
+                'password' => env('DFSDB_PASSWORD_EP'),
+                'prefix' => '',
+                'charset' => 'SQL_Latin1_General_CP1_CI_AS',
+                'pooling' => false,
+            ],
+        ]
     ],
 
     /*
@@ -193,5 +208,5 @@ return [
 
     ],
 
-    'total_pagination' => env('DB_TOTAL_PAGINATE',15),
+    'total_pagination' => env('DB_TOTAL_PAGINATE', 15),
 ];

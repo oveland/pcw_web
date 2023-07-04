@@ -93,4 +93,24 @@ RUN apt -y install alien
 RUN #docker-php-ext-install interbase
 RUN #docker-php-ext-install pdo_firebird
 
+# SQL Server tools:
+RUN apt -y install unixodbc-dev
+RUN apt -y install php${php_version}-dev
+RUN apt -y install php${php_version}-odbc
+RUN pecl install sqlsrv-5.10.0
+RUN pecl install pdo_sqlsrv-5.10.0
+
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
+RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
+RUN echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
+
+RUN apt-get update -yqq \
+    && apt-get install -y --no-install-recommends openssl \
+    && sed -i 's,^\(MinProtocol[ ]*=\).*,\1'TLSv1.0',g' /etc/ssl/openssl.cnf \
+    && sed -i 's,^\(CipherString[ ]*=\).*,\1'DEFAULT@SECLEVEL=1',g' /etc/ssl/openssl.cnf\
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /var/www/${ng_root}

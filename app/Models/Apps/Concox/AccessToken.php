@@ -33,7 +33,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|AccessToken whereRefreshToken($value)
  * @method static Builder|AccessToken whereTime($value)
  * @method static Builder|AccessToken whereUpdatedAt($value)
- * @property string $time
  */
 class AccessToken extends Model
 {
