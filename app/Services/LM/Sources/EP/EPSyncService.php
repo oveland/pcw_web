@@ -3,8 +3,11 @@
 namespace App\Services\LM\Sources\EP;
 
 use App\Facades\EPDB;
+use App\Http\Controllers\Utils\StrTime;
+use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\Services\LM\SyncService;
+use Carbon\Carbon;
 
 class EPSyncService extends SyncService
 {
@@ -40,8 +43,77 @@ class EPSyncService extends SyncService
 
     function test()
     {
-        EPDB::select("SELECT SYSDATE FROM DUAL");
+        $vehicle = $this->company->vehicles()->where('number', '6005')->first();
 
-        dump('Sync EP data count!!!!!!');
+        $activeVehicles = $this->company->activeVehicles;
+        $activeVehiclesQuery = $activeVehicles
+            ->pluck('number')
+            ->map(function ($number) {
+                return "'$number'";
+            })
+            ->join(', ');
+
+        $query = "
+            SELECT viaje travel_id, FechaPartida date, Codigo route_code, Suben ascents, Bajan descents, bus vehicle_number 
+            FROM v_saturacion_expal_h_II 
+            WHERE FechaPartida between CAST(getdate() AS DATE) 
+                AND CAST(getdate() + 1 AS DATE)
+                AND bus IN ($activeVehiclesQuery) 
+        ";
+
+        $reportTicketsByVehicleNumber = EPDB::select($query)
+            ->map(function ($report) {
+                $report->vehicle_number = trim($report->vehicle_number);
+                return $report;
+            })
+            ->groupBy('vehicle_number');
+
+        $activeVehicles->each(function (Vehicle $vehicle) use ($reportTicketsByVehicleNumber) {
+            $report = $reportTicketsByVehicleNumber->get($vehicle->number);
+            if ($report) $this->countsTicketsByVehicle($vehicle, $report);
+        });
+    }
+
+    /**
+     * @param Vehicle $vehicle
+     * @param \Illuminate\Support\Collection $report
+     * @return void
+     */
+    function countsTicketsByVehicle(Vehicle $vehicle, \Illuminate\Support\Collection $report)
+    {
+        $drs = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId(
+            $this->company,
+            Carbon::now(), null,
+            null,
+            $vehicle->id
+        )
+            ->active()
+            ->orderBy('departure_time')
+            ->get();
+
+        $report->sortBy('date')->groupBy('travel_id')->each(function ($data, $travelId) use ($drs) {
+            $dr = $drs->filter(function (DispatchRegister $dr) use ($data) {
+                $data = collect($data);
+                $dateStart = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->first()->date);
+                $dateEnd = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->last()->date);
+
+                return StrTime::isInclusiveTimeRanges(
+                    $dateStart->toTimeString(),
+                    $dateEnd->toTimeString(),
+                    $dr->departure_time,
+                    $dr->arrival_time_scheduled
+                );
+            })->first();
+
+            if ($dr) {
+                $passengers = intval(collect([$data->sum('ascents'), $data->sum('descents')])->average());
+
+                $drObs = $dr->getObservation('spreadsheet_passengers');
+                $drObs->value = $passengers;
+                $drObs->observation = "Viaje $travelId";
+                $drObs->user_id = 2018101392; // Set user BOOTPCW
+                $drObs->save();
+            }
+        });
     }
 }

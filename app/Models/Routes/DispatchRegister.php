@@ -3,6 +3,7 @@
 namespace App\Models\Routes;
 
 use App\Http\Controllers\Utils\StrTime;
+use App\Models\Apps\Rocket\Photo;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Operation\FuelStation;
@@ -232,6 +233,11 @@ class DispatchRegister extends Model
     function reports()
     {
         return $this->hasMany(Report::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
+    }
+
+    function photos()
+    {
+        return $this->hasMany(Photo::class, 'dispatch_register_id', 'id')->orderBy('date', 'asc');
     }
 
     /**

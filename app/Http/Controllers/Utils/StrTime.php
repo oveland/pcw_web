@@ -1,26 +1,20 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oscar
- * Date: 28/11/2017
- * Time: 7:53 PM
- */
 
 namespace App\Http\Controllers\Utils;
 
-
 class StrTime
 {
-    static function intervalToTime($interval){
+    static function intervalToTime($interval)
+    {
         return self::segToStrTime(self::toSeg($interval));
     }
 
     static function toSeg($strTime)
     {
-        if( $strTime == '--:--:--' )return 0;
+        if ($strTime == '--:--:--') return 0;
         $strTimeArray = explode(":", $strTime);
 
-        if(count($strTimeArray) == 2){
+        if (count($strTimeArray) == 2) {
             return $strTimeArray[0] * 60 + $strTimeArray[1];
         }
         return $strTimeArray[0] * 3600 + $strTimeArray[1] * 60 + $strTimeArray[2];
@@ -71,12 +65,33 @@ class StrTime
         return self::segToStrTime(self::toSeg($strTimeA) - self::toSeg($strTimeB));
     }
 
-    static function toString($time){
-        return explode('.',$time)[0];
+    static function toString($time)
+    {
+        return explode('.', $time)[0];
     }
 
-    static function toShortString($time){
-        $fields = explode(':',self::toString($time));
+    static function toShortString($time)
+    {
+        $fields = explode(':', self::toString($time));
         return "$fields[0]:$fields[1]";
+    }
+
+    static function isInclusiveTimeRanges($timeStartA, $timeEndA, $timeStartB, $timeEndB)
+    {
+        $durationA = self::subStrTime($timeEndA, $timeStartA);
+        $durationB = self::subStrTime($timeEndB, $timeStartB);
+
+        $averageDurationRanges = self::toSeg(self::addStrTime($durationA, $durationB)) / 2;
+
+        $inclusiveRange = max(0,
+            min(
+                self::toSeg($timeEndA), self::toSeg($timeEndB)
+            ) - max(
+                self::toSeg($timeStartA), self::toSeg($timeStartB)
+            )
+        );
+
+        // InclusiveRange range should be at least 50% of average duration ranges
+        return $inclusiveRange > $averageDurationRanges * 0.5;
     }
 }

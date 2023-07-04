@@ -151,6 +151,7 @@ return [
                 'username' => env('DFSDB_USERNAME_EP'),
                 'password' => env('DFSDB_PASSWORD_EP'),
                 'prefix' => '',
+                'encrypt' => 'no',
                 'charset' => 'SQL_Latin1_General_CP1_CI_AS',
                 'pooling' => false,
             ],
