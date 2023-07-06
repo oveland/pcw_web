@@ -73,7 +73,7 @@
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
-                                        <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
+                                        <select name="company-report" id="company-report" class="default-select2 form-control col-md-12 primary-filter">
                                             <option value="">@lang('Select an option')</option>
                                             @foreach($companies as $company)
                                                 <option value="{{$company->id}}">{{ $company->short_name }}</option>
@@ -89,10 +89,10 @@
                                     @lang('Date')
                                 </label>
                                 <label class="with-end-date-container text-bold">
-                                    &nbsp;• <input id="with-end-date" name="with-end-date" type="checkbox"> @lang('By range time')
+                                    &nbsp;• <input id="with-end-date" name="with-end-date" class="primary-filter" type="checkbox"> @lang('By range time')
                                 </label>
                                 <div class="input-group date datetime-report">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" autocomplete="off" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 00:00"/>
+                                    <input name="date-report" id="date-report" type="text" class="form-control primary-filter" autocomplete="off" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 00:00"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -103,7 +103,7 @@
                             <div class="form-group">
                                 <label for="date-end-report" class="control-label">@lang('Date end')</label>
                                 <div class="input-group date datetime-report">
-                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control" autocomplete="off" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 23:59"/>
+                                    <input name="date-end-report" id="date-end-report" type="text" class="form-control primary-filter" autocomplete="off" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 23:59"/>
                                     <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -115,7 +115,7 @@
                             <div class="form-group">
                                 <label for="route-report" class="control-label field-required">@lang('Route')</label>
                                 <div class="form-group">
-                                    <select name="route-report" id="route-report" data-with-all="true" data-with-none="true" class="default-select2 form-control col-md-12">
+                                    <select name="route-report" id="route-report" data-with-all="true" data-with-none="true" class="default-select2 form-control col-md-12 primary-filter">
                                         <option value="null">@lang('Select a company')</option>
                                     </select>
                                 </div>
@@ -126,12 +126,22 @@
                             <div class="form-group">
                                 <label for="vehicle-report" class="control-label field-required">@lang('Vehicle')</label>
                                 <div class="form-group">
-                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12" data-with-all="true">
+                                    <select name="vehicle-report" id="vehicle-report" class="default-select2 form-control col-md-12 primary-filter" data-with-all="true">
                                         @include('partials.selects.vehicles', compact('vehicles'), ['withAll' => true])
                                     </select>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="spreadsheet-report" class="control-label"># @lang('Spreadsheet')</label>
+                                <div class="form-group">
+                                    <input type="number" min="0" name="spreadsheet-report" id="spreadsheet-report" class="form-control col-md-12" data-with-all="true"/>
+                                </div>
+                            </div>
+                        </div>
+
                         <hr class="col-md-12 hr">
                         <div class="col-md-12 options with-route">
                             <div class="form-group" style="display: flex; align-items: center;gap: 12px">
@@ -140,23 +150,23 @@
                                     <div class="has-warning options-report">
                                         <div class="checkbox" style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
                                             <label class="text-bold">
-                                                <input id="type-report" name="type-report" type="checkbox" value="group-vehicles" checked> @lang('Group')
+                                                <input id="type-report" name="type-report" type="checkbox" value="group-vehicles" class="primary-filter" checked> @lang('Group')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="no-taken-turns" name="no-taken-turns" type="checkbox" value="no-taken-turns"> @lang('No taken turns')
+                                                <input id="no-taken-turns" name="no-taken-turns" type="checkbox" value="no-taken-turns" class="primary-filter"> @lang('No taken turns')
                                             </label>
                                             <label class="text-bold hide">
-                                                <input id="last-laps" name="last-laps" type="checkbox" value="true"> @lang('Last laps')
+                                                <input id="last-laps" name="last-laps" type="checkbox" value="true" class="primary-filter"> @lang('Last laps')
                                             </label>
                                             |
                                             <label class="text-bold">
-                                                <input id="completed-turns" name="completed-turns" checked type="checkbox" value="true"> @lang('Completed')
+                                                <input id="completed-turns" name="completed-turns" checked type="checkbox" value="true" class="primary-filter"> @lang('Completed')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="active-turns" name="active-turns" checked type="checkbox" value="true"> @lang('Active')
+                                                <input id="active-turns" name="active-turns" checked type="checkbox" value="true" class="primary-filter"> @lang('Active')
                                             </label>
                                             <label class="text-bold">
-                                                <input id="cancelled-turns" name="cancelled-turns" type="checkbox" value="true"> @lang('Cancelled')
+                                                <input id="cancelled-turns" name="cancelled-turns" type="checkbox" value="true" class="primary-filter"> @lang('Cancelled')
                                             </label>
                                         </div>
                                     </div>
@@ -377,6 +387,15 @@
 
         $('.datetime-report').click(function() {
             $(this).data("DateTimePicker")?.show();
+        });
+
+        $('#spreadsheet-report').keyup(function () {
+            const hasValue = !!$(this).val();
+            const primaryFilters = $('.primary-filter');
+            primaryFilters.parents('.form-group').css({'opacity': (hasValue ? 0.3 : 1)});
+
+            const labels = primaryFilters.parents('.form-group').find('.control-label').addClass('field-required');
+            if(hasValue) labels.removeClass('field-required');
         });
 
         initDateTimePicker("YYYY-MM-DD");

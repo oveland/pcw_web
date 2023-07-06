@@ -13,6 +13,7 @@ use App\Models\Company\Company;
 use App\Models\Routes\ControlPoint;
 use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\Geolocation;
+use App\Models\Routes\DrObservation;
 use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
 use Illuminate\Database\Eloquent\Builder;
@@ -88,7 +89,7 @@ class DispatchRouteService
     {
         $dispatchRegisters = $this->all($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $activeTurns, $cancelledTurns);
 
-        if($dateEndReport) {
+        if ($dateEndReport) {
             $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) use ($dateReport, $dateEndReport, $initialTime, $finalTime) {
                 return "$dr->date $dr->departure_time" >= "$dateReport $initialTime:00" && "$dr->date $dr->departure_time" <= "$dateEndReport $finalTime:59";
             });
@@ -100,11 +101,20 @@ class DispatchRouteService
             });
         }
 
-        $data = $dispatchRegisters->sortBy(function ($dr) {
+        return $dispatchRegisters->sortBy(function ($dr) {
             return "$dr->date-" . $dr->vehicle->number . "$dr->departure_time";
         })->groupBy('vehicle_id');
+    }
 
-        return $data;
+    function allBySpreadsheet($spreadsheet)
+    {
+        $drs = DrObservation::where('observation', $spreadsheet)
+            ->with('dispatchRegister')
+            ->get();
+
+        return $drs->pluck('dispatchRegister')->sortBy(function ($dr) {
+            return "$dr->date-" . $dr->vehicle->number . "$dr->departure_time";
+        })->groupBy('vehicle_id');
     }
 
     /**

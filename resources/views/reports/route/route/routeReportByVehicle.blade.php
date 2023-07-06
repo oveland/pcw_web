@@ -14,7 +14,7 @@
     <div class="panel panel-inverse">
         <div class="panel-heading">
             <div class="panel-heading-btn">
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ urlencode($dateTimeRequest) }}&date-end-report={{ urlencode($dateTimeEndRequest) }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&completed-turns={{ $completedTurns }}&active-turns={{ $activeTurns }}&cancelled-turns={{ $cancelledTurns }}&type-report=group-vehicles&export=true"
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ urlencode($dateTimeRequest) }}&date-end-report={{ urlencode($dateTimeEndRequest) }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&spreadsheet-report={{ $spreadsheetReport }}&completed-turns={{ $completedTurns }}&active-turns={{ $activeTurns }}&cancelled-turns={{ $cancelledTurns }}&type-report=group-vehicles&export=true"
                    class="btn green btn-circle tooltips"
                    data-title="@lang('Export grouped report') | @lang('Excel')">
                     <i class="fa fa-download"></i>

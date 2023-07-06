@@ -72,6 +72,7 @@ class ReportRouteController extends Controller
     {
         $dateTimeRequest = $request->get('date-report');
         $dateTimeEndRequest = $request->get('date-end-report');
+        $spreadsheetReport = $request->get('spreadsheet-report');
 
         $dateTimeRequestArray = collect(explode(' ', $dateTimeRequest));
         $dateTimeEndRequestArray = collect(explode(' ', $dateTimeEndRequest));
@@ -100,7 +101,12 @@ class ReportRouteController extends Controller
 
         if ($routeReport == 'none') return $this->showReportWithOutRoute($request);
 
-        $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns, $initialTime, $finalTime, $activeTurns, $cancelledTurns);
+        if ($spreadsheetReport) {
+            $dispatchRegistersByVehicles = $this->routeService->dispatch->allBySpreadsheet($spreadsheetReport);
+        } else {
+            $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns, $initialTime, $finalTime, $activeTurns, $cancelledTurns);
+        }
+
 
         if ($onlyLastLap) {
             $dispatchRegistersByVehicles = $dispatchRegistersByVehicles->mapWithKeys(function ($drs, $vehicleId) {
@@ -142,7 +148,8 @@ class ReportRouteController extends Controller
             'completedTurns',
             'activeTurns',
             'cancelledTurns',
-            'timeReport'
+            'timeReport',
+            'spreadsheetReport'
         ]));
     }
 
