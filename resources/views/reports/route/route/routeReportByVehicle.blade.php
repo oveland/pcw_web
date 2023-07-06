@@ -59,6 +59,7 @@
             @endforeach
         </div>
     </div>
+    <script>$('#company-report').val({{ $company->id }})</script>
 @else
     @include('partials.alerts.noRegistersFound', ['message' => 'There are not dispatch registers on this date'])
 
