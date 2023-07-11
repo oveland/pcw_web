@@ -8,6 +8,7 @@ use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\Services\LM\SyncService;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class EPSyncService extends SyncService
 {
@@ -54,8 +55,15 @@ class EPSyncService extends SyncService
             ->join(', ');
 
         $query = "
-            SELECT viaje travel_id, FechaPartida date, Codigo route_code, Suben ascents, Bajan descents, bus vehicle_number 
-            FROM v_saturacion_expal_h_II 
+            SELECT 
+                viaje travel_id, 
+                FechaPartida date, 
+                Codigo route_code, 
+                Planilla spread_sheet, 
+                Suben ascents, 
+                Bajan descents, 
+                bus vehicle_number 
+            FROM v_saturacion_expal_h_III 
             WHERE FechaPartida between CAST(getdate() AS DATE) 
                 AND CAST(getdate() + 1 AS DATE)
                 AND bus IN ($activeVehiclesQuery) 
@@ -76,10 +84,10 @@ class EPSyncService extends SyncService
 
     /**
      * @param Vehicle $vehicle
-     * @param \Illuminate\Support\Collection $report
+     * @param Collection $report
      * @return void
      */
-    function countsTicketsByVehicle(Vehicle $vehicle, \Illuminate\Support\Collection $report)
+    function countsTicketsByVehicle(Vehicle $vehicle, Collection $report)
     {
         $drs = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId(
             $this->company,
@@ -91,7 +99,7 @@ class EPSyncService extends SyncService
             ->orderBy('departure_time')
             ->get();
 
-        $report->sortBy('date')->groupBy('travel_id')->each(function ($data, $travelId) use ($drs) {
+        $report->sortBy('date')->groupBy('travel_id')->each(function ($data) use ($drs) {
             $dr = $drs->filter(function (DispatchRegister $dr) use ($data) {
                 $data = collect($data);
                 $dateStart = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->first()->date);
@@ -107,10 +115,11 @@ class EPSyncService extends SyncService
 
             if ($dr) {
                 $passengers = intval(collect([$data->sum('ascents'), $data->sum('descents')])->average());
+                $spreadSheet = $data->last()->spread_sheet;
 
                 $drObs = $dr->getObservation('spreadsheet_passengers');
                 $drObs->value = $passengers;
-                $drObs->observation = "Viaje $travelId";
+                $drObs->observation = $spreadSheet;
                 $drObs->user_id = 2018101392; // Set user BOOTPCW
                 $drObs->save();
             }
