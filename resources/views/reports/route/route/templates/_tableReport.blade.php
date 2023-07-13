@@ -6,7 +6,7 @@
 
     $isExpresoPalmira = $company->id == \App\Models\Company\Company::EXPRESO_PALMIRA;
 @endphp
-<!-- begin table -->
+        <!-- begin table -->
 <table id="table-report"
        class="table table-bordered table-striped table-hover table-valign-middle table-report">
     <thead>
@@ -74,12 +74,12 @@
             </th>
         @endif
 
-            @if($isExpresoPalmira)
+        @if(Auth::user()->isSuperAdmin())
             <th>
                 <i class="icon-users text-muted">
-                </i><br>{{"Diferencia"}}
+                </i><br>{{"Maximo"}}
             </th>
-            @endif
+        @endif
 
         @if($company->hasSensorCounter())
             <th>
@@ -453,18 +453,20 @@
                     @endphp
 
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
-                            <div class="tooltips box-edit"            data-title="@lang('Edit') {{ $labelEndRecorder }}">
+                        <div class="tooltips box-edit"            data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
                                 <span class="">
                                     @if(!$isExpresoPalmira)
                                         {{ $endRecorder }}
                                     @else
-{{--                                      {{ $endRecorder > $spreadsheetPassengers1 ? $endRecorder: $spreadsheetPassengers1 }}--}}
+                                        {{--                                      {{ $endRecorder > $spreadsheetPassengers1 ? $endRecorder: $spreadsheetPassengers1 }}--}}
                                         {{ $endRecorder }}
                                     @endif
-                                    @if($isExpresoPalmira)
+                                    @if($isExpresoPalmira && $obs->observation)
                                         <br>
-                                        <small class="tooltips text-muted" style="color: #0c0c0c" data-title="@lang('# Spreadsheet')" data-placement="bottom">{{ $obs->observation }}</small>
+                                        <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet')" data-placement="bottom">
+                                            <i class="fa fa-file-o text-muted"></i> {{ $obs->observation }}
+                                        </small>
                                     @endif
                                 </span>
                             </span>
@@ -534,20 +536,20 @@
             @php
                 $spreadsheetPassengers1 = $dispatchRegister->getObservation('spreadsheet_passengers')->value;
             @endphp
-                @if($isExpresoPalmira)
+            @if(Auth::user()->isSuperAdmin())
                 <td width="5%" class="text-center">
-                    @if(($dispatchRegister->passengersBySensor - $spreadsheetPassengers1) >=3 || ($dispatchRegister->passengersBySensor - $spreadsheetPassengers1)<=-3 )
-                        <span style="color: darkred; font-weight: 900">
-                        {{$dispatchRegister->passengersBySensor - $spreadsheetPassengers1}}
+                    @if(($dispatchRegister->passengersBySensor >= $spreadsheetPassengers1))
+                        <span >
+                        {{$dispatchRegister->passengersBySensor }}
                         </span>
-                        @else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span style="color: black; font-weight: 900">
-                        {{$dispatchRegister->passengersBySensor - $spreadsheetPassengers1}}
+                    @else
+                        <span style="color: black; font-weight: 900">
+                        {{$spreadsheetPassengers1}}
                         </span>
                     @endif
 
                 </td>
-                @endif
+            @endif
 
             @if($company->hasSensorCounter())
                 <td width="8%"
@@ -597,92 +599,97 @@
                 </td>
             @endif
 
-            <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff"  >
-                @php
-                    $obs = $dispatchRegister->getObservation('end_recorder');
-                    $labelEndRecorder = $isExpresoPalmira ? __('Pasajeros planilla') : __('End Recorder');
-                    $diferencePassenger =$dispatchRegister->end_recorder - $dispatchRegister->final_sensor_counter;
-                    $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
-                    $prueba= $dispatchRegister->end_recorder - $spreadsheetPassengers->value;
-                    $countMax = $dispatchRegister->edited_info;
-                @endphp
+            @if(Auth::user()->isSuperAdmin() || $isExpresoPalmira )
+                <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff"  >
+                    @php
+                        $obs = $dispatchRegister->getObservation('end_recorder');
+                        $labelEndRecorder = $isExpresoPalmira ? __('Pasajeros planilla') : __('End Recorder');
+                        $diferencePassenger =$dispatchRegister->end_recorder - $dispatchRegister->final_sensor_counter;
+                        $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
+                        $prueba= $dispatchRegister->end_recorder - $spreadsheetPassengers->value;
+                        $countMax = $dispatchRegister->edited_info;
+                    @endphp
 
-                @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
-                    <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
-                            <span class="box-info">
-                                {{ $spreadsheetPassengers->value ?: 0 }}
-                            </span>
-                        <div class="box-edit" style="display: none">
-                            <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
-                                   title="@lang('Press enter for edit')"
-                                   name=""
-                                   type="number"
-                                   data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
-                                   data-id="{{ $dispatchRegister->id }}"
-                                   data-field="spreadsheet_passengers"
-                                   data-single="true"
-                                   class="input-sm form-control edit-input-recorder edit-input-value"
-                                   value="{{ $spreadsheetPassengers->value }}">
-                            <div class="box-obs ">
-                                <textarea style="display: none"
-                                        name=""
-                                        rows="3"
-                                        class="input-sm form-control edit-input-obs"
-                                        placeholder="{{ $isExpresoPalmira ? __('# Spreadsheet') : __('Observations') }}">
-                                    {{ $spreadsheetPassengers->observation }}
-                                </textarea>
-                                @if($spreadsheetPassengers->updated_at)
-                                    <div class="text-muted text-center box-audit">
-                                        <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->user->username }}</small>
-                                        ·
-                                        <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->updated_at }}</small>
-                                    </div>
-                                @endif
-                                <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
-                                        title="@lang('Cancel')">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                                <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                        title="@lang('Save')"
-                                        onclick="return confirm('¿Estas segura que los datos son correctos?')">
+                    @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
+                        <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
+                                <span class="box-info">
+                                    {{ $spreadsheetPassengers->value ?: 0 }}
+                                </span>
+                            @if($isExpresoPalmira && $spreadsheetPassengers->observation)
+                                <br >
+                                <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet')" data-placement="bottom">
+                                    <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation }}
+                                </small>
+                            @endif
+                            <div class="box-edit" style="display: none">
+                                <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
+                                       title="@lang('Press enter for edit')"
+                                       name=""
+                                       type="number"
+                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
+                                       data-id="{{ $dispatchRegister->id }}"
+                                       data-field="spreadsheet_passengers"
+                                       data-single="true"
+                                       class="input-sm form-control edit-input-recorder edit-input-value"
+                                       value="{{ $spreadsheetPassengers->value }}">
+                                <div class="box-obs ">
+                                    <textarea name=""
+                                              rows="3"
+                                              class="input-sm form-control edit-input-obs"
+                                              placeholder="{{ $isExpresoPalmira ? __('# Spreadsheet') : __('Observations') }}">{{ $spreadsheetPassengers->observation }}</textarea>
+                                    @if($spreadsheetPassengers->updated_at)
+                                        <div class="text-muted text-center box-audit">
+                                            <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->user->username }}</small>
+                                            ·
+                                            <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->updated_at }}</small>
+                                        </div>
+                                    @endif
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
+                                            title="@lang('Cancel')">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save"
+                                            title="@lang('Save')"
+                                            onclick="return confirm('¿Estas segura que los datos son correctos?')">
 
-                                    <i class="fa fa-save"></i>
-                                </button>
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                @endif
-            </td>
+                    @endif
+                </td>
+            @endif
 
-           {{-- @if(Auth::user()->isSuperAdmin())
-            <td class="text-center">
-                <small class="tooltips text-bold"
-                       data-title="@lang('Diferencia conteo Visual - conteo Planilla ')">
-                     {{$prueba}}
-                </small>
-            </td>
+            {{-- @if(Auth::user()->isSuperAdmin())
+             <td class="text-center">
+                 <small class="tooltips text-bold"
+                        data-title="@lang('Diferencia conteo Visual - conteo Planilla ')">
+                      {{$prueba}}
+                 </small>
+             </td>
 
-            <td class="text-center">
-                <small class="tooltips text-bold"
-                       data-title="@lang('Diferencia conteo Visual - conteo Sistema ')">
-                    {{  $diferencePassenger}}
-                </small>
-            </td>
+             <td class="text-center">
+                 <small class="tooltips text-bold"
+                        data-title="@lang('Diferencia conteo Visual - conteo Sistema ')">
+                     {{  $diferencePassenger}}
+                 </small>
+             </td>
 
-            <td class="text-center">
-                <small class="tooltips text-bold"
-                       data-title="@lang('valor pasaje diferencia ')">
-                    {{  $prueba * 11000}}
-                </small>
-            </td>
-            <td class="text-center">
-                <small class="tooltips text-bold"
-                       data-title="@lang('valor pasaje diferencia ')">
-                    {{  $diferencePassenger * 11000}}
-                </small>
-            </td>
-            @endif--}}
+             <td class="text-center">
+                 <small class="tooltips text-bold"
+                        data-title="@lang('valor pasaje diferencia ')">
+                     {{  $prueba * 11000}}
+                 </small>
+             </td>
+             <td class="text-center">
+                 <small class="tooltips text-bold"
+                        data-title="@lang('valor pasaje diferencia ')">
+                     {{  $diferencePassenger * 11000}}
+                 </small>
+             </td>
+             @endif--}}
             @if(Auth::user()->isSuperAdmin())
                 <td class="text-center">
                     <small class="tooltips text-bold"
@@ -755,16 +762,16 @@
                             <i class="fa fa-times faa-shake"></i>
                         </button>
                     @endif
-                   {{-- @if( Auth::user()->isExpreso() )
-                            <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
-                                    data-original-title="@lang('Cancel turn')"
-                                    data-placement="bottom"
-                                    data-confirm="@lang('Confirm action for discard dispatch turn')"
-                                    data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
-                                    data-id="{{ $dispatchRegister->id }}">
-                                <i class="fa fa-times faa-shake"></i>
-                            </button>
-                        @endif--}}
+                    {{-- @if( Auth::user()->isExpreso() )
+                             <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
+                                     data-original-title="@lang('Cancel turn')"
+                                     data-placement="bottom"
+                                     data-confirm="@lang('Confirm action for discard dispatch turn')"
+                                     data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
+                                     data-id="{{ $dispatchRegister->id }}">
+                                 <i class="fa fa-times faa-shake"></i>
+                             </button>
+                         @endif--}}
                     @if( Auth::user()->isSuperAdmin() )
                         @php
                             $totalLocations = $dispatchRegister->locations()->count();
@@ -927,5 +934,9 @@
     .row-turn-cancelled td {
         opacity: 50%;
         background: rgba(239, 203, 155, 0.48) !important;
+    }
+
+    .text-xs {
+        font-size: 0.9rem !important;
     }
 </style>
