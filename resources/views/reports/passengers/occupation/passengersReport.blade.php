@@ -21,7 +21,7 @@
         $correction = 0.08;
 
         function percentTo($km, $routeDistance) {
-            return $km * 100 / $routeDistance;
+            return $routeDistance ? $km * 100 / $routeDistance: 0;
         }
 
         function formatW($value) {
