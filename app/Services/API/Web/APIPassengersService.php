@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Artisan;
 
 class APIPassengersService implements APIWebInterface
 {
@@ -42,6 +43,9 @@ class APIPassengersService implements APIWebInterface
         switch ($this->service) {
             case 'report':
                 return $this->buildPassengersReport();
+                break;
+            case 'sync':
+                return $this->syncPassengers();
                 break;
             default:
                 return response()->json([
@@ -128,5 +132,20 @@ class APIPassengersService implements APIWebInterface
         }
 
         return $recorderHistory;
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    private function syncPassengers() {
+        Artisan::call('lm:sync', [
+            '--company' => $this->request->get('company'),
+            '--date' => $this->request->get('date'),
+        ]);
+
+        return response()->json([
+            'error' => false,
+            'message'=> 'Sync successfully'
+        ]);
     }
 }

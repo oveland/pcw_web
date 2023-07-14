@@ -9,6 +9,7 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\LM\SyncService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Log;
 
 class EPSyncService extends SyncService
 {
@@ -44,8 +45,11 @@ class EPSyncService extends SyncService
 
     function tickets($date)
     {
+
         $dateFrom = Carbon::createFromFormat('Y-m-d', $date ?? Carbon::now()->toDateString())->toDateString();
         $dateTo = Carbon::createFromFormat('Y-m-d', $dateFrom)->addDays()->toDateString();
+
+        $this->log("Start sync ticket passengers for date $dateFrom");
 
         $activeVehicles = $this->company->activeVehicles;
         $activeVehiclesQuery = $activeVehicles
@@ -81,6 +85,8 @@ class EPSyncService extends SyncService
             $report = $reportTicketsByVehicleNumber->get($vehicle->number);
             if ($report) $this->countsTicketsByVehicle($vehicle, $report, $dateFrom);
         });
+
+        $this->log("End sync ticket passengers for date $dateFrom");
     }
 
     /**
@@ -141,5 +147,10 @@ class EPSyncService extends SyncService
                 }
             }
         });
+    }
+
+    protected function log($message)
+    {
+        Log::info($this->company->short_name . " • $message");
     }
 }
