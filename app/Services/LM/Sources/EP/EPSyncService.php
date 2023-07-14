@@ -42,9 +42,10 @@ class EPSyncService extends SyncService
     {
     }
 
-    function test()
+    function tickets($date)
     {
-        $vehicle = $this->company->vehicles()->where('number', '6005')->first();
+        $dateFrom = Carbon::createFromFormat('Y-m-d', $date ?? Carbon::now()->toDateString())->toDateString();
+        $dateTo = Carbon::createFromFormat('Y-m-d', $dateFrom)->addDays()->toDateString();
 
         $activeVehicles = $this->company->activeVehicles;
         $activeVehiclesQuery = $activeVehicles
@@ -64,8 +65,7 @@ class EPSyncService extends SyncService
                 Bajan descents, 
                 bus vehicle_number 
             FROM v_saturacion_expal_h_III 
-            WHERE FechaPartida between CAST(getdate() AS DATE) 
-                AND CAST(getdate() + 1 AS DATE)
+            WHERE FechaPartida between '$dateFrom' AND '$dateTo'
                 AND bus IN ($activeVehiclesQuery) 
         ";
 
@@ -76,9 +76,9 @@ class EPSyncService extends SyncService
             })
             ->groupBy('vehicle_number');
 
-        $activeVehicles->each(function (Vehicle $vehicle) use ($reportTicketsByVehicleNumber) {
+        $activeVehicles->each(function (Vehicle $vehicle) use ($reportTicketsByVehicleNumber, $dateFrom) {
             $report = $reportTicketsByVehicleNumber->get($vehicle->number);
-            if ($report) $this->countsTicketsByVehicle($vehicle, $report);
+            if ($report) $this->countsTicketsByVehicle($vehicle, $report, $dateFrom);
         });
     }
 
@@ -87,11 +87,11 @@ class EPSyncService extends SyncService
      * @param Collection $report
      * @return void
      */
-    function countsTicketsByVehicle(Vehicle $vehicle, Collection $report)
+    function countsTicketsByVehicle(Vehicle $vehicle, Collection $report, $date)
     {
         $drs = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId(
             $this->company,
-            Carbon::now(), null,
+            $date, null,
             null,
             $vehicle->id
         )

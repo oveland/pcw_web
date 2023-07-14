@@ -21,7 +21,7 @@ class SyncCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'lm:sync {--company=39} {--type=test} {--db-id=1}';
+    protected $signature = 'lm:sync {--company=39} {--type=tickets} {--db-id=1} {--date=}';
 
     /**
      * The console command description.
@@ -77,7 +77,8 @@ class SyncCommand extends Command
                     $this->sync->checkVehicleParams($vehicle);
                 }
             } else {
-                $this->sync->$type();
+                if ($type == 'tickets') $this->sync->$type($this->option('date'));
+                else $this->sync->$type();
             }
 
 
