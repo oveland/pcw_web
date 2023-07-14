@@ -63,7 +63,8 @@ class EPSyncService extends SyncService
                 Planilla spread_sheet, 
                 Suben ascents, 
                 Bajan descents, 
-                bus vehicle_number 
+                bus vehicle_number,
+                parada stop
             FROM v_saturacion_expal_h_III 
             WHERE FechaPartida between '$dateFrom' AND '$dateTo'
                 AND bus IN ($activeVehiclesQuery) 
@@ -100,10 +101,18 @@ class EPSyncService extends SyncService
             ->get();
 
         $report->sortBy('date')->groupBy('travel_id')->each(function ($data) use ($drs) {
-            $dr = $drs->filter(function (DispatchRegister $dr) use ($data) {
+            $dataStops = collect([]);
+            $dr = $drs->filter(function (DispatchRegister $dr) use ($data, $dataStops) {
                 $data = collect($data);
                 $dateStart = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->first()->date);
                 $dateEnd = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->last()->date);
+
+                $data->sortBy('date')->each(function ($d) use ($dataStops) {
+                    $dataStops->put($d->stop, [
+                        'a' => $d->ascents,
+                        'd' => $d->descents,
+                    ]);
+                });
 
                 return StrTime::isInclusiveTimeRanges(
                     $dateStart->toTimeString(),
@@ -122,6 +131,14 @@ class EPSyncService extends SyncService
                 $drObs->observation = $spreadSheet;
                 $drObs->user_id = 2018101392; // Set user BOOTPCW
                 $drObs->save();
+
+                if ($dataStops) {
+                    $drObsStops = $dr->getObservation('passengers_stops');
+                    $drObsStops->value = 0;
+                    $drObsStops->observation = $dataStops->toJson();
+                    $drObsStops->user_id = 2018101392; // Set user BOOTPCW
+                    $drObsStops->save();
+                }
             }
         });
     }
