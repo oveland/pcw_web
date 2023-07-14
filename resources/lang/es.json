@@ -844,5 +844,7 @@
   "Spreadsheet": "Planilla",
   "# Spreadsheet": "# Planilla",
   "Manual count": "Conteo manual",
-  "By range time": "Por rango horario"
+  "By range time": "Por rango horario",
+  "Sync spreadsheets": "Sincroinzar planillas",
+  "Sync processing": "Sincronizando datos"
 }
