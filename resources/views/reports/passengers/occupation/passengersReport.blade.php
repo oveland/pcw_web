@@ -29,6 +29,7 @@
         }
 
         $passengersStops = json_decode($dispatchRegister->getObservation('passengers_stops')->observation);
+        $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
     @endphp
     <div class="panel-inverse col-md-12">
         <div class="panel-heading">
@@ -80,14 +81,15 @@
                                     <span class="stop"><i class="fa fa-map-marker"></i> {{ $stop }}</span>
                                     <span>
                                         <span class="up">{{ $data->a }}⭡</span>
-                                        <span class="down">{{ $data->a }}⭣</span>
+                                        <span class="down">{{ $data->d }}⭣</span>
                                     </span>
                                 </span>
                                 @endforeach
-                                @php
-                                    $totalByStops = collect([collect($passengersStops)->sum('a'), collect($passengersStops)->sum('d')])->average();
-                                @endphp
-                                <span>TOTAL {{ intval($totalByStops)  }}</span>
+
+                                <div class="spreadsheet_passengers">
+                                    <span>TOTAL {{ intval($spreadsheetPassengers->value)  }}</span>
+                                    <span class="tooltips" title="# @lang('Spreadsheet')"><i class="fa fa-file"></i> {{ intval($spreadsheetPassengers->observation)  }}</span>
+                                </div>
                             </div>
                         @endif
                     </div>
@@ -421,6 +423,14 @@
             background: #762e02;
             border: 1px solid #ff6000;
             padding: 0 4px;
+        }
+
+        .spreadsheet_passengers {
+            display: flex;
+            gap: 8px;
+            background: black;
+            padding: 4px 8px;
+            border-radius: 4px;
         }
     </style>
 
