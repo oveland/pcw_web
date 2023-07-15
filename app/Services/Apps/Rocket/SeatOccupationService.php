@@ -30,6 +30,8 @@ class SeatOccupationService
     function processPersistenceSeating($currentOccupation, $prevOccupation, StatusDR $statusDR)
     {
         $this->persistenceRelease($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, $currentOccupation->withOverlap, $statusDR);
+
+        // Should be call 2 times to persistenceActivate (Topology 1 criteria - T1) which is complemented by totalPersistenceCounts (Topology 2 - T2 criteria)
         $this->persistenceActivate($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, false, $statusDR, $currentOccupation->seatingCounts);
         $this->totalPersistenceCounts($currentOccupation->seatingCounts, $prevOccupation->seatingCounts, $currentOccupation->seatingOccupied, $statusDR);
         $this->persistenceActivate($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, false, $statusDR, $currentOccupation->seatingCounts);
@@ -84,10 +86,12 @@ class SeatOccupationService
     }
 
     /**
-     * @param Collection | array $currentOccupied
-     * @param Collection | array $prevOccupied
-     * @param bool $withOverlap
+     * @param $currentOccupied
+     * @param $prevOccupied
+     * @param $withOverlap
      * @param StatusDR $statusDR
+     * @param $seatingCounts
+     * @return void
      */
     private function persistenceActivate(&$currentOccupied, $prevOccupied, $withOverlap = false, StatusDR $statusDR, $seatingCounts)
     {
@@ -119,7 +123,13 @@ class SeatOccupationService
                         $counterActivate++;
                         $newData->put('detected', true);
                     } else if (!$persistentPrev) {
-                        $counterActivate = $seatingCounts->get($seat)->pa >= 2 ? $seatActivateThreshold : 1;
+//                        $inShorRoute = $statusDR->dr->route->distance_in_km < 100;
+                        $inShorRoute = !collect([285, 286])->contains($statusDR->dr->route_id); // All minus PEREIRA
+                        $persistenceByT2 = $seatingCounts->get($seat)->pa >= 2;
+
+                        $complementsT2 = $inShorRoute && $persistenceByT2;
+
+                        $counterActivate = $complementsT2 ? $seatActivateThreshold : 1;
                         $newData->put('detected', true);
                     }
 
@@ -160,15 +170,21 @@ class SeatOccupationService
 
             $data->photoSeq = $prevData->photoSeq + 1;
 
+            $scores = collect([
+                'default' => 1,
+                'promoted' => 3,
+            ]);
+            $promotedConfidence = 70;
+
             switch ($statusDR->text) {
                 case 'start':
-//                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence > 70 ? 3 : 0.5;
-                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence > 70 ? 3 : 1;
+                    if ($seatingOccupiedInfo) $data->pa = $seatingOccupiedInfo->confidence > $promotedConfidence ? $scores->get('promoted') : $scores->get('default');
                     break;
                 case 'in':
                     if ($seatingOccupiedInfo && $seatingOccupiedInfo->detected) {
-                        $step = $prevData->pa == 0 ? 3 : 1;
-                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence > 70 ? $step : 1);
+                        $firstPersistence = $prevData->pa == 0;
+                        $promotedScore = $firstPersistence ? $scores->get('promoted') : $scores->get('default');
+                        $data->pa = $prevData->pa + ($seatingOccupiedInfo->confidence > $promotedConfidence ? $promotedScore : $scores->get('default'));
                     } else {
                         $data->pa = $prevData->pa;
                     }
