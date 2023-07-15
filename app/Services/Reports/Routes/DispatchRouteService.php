@@ -112,7 +112,9 @@ class DispatchRouteService
             ->with('dispatchRegister')
             ->get();
 
-        return $drs->pluck('dispatchRegister')->sortBy(function ($dr) {
+        return $drs->pluck('dispatchRegister')->unique(function($dr) {
+            return $dr->id;
+        })->sortBy(function ($dr) {
             return "$dr->date-" . $dr->vehicle->number . "$dr->departure_time";
         })->groupBy('vehicle_id');
     }

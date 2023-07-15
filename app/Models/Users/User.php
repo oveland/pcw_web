@@ -301,6 +301,8 @@ class User extends Authenticatable
             31580814, // JEFE RRHH
             2018101262, // WILSONAL
             2018101388, //  DEYSY
+            2018101354, // MIGUEL
+            2018101393,
 
             #TRANSPUBENZA:
             2018101273, // SIMONTP

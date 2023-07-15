@@ -47,12 +47,12 @@
         </th>
         @if(!$isExpresoPalmira)
             <th>
-                    <i class="ion-android-stopwatch text-muted"></i><br>
-                    @lang('Route Time')
+                <i class="ion-android-stopwatch text-muted"></i><br>
+                @lang('Route Time')
             </th>
         @endif
         @if($isExpresoPalmira)
-            <th class="text-center">
+            <th width="10%" class="text-center">
                 <i class="fa fa-file  fa-3x fa-fw"></i><br>
                 @lang('Pasajeros Planilla')
             </th>
@@ -70,14 +70,14 @@
                     </small>
                 @endif
             </th>
-            @if($isExpresoPalmira)
+            @if($isExpresoPalmira &&!Auth::user()->isExpreso())
                 <th class="text-center">
                     <i class="icon-users text-muted"></i><br>
-                     {{ str_limit(__('Total'),5) }}
+                    {{ str_limit(__('Total'),5) }}
                     <br>
                     {{ str_limit(__('Manual')) }}
                 </th>
-            @else
+            @elseif(!Auth::user()->isExpreso())
                 <th class="text-center">
                     <i class="icon-users text-muted"></i><br>
                     <small><i class="fa fa-compass text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}
@@ -87,26 +87,23 @@
                     </small>
                 </th>
             @endif
-
-
         @endif
-
-        @if($isExpresoPalmira)
+        @if($isExpresoPalmira )
             <th>
                 <i class="icon-users text-muted">
                 </i><br>{{"Total Sistema"}}
             </th>
-
         @endif
 
+
         @if($company->hasSensorCounter())
-            @if($isExpresoPalmira)
+            @if($isExpresoPalmira &&!Auth::user()->isExpreso())
                 <th>
                     <i class="icon-users text-muted"></i>
                     <br>
                     {{"Conteo Sistema"}}
                 </th>
-            @else
+            @elseif(!Auth::user()->isExpreso())
                 <th>
                     <i class="icon-users text-muted"></i>
                     <br>
@@ -122,7 +119,6 @@
                     </small>
                 </th>
             @endif
-
         @endif
 
         @if($company->hasSensorRecorderCounter())
@@ -136,44 +132,23 @@
             </th>
         @endif
         @if($isExpresoPalmira)
-            <th>
-                <i class="icon-users text-muted">
-                </i><br>{{"Promedio"}}
-            </th>
+            @if(!Auth::user()->isExpreso())
+                <th>
+                    <i class="icon-users text-muted">
+                    </i><br>{{"Promedio"}}
+                </th>
+            @endif
             <th>
                 <i class="fa fa-camera text-muted"></i><br>
                 @lang('Info. Fotos')
             </th>
         @endif
-        {{-- @if(Auth::user()->isSuperAdmin())
-             <th class="text-center">
-                 <i class="fa fa-file  fa-3x fa-fw"></i><br>
-                 @lang('Dif. Planilla')
-             </th>
-             <th class="text-center">
-                 <i class="icon-users text-muted"></i><br>
-                 @lang('Dif. Sistema')
-             </th>
-             <th class="text-center">
-                 <i class="fa fa-dollar text-muted"></i><br>
-                 @lang('Planilla')
-             </th>
-             <th class="text-center">
-             <i class="fa fa-dollar text-muted"></i><br>
-             @lang('Sistema')
-             </th>
-         @endif--}}
-        {{--@if(Auth::user()->isSuperAdmin())
-            <th class="text-center">
-                <i class="icon-users text-muted"></i><br>
-                @lang('Conteo Maximos')
+        @if(!Auth::user()->isExpreso())
+            <th width="10%">
+                <i class="fa fa-rocket text-muted"></i><br>
+                @lang('Actions')
             </th>
-        @endif--}}
-        <th width="10%">
-            <i class="fa fa-rocket text-muted"></i><br>
-            @lang('Actions')
-        </th>
-
+        @endif
     </tr>
     </thead>
     <tbody>
@@ -421,13 +396,16 @@
                     <i class="ion-android-stopwatch text-muted"></i>
                 </small>
             </td>
+            
             @if(!$isExpresoPalmira)
                 <td width="8%"
                     class="text-center">
-                        {{$dispatchRegister->getRouteTime()}}
+                    {{$dispatchRegister->getRouteTime()}}
 
                 </td>
             @endif
+
+            @if($isExpresoPalmira)
             <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff">
                 @php
                     $obs = $dispatchRegister->getObservation('end_recorder');
@@ -443,6 +421,12 @@
                             <span class="box-info">
                                 {{ $spreadsheetPassengers->value ?: 0 }}
                             </span>
+                            @if($spreadsheetPassengers->observation)
+                                <br>
+                                <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada" data-placement="bottom">
+                                    <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation }}
+                                </small>
+                            @endif
                         <div class="box-edit" style="display: none">
                             <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
                                    title="@lang('Press enter for edit')"
@@ -485,6 +469,7 @@
 
                 @endif
             </td>
+            @endif
 
             @if( $company->hasRecorderCounter() )
                 <td width="10%" class="p-r-0 p-l-0 text-center" style="background:  #b7f4ff ">
@@ -558,11 +543,12 @@
                                         {{--                                      {{ $endRecorder > $spreadsheetPassengers1 ? $endRecorder: $spreadsheetPassengers1 }}--}}
                                         {{ $endRecorder }}
                                     @endif
-                                    @if($isExpresoPalmira)
+                                    @if($isExpresoPalmira && $obs->observation)
                                         <br>
-                                        <small class="tooltips text-muted" style="color: #0c0c0c"
-                                               data-title="@lang('# Spreadsheet')"
-                                               data-placement="bottom">{{ $obs->observation }}</small>
+                                        <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet')"
+                                               data-placement="bottom">
+                                            <i class="fa fa-file-o text-muted"></i> {{ $obs->observation }}
+                                        </small>
                                     @endif
                                 </span>
                             </span>
@@ -611,31 +597,33 @@
                         @endif
                     @endif
                 </td>
-                <td width="10%"
-                    class="text-center">
-                    @if( $dispatchRegister->complete() )
-                        <span title=""
-                              class="{{ $invalid?'text-danger':'' }} tooltips"
-                              data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Round trip').' '.($endRecorder.' - '.$startRecorder) }}">
-                            {{ $endRecorder - $startRecorder }}
-                        </span>
-                        <hr class="m-0">
-                        <small class="{{ $invalid?'text-danger':'' }} text-bold tooltips"
-                               data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
-                            {{ $totalPassengersByRecorder }}
-                        </small>
-                    @else
-                        ...
-                        <hr class="hr">
-                        ...
-                    @endif
-                </td>
+                @if(!Auth::user()->isExpreso())
+                    <td width="10%"
+                        class="text-center">
+                        @if( $dispatchRegister->complete())
+                            <span title=""
+                                  class="{{ $invalid?'text-danger':'' }} tooltips"
+                                  data-original-title="{{ $invalid?__('Verify possible error in register data'):($isExpresoPalmira ? 'Vuelo' : __('Round trip').' '.($endRecorder.' - '.$startRecorder)) }}">
+                                {{ $endRecorder - $startRecorder }}
+                            </span>
+                            <hr class="m-0">
+                            <small class="{{ $invalid?'text-danger':'' }} text-bold tooltips"
+                                   data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
+                                {{ $totalPassengersByRecorder }}
+                            </small>
+                        @else
+                            ...
+                            <hr class="hr">
+                            ...
+                        @endif
+                    </td>
+                @endif
             @endif
             @php
                 $spreadsheetPassengers1 = $dispatchRegister->getObservation('spreadsheet_passengers')->value;
             @endphp
-            @if($isExpresoPalmira)
-                <td width="5%" class="text-center" style="background: #c4c9d0">
+            @if($isExpresoPalmira )
+                <td width="10%"  class="text-center" style="background: #c4c9d0">
                     @php
                         $timeFrange=$dispatchRegister->departure_time;
                         $promPassengers = 0;
@@ -645,75 +633,72 @@
                                   if ($routeProm==279||$routeProm==280){
                                      $promPassengers = 10;
                                   }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 25;
+                                      $promPassengers = 0;
                                   }
                                   break;
                               case ($timeFrange >= '06:01:00' && $timeFrange <= '09:00:51'):
                                   if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 22;
                                   }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 25;
+                                      $promPassengers = 0;
                                   }
                                   break;
                               case ($timeFrange >= '09:01:00' && $timeFrange <= '11:00:59'):
                                   if ($routeProm==279||$routeProm==280){
                                       $promPassengers = 18;
                                   }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 25;
+                                      $promPassengers = 0;
                                   }
                                   break;
                                case ($timeFrange >= '11:01:00' && $timeFrange <= '14:00:59'):
                                    if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 19;
                                   }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 25;
+                                      $promPassengers = 0;
                                   }
                                   break;
                                case ($timeFrange >= '14:01:00' && $timeFrange <= '17:00:59'):
                                    if ($routeProm==279||$routeProm==280){
                                      $promPassengers = 20;
                                   }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 25;
+                                      $promPassengers = 0;
                                   }
                                   break;
                                case ($timeFrange >= '17:01:00' && $timeFrange <= '20:00:59'):
                                   if ($routeProm==279||$routeProm==280){
                                      $promPassengers = 21;
                                   }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 25;
+                                      $promPassengers = 0;
                                   }
                                   break;
                                case ($timeFrange >= '20:01:00' && $timeFrange <= '23:59:59'):
                                   if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 13;
                                   }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 25;
+                                      $promPassengers = 0;
                                   }
                                   break;
                           }
                     @endphp
                     @if($dispatchRegister->passengersBySensor <= $spreadsheetPassengers1)
-                        <span title="se coloca numero de planilla">
-                        {{$spreadsheetPassengers1}}
+                        <span class="tooltips" title="Número de planilla">
+                            {{$spreadsheetPassengers1}}
                         </span>
                     @else
                         @if($dispatchRegister->passengersBySensor>= $promPassengers )
-                            <span title="se coloca numero de camara">
-                                 {{$dispatchRegister->passengersBySensor}}
-                                </span>
+                            <span class="tooltips" title="Número de cámara">
+                                {{$dispatchRegister->passengersBySensor}}
+                            </span>
                         @else
-                            <span style="color: darkred; font-weight: 900"
-                                  title="se coloca numero de camara pero camara es < a promedio">
-                                     {{$dispatchRegister->passengersBySensor}}
-                                </span>
+                            <span class="tooltips" style="color: darkred; font-weight: 900" title="Promedio">
+                                {{$promPassengers}}
+                            </span>
                         @endif
-
                     @endif
-
                 </td>
             @endif
 
-            @if($company->hasSensorCounter())
+            @if($company->hasSensorCounter() &&!Auth::user()->isExpreso())
                 <td width="8%"
                     class="text-center">
                     <div style="display: flex;">
@@ -749,10 +734,10 @@
             @if($company->hasSensorRecorderCounter())
                 <td width="10%"
                     class="text-center">
-                    <span class="tooltips"
-                          data-title="@lang('Round trip')">
-                        {{ $dispatchRegister->passengersBySensorRecorder }}
-                    </span>
+                        <span class="tooltips"
+                              data-title="@lang('Round trip')">
+                            {{ $dispatchRegister->passengersBySensorRecorder }}
+                        </span>
                     <hr class="m-0">
                     <small class="tooltips text-bold"
                            data-title="@lang('Accumulated day')">
@@ -760,51 +745,15 @@
                     </small>
                 </td>
             @endif
-            @if($isExpresoPalmira )
+            @if($isExpresoPalmira && !Auth::user()->isExpreso() )
                 <td width="5%" class="text-center">
                         <span>
                             {{$promPassengers}}
                         </span>
                 </td>
             @endif
-            {{-- @if(Auth::user()->isSuperAdmin())
-             <td class="text-center">
-                 <small class="tooltips text-bold"
-                        data-title="@lang('Diferencia conteo Visual - conteo Planilla ')">
-                      {{$prueba}}
-                 </small>
-             </td>
-
-             <td class="text-center">
-                 <small class="tooltips text-bold"
-                        data-title="@lang('Diferencia conteo Visual - conteo Sistema ')">
-                     {{  $diferencePassenger}}
-                 </small>
-             </td>
-
-             <td class="text-center">
-                 <small class="tooltips text-bold"
-                        data-title="@lang('valor pasaje diferencia ')">
-                     {{  $prueba * 11000}}
-                 </small>
-             </td>
-             <td class="text-center">
-                 <small class="tooltips text-bold"
-                        data-title="@lang('valor pasaje diferencia ')">
-                     {{  $diferencePassenger * 11000}}
-                 </small>
-             </td>
-             @endif--}}
-           {{-- @if(Auth::user()->isSuperAdmin())
-                <td class="text-center">
-                    <small class="tooltips text-bold"
-                           data-title="@lang('Conteo por maximos')">
-                        {{$countMax ? : 0}}
-                    </small>
-                </td>
-            @endif--}}
             @if($isExpresoPalmira)
-                <td>
+                <td class="text-center">
                     <div>
                         @php
                             $photos = $dispatchRegister->photos;
@@ -843,121 +792,113 @@
                     </div>
                 </td>
             @endif
-            <td width="15%"
-                class="text-center">
-                @if( Auth::user()->company->hasSeatSensorCounter())
-                    <a href="#modal-seating-profile"
-                       data-toggle="modal"
-                       title="@lang('See profile seating report')"
-                       onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')"
-                       class="btn yellow-crusta faa-parent animated-hover btn-circle btn-outline tooltips">
-                        <i class="fa fa-users faa-pulse"></i>
-                    </a>
-                @endif
-
-                @if( Auth::user()->canMakeTakings() )
-                    <a id="btn-taking-{{ $dispatchRegister->id }}"
-                       href="#modal-takings-passengers"
-                       data-toggle="modal"
-                       onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
-                       class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips m-b-5"
-                       data-original-title="<i class='fa fa-users faa-float animated'></i> @lang('Takings')"
-                       data-html="true">
-                        <i class="icon-briefcase faa-ring"
-                           style="margin-right: 0; margin-left: 0px"></i>
-                        <i class="fa fa-dollar faa-vertical"
-                           style="margin-right: 0px; margin-left: 0"></i>
-                    </a>
-                @endif
-
-                <a href="#modal-route-report"
-                   class="btn green-haze faa-parent animated-hover btn-show-chart-route-report btn-circle btn-outline tooltips"
-                   data-toggle="modal"
-                   data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                   data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                   data-original-title="@lang('Graph report detail')">
-                    <i class="fa fa-area-chart faa-pulse"></i>
-                </a>
-
-                <div class="p-t-5">
-                    @if( Auth::user()->isSuperAdmin())
-                        <button onclick="executeDAR({{ $dispatchRegister->id }})"
-                                class="btn btn-xs {{ $dispatchRegister->process_ard ? 'btn-warning' : 'btn-success' }} faa-parent animated-hover btn-circle tooltips"
-                                data-original-title="@lang('Execute DAR')"
-                                data-placement="bottom">
-                            <i class="fa fa-cogs faa-pulse"></i>
-                        </button>
-
-                        <a href="#modal-report-log"
+            @if(!Auth::user()->isExpreso())
+                <td width="15%"
+                    class="text-center">
+                    @if( Auth::user()->company->hasSeatSensorCounter())
+                        <a href="#modal-seating-profile"
                            data-toggle="modal"
-                           data-placement="bottom"
-                           onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
-                           class="btn btn-xs btn-info faa-parent animated-hover tooltips btn-circle"
-                           data-original-title="@lang('Show report details')">
-                            <i class="fa fa-code faa-pulse"></i>
+                           title="@lang('See profile seating report')"
+                           onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')"
+                           class="btn yellow-crusta faa-parent animated-hover btn-circle btn-outline tooltips">
+                            <i class="fa fa-users faa-pulse"></i>
                         </a>
-
-                        <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
-                                data-original-title="@lang('Cancel turn')"
-                                data-placement="bottom"
-                                data-confirm="@lang('Confirm action for discard dispatch turn')"
-                                data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
-                                data-id="{{ $dispatchRegister->id }}">
-                            <i class="fa fa-times faa-shake"></i>
-                        </button>
                     @endif
-                    {{-- @if( Auth::user()->isExpreso() )
-                             <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
-                                     data-original-title="@lang('Cancel turn')"
-                                     data-placement="bottom"
-                                     data-confirm="@lang('Confirm action for discard dispatch turn')"
-                                     data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
-                                     data-id="{{ $dispatchRegister->id }}">
-                                 <i class="fa fa-times faa-shake"></i>
-                             </button>
-                         @endif--}}
-                    @if( Auth::user()->isSuperAdmin() )
-                        @php
-                            $totalLocations = $dispatchRegister->locations()->count();
-                            $totalReports = $dispatchRegister->reports()->count();
-                            $totalPhotos = $dispatchRegister->photos()->count();
-                            $alert = false;
-                            if($totalLocations < $thresholdMinLocations) {
-                                $lowerGPSReport++;
-                                $alert = true;
-                            }
-                        @endphp
-                        <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}"
-                               data-original-title="@lang('Locations') / @lang('Photos')"
+
+                    @if( Auth::user()->canMakeTakings()  )
+                        <a id="btn-taking-{{ $dispatchRegister->id }}"
+                           href="#modal-takings-passengers"
+                           data-toggle="modal"
+                           onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
+                           class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips m-b-5"
+                           data-original-title="<i class='fa fa-users faa-float animated'></i> @lang('Takings')"
+                           data-html="true">
+                            <i class="icon-briefcase faa-ring"
+                               style="margin-right: 0; margin-left: 0px"></i>
+                            <i class="fa fa-dollar faa-vertical"
+                               style="margin-right: 0px; margin-left: 0"></i>
+                        </a>
+                    @endif
+
+                    <a href="#modal-route-report"
+                       class="btn green-haze faa-parent animated-hover btn-show-chart-route-report btn-circle btn-outline tooltips"
+                       data-toggle="modal"
+                       data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                       data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
+                       data-original-title="@lang('Graph report detail')">
+                        <i class="fa fa-area-chart faa-pulse"></i>
+                    </a>
+
+                    <div class="p-t-5">
+                        @if( Auth::user()->isSuperAdmin())
+                            <button onclick="executeDAR({{ $dispatchRegister->id }})"
+                                    class="btn btn-xs {{ $dispatchRegister->process_ard ? 'btn-warning' : 'btn-success' }} faa-parent animated-hover btn-circle tooltips"
+                                    data-original-title="@lang('Execute DAR')"
+                                    data-placement="bottom">
+                                <i class="fa fa-cogs faa-pulse"></i>
+                            </button>
+
+                            <a href="#modal-report-log"
+                               data-toggle="modal"
                                data-placement="bottom"
-                        >
-                            <i class="fa fa-location-arrow"></i> {!! $totalLocations !!} <i
-                                    class="fa fa-camera"></i> {!! $totalPhotos !!}
-                        </small>
-                    @endif
-                </div>
-            </td>
+                               onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
+                               class="btn btn-xs btn-info faa-parent animated-hover tooltips btn-circle"
+                               data-original-title="@lang('Show report details')">
+                                <i class="fa fa-code faa-pulse"></i>
+                            </a>
 
+                            <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
+                                    data-original-title="@lang('Cancel turn')"
+                                    data-placement="bottom"
+                                    data-confirm="@lang('Confirm action for discard dispatch turn')"
+                                    data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
+                                    data-id="{{ $dispatchRegister->id }}">
+                                <i class="fa fa-times faa-shake"></i>
+                            </button>
+                        @endif
+                        @if( Auth::user()->isSuperAdmin() )
+                            @php
+                                $totalLocations = $dispatchRegister->locations()->count();
+                                $totalReports = $dispatchRegister->reports()->count();
+                                $totalPhotos = $dispatchRegister->photos()->count();
+                                $alert = false;
+                                if($totalLocations < $thresholdMinLocations) {
+                                    $lowerGPSReport++;
+                                    $alert = true;
+                                }
+                            @endphp
+                            <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}"
+                                   data-original-title="@lang('Locations') / @lang('Photos')"
+                                   data-placement="bottom"
+                            >
+                                <i class="fa fa-location-arrow"></i> {!! $totalLocations !!} <i
+                                        class="fa fa-camera"></i> {!! $totalPhotos !!}
+                            </small>
+                        @endif
+                    </div>
+                </td>
+            @endif
         </tr>
+
         @php
             $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time;
         @endphp
 
         <script>
             @if($offRoadPercent)
-            $('.icon-car-{{ $vehicle->id }}').removeClass('f-s-8').removeClass('fa-car').addClass('fa-random text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-flash animated');
+                $('.icon-car-{{ $vehicle->id }}').removeClass('f-s-8').removeClass('fa-car').addClass('fa-random text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-flash animated');
             @endif
 
-                    @if($maxInvalidGPSPercent)
-            if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
-                $('.car-ss-percent-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < $thresholdAlertSS ? 'white': 'danger' }} faa-pulse animated');
-            }
+            @if($maxInvalidGPSPercent)
+                if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
+                    $('.car-ss-percent-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < $thresholdAlertSS ? 'white': 'danger' }} faa-pulse animated');
+                }
             @endif
 
-                    @if($lowerGPSReport)
-            if (parseFloat('{{ $lowerGPSReport }}') > 1) {
-                $('.car-nr-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $lowerGPSReport < $thresholdAlertNR ? 'white': 'danger' }}');
-            }
+            @if($lowerGPSReport)
+                if (parseFloat('{{ $lowerGPSReport }}') > 1) {
+                    $('.car-nr-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $lowerGPSReport < $thresholdAlertNR ? 'white': 'danger' }}');
+                }
             @endif
         </script>
 
@@ -1079,5 +1020,9 @@
     .row-turn-cancelled td {
         opacity: 50%;
         background: rgba(239, 203, 155, 0.48) !important;
+    }
+
+    .text-xs {
+        font-size: 0.9rem !important;
     }
 </style>

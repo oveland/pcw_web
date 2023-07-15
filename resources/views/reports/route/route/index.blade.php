@@ -62,9 +62,17 @@
                             <i class="fa fa-minus"></i>
                         </a>
                     </div>
-                    <button type="submit" class="btn btn-success btn-sm btn-search-report">
-                        <i class="fa fa-search"></i> @lang('Search')
-                    </button>
+                    <div style="display: flex; gap: 4px">
+                        <button type="submit" class="btn btn-success btn-sm btn-search-report">
+                            <i class="fa fa-search"></i> @lang('Search')
+                        </button>
+                        <div class="lm-sync-container">
+                            <button id="lm-sync-button" type="button" class="btn btn-info btn-sm btn-search-report">
+                                <i class="fa fa-refresh"></i>
+                                <span>@lang('Sync spreadsheets')</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
@@ -133,7 +141,7 @@
                             </div>
                         </div>
 
-                        @if(Auth::user()->isAdmin())
+                        @if(Auth::user()->isAdmin() || Auth::user()->isExpreso())
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="spreadsheet-report" class="control-label"># @lang('Spreadsheet')</label>
@@ -401,5 +409,33 @@
         });
 
         initDateTimePicker("YYYY-MM-DD");
+
+        $('#lm-sync-button').click(function () {
+            const button = $(this);
+            const buttonLabel = button.find('span');
+            const buttonIcon = button.find('i');
+            const dateReport = $('#date-report').val();
+
+            function processing(loading) {
+                buttonLabel.text(loading ? '@lang('Sync processing') • @lang('Date'): ' + dateReport : '@lang('Sync spreadsheets')');
+                loading ? buttonIcon.addClass('fa-spin') : buttonIcon.removeClass('fa-spin');
+                button.prop('disabled', loading);
+            }
+
+            processing(true);
+            fetch('{{ config('app.beta_server_url') }}/api/v2/web/passengers/sync?company=39&date='+dateReport)
+                .then(response => response.json())
+                .then((data) => {
+                    if (data.error)
+                        gerror('Ocurrió un error al procesar la solicutd. ' + data.message);
+                    else
+                        gsuccess('Sicronización procesada correctamente');
+                    processing(false);
+                })
+                .catch(() => {
+                    gerror('Ocurrió un error al procesar la solicutd. Contacte a su administrador');
+                    processing(false);
+                })
+        });
     </script>
 @endsection
