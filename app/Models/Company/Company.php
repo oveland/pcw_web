@@ -344,7 +344,7 @@ class Company extends Model
     */
     function hasSeatSensorCounter()
     {
-        return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW, self::ARMENIA,self::IBAGUE,self::IBAGUE])->contains($this->id);
+        return collect([self::MONTEBELLO, self::TRANSPUBENZA, self::VALLEDUPAR, self::PCW, self::ARMENIA, self::IBAGUE, self::IBAGUE, self::EXPRESO_PALMIRA])->contains($this->id);
     }
 
     /**
