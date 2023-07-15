@@ -5,7 +5,7 @@
 
     $isExpresoPalmira = $company->id == \App\Models\Company\Company::EXPRESO_PALMIRA;
 @endphp
-<!-- begin table -->
+        <!-- begin table -->
 <table id="table-report"
        class="table table-bordered table-striped table-hover table-valign-middle table-report">
     <thead>
@@ -396,7 +396,7 @@
                     <i class="ion-android-stopwatch text-muted"></i>
                 </small>
             </td>
-            
+
             @if(!$isExpresoPalmira)
                 <td width="8%"
                     class="text-center">
@@ -406,18 +406,18 @@
             @endif
 
             @if($isExpresoPalmira)
-            <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff">
-                @php
-                    $obs = $dispatchRegister->getObservation('end_recorder');
-                    $labelEndRecorder = $isExpresoPalmira ? __('Pasajeros planilla') : __('End Recorder');
-                    $diferencePassenger =$dispatchRegister->end_recorder - $dispatchRegister->final_sensor_counter;
-                    $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
-                    $prueba= $dispatchRegister->end_recorder - $spreadsheetPassengers->value;
-                    $countMax = $dispatchRegister->edited_info;
-                @endphp
+                <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff">
+                    @php
+                        $obs = $dispatchRegister->getObservation('end_recorder');
+                        $labelEndRecorder = $isExpresoPalmira ? __('Pasajeros planilla') : __('End Recorder');
+                        $diferencePassenger =$dispatchRegister->end_recorder - $dispatchRegister->final_sensor_counter;
+                        $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
+                        $prueba= $dispatchRegister->end_recorder - $spreadsheetPassengers->value;
+                        $countMax = $dispatchRegister->edited_info;
+                    @endphp
 
-                @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
-                    <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
+                    @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
+                        <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
                                 {{ $spreadsheetPassengers->value ?: 0 }}
                             </span>
@@ -427,18 +427,18 @@
                                     <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation }}
                                 </small>
                             @endif
-                        <div class="box-edit" style="display: none">
-                            <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
-                                   title="@lang('Press enter for edit')"
-                                   name=""
-                                   type="number"
-                                   data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
-                                   data-id="{{ $dispatchRegister->id }}"
-                                   data-field="spreadsheet_passengers"
-                                   data-single="true"
-                                   class="input-sm form-control edit-input-recorder edit-input-value"
-                                   value="{{ $spreadsheetPassengers->value }}">
-                            <div class="box-obs ">
+                            <div class="box-edit" style="display: none">
+                                <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
+                                       title="@lang('Press enter for edit')"
+                                       name=""
+                                       type="number"
+                                       data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
+                                       data-id="{{ $dispatchRegister->id }}"
+                                       data-field="spreadsheet_passengers"
+                                       data-single="true"
+                                       class="input-sm form-control edit-input-recorder edit-input-value"
+                                       value="{{ $spreadsheetPassengers->value }}">
+                                <div class="box-obs ">
                                 <textarea style="display: none"
                                           name=""
                                           rows="3"
@@ -446,29 +446,29 @@
                                           placeholder="{{ $isExpresoPalmira ? __('# Spreadsheet') : __('Observations') }}">
                                     {{ $spreadsheetPassengers->observation }}
                                 </textarea>
-                                @if($spreadsheetPassengers->updated_at)
-                                    <div class="text-muted text-center box-audit">
-                                        <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->user->username }}</small>
-                                        ·
-                                        <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->updated_at }}</small>
-                                    </div>
-                                @endif
-                                <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
-                                        title="@lang('Cancel')">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                                <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                        title="@lang('Save')"
-                                        onclick="return confirm('¿Estas segura que los datos son correctos?')">
+                                    @if($spreadsheetPassengers->updated_at)
+                                        <div class="text-muted text-center box-audit">
+                                            <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->user->username }}</small>
+                                            ·
+                                            <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->updated_at }}</small>
+                                        </div>
+                                    @endif
+                                    <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
+                                            title="@lang('Cancel')">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-success m-5 edit-btn-save"
+                                            title="@lang('Save')"
+                                            onclick="return confirm('¿Estas segura que los datos son correctos?')">
 
-                                    <i class="fa fa-save"></i>
-                                </button>
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                @endif
-            </td>
+                    @endif
+                </td>
             @endif
 
             @if( $company->hasRecorderCounter() )
@@ -886,19 +886,19 @@
 
         <script>
             @if($offRoadPercent)
-                $('.icon-car-{{ $vehicle->id }}').removeClass('f-s-8').removeClass('fa-car').addClass('fa-random text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-flash animated');
+            $('.icon-car-{{ $vehicle->id }}').removeClass('f-s-8').removeClass('fa-car').addClass('fa-random text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-flash animated');
             @endif
 
-            @if($maxInvalidGPSPercent)
-                if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
-                    $('.car-ss-percent-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < $thresholdAlertSS ? 'white': 'danger' }} faa-pulse animated');
-                }
+                    @if($maxInvalidGPSPercent)
+            if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
+                $('.car-ss-percent-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < $thresholdAlertSS ? 'white': 'danger' }} faa-pulse animated');
+            }
             @endif
 
-            @if($lowerGPSReport)
-                if (parseFloat('{{ $lowerGPSReport }}') > 1) {
-                    $('.car-nr-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $lowerGPSReport < $thresholdAlertNR ? 'white': 'danger' }}');
-                }
+                    @if($lowerGPSReport)
+            if (parseFloat('{{ $lowerGPSReport }}') > 1) {
+                $('.car-nr-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $lowerGPSReport < $thresholdAlertNR ? 'white': 'danger' }}');
+            }
             @endif
         </script>
 
