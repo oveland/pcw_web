@@ -419,7 +419,7 @@
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
                         <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
-                                {{ $spreadsheetPassengers->value ?: 0 }}
+                                {{ $spreadsheetPassengers->value ?? 0 }}
                             </span>
                             @if($spreadsheetPassengers->observation)
                                 <br>
@@ -466,7 +466,16 @@
                                 </div>
                             </div>
                         </div>
-
+                    @else
+                        <span class="box-info">
+                            {{ $spreadsheetPassengers->value ?? 0 }}
+                            </span>
+                        @if($spreadsheetPassengers->observation)
+                            <br>
+                            <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada" data-placement="bottom">
+                                <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation }}
+                            </small>
+                        @endif
                     @endif
                 </td>
             @endif

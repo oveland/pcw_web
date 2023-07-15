@@ -24,6 +24,8 @@ class Geolocation
     public
     static function getRouteCoordinates($url)
     {
+        if(!$url) return collect([]);
+
         $milliseconds = round(microtime(true) * 1000);
         $dir_name = "ziptmp$milliseconds";
         $file = 'doc.kml';
