@@ -21,12 +21,15 @@
         $correction = 0.08;
 
         function percentTo($km, $routeDistance) {
-            return $km * 100 / $routeDistance;
+            return $routeDistance ? $km * 100 / $routeDistance: 0;
         }
 
         function formatW($value) {
             return number_format($value - 0.08, 2, '.', ',');
         }
+
+        $passengersStops = json_decode($dispatchRegister->getObservation('passengers_stops')->observation);
+        $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
     @endphp
     <div class="panel-inverse col-md-12">
         <div class="panel-heading">
@@ -70,6 +73,25 @@
                                 {{ $dispatchRegister->departure_time }} @lang('to') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivalTime }}
                             </small>
                         </div>
+                        @if($passengersStops)
+                            <div class="passengers-stops">
+                                <span>Conteos EP: </span>
+                                @foreach($passengersStops as $stop => $data)
+                                <span class="passengers-stop">
+                                    <span class="stop"><i class="fa fa-map-marker"></i> {{ $stop }}</span>
+                                    <span>
+                                        <span class="up">{{ $data->a }}⭡</span>
+                                        <span class="down">{{ $data->d }}⭣</span>
+                                    </span>
+                                </span>
+                                @endforeach
+
+                                <div class="spreadsheet_passengers">
+                                    <span>TOTAL {{ intval($spreadsheetPassengers->value)  }}</span>
+                                    <span class="tooltips" title="# @lang('Spreadsheet')"><i class="fa fa-file"></i> {{ intval($spreadsheetPassengers->observation)  }}</span>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -370,6 +392,45 @@
 
         .text-sm {
             font-size: 0.9rem !important;
+        }
+
+        .passengers-stops {
+            padding: 8px;
+            background: rgba(29, 30, 27, 0.71);
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            place-items: center;
+        }
+        .passengers-stop {
+            background: #04805c;
+            border: 1px solid white;
+            border-radius: 2px;
+            padding: 2px 4px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .passengers-stop .stop {
+
+        }
+        .passengers-stop .up {
+            background: #27a903;
+            border: 1px solid #38ff00;
+            padding: 0 4px;
+        }
+        .passengers-stop .down {
+            background: #762e02;
+            border: 1px solid #ff6000;
+            padding: 0 4px;
+        }
+
+        .spreadsheet_passengers {
+            display: flex;
+            gap: 8px;
+            background: black;
+            padding: 4px 8px;
+            border-radius: 4px;
         }
     </style>
 
