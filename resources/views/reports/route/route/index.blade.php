@@ -141,7 +141,6 @@
                             </div>
                         </div>
 
-                        @if(Auth::user()->isAdmin() || Auth::user()->isExpreso())
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="spreadsheet-report" class="control-label"># @lang('Spreadsheet')</label>
@@ -150,7 +149,6 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
 
                         <hr class="col-md-12 hr">
                         <div class="col-md-12 options with-route">
