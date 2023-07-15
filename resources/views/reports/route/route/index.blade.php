@@ -141,7 +141,7 @@
                             </div>
                         </div>
 
-                        @if(Auth::user()->isAdmin())
+                        @if(Auth::user()->isAdmin() || Auth::user()->isExpreso())
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="spreadsheet-report" class="control-label"># @lang('Spreadsheet')</label>
@@ -409,7 +409,6 @@
         });
 
         initDateTimePicker("YYYY-MM-DD");
-
 
         $('#lm-sync-button').click(function () {
             const button = $(this);
