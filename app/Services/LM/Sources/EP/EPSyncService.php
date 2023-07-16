@@ -120,7 +120,9 @@ class EPSyncService extends SyncService
                     ]);
                 });
 
-                return StrTime::isInclusiveTimeRanges(
+//                if(!$dr->arrival_time_scheduled)dd($dr->id . " >> ". $dr->status);
+
+                return $dr->arrival_time_scheduled && StrTime::isInclusiveTimeRanges(
                     $dateStart->toTimeString(),
                     $dateEnd->toTimeString(),
                     $dr->departure_time,

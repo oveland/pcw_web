@@ -171,15 +171,6 @@ class SyrusService
                 return '3';
             }
         }
-        if ($imei == '352557104743722') {
-            if (Str::startsWith($fileName, '1')) {
-                return '2';
-            } else if (Str::startsWith($fileName, '2')) {
-                return '1';
-            } else if (Str::startsWith($fileName, '3')) {
-                return '3';
-            }
-        }
         if ($imei == '352557104791572') {
             if (Str::startsWith($fileName, '1')) {
                 return '2';
