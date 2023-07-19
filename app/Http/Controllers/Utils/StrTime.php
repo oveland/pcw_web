@@ -91,7 +91,9 @@ class StrTime
             )
         );
 
+        $inclusiveAveragePercent = self::segToStrTime($averageDurationRanges) < '01:00:00' ? 0.2 : 0.5;
+
         // InclusiveRange range should be at least 50% of average duration ranges
-        return $inclusiveRange > $averageDurationRanges * 0.5;
+        return $inclusiveRange >= $averageDurationRanges * $inclusiveAveragePercent;
     }
 }
