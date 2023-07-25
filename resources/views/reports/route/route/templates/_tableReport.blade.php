@@ -73,9 +73,9 @@
             @if($isExpresoPalmira &&!Auth::user()->isExpreso())
                 <th class="text-center">
                     <i class="icon-users text-muted"></i><br>
-                    {{ str_limit(__('Total'),5) }}
+                    {{ str_limit(__('Conteo'),6) }}
                     <br>
-                    {{ str_limit(__('Manual')) }}
+                    {{ str_limit(__('Sistema')) }}
                 </th>
             @elseif(!Auth::user()->isExpreso())
                 <th class="text-center">
@@ -97,13 +97,8 @@
 
 
         @if($company->hasSensorCounter())
-            @if($isExpresoPalmira &&!Auth::user()->isExpreso())
-                <th>
-                    <i class="icon-users text-muted"></i>
-                    <br>
-                    {{"Conteo Sistema"}}
-                </th>
-            @elseif(!Auth::user()->isExpreso())
+
+            @if(!Auth::user()->isExpreso()&&!Auth::user()->isSuperAdmin())
                 <th>
                     <i class="icon-users text-muted"></i>
                     <br>
@@ -141,6 +136,12 @@
             <th>
                 <i class="fa fa-camera text-muted"></i><br>
                 @lang('Info. Fotos')
+            </th>
+        @endif
+        @if(Auth::user()->isSuperAdmin())
+            <th class="text-center">
+                <i class="icon-users text-muted"></i><br>
+                @lang('Conteo Maximos')
             </th>
         @endif
         @if(!Auth::user()->isExpreso())
@@ -413,7 +414,8 @@
                         $diferencePassenger =$dispatchRegister->end_recorder - $dispatchRegister->final_sensor_counter;
                         $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
                         $prueba= $dispatchRegister->end_recorder - $spreadsheetPassengers->value;
-                        $countMax = $dispatchRegister->edited_info;
+
+
                     @endphp
 
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
@@ -609,7 +611,7 @@
                 @if(!Auth::user()->isExpreso())
                     <td width="10%"
                         class="text-center">
-                        @if( $dispatchRegister->complete())
+                        @if( $dispatchRegister->complete() && !$isExpresoPalmira )
                             <span title=""
                                   class="{{ $invalid?'text-danger':'' }} tooltips"
                                   data-original-title="{{ $invalid?__('Verify possible error in register data'):($isExpresoPalmira ? 'Vuelo' : __('Round trip').' '.($endRecorder.' - '.$startRecorder)) }}">
@@ -620,6 +622,13 @@
                                    data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
                                 {{ $totalPassengersByRecorder }}
                             </small>
+                        @elseif($isExpresoPalmira)
+                            <span title=""
+                                  class=" tooltips"
+                                  data-original-title="Conteo camaras">
+                                {{ $dispatchRegister->final_sensor_counter }}
+                            </span>
+
                         @else
                             ...
                             <hr class="hr">
@@ -699,15 +708,15 @@
                                 {{$dispatchRegister->passengersBySensor}}
                             </span>
                         @else
-                            <span class="tooltips" style="color: darkred; font-weight: 900" title="Promedio">
-                                {{$promPassengers}}
+                            <span class="tooltips" style="color: darkred; font-weight: 900" title="Número de cámara < promedio">
+                                {{$dispatchRegister->passengersBySensor}}
                             </span>
                         @endif
                     @endif
                 </td>
             @endif
 
-            @if($company->hasSensorCounter() &&!Auth::user()->isExpreso())
+            @if($company->hasSensorCounter() &&!Auth::user()->isExpreso()&&!Auth::user()->isSuperAdmin() )
                 <td width="8%"
                     class="text-center">
                     <div style="display: flex;">
@@ -799,6 +808,18 @@
                         @endforeach
                         <div>{{ $photos->count() }} / {{ $expectedTotalPhotos }}</div>
                     </div>
+                </td>
+            @endif
+
+            @if(Auth::user()->isSuperAdmin())
+                @php
+                    $countMax = $dispatchRegister->final_front_sensor_counter;
+                @endphp
+                <td class="text-center">
+                    <small class="tooltips text-bold"
+                           data-title="@lang('Conteo por maximos')">
+                          {{$countMax}}
+                    </small>
                 </td>
             @endif
             @if(!Auth::user()->isExpreso())

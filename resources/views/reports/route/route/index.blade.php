@@ -92,7 +92,7 @@
                             </div>
                         @endif
                         <div class="col-md-3">
-                            <div class="form-group">
+                            <div class="form-group form-date">
                                 <label for="date-report" class="control-label field-required">
                                     @lang('Date')
                                 </label>
@@ -400,7 +400,7 @@
         $('#spreadsheet-report').keyup(function () {
             const hasValue = !!$(this).val();
             const primaryFilters = $('.primary-filter');
-            primaryFilters.parents('.form-group').css({'opacity': (hasValue ? 0.3 : 1)});
+            primaryFilters.parents('.form-group:not(.form-date)').css({'opacity': (hasValue ? 0.3 : 1)});
 
             const labels = primaryFilters.parents('.form-group').find('.control-label').addClass('field-required');
             if(hasValue) labels.removeClass('field-required');
