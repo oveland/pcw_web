@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Models\LM\Config;
 use App\Models\Drivers\Driver;
+use App\Models\LM\Sync;
 use App\Models\Proprietaries\Proprietary;
 use App\Models\Routes\Dispatch;
 use App\Models\Routes\DispatcherVehicle;
@@ -250,6 +251,7 @@ class Company extends Model
                 Self::ARMENIA
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
+
     function hasPhoto()
     {
         return collect([
@@ -466,5 +468,10 @@ class Company extends Model
         return collect(self::ALL)
             ->forget(self::TRANSPUBENZA)
             ->contains($this->id);
+    }
+
+    function lmSync()
+    {
+        return $this->hasOne(Sync::class);
     }
 }
