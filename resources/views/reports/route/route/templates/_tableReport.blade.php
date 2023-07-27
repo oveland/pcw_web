@@ -650,50 +650,64 @@
                               case ($timeFrange >= '04:00:00' && $timeFrange <= '06:00:59'):
                                   if ($routeProm==279||$routeProm==280){
                                      $promPassengers = 10;
-                                  }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 0;
+                                  }else if ($routeProm==282){
+                                      $promPassengers = 3;
+                                  }else if ($routeProm==283){
+                                      $promPassengers = 27;
                                   }
                                   break;
                               case ($timeFrange >= '06:01:00' && $timeFrange <= '09:00:51'):
                                   if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 22;
-                                  }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 0;
+                                  }else if ($routeProm==282){
+                                      $promPassengers = 3;
+                                  }else if ($routeProm==283){
+                                      $promPassengers = 27;
                                   }
                                   break;
                               case ($timeFrange >= '09:01:00' && $timeFrange <= '11:00:59'):
                                   if ($routeProm==279||$routeProm==280){
                                       $promPassengers = 18;
-                                  }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 0;
+                                  }else if ($routeProm==282){
+                                      $promPassengers = 3;
+                                  }else if ($routeProm==283){
+                                      $promPassengers = 27;
                                   }
                                   break;
                                case ($timeFrange >= '11:01:00' && $timeFrange <= '14:00:59'):
                                    if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 19;
-                                  }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 0;
+                                  }else if ($routeProm==282){
+                                      $promPassengers = 3;
+                                  }else if ($routeProm==283){
+                                      $promPassengers = 27;
                                   }
                                   break;
                                case ($timeFrange >= '14:01:00' && $timeFrange <= '17:00:59'):
                                    if ($routeProm==279||$routeProm==280){
                                      $promPassengers = 20;
-                                  }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 0;
+                                  }else if ($routeProm==282){
+                                      $promPassengers = 3;
+                                  }else if ($routeProm==283){
+                                      $promPassengers = 27;
                                   }
                                   break;
                                case ($timeFrange >= '17:01:00' && $timeFrange <= '20:00:59'):
                                   if ($routeProm==279||$routeProm==280){
                                      $promPassengers = 21;
-                                  }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 0;
+                                  }else if ($routeProm==282){
+                                      $promPassengers = 3;
+                                  }else if ($routeProm==283){
+                                      $promPassengers = 27;
                                   }
                                   break;
                                case ($timeFrange >= '20:01:00' && $timeFrange <= '23:59:59'):
                                   if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 13;
-                                  }else if ($routeProm==282||$routeProm==283){
-                                      $promPassengers = 0;
+                                  }else if ($routeProm==282){
+                                      $promPassengers = 3;
+                                  }else if ($routeProm==283){
+                                      $promPassengers = 27;
                                   }
                                   break;
                           }
