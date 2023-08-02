@@ -102,9 +102,12 @@ class PCWExporterEPService extends PCWExporterService
         $sheet->setSize('F' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
         $sheet->setSize('G' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
         $sheet->setSize('H' . $starData . ':' . $config->lastLetter . $lastRow, 15, 1000);
-        $sheet->setSize('I' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
+        $sheet->setSize('I' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
         $sheet->setSize('J' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
-        $sheet->setSize('K' . $starData . ':' . $config->lastLetter . $lastRow, 30, 1000);
+        $sheet->setSize('K' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        $sheet->setSize('L' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        $sheet->setSize('M' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        $sheet->setSize('N' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
 
         //firma
         $f = 'I' . $firma . ":" . 'J' . $firma;
