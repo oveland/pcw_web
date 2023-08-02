@@ -52,6 +52,12 @@
             </th>
         @endif
         @if($isExpresoPalmira)
+            @if( Auth::user()->isSuperAdmin())
+            <th width="10%" class="text-center">
+                <i class="fa fa-file  fa-3x fa-fw"></i><br>
+                @lang('Planilla FICS')
+            </th>
+            @endif
             <th width="10%" class="text-center">
                 <i class="fa fa-file  fa-3x fa-fw"></i><br>
                 @lang('Pasajeros Planilla')
@@ -409,11 +415,27 @@
                 <td width="8%"
                     class="text-center">
                     {{$dispatchRegister->getRouteTime()}}
-
                 </td>
             @endif
 
             @if($isExpresoPalmira)
+                @if( Auth::user()->isSuperAdmin())
+                <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #ffd39e">
+                    @php
+                        $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
+                    @endphp
+                    <span class="box-info">
+                        {{ $spreadsheetPassengersSync->value ?? 0 }}
+                        </span>
+                    @if($spreadsheetPassengersSync->observation)
+                        <br>
+                        <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada" data-placement="bottom">
+                            <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengersSync->observation }}
+                        </small>
+                    @endif
+                </td>
+                @endif
+
                 <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff">
                     @php
                         $obs = $dispatchRegister->getObservation('end_recorder');
@@ -427,7 +449,7 @@
                     @endphp
 
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
-                        <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
+                        <div class="tooltips box-edit" data-title="@lang('Edit') @lang('Pasajeros planilla')">
                             <span class="box-info">
                                 {{ $spreadsheetPassengers->value ?? 0 }}
                             </span>
@@ -470,7 +492,7 @@
                                     </button>
                                     <button class="btn btn-xs btn-success m-5 edit-btn-save"
                                             title="@lang('Save')"
-                                            onclick="return confirm('¿Estas segura que los datos son correctos?')">
+                                            onclick="return confirm('Confirma que los datos son correctos')">
 
                                         <i class="fa fa-save"></i>
                                     </button>
@@ -602,7 +624,7 @@
                                     </button>
                                     <button class="btn btn-xs btn-success m-5 edit-btn-save"
                                             title="@lang('Save')"
-                                            onclick="return confirm('¿Estas segura que los datos son correctos?')">
+                                            onclick="return confirm('Confirma que los datos son correctos')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
@@ -660,7 +682,7 @@
                         $promPassengers = 0;
                         $routeProm = $dispatchRegister->route_id;
                         if ($routeProm==285 || $routeProm==286){
-                            $promPassengers = 15;
+                             $promPassengers = 15;
                         }
                           switch (true) {
                               case ($timeFrange >= '04:00:00' && $timeFrange <= '06:00:59'):
@@ -879,11 +901,10 @@
                     $sumByCountPassengerPlan += $countPlanilla;
 
                 @endphp
-                <td class
-                    ="text-center">
+                <td class="text-center">
                     <small class="tooltips text-bold"
                            data-title="@lang('Conteo por maximos')">
-                        {{$countMax}}
+                          {{$countMax}}
                     </small>
                 </td>
             @endif
@@ -996,6 +1017,7 @@
             }
             @endif
         </script>
+
     @endforeach
     @if($dispatchRegisters->count())
         <tr>
@@ -1028,7 +1050,6 @@
                 data-title="@lang('Sumatoria Maximos')">
                 {{$sumatoriaCountMax}}
             </td>
-            |
         </tr>
     @endif
     </tbody>
