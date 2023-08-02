@@ -5,7 +5,7 @@
 
     $isExpresoPalmira = $company->id == \App\Models\Company\Company::EXPRESO_PALMIRA;
 @endphp
-        <!-- begin table -->
+<!-- begin table -->
 <table id="table-report"
        class="table table-bordered table-striped table-hover table-valign-middle table-report">
     <thead>
@@ -60,7 +60,7 @@
         @if( $company->hasRecorderCounter() )
             <th class="text-center">
                 <i class="fa fa-compass text-muted"></i><br>
-                {{ str_limit(__($isExpresoPalmira ? 'Conteo Manual ' : 'Recorder'), 15) }}
+                {{ str_limit(__($isExpresoPalmira ? 'Pasajeros Visual ' : 'Recorder'), 20) }}
                 @if(!$isExpresoPalmira)
                     <br>
                     <small class="text-muted">
@@ -73,9 +73,9 @@
             @if($isExpresoPalmira &&!Auth::user()->isExpreso())
                 <th class="text-center">
                     <i class="icon-users text-muted"></i><br>
-                    {{ str_limit(__('Conteo'),6) }}
+                    {{ str_limit(__('Pasajeros'),9) }}
                     <br>
-                    {{ str_limit(__('Sistema')) }}
+                    {{ str_limit(__('Cámaras')) }}
                 </th>
             @elseif(!Auth::user()->isExpreso())
                 <th class="text-center">
@@ -166,6 +166,13 @@
 
         $maxInvalidGPSPercent = 0;
         $lowerGPSReport = 0;
+
+        $sumatoriaCountMax = 0;
+        $sumByCountspredsheet = 0;
+        $sumByCountSensor = 0;
+        $sumByCountProm = 0;
+        $sumByCountManual=0;
+        $sumByCountPassengerPlan=0;
     @endphp
 
     @foreach( $dispatchRegisters as $dispatchRegister )
@@ -414,6 +421,7 @@
                         $diferencePassenger =$dispatchRegister->end_recorder - $dispatchRegister->final_sensor_counter;
                         $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
                         $prueba= $dispatchRegister->end_recorder - $spreadsheetPassengers->value;
+                        $sumByCountManual += $spreadsheetPassengers->value;
 
 
                     @endphp
@@ -425,7 +433,8 @@
                             </span>
                             @if($spreadsheetPassengers->observation)
                                 <br>
-                                <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada" data-placement="bottom">
+                                <small class="tooltips text-bold text-xs"
+                                       data-title="@lang('# Spreadsheet') sincronizada" data-placement="bottom">
                                     <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation }}
                                 </small>
                             @endif
@@ -474,7 +483,8 @@
                             </span>
                         @if($spreadsheetPassengers->observation)
                             <br>
-                            <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada" data-placement="bottom">
+                            <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada"
+                                   data-placement="bottom">
                                 <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation }}
                             </small>
                         @endif
@@ -639,13 +649,19 @@
             @endif
             @php
                 $spreadsheetPassengers1 = $dispatchRegister->getObservation('spreadsheet_passengers')->value;
+                $countBySensorfinal = $dispatchRegister->final_sensor_counter;
+                $sumByCountspredsheet += $spreadsheetPassengers1;
+                $sumByCountSensor += $countBySensorfinal;
             @endphp
             @if($isExpresoPalmira )
-                <td width="10%"  class="text-center" style="background: #c4c9d0">
+                <td width="10%" class="text-center" style="background: #c4c9d0">
                     @php
                         $timeFrange=$dispatchRegister->departure_time;
                         $promPassengers = 0;
                         $routeProm = $dispatchRegister->route_id;
+                        if ($routeProm==285 || $routeProm==286){
+                            $promPassengers = 15;
+                        }
                           switch (true) {
                               case ($timeFrange >= '04:00:00' && $timeFrange <= '06:00:59'):
                                   if ($routeProm==279||$routeProm==280){
@@ -655,7 +671,7 @@
                                   }else if ($routeProm==283){
                                       $promPassengers = 27;
                                   }
-                                  break;
+                              break;
                               case ($timeFrange >= '06:01:00' && $timeFrange <= '09:00:51'):
                                   if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 22;
@@ -664,7 +680,7 @@
                                   }else if ($routeProm==283){
                                       $promPassengers = 27;
                                   }
-                                  break;
+                              break;
                               case ($timeFrange >= '09:01:00' && $timeFrange <= '11:00:59'):
                                   if ($routeProm==279||$routeProm==280){
                                       $promPassengers = 18;
@@ -673,8 +689,8 @@
                                   }else if ($routeProm==283){
                                       $promPassengers = 27;
                                   }
-                                  break;
-                               case ($timeFrange >= '11:01:00' && $timeFrange <= '14:00:59'):
+                              break;
+                              case ($timeFrange >= '11:01:00' && $timeFrange <= '14:00:59'):
                                    if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 19;
                                   }else if ($routeProm==282){
@@ -682,7 +698,7 @@
                                   }else if ($routeProm==283){
                                       $promPassengers = 27;
                                   }
-                                  break;
+                              break;
                                case ($timeFrange >= '14:01:00' && $timeFrange <= '17:00:59'):
                                    if ($routeProm==279||$routeProm==280){
                                      $promPassengers = 20;
@@ -691,7 +707,7 @@
                                   }else if ($routeProm==283){
                                       $promPassengers = 27;
                                   }
-                                  break;
+                               break;
                                case ($timeFrange >= '17:01:00' && $timeFrange <= '20:00:59'):
                                   if ($routeProm==279||$routeProm==280){
                                      $promPassengers = 21;
@@ -700,7 +716,7 @@
                                   }else if ($routeProm==283){
                                       $promPassengers = 27;
                                   }
-                                  break;
+                              break;
                                case ($timeFrange >= '20:01:00' && $timeFrange <= '23:59:59'):
                                   if ($routeProm==279||$routeProm==280){
                                     $promPassengers = 13;
@@ -709,21 +725,22 @@
                                   }else if ($routeProm==283){
                                       $promPassengers = 27;
                                   }
-                                  break;
+                              break;
                           }
                     @endphp
-                    @if($dispatchRegister->passengersBySensor <= $spreadsheetPassengers1)
+                    @if($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers1)
                         <span class="tooltips" title="Número de planilla">
                             {{$spreadsheetPassengers1}}
                         </span>
                     @else
-                        @if($dispatchRegister->passengersBySensor>= $promPassengers )
+                        @if($dispatchRegister->final_sensor_counter>= $promPassengers )
                             <span class="tooltips" title="Número de cámara">
-                                {{$dispatchRegister->passengersBySensor}}
+                                {{$countBySensorfinal}}
                             </span>
                         @else
-                            <span class="tooltips" style="color: darkred; font-weight: 900" title="Número de cámara < promedio">
-                                {{$dispatchRegister->passengersBySensor}}
+                            <span class="tooltips" style="color: darkred; font-weight: 900"
+                                  title="Número de cámara < promedio">
+                                {{$countBySensorfinal}}
                             </span>
                         @endif
                     @endif
@@ -804,6 +821,7 @@
                                 $cameraPhotos = $photosByCamera->get($camera);
                                 $totalPhotos = 0;
                                 $photoStatus = "green";
+                                $alertPhoto = false;
 
                                 $expectedPhotos = intval($routeTimeInMinutes / 2);
 
@@ -813,6 +831,7 @@
                                     else $photoStatus = "green";
                                 } else {
                                     $photoStatus = "red";
+                                    $alertPhoto = true;
                                 }
                             @endphp
                             <br>
@@ -824,15 +843,47 @@
                     </div>
                 </td>
             @endif
+            @if ($alertPhoto)
+            <!-- Modal -->
+                <div class="modal fade" id="alertPhotoModal" tabindex="-1" role="dialog" aria-labelledby="labelModal"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="border: 3px solid darkred;background: silver">
+                            <div class="modal-header text-center">
+                                <h5 class="modal-title"
+                                    style="font-weight: bold;font-size: 20px;font-family: Glyphicons-Halflings">
+                                    <i class="fa fa-warning faa-pulse"></i> @lang('alert') <i
+                                            class="fa fa-warning faa-pulse"></i>
+                                </h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-warning"
+                                     style="font-weight: bold ; color: white; background: darkred; font-size: 18px">
+                                    El vehículo número {{ $vehicle->number }} presenta una novedad en el envío de fotos.
+                                    Por favor, comuníquese con soporte.
+                                </div>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             @if(Auth::user()->isSuperAdmin())
                 @php
                     $countMax = $dispatchRegister->final_front_sensor_counter;
+                    $sumatoriaCountMax += $countMax;
+                    $countPlanilla =  $dispatchRegister->registradora_llegada;
+                    $sumByCountPassengerPlan += $countPlanilla;
+
                 @endphp
-                <td class="text-center">
+                <td class
+                    ="text-center">
                     <small class="tooltips text-bold"
                            data-title="@lang('Conteo por maximos')">
-                          {{$countMax}}
+                        {{$countMax}}
                     </small>
                 </td>
             @endif
@@ -945,7 +996,6 @@
             }
             @endif
         </script>
-
     @endforeach
     @if($dispatchRegisters->count())
         <tr>
@@ -953,12 +1003,32 @@
 
             </td>
             <td class="text-center tooltips"
-                data-title="@lang('Average'): @lang('Route time')">
-                {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$dispatchRegisters->count()) }}
+                data-title="@lang(''): @lang('')">
+                {{--                {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$dispatchRegisters->count()) }}--}}
+                {{$sumByCountManual}}
             </td>
-            <td colspan="3">
+            <td class="text-center tooltips" data-title="@lang('Sumatoria conteo Manual')">
+                {{$sumByCountPassengerPlan}}
+            </td>
+            <td class="text-center tooltips" data-title="@lang('Sumatoria conteo sistema')">
+                {{$sumByCountSensor}}
+            </td>
 
+            @if($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers1)
+                <td class="text-center tooltips" data-title="@lang('Sumatoria Conteo Planilla')">
+                    {{$sumByCountspredsheet}}
+                </td>
+            @else
+                <td class="text-center tooltips" data-title="@lang('Sumatoria conteo sistema')">
+                    {{$sumByCountSensor}}
+                </td>
+            @endif
+            <td colspan="2"></td>
+            <td class="text-center tooltips"
+                data-title="@lang('Sumatoria Maximos')">
+                {{$sumatoriaCountMax}}
             </td>
+            |
         </tr>
     @endif
     </tbody>
@@ -968,6 +1038,7 @@
 
     @if( Auth::user()->belongsToCootransol() )
     let modalExecuteDAR = $('#modal-execute-DAR');
+
 
     function executeDAR(dispatchRegisterId) {
         modalExecuteDAR.modal('show');
@@ -1016,6 +1087,11 @@
     $('.html-observations').each(function (i, el) {
         const content = $(el).find('a').data('content');
         $(el).html($(el).text() + (content && content !== undefined ? '<br><span>' + content + '</span>' : ''))
+    });
+    $(document).ready(function () {
+        @if ($alertPhoto)
+        $('#alertPhotoModal').modal('show');
+        @endif
     });
 </script>
 

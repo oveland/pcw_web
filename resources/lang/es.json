@@ -846,5 +846,6 @@
   "Manual count": "Conteo manual",
   "By range time": "Por rango horario",
   "Sync spreadsheets": "Sincroinzar planillas",
-  "Sync processing": "Sincronizando datos"
+  "Sync processing": "Sincronizando datos",
+  "alert": "ALERTA"
 }
