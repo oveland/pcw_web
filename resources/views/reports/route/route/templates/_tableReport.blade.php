@@ -2,6 +2,7 @@
     $thresholdAlertSS = 1;
     $thresholdAlertNR = 2;
     $thresholdMinLocations = 100;
+    $alertPhoto = false;
 
     $isExpresoPalmira = $company->id == \App\Models\Company\Company::EXPRESO_PALMIRA;
 @endphp
@@ -53,10 +54,10 @@
         @endif
         @if($isExpresoPalmira)
             @if( Auth::user()->isSuperAdmin())
-            <th width="10%" class="text-center">
-                <i class="fa fa-file  fa-3x fa-fw"></i><br>
-                @lang('Planilla FICS')
-            </th>
+                <th width="10%" class="text-center">
+                    <i class="fa fa-file  fa-3x fa-fw"></i><br>
+                    @lang('Planilla FICS')
+                </th>
             @endif
             <th width="10%" class="text-center">
                 <i class="fa fa-file  fa-3x fa-fw"></i><br>
@@ -420,20 +421,21 @@
 
             @if($isExpresoPalmira)
                 @if( Auth::user()->isSuperAdmin())
-                <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #ffd39e">
-                    @php
-                        $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
-                    @endphp
-                    <span class="box-info">
+                    <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #ffd39e">
+                        @php
+                            $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
+                        @endphp
+                        <span class="box-info">
                         {{ $spreadsheetPassengersSync->value ?? 0 }}
                         </span>
-                    @if($spreadsheetPassengersSync->observation)
-                        <br>
-                        <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada" data-placement="bottom">
-                            <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengersSync->observation }}
-                        </small>
-                    @endif
-                </td>
+                        @if($spreadsheetPassengersSync->observation)
+                            <br>
+                            <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada"
+                                   data-placement="bottom">
+                                <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengersSync->observation }}
+                            </small>
+                        @endif
+                    </td>
                 @endif
 
                 <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff">
@@ -843,7 +845,6 @@
                                 $cameraPhotos = $photosByCamera->get($camera);
                                 $totalPhotos = 0;
                                 $photoStatus = "green";
-                                $alertPhoto = false;
 
                                 $expectedPhotos = intval($routeTimeInMinutes / 2);
 
@@ -864,34 +865,37 @@
                         <div>{{ $photos->count() }} / {{ $expectedTotalPhotos }}</div>
                     </div>
                 </td>
-            @endif
-            @if ($alertPhoto)
-            <!-- Modal -->
-                <div class="modal fade" id="alertPhotoModal" tabindex="-1" role="dialog" aria-labelledby="labelModal"
-                     aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content" style="border: 3px solid darkred;background: silver">
-                            <div class="modal-header text-center">
-                                <h5 class="modal-title"
-                                    style="font-weight: bold;font-size: 20px;font-family: Glyphicons-Halflings">
-                                    <i class="fa fa-warning faa-pulse"></i> @lang('alert') <i
-                                            class="fa fa-warning faa-pulse"></i>
-                                </h5>
-                            </div>
-                            <div class="modal-body">
-                                <div class="alert alert-warning"
-                                     style="font-weight: bold ; color: white; background: darkred; font-size: 18px">
-                                    El vehículo número {{ $vehicle->number }} presenta una novedad en el envío de fotos.
-                                    Por favor, comuníquese con soporte.
+                @if ($alertPhoto)
+                <!-- Modal -->
+                    <div class="modal fade" id="alertPhotoModal" tabindex="-1" role="dialog"
+                         aria-labelledby="labelModal"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content" style="border: 3px solid darkred;background: silver">
+                                <div class="modal-header text-center">
+                                    <h5 class="modal-title"
+                                        style="font-weight: bold;font-size: 20px;font-family: Glyphicons-Halflings">
+                                        <i class="fa fa-warning faa-pulse"></i> @lang('alert') <i
+                                                class="fa fa-warning faa-pulse"></i>
+                                    </h5>
                                 </div>
-                            </div>
-                            <div class="modal-footer text-center">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <div class="modal-body">
+                                    <div class="alert alert-warning"
+                                         style="font-weight: bold ; color: white; background: darkred; font-size: 18px">
+                                        El vehículo número {{ $vehicle->number }} presenta una novedad en el envío de
+                                        fotos.
+                                        Por favor, comuníquese con soporte.
+                                    </div>
+                                </div>
+                                <div class="modal-footer text-center">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
             @endif
+
 
             @if(Auth::user()->isSuperAdmin())
                 @php
@@ -904,7 +908,7 @@
                 <td class="text-center">
                     <small class="tooltips text-bold"
                            data-title="@lang('Conteo por maximos')">
-                          {{$countMax}}
+                        {{$countMax}}
                     </small>
                 </td>
             @endif
@@ -1019,9 +1023,9 @@
         </script>
 
     @endforeach
-    @if($dispatchRegisters->count())
+    @if($dispatchRegisters->count() && Auth::user()->isSuperAdmin())
         <tr>
-            <td colspan="7">
+            <td colspan="8">
 
             </td>
             <td class="text-center tooltips"
@@ -1109,11 +1113,15 @@
         const content = $(el).find('a').data('content');
         $(el).html($(el).text() + (content && content !== undefined ? '<br><span>' + content + '</span>' : ''))
     });
-    $(document).ready(function () {
-        @if ($alertPhoto)
-        $('#alertPhotoModal').modal('show');
-        @endif
-    });
+    @if($dispatchRegister->complete()){
+        $(document).ready(function () {
+                    @if ($alertPhoto)
+                    $('#alertPhotoModal').modal('show');
+                    @endif
+            }
+        );
+        }
+    @endif
 </script>
 
 <style>
