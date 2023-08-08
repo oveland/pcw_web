@@ -4,8 +4,13 @@
 <head>
     <title>@yield('title','PCW | Servicios GPS')</title>
     @yield('login-style')
-    @include('layouts.template.header')
+    @include('layouts.template.metronic.header')
     @yield('stylesheets')
+    <style>
+        .page-header, .breadcrumb{
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -22,8 +27,8 @@
     <br><hr><br>
 @endif
 
-<div class="page-footer">
-    <div class="page-footer-inner col-md-12 text-center text-white" style="width: 100%"> <b>{{ date('Y') }}</b> <i class="fa fa-rocket"></i> PCW @
+<div class="page-footer hide">
+    <div class="page-footer-inner col-md-12 text-center" style="width: 100%"> <b>{{ date('Y') }}</b> <i class="fa fa-rocket"></i> PCW @
         <a href="https://pcwtecnologia.com" title="PCW Tecnología" style="color: #419368" target="_blank">tecnologia.com</a>
     </div>
     <div class="scroll-to-top">
@@ -33,7 +38,7 @@
 
 <template id="animated-loading">
     <div class="col-md-12 text-center">
-        <img class="" alt="@lang('Loading')..." src="https://www.pcwserviciosgps.com/files/loading.svg" height="200px">
+        <img class="" alt="@lang('Loading')..." src="https://www.pcwserviciosgps.com/files/loading.gif" height="200px">
     </div>
 </template>
 

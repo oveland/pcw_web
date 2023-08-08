@@ -210,35 +210,97 @@
             color: #ffd500 !important;
         }
 
-        img.photo {
-            cursor: pointer;
-            z-index: 10000 !important;
-            margin: 2px;
-            box-shadow: rgb(0 0 0 / 43%) 0px 10px 7px 2px;
-            transition: all 0.3s ease-in-out;
-            -webkit-transition: all 0.3s ease-in-out;
-            -moz-transition: all 0.3s ease-in-out;
-            -o-transition: all 0.3s ease-in-out;
-        }
-
-        img.photo.enlarge {
-            width: 48%;
-            height: auto;
-            position: fixed;
-            z-index: 10000 !important;
-            top: 10%;
-            left: 25%;
-        }
-
         .photo-container {
+            padding: 0 20px;
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            z-index: 10000000 !important;
+        }
+
+        .photo-container #photo-loading {
             position: absolute;
-            bottom: 0;
         }
 
         .photos-image-container {
-            position: absolute;
-            top: 0;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .photos-image-container-preview {
+            display: flex;
+            width: 10%;
+            background: rgba(0, 0, 0, 0.49);
+        }
+
+        .photos-image-container-preview.enlarge {
+            width: 30% !important;
+        }
+
+        .photos-image-container .photo {
+            cursor: pointer;
+        }
+
+        .photos-image-container .vehicle-camera {
+            display: flex;
+            align-items: center;
+        }
+
+        .photos-time-line {
+            position: absolute;
+            width: 2px;
+            height: 80px;
+            bottom: -12px;
+            background: mediumvioletred;
+            left: 10%;
+        }
+
+        img.photo {
+            cursor: pointer;
+            z-index: 10000 !important;
+            box-shadow: rgb(0 0 0 / 43%) 0px 10px 7px 2px;
+            transition: all 0.1s ease-in-out;
+            -webkit-transition: all 0.1s ease-in-out;
+            -moz-transition: all 0.1s ease-in-out;
+            -o-transition: all 0.1s ease-in-out;
+        }
+
+        img.photo.highlight {
+            transform: scale(2);
+            aspect-ratio: 1.33 !important;
+            height: auto !important;
+            border-top: 1px;
+            border-top-style: solid;
+            border-top-color: greenyellow;
+            animation-name: flash;
+            -webkit-animation-duration: 0.2s;
+            animation-duration: 0.2s;
+            -webkit-animation-fill-mode: both;
+        }
+
+        @keyframes flash {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .photo-point:hover {
+            background: rgba(34, 139, 34, 0.47) !important;
+        }
+
+        .photo-point.seen {
+            background: rgba(21, 107, 21, 0.65);
+        }
+
+        div.photo-image-empty {
+            background: rgba(34, 139, 34, 0.62);
+            color: white;
+            text-align: center;
+            border: 0.5px solid rgba(0, 100, 0, 0.11);
         }
 
         .photo-info {
@@ -283,7 +345,7 @@
         #photo-show {
             position: absolute;
             bottom: 0;
-            margin: 15px 15px 1px;
+            margin: 20px;
         }
 
         #photo-show .photo-id-container {
@@ -294,6 +356,22 @@
             border-radius: 10px;
             font-size: 1.2rem;
             margin-top: 2px;
+        }
+
+        .loading-report {
+            display: flex;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            width: 100%;
+            align-items: center;
+            background: #000000d1;
+            top: 0;
+            left: 0;
+        }
+
+        .loading-report img {
+            border-radius: 100%;
         }
 
         @media only screen and (max-width: 600px) {
@@ -403,9 +481,9 @@
     <!-- end page-header -->
 
     <!-- begin row -->
-    <div class="row">
+    <div class="">
         <!-- begin search form -->
-        <form class="col-md-12 form-search-report" action="{{ route('report-route-historic-search') }}">
+        <form class="col-md-12 p-0 form-search-report" action="{{ route('report-route-historic-search') }}">
             <div class="panel panel-inverse m-0">
                 <div class="panel-body p-5">
                     <div class="form-input-flat">
@@ -526,7 +604,7 @@
         <!-- begin content report -->
         <div class="loading-report col-md-12 m-t-40"></div>
 
-        <div class="historic-container col-md-12">
+        <div class="historic-container col-md-12 col-xs-12 p-0">
             <div class="col-md-12 col-sm-12 col-xs-12 p-0" style="display: grid">
                 <div class="range-reports col-md-12 p-t-2" style="display: grid">
                     <div class="slider-player">
@@ -587,7 +665,7 @@
                                      data-placement="bottom" title="@lang('Count passengers')">
                                     @if(Auth::user()->isAdmin() && false)
                                         <small class="passengers-label p-0 hidden-xs" style="display: block">
-                                            
+
                                         </small>
                                     @endif
 
@@ -720,29 +798,25 @@
             <div id="google-map-light-dream" class="col-md-12 col-sm-12 col-xs-12 p-0 map-report-historic"></div>
 
             @if(Auth::user()->company->hasPhoto())
-                <div class="col-md-6 col-sm-12 col-xs-12 p-0 photo-container">
+                <div class="col-md-12 col-xs-12 photo-container">
 
                     <div id="photo-show" style="display: none">
                         <button class="btn btn-warning btn-outline btn-circle pulse text-center"
                                 onclick="largePhoto = true; pause()" ontouchstart="largePhoto = true; pause()">
                             <i class="fa fa-camera"></i>
                         </button>
-                        @if(Auth::user()->company->hasPhoto())
-                            <div class="photo-id-container text-center">
-                                <small class="photo-id"></small>
-                            </div>
-                        @endif
                     </div>
 
                     <img id="photo-loading" class="photo" draggable="false" style="display: none"
-                         src="https://satsangiconsultancy.files.wordpress.com/2019/01/gif-final.gif" alt="" width="20%">
+                         src="https://satsangiconsultancy.files.wordpress.com/2019/01/gif-final.gif"
+                         alt="" width="120px" height="90px">
 
                     <div id="photos-container" class="show-info" style="width: 100%">
-                        <div class="photos-image-container">
+                        <div class="photos-time-line"></div>
+                        <div class="photos-image-container-preview"></div>
+                        <div class="photos-image-container"></div>
 
-                        </div>
-
-                        <div class="photo-info">
+                        <div class="photo-info hide">
                             <div class="photo-passengers-label hide">
                                 <i class="fa fa-users"></i> <span class="hidden-xss">@lang('Total'):</span> <span
                                         class="photo-passengers-total"></span>
@@ -808,27 +882,25 @@
 
         let trackIndex = 0;
         let largePhoto = false;
-        let imgLarge = false;
+        let imagePreviewLarge = false;
 
         // Function to set image dimensions
-        function toggleImgSize(img) {
-            if (imgLarge) {
-                resetImg(img);
+        function togglePhotoPreviewSize() {
+            if (imagePreviewLarge) {
+                resetPreview();
             } else {
-                enlargeImg(img);
+                enlargePreview();
             }
         }
 
-        function enlargeImg(img) {
-            $('.photo-image').removeClass('enlarge');
-            $(img).addClass('enlarge');
-            imgLarge = true;
+        function enlargePreview() {
+            $('.photos-image-container-preview').addClass('enlarge');
+            imagePreviewLarge = true;
         }
 
-        function resetImg(img) {
-            $('.photo-image').removeClass('enlarge');
-            $(img).removeClass('enlarge');
-            imgLarge = false;
+        function resetPreview() {
+            $('.photos-image-container-preview').removeClass('enlarge');
+            imagePreviewLarge = false;
         }
 
         function loadScript(url, callback) {
@@ -941,8 +1013,6 @@
                     infoRoute.slideDown();
                     infoTrips.slideUp(100);
                 }
-
-
             });
 
             @if(Auth::user()->isAdmin())
@@ -968,8 +1038,8 @@
             }
             timeRange.push(time.subtract(1, 'minutes').format('HH:mm'));
 
-            const initialTime = parseInt('{{ $initialTime ? $initialTime : 60 }}');
-            const finalTime = parseInt('{{ $finalTime ? $finalTime : 144 }}');
+            const initialTime = parseInt('{{ $initialTime ?  : 60 }}');
+            const finalTime = parseInt('{{ $finalTime ?  : 144 }}');
 
             $("#time-range-report").ionRangeSlider({
                 type: "double",

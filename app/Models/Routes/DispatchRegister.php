@@ -1092,4 +1092,26 @@ class DispatchRegister extends Model
     {
         return $this->route ? $this->route->company->getTypeCounters() : collect([]);
     }
+
+    function getHistoricReportQueryParams()
+    {
+        $vehicle = $this->vehicle;
+        $company = $vehicle->company;
+
+        $initialTime = $this->departure_time;
+        $finalTime = $this->complete() ? $this->arrival_time : $this->arrival_time_scheduled;
+
+        $initialTime = StrTime::subStrTime($initialTime, '10:00');
+        $finalTime = StrTime::addStrTime($finalTime, '10:00');
+
+        return collect([
+            "c=$company->id",
+            "n=$vehicle->number",
+            "d=$this->date",
+            "i=$initialTime",
+            "f=$finalTime",
+        ])->reduce(function ($carry, $filter) {
+            return $carry ? "$carry&$filter" : $filter;
+        }, '');
+    }
 }

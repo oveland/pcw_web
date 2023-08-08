@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Apps\Rocket\VehicleCamera;
 use App\Models\Company\Company;
 use App\Models\Routes\Dispatch;
 use App\Models\Vehicles\Location;
@@ -17,6 +18,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Http\Controllers\Utils\StrTime;
 
 class ReportRouteHistoricController extends Controller
 {
@@ -40,19 +42,32 @@ class ReportRouteHistoricController extends Controller
         $routes = $access->routes;
         $vehicles = $access->vehicles;
 
-        $dateReport = $request->get('d');
-        $vehicleReport = Vehicle::where('number', request()->get('n'))
-            ->where('company_id', 14)->first();
-        $vehicleReport = $vehicleReport ? $vehicleReport->id : null;
-
-        $vehicleReport = $vehicleReport ? $vehicleReport : $request->get('v');
         $companyReport = $request->get('c');
-        $initialTime = $request->get('i');
-        $finalTime = $request->get('f');
+        $dateReport = $request->get('d');
+
+        $vehicleReport = Vehicle::where('number', $request->get('n'))
+            ->where('company_id', $companyReport ?? 14)->first();
+        $vehicleReport = $vehicleReport ? $vehicleReport->id : null;
+        $vehicleReport = $vehicleReport ?: $request->get('v');
+
+        $initialTime = $this->parseTimeQuery($request->get('i'));
+        $finalTime = $this->parseTimeQuery($request->get('f'));
         $speed = $request->get('s');
-        $hideMenu = session('hide-menu');
+        $hideMenu = session('hide-menu') || $request->get('hide-menu');
 
         return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles', 'dateReport', 'vehicleReport', 'companyReport', 'initialTime', 'finalTime', 'speed', 'hideMenu']));
+    }
+
+    function parseTimeQuery($time)
+    {
+        if (!$time) return $time;
+
+        $timeFragments = collect(explode(':', $time));
+        if ($timeFragments->count() >= 2) {
+            return intval(StrTime::toSeg($timeFragments->get(0) . ":" . $timeFragments->get(1)) / 5);
+        }
+
+        return intval($time);
     }
 
     /**
@@ -130,6 +145,7 @@ class ReportRouteHistoricController extends Controller
         $prevDr = null;
         $newTurn = true;
 
+        $vehicleCameras = $vehicle->cameras;
         $photos = [];
         $prevEvents = [
             'alerts' => [],
@@ -289,9 +305,13 @@ class ReportRouteHistoricController extends Controller
                 $seatingCounted = [];
             }
 
-            if ($location->photos->count()) {
-                $photos = $location->photos->toArray();
-            }
+            $locationPhotos = $location->photos->count() ? collect($location->photos->toArray())->pluck('id', 'side') : collect([]);
+            $photos = $vehicleCameras->map(function (VehicleCamera $vc) use ($locationPhotos) {
+                return [
+                    'cm' => $vc->camera,
+                    'id' => $locationPhotos->get($vc->camera)
+                ];
+            });
 
             $photoEvents = $this->processPhotoEvents($location->photo, $photoTags, $seatingCounted);
             if (!count($photoEvents->alerts)) $photoEvents = $prevEvents;
@@ -349,7 +369,7 @@ class ReportRouteHistoricController extends Controller
                     'passengersTrip' => $passengersTripOnPhoto,
                     "events" => $photoEvents
                 ],
-                'photos' => $photos
+                'photos' => $photos,
             ]);
 
             $prevTotalPassengers = $totalPassengers;
@@ -365,6 +385,7 @@ class ReportRouteHistoricController extends Controller
             'initialTime' => $initialTime,
             'finalTime' => $finalTime,
             'vehicle' => $vehicle->getAPIFields(null, true),
+            'vehicleCameras'=> $vehicle->cameras->pluck('camera'),
             'historic' => $dataLocations,
             'total' => $totalLocations,
             'from' => $totalLocations ? $dataLocations->first()->time : '--:--',
