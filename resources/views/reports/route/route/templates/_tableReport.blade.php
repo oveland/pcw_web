@@ -151,12 +151,10 @@
                 @lang('Conteo Maximos')
             </th>
         @endif
-        @if(!Auth::user()->isExpreso())
-            <th width="10%">
-                <i class="fa fa-rocket text-muted"></i><br>
-                @lang('Actions')
-            </th>
-        @endif
+        <th width="10%">
+            <i class="fa fa-rocket text-muted"></i><br>
+            @lang('Actions')
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -912,92 +910,90 @@
                     </small>
                 </td>
             @endif
-            @if(!Auth::user()->isExpreso())
-                <td width="15%"
-                    class="text-center">
-                    @if( Auth::user()->company->hasSeatSensorCounter())
-                        <a href="#modal-seating-profile"
-                           data-toggle="modal"
-                           title="@lang('See profile seating report')"
-                           onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')"
-                           class="btn yellow-crusta faa-parent animated-hover btn-circle btn-outline tooltips">
-                            <i class="fa fa-users faa-pulse"></i>
-                        </a>
-                    @endif
-
-                    @if( Auth::user()->canMakeTakings()  )
-                        <a id="btn-taking-{{ $dispatchRegister->id }}"
-                           href="#modal-takings-passengers"
-                           data-toggle="modal"
-                           onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
-                           class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips m-b-5"
-                           data-original-title="<i class='fa fa-users faa-float animated'></i> @lang('Takings')"
-                           data-html="true">
-                            <i class="icon-briefcase faa-ring"
-                               style="margin-right: 0; margin-left: 0px"></i>
-                            <i class="fa fa-dollar faa-vertical"
-                               style="margin-right: 0px; margin-left: 0"></i>
-                        </a>
-                    @endif
-
-
-                    <a href="#modal-historic-report"
-                       class="btn green-haze faa-parent animated-hover btn-show-historic-report btn-circle btn-outline tooltips"
+            <td width="15%"
+                class="text-center">
+                @if( Auth::user()->company->hasSeatSensorCounter())
+                    <a href="#modal-seating-profile"
                        data-toggle="modal"
-                       data-url="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}&hide-menu=true"
-                       data-original-title="@lang('Historic report')">
-                        <i class="fa fa-map faa-pulse"></i>
+                       title="@lang('See profile seating report')"
+                       onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')"
+                       class="btn yellow-crusta faa-parent animated-hover btn-circle btn-outline tooltips">
+                        <i class="fa fa-users faa-pulse"></i>
                     </a>
+                @endif
 
-                    <div class="p-t-5">
-                        @if( Auth::user()->isSuperAdmin())
-                            <button onclick="executeDAR({{ $dispatchRegister->id }})"
-                                    class="btn btn-xs {{ $dispatchRegister->process_ard ? 'btn-warning' : 'btn-success' }} faa-parent animated-hover btn-circle tooltips"
-                                    data-original-title="@lang('Execute DAR')"
-                                    data-placement="bottom">
-                                <i class="fa fa-cogs faa-pulse"></i>
-                            </button>
+                @if( Auth::user()->canMakeTakings()  )
+                    <a id="btn-taking-{{ $dispatchRegister->id }}"
+                       href="#modal-takings-passengers"
+                       data-toggle="modal"
+                       onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')"
+                       class="btn {{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp btn-outline' }} sbold uppercase faa-parent animated-hover btn-circle tooltips m-b-5"
+                       data-original-title="<i class='fa fa-users faa-float animated'></i> @lang('Takings')"
+                       data-html="true">
+                        <i class="icon-briefcase faa-ring"
+                           style="margin-right: 0; margin-left: 0px"></i>
+                        <i class="fa fa-dollar faa-vertical"
+                           style="margin-right: 0px; margin-left: 0"></i>
+                    </a>
+                @endif
 
-                            <a href="#modal-report-log"
-                               data-toggle="modal"
+
+                <a href="#modal-historic-report"
+                   class="btn green-haze faa-parent animated-hover btn-show-historic-report btn-circle btn-outline tooltips"
+                   data-toggle="modal"
+                   data-url="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}&hide-menu=true"
+                   data-original-title="@lang('Historic report')">
+                    <i class="fa fa-map faa-pulse"></i>
+                </a>
+
+                <div class="p-t-5">
+                    @if( Auth::user()->isSuperAdmin())
+                        <button onclick="executeDAR({{ $dispatchRegister->id }})"
+                                class="btn btn-xs {{ $dispatchRegister->process_ard ? 'btn-warning' : 'btn-success' }} faa-parent animated-hover btn-circle tooltips"
+                                data-original-title="@lang('Execute DAR')"
+                                data-placement="bottom">
+                            <i class="fa fa-cogs faa-pulse"></i>
+                        </button>
+
+                        <a href="#modal-report-log"
+                           data-toggle="modal"
+                           data-placement="bottom"
+                           onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
+                           class="btn btn-xs btn-info faa-parent animated-hover tooltips btn-circle"
+                           data-original-title="@lang('Show report details')">
+                            <i class="fa fa-code faa-pulse"></i>
+                        </a>
+
+                        <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
+                                data-original-title="@lang('Cancel turn')"
+                                data-placement="bottom"
+                                data-confirm="@lang('Confirm action for discard dispatch turn')"
+                                data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
+                                data-id="{{ $dispatchRegister->id }}">
+                            <i class="fa fa-times faa-shake"></i>
+                        </button>
+                    @endif
+                    @if( Auth::user()->isSuperAdmin() )
+                        @php
+                            $totalLocations = $dispatchRegister->locations()->count();
+                            $totalReports = $dispatchRegister->reports()->count();
+                            $totalPhotos = $dispatchRegister->photos()->count();
+                            $alert = false;
+                            if($totalLocations < $thresholdMinLocations) {
+                                $lowerGPSReport++;
+                                $alert = true;
+                            }
+                        @endphp
+                        <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}"
+                               data-original-title="@lang('Locations') / @lang('Photos')"
                                data-placement="bottom"
-                               onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()"
-                               class="btn btn-xs btn-info faa-parent animated-hover tooltips btn-circle"
-                               data-original-title="@lang('Show report details')">
-                                <i class="fa fa-code faa-pulse"></i>
-                            </a>
-
-                            <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
-                                    data-original-title="@lang('Cancel turn')"
-                                    data-placement="bottom"
-                                    data-confirm="@lang('Confirm action for discard dispatch turn')"
-                                    data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
-                                    data-id="{{ $dispatchRegister->id }}">
-                                <i class="fa fa-times faa-shake"></i>
-                            </button>
-                        @endif
-                        @if( Auth::user()->isSuperAdmin() )
-                            @php
-                                $totalLocations = $dispatchRegister->locations()->count();
-                                $totalReports = $dispatchRegister->reports()->count();
-                                $totalPhotos = $dispatchRegister->photos()->count();
-                                $alert = false;
-                                if($totalLocations < $thresholdMinLocations) {
-                                    $lowerGPSReport++;
-                                    $alert = true;
-                                }
-                            @endphp
-                            <small class="badge tooltips bg-{{ $alert ? 'red' : '' }}"
-                                   data-original-title="@lang('Locations') / @lang('Photos')"
-                                   data-placement="bottom"
-                            >
-                                <i class="fa fa-location-arrow"></i> {!! $totalLocations !!} <i
-                                        class="fa fa-camera"></i> {!! $totalPhotos !!}
-                            </small>
-                        @endif
-                    </div>
-                </td>
-            @endif
+                        >
+                            <i class="fa fa-location-arrow"></i> {!! $totalLocations !!} <i
+                                    class="fa fa-camera"></i> {!! $totalPhotos !!}
+                        </small>
+                    @endif
+                </div>
+            </td>
         </tr>
 
         @php
