@@ -1,3 +1,4 @@
+
 <script type="application/javascript">
     'use strict';
 
@@ -438,11 +439,11 @@
         getHtmlPhoto(photo, index, preview) {
             const width = preview ? '100%' :`${this.getPhotoWidth()}%`;
             const height = preview ? 'auto' : `20px`;
-            const eventMouseOver = preview ? null : `reportRouteHistoric.highlightPosition(${index})`;
+            const eventClick = preview ? null : `reportRouteHistoric.highlightPosition(${index})`;
 
-            return `<img id="photo-${photo.id}"
+            return `<img id="photo-${preview ? 'preview-' + photo.id : photo.id}"
                 class="photo photo-${preview ? 'preview-' + index : index} photo-image photo-point"
-                onmouseover="${eventMouseOver}"
+                onclick="${eventClick}"
                 src="${this.getUrlPhoto(photo.id)}"
                 draggable="false" onclick="togglePhotoPreviewSize()"
                 style="width: ${width}; height: ${height};flex: 1 1 auto"
@@ -458,7 +459,7 @@
             const height = preview ? 'auto' : `20px`;
 
             return `<div class="photo-${preview ? 'preview-' + index : index} photo-image-empty photo-point"
-                onmouseover="reportRouteHistoric.highlightPosition(${index})"
+                onclick="reportRouteHistoric.highlightPosition(${index})"
                 style="width: ${width}; height: ${height};"
             ></div>`;
         }
@@ -474,10 +475,14 @@
 
             $('.photos-image-container-preview').empty();
 
+            let refStr = "";
             ref?.map((photo) => {
+                refStr += `${photo.cm}: ${photo.id}, `;
                 $(`#photo-${photo.id}`).addClass('highlight');
                 $('.photos-image-container-preview').append(photo.id ? this.getHtmlPhoto(photo, index, true) : this.getHtmlEmptyPhoto(photo, index, true));
             });
+
+            console.log(refStr);
 
             this.updatePhotosTimeLine(index);
         }
@@ -486,7 +491,6 @@
             const photoView = $(`.photo-${index}`);
 
             const leftPx = photoView.position()?.left;
-            console.log('PASS', leftPx);
             $('.photos-time-line').css('left', `${ leftPx + parseInt(photoView.width())/2 }px`);
             photoView.addClass('seen');
         }
