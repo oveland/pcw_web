@@ -557,10 +557,16 @@ class PhotoService
                 }
             }
 
+            $drObs = DispatchRegister::find($drId)->getObservation('rocket_passengers');
+            $drObs->value = $countByRoundTrip;
+            $drObs->observation = '';
+            $drObs->user_id = 2018101392; // Set user BOOTPCW
+            $drObs->save();
+
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip WHERE id_registro = $drId AND id_empresa <> 39");
             if ($this->vehicle->company_id==39) {
-                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, edited_info = $countMaxByRoundTrip WHERE id_registro = $drId");
+                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_front_sensor_counter = $countMaxByRoundTrip WHERE id_registro = $drId");
             }
         }
 

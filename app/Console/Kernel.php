@@ -207,6 +207,26 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104802981')->everyFiveMinutes()->runInBackground(); // Vehicle 6033  expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=ETK-965 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
 
+            $schedule->command('syrus:sync-photos --imei=352557104840932')->everyFiveMinutes()->runInBackground(); // Vehicle 6023  expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ETK-962 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
+
+            $schedule->command('syrus:sync-photos --imei=352557104746204')->everyFiveMinutes()->runInBackground(); // Vehicle 2843  expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=WHW-763 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
+
+            $schedule->command('syrus:sync-photos --imei=352557104727915')->everyFiveMinutes()->runInBackground(); // Vehicle 6031  expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=ETK-961 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
+
+            $schedule->command('syrus:sync-photos --imei=352557104485597')->everyFiveMinutes()->runInBackground(); // Vehicle 2693  expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=KUK-591 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
+
+            $schedule->command('syrus:sync-photos --imei=352557104788420')->everyFiveMinutes()->runInBackground(); // Vehicle 2681  expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=KUK-644 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
+
+            $schedule->command('syrus:sync-photos --imei=352557104727287')->everyFiveMinutes()->runInBackground(); // Vehicle 2657  expreso Palmira
+            $schedule->command('rocket:count --vehicle-plate=KUL-982 --pa=2 --pr=10')->everyThirtyMinutes()->runInBackground();
+
+
+
 
 
             /**********************************VALLEDUPAR*************************************************/

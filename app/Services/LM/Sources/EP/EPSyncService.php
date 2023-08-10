@@ -199,7 +199,7 @@ class EPSyncService extends SyncService
 
                 $spreadSheet = $data->last()->spread_sheet;
 
-                $drObs = $dr->getObservation('spreadsheet_passengers');
+                $drObs = $dr->getObservation('spreadsheet_passengers_sync');
                 $drObs->value = $passengers;
                 $drObs->observation = $spreadSheet;
                 $drObs->user_id = 2018101392; // Set user BOOTPCW
