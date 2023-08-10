@@ -204,6 +204,7 @@
 
     <!-- Include template for show modal report with char and historic route coordinates -->
     @include('reports.route.route.templates.chart._chartModal')
+    @include('reports.route.route.templates.chart._modalHistoric')
     <!-- end template -->
 
     @if( Auth::user()->belongsToCootransol() )
@@ -271,6 +272,7 @@
             <div class="modal-content">
             </div>
         </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -331,6 +333,11 @@
             setTimeout(function(){
                 $('.btn-show-off-road-report').click();
             },500);
+
+            $('body').on('click', '.btn-show-historic-report', function () {
+                const url = $(this).data('url');
+                $('#modal-historic-report .modal-content iframe').attr('src', url);
+            });
         });
 
         function loadSeatingProfile(url) {

@@ -65,6 +65,7 @@ class PhotoLocation extends Model
     {
         return [
             'id' => $this->id,
+            'side'=> $this->side
         ];
     }
 }

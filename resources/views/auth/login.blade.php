@@ -41,19 +41,20 @@
 <!-- begin #page-container -->
 <div id="page-container" class="page-container">
     <!-- begin login -->
-    <div class="login">
-        <!-- begin login-brand -->
-        <div class="login-brand text-white transparent-header">
-            <i class="icon-user pull-right fa fa-2x"></i> @lang('Log In')!
+
+    <div class="login m-auto">
+        <div class="login-brand text-white transparent-header p-20">
+            <h4>
+               <strong><i class="icon-user pull-right fa fa-2x"></i> Inicia sesión</strong>
+            </h4>
         </div>
-        <!-- end login-brand -->
+
         <!-- begin login-content -->
-        <div class="login-content transparent">
-            <h4 class="text-center text-white m-t-0 m-b-20">@lang('Type your credentials')</h4>
+        <div class="login-content transparent p-20">
             <form action="{{ route('login') }}" method="POST" name="login_form" class="form-input-flat">
                 {{ csrf_field() }}
                 <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                    <input id="username" type="text" class="form-control input-lg" placeholder="@lang('Username')" name="username" value="{{ old('username') }}" required onchange="$(this).val($(this).val().toUpperCase())" onkeypress="$(this).addClass('text-uppercase')" autofocus/>
+                    <input id="username" type="text" class="form-control input-lg block" placeholder="@lang('Username')" name="username" value="{{ old('username') }}" required onchange="$(this).val($(this).val().toUpperCase())" onkeypress="$(this).addClass('text-uppercase')" autofocus/>
                     @if ($errors->has('username'))
                         <span class="help-block">
                             <strong>{{ $errors->first('username') }}</strong>
@@ -61,7 +62,7 @@
                     @endif
                 </div>
                 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                    <input id="password" type="password" class="form-control input-lg" name="password" placeholder="@lang('Password')" required/>
+                    <input id="password" type="password" class="form-control input-lg block" name="password" placeholder="@lang('Password')" required/>
                     @if ($errors->has('password'))
                         <span class="help-block">
                             <strong>{{ $errors->first('password') }}</strong>
@@ -87,10 +88,47 @@
             </form>
         </div>
         <!-- end login-content -->
+
+        <div class="transparent-header text-center text-white p-20" style="width: 100%"> <b>{{ date('Y') }}</b> <i class="fa fa-rocket"></i> PCW @
+            <a href="https://brochure.pcwserviciosgps.com/" title="PCW Tecnología" style="color: #419368" target="_blank">tecnologia.com</a>
+        </div>
     </div>
     <!-- end login -->
 </div>
 <!-- end page container -->
 
 <script>setTimeout(function(){$('#username').focus()},500)</script>
+<style>
+    .block {
+        width: 100% !important;
+    }
+
+    .page-container {
+        margin: auto !important;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            width: 100% !important;
+        }
+    }
+    @media (min-width: 768px) {
+        .page-container {
+            width: 40% !important;
+            margin-top: 10% !important;
+        }
+    }
+    @media (min-width: 1024px) {
+        .page-container {
+            width: 30% !important;
+        }
+    }
+    @media (min-width: 1940px) {
+        .page-container {
+            width: 20% !important;
+        }
+    }
+</style>
 @endsection

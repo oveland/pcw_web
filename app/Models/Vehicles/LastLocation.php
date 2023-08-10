@@ -2,9 +2,6 @@
 
 namespace App\Models\Vehicles;
 
-use App\Models\Company\Company;
-use App\Models\Vehicles\Vehicle;
-use App\Models\Vehicles\ReportVehicleStatus;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;

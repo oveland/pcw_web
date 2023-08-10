@@ -1,3 +1,4 @@
+
 <script type="application/javascript">
     'use strict';
 
@@ -8,6 +9,8 @@
 
             this.currentLocation = null;
             this.historicLocations = [];
+            this.vehicleCameras = [];
+            this.dataPhotos = [];
             this.controlPoints = [];
             this.geofenceDispatches = [];
             this.markerBus = null;
@@ -180,7 +183,11 @@
                 gwarning("@lang("No registers found")");
             }
 
+            this.vehicleCameras = report.vehicleCameras;
+
             if (this.report.config.show.geofenceDispatches) this.addGeofenceDispatches(this.report.config.dispatches);
+
+            this.paintPhotos();
         }
 
         addKml(url) {
@@ -358,7 +365,10 @@
 
         showPhotos(index) {
             const historicLocation = this.historicLocations[index];
-            if (!historicLocation) return false;
+            if (!historicLocation || true) return false;
+
+            const photoLoading = $('#photo-loading');
+
             const reportLocation = historicLocation.reportLocation;
             const photos = reportLocation.photos;
             const photoCountedSeatingStr = reportLocation.photo.events.countedStr;
@@ -367,22 +377,127 @@
                 let photosContainer = $('.photos-image-container');
                 photosContainer.empty();
 
-                $('#photo-show').hide();
+                // $('#photo-show').hide();
                 $('#photos-container').show();
-                $('#photo-loading').show();
+
+                photoLoading.show();
+                setTimeout(() => photoLoading.hide(), 1000);
 
                 let photoWidth = 100 / photos.length;
                 if (photoWidth > 30) photoWidth = 30;
+                photoWidth = 10;
+
                 for (let photo of photos) {
-                    const url = `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${photo.id}&with-effect=true&encode=png&title=true&counted=${photoCountedSeatingStr}&mask=`;
-                    photosContainer.append(`<img src="${url}" class="photo photo-image" draggable="false" onclick="toggleImgSize(this)"  alt="" width="${photoWidth}%">`);
+                    if(photo.id){
+                        const url = this.getUrlPhoto(photo.id, photoCountedSeatingStr);
+                        photosContainer.append(this.getHtmlPhoto(url, photoWidth));
+                    } else {
+                        photosContainer.append(this.getHtmlEmptyPhoto(photo));
+                    }
                 }
             }
+        }
+
+        paintPhotos() {
+            this.dataPhotos = [];
+            $.each(this.historicLocations, (index, h) => {
+                const ref = h.reportLocation.photos.map((c) => {
+                    return c.id || !this.dataPhotos.length ? c : this.dataPhotos[this.dataPhotos.length - 1].ref.find(lc => lc.cm === c.cm);
+                });
+
+                const cameras = h.reportLocation.photos;
+
+                this.dataPhotos.push({
+                    index,
+                    cameras,
+                    ref
+                })
+            });
+
+            let photosContainer = $('.photos-image-container');
+            photosContainer.empty().append(this.getPhotoContainerByCameras(this.dataPhotos));
+            $('#photos-container').show();
+        }
+
+        getPhotoContainerByCameras(dataPhotos) {
+            return this.vehicleCameras.map(camera => {
+                return `<div class="vehicle-camera vehicle-camera-${camera}">
+                    ${this.dataPhotos.map((dataPhoto, index) => this.getPhotoCameraContent(dataPhoto, camera, index)).join('')}
+                </div>`;
+            });
+        }
+
+        getPhotoCameraContent(dataPhoto, camera, index) {
+            const photo = dataPhoto.cameras.find(c => c.cm === camera);
+            return photo.id ? this.getHtmlPhoto(photo, index) : this.getHtmlEmptyPhoto(photo, index);
+        }
+
+        getUrlPhoto(id, countedStr) {
+            return `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${id}&with-effect=true&encode=png&title=true&counted=${countedStr}&mask=`;
+        }
+
+        getHtmlPhoto(photo, index, preview) {
+            const width = preview ? '100%' :`${this.getPhotoWidth()}%`;
+            const height = preview ? 'auto' : `20px`;
+            const eventClick = (preview ? `togglePhotoPreviewSize()` : `reportRouteHistoric.highlightPosition(${index});togglePhotoPreviewSize(true)`);
+
+            return `<img id="photo-${preview ? 'preview-' + photo.id : photo.id}"
+                class="photo photo-${preview ? 'preview-' + index : index} photo-image photo-point"
+                onclick="${eventClick}"
+                src="${this.getUrlPhoto(photo.id)}"
+                draggable="false"
+                style="width: ${width}; height: ${height};flex: 1 1 auto"
+            />`;
+        }
+
+        getPhotoWidth() {
+            return this.dataPhotos.length ? 100 / this.dataPhotos.length : 0;
+        }
+
+        getHtmlEmptyPhoto(photo, index, preview) {
+            const width = preview ? '100%' :`${this.getPhotoWidth()}%`;
+            const height = preview ? 'auto' : `20px`;
+
+            return `<div class="photo-${preview ? 'preview-' + index : index} photo-image-empty photo-point"
+                onclick="reportRouteHistoric.highlightPosition(${index})"
+                style="width: ${width}; height: ${height};"
+            ></div>`;
+        }
+
+        highlightPosition(index) {
+            setTrack(index, true);
+            pause(true);
+        }
+
+        highlightRefPhotos(index) {
+            const ref = this.dataPhotos.find(dp => dp.index === index)?.ref;
+            $(`.photo-image`).removeClass('highlight');
+
+            $('.photos-image-container-preview').empty();
+
+            let refStr = "";
+            ref?.map((photo) => {
+                refStr += `${photo.cm}: ${photo.id}, `;
+                $(`#photo-${photo.id}`).addClass('highlight');
+                $('.photos-image-container-preview').append(photo.id ? this.getHtmlPhoto(photo, index, true) : this.getHtmlEmptyPhoto(photo, index, true));
+            });
+
+            this.updatePhotosTimeLine(index);
+        }
+
+        updatePhotosTimeLine(index) {
+            const photoView = $(`.photo-${index}`);
+
+            const leftPx = photoView.position()?.left;
+            $('.photos-time-line').css('left', `${ leftPx + parseInt(photoView.width())/2 }px`);
+            photoView.addClass('seen');
         }
 
         updateBusMarker(index) {
             const historicLocation = this.historicLocations[index];
             if (!historicLocation) return false;
+
+            this.highlightRefPhotos(index);
 
             this.paintHistoricPathTo(index);
 
@@ -507,14 +622,14 @@
             $('.gm-style-iw-c, .gm-style-iw-d').css('max-height', '300px').css('height', '270px');
 
             if (parseInt(reportLocation.photo.id) > 0) {
-                $('#photo-show').show();
+                // $('#photo-show').show();
             } else {
-                $('#photo-show').hide();
+                // $('#photo-show').hide();
             }
 
             $('#photo-loading').hide();
-            $('#photos-container').hide();
-            $('.photo-image').hide();
+            // $('#photos-container').hide();
+            // $('.photo-image').hide();
             // $('.photo-info').hide();
         }
 

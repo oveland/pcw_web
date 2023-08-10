@@ -2,7 +2,7 @@
 
 namespace App\Models\Vehicles;
 
-use App\Models\Vehicles\LastLocation;
+use App\Models\Apps\Rocket\VehicleCamera;
 use App\Models\Company\Company;
 use App\Models\Drivers\Driver;
 use App\Models\Proprietaries\Proprietary;
@@ -17,8 +17,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Sofa\Eloquence\Eloquence;
-use Sofa\Eloquence\Mappable;
 
 /**
  * App\Models\Vehicles\Vehicle
@@ -52,6 +50,7 @@ use Sofa\Eloquence\Mappable;
  * @property-read GpsVehicle $gpsVehicle
  * @property-read DispatcherVehicle $dispatcherVehicles
  * @property int|null $bea_id
+ * @property int $db_id
  * @property int|null $driver_id
  * @property int|null $proprietary_id
  * @method static Builder|Vehicle whereBeaId($value)
@@ -65,11 +64,26 @@ use Sofa\Eloquence\Mappable;
  * @property string|null $tags
  * @property boolean|null $process_takings
  * @method static Builder|Vehicle whereTags($value)
+ * @property-read VehicleCamera[]|null $cameras
  */
 class Vehicle extends Model
 {
     protected $hidden = ['created_at', 'updated_at'];
 
+    function getDateFormat()
+    {
+        return config('app.simple_date_time_format');
+    }
+
+    function getToDateTakingsAttribute($date)
+    {
+        if (!$date) return null;
+        return Carbon::createFromFormat(config('app.date_format'), $date)->toDateString();
+    }
+
+    /**
+     * @return BelongsTo | Company
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -264,5 +278,13 @@ class Vehicle extends Model
         $currentIssue->save();
 
         return $currentIssue;
+    }
+
+    /**
+     * @return HasMany|VehicleCamera[]
+     */
+    function cameras()
+    {
+        return $this->hasMany(VehicleCamera::class);
     }
 }
