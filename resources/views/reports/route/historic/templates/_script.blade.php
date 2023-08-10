@@ -439,13 +439,13 @@
         getHtmlPhoto(photo, index, preview) {
             const width = preview ? '100%' :`${this.getPhotoWidth()}%`;
             const height = preview ? 'auto' : `20px`;
-            const eventClick = preview ? null : `reportRouteHistoric.highlightPosition(${index})`;
+            const eventClick = (preview ? `togglePhotoPreviewSize()` : `reportRouteHistoric.highlightPosition(${index});togglePhotoPreviewSize(true)`);
 
             return `<img id="photo-${preview ? 'preview-' + photo.id : photo.id}"
                 class="photo photo-${preview ? 'preview-' + index : index} photo-image photo-point"
                 onclick="${eventClick}"
                 src="${this.getUrlPhoto(photo.id)}"
-                draggable="false" onclick="togglePhotoPreviewSize()"
+                draggable="false"
                 style="width: ${width}; height: ${height};flex: 1 1 auto"
             />`;
         }
@@ -481,8 +481,6 @@
                 $(`#photo-${photo.id}`).addClass('highlight');
                 $('.photos-image-container-preview').append(photo.id ? this.getHtmlPhoto(photo, index, true) : this.getHtmlEmptyPhoto(photo, index, true));
             });
-
-            console.log(refStr);
 
             this.updatePhotosTimeLine(index);
         }

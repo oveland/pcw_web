@@ -885,11 +885,11 @@
         let imagePreviewLarge = false;
 
         // Function to set image dimensions
-        function togglePhotoPreviewSize() {
-            if (imagePreviewLarge) {
-                resetPreview();
-            } else {
+        function togglePhotoPreviewSize(enlarge) {
+            if (!imagePreviewLarge || enlarge) {
                 enlargePreview();
+            } else {
+                resetPreview();
             }
         }
 
