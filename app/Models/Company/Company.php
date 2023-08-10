@@ -247,10 +247,16 @@ class Company extends Model
                 self::EXPRESO_PALMIRA,
                 self::VALLEDUPAR,
                 self::ARMENIA,
-                self::VALLEDUPAR,
                 self::IBAGUE
 
             ])->contains($this->id) || auth()->user()->isAdmin();
+    }
+    function hasSensorTotalCounter()
+    {
+        return collect([
+                self::TRANSPUBENZA,
+                self::VALLEDUPAR,
+            ])->contains($this->id) && !auth()->user()->isSuperAdmin();
     }
 
     function hasPhoto()

@@ -3,7 +3,6 @@
 namespace App\Models\Users;
 
 use App\Models\Company\Company;
-use App\Models\System\ViewPermission;
 use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use DB;
@@ -11,10 +10,10 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -131,9 +130,44 @@ class User extends Authenticatable
 
     public function isExpreso()
     {
-        return $this->id == 2018101286 || $this->id == 2018101362 || $this->id ==2018101369 || $this->id ==2018101372 || $this->id ==2018101377
-            || $this->id == 2018101383 || $this->id == 2018101382 || $this->id == 2018101381 ||$this->id == 2018101380
-            ||$this->id == 2018101379 || $this->id == 2018101378;
+        return $this->id == 2018101286 || $this->id == 2018101362 || $this->id == 2018101369 || $this->id == 2018101372 || $this->id == 2018101377
+            || $this->id == 2018101383 || $this->id == 2018101382 || $this->id == 2018101381 || $this->id == 2018101380
+            || $this->id == 2018101379 || $this->id == 2018101378;
+    }
+
+    public function liquidatorEP()
+    {
+        return $this->id == 2018101398;
+    }
+
+    function canViewAverageCount()
+    {
+        $isNotExpreso = !$this->isExpreso();
+        $isNotLiquidatorEP = !$this->liquidatorEP();
+        return $isNotExpreso && $isNotLiquidatorEP;
+    }
+    function canViewAction(){
+        $isNotExpreso = !$this->isExpreso();
+        $isNotLiquidatorEP = !$this->liquidatorEP();
+        return $isNotExpreso && $isNotLiquidatorEP;
+    }
+    function canViewPasengervisual(){
+        $isNotLiquidatorEP = !$this->liquidatorEP();
+        return $isNotLiquidatorEP;
+    }
+    function canViewPasengerCameras(){
+        $isNotLiquidatorEP = !$this->liquidatorEP();
+        return $isNotLiquidatorEP;
+    }
+    function canViewtotalSistem()
+    {
+        $isNotLiquidatorEP = !$this->liquidatorEP();
+        return  $isNotLiquidatorEP;
+    }
+    function CanViewInfoPhotos()
+    {
+        $isNotLiquidatorEP = !$this->liquidatorEP();
+        return  $isNotLiquidatorEP;
     }
 
     /**
@@ -303,6 +337,7 @@ class User extends Authenticatable
             2018101388, //  DEYSY
             2018101354, // MIGUEL
             2018101393,
+            2018101400,//EDISON
 
             #TRANSPUBENZA:
             2018101273, // SIMONTP
@@ -323,7 +358,7 @@ class User extends Authenticatable
             2018101380,// nuevos usuarios EP
             2018101379,
             2018101378,
-
+            2018101398,
 
 
         ];
