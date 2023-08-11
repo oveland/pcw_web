@@ -64,7 +64,7 @@
             <i class="fa fa-file  fa-3x fa-fw"></i><br>
             @lang('Número de planilla')
             <br>
-            <div class="input-group input-group-sm text-center">
+            <div class="input-group input-group-sm text-center" style="display: none;">
                 <input type="text" class="form-control form-control-sm search-input">
                  <span class="input-group-append">
                     <button type="button" class="btn btn-info btn-sm search-button">Go!</button>
