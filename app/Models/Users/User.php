@@ -147,9 +147,8 @@ class User extends Authenticatable
         return $isNotExpreso && $isNotLiquidatorEP;
     }
     function canViewAction(){
-        $isNotExpreso = !$this->isExpreso();
         $isNotLiquidatorEP = !$this->liquidatorEP();
-        return $isNotExpreso && $isNotLiquidatorEP;
+        return  $isNotLiquidatorEP;
     }
     function canViewPasengervisual(){
         $isNotLiquidatorEP = !$this->liquidatorEP();

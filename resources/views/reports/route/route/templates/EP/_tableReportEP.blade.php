@@ -854,13 +854,13 @@
                         </a>
                     @endif
 
-                    <a href="#modal-route-report"
-                       class="btn green-haze faa-parent animated-hover btn-show-chart-route-report btn-circle btn-outline tooltips"
+
+                    <a href="#modal-historic-report"
+                       class="btn green-haze faa-parent animated-hover btn-show-historic-report btn-circle btn-outline tooltips"
                        data-toggle="modal"
-                       data-url="{{ route('report-route-chart',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                       data-url-off-road-report="{{ route('report-route-off-road',['dispatchRegister'=>$dispatchRegister->id]) }}"
-                       data-original-title="@lang('Graph report detail')">
-                        <i class="fa fa-area-chart faa-pulse"></i>
+                       data-url="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}&hide-menu=true"
+                       data-original-title="@lang('Historic report')">
+                        <i class="fa fa-map faa-pulse"></i>
                     </a>
 
                     <div class="p-t-5">

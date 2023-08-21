@@ -3,11 +3,6 @@
     $thresholdAlertNR = 2;
     $thresholdMinLocations = 100;
     $alertPhoto = false;
-
-    $isExpresoPalmira = $company->id == \App\Models\Company\Company::EXPRESO_PALMIRA;
-    $user = Auth::user();
-
-
 @endphp
 <!-- begin table -->
 <table id="table-report"
@@ -49,62 +44,31 @@
             <i class="fa fa-clock-o text-muted"></i><br>
             @lang('Arrival Time')
         </th>
-        @if(!$isExpresoPalmira)
-            <th>
-                <i class="ion-android-stopwatch text-muted"></i><br>
-                @lang('Route Time')
-            </th>
-        @endif
-        @if($isExpresoPalmira)
-            @if( Auth::user()->isSuperAdmin())
-                <th width="10%" class="text-center">
-                    <i class="fa fa-file  fa-3x fa-fw"></i><br>
-                    @lang('Planilla FICS')
-                </th>
-            @endif
-            <th width="10%" class="text-center">
-                <i class="fa fa-file  fa-3x fa-fw"></i><br>
-                @lang('Pasajeros Planilla')
-            </th>
-        @endif
+        <th>
+            <i class="ion-android-stopwatch text-muted"></i><br>
+            @lang('Route Time')
+        </th>
+
         @if( $company->hasRecorderCounter() )
             <th class="text-center">
                 <i class="fa fa-compass text-muted"></i><br>
-                {{ str_limit(__($isExpresoPalmira ? 'Pasajeros Visual ' : 'Recorder'), 20) }}
-                @if(!$isExpresoPalmira)
-                    <br>
-                    <small class="text-muted">
-                        @lang('Initial')
-                        <hr class="m-0">
-                        @lang('Final')
-                    </small>
-                @endif
+                {{ str_limit(__('Recorder'), 20) }}
+                <br>
+                <small class="text-muted">
+                    @lang('Initial')
+                    <hr class="m-0">
+                    @lang('Final')
+                </small>
             </th>
-            @if($isExpresoPalmira)
-                <th class="text-center">
-                    <i class="icon-users text-muted"></i><br>
-                    {{ str_limit(__('Pasajeros'),9) }}
-                    <br>
-                    {{ str_limit(__('Cámaras')) }}
-                </th>
-            @else
-                <th class="text-center">
-                    <i class="icon-users text-muted"></i><br>
-                    <small><i class="fa fa-compass text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}
-                    <br>
-                    <small class="text-muted">
-                        @lang('Recorder')
-                    </small>
-                </th>
-            @endif
-        @endif
-        @if($isExpresoPalmira )
-            <th>
-                <i class="icon-users text-muted">
-                </i><br>{{"Total Sistema"}}
+            <th class="text-center">
+                <i class="icon-users text-muted"></i><br>
+                <small><i class="fa fa-compass text-muted"></i></small> {{ str_limit(__('Passengers'),5) }}
+                <br>
+                <small class="text-muted">
+                    @lang('Recorder')
+                </small>
             </th>
         @endif
-
 
         @if($company->hasSensorTotalCounter())
                 <th>
@@ -132,24 +96,8 @@
                 </small>
             </th>
         @endif
-        @if($isExpresoPalmira)
-            @if($user->canViewAverageCount())
-                <th>
-                    <i class="icon-users text-muted">
-                    </i><br>{{"Promedio"}}
-                </th>
-            @endif
-            <th>
-                <i class="fa fa-camera text-muted"></i><br>
-                @lang('Info. Fotos')
-            </th>
-        @endif
-        @if(Auth::user()->isSuperAdmin())
-            <th class="text-center">
-                <i class="icon-users text-muted"></i><br>
-                @lang('Conteo Maximos')
-            </th>
-        @endif
+
+
         <th width="10%">
             <i class="fa fa-rocket text-muted"></i><br>
             @lang('Actions')
@@ -171,12 +119,6 @@
         $maxInvalidGPSPercent = 0;
         $lowerGPSReport = 0;
 
-        $sumatoriaCountMax = 0;
-        $sumByCountspredsheet = 0;
-        $sumByCountSensor = 0;
-        $sumByCountProm = 0;
-        $sumByCountManual=0;
-        $sumByCountPassengerPlan=0;
     @endphp
 
     @foreach( $dispatchRegisters as $dispatchRegister )
@@ -408,82 +350,46 @@
                     <i class="ion-android-stopwatch text-muted"></i>
                 </small>
             </td>
+            <td width="8%"
+                class="text-center">
+                {{$dispatchRegister->getRouteTime()}}
+            </td>
 
-            @if(!$isExpresoPalmira)
-                <td width="8%"
-                    class="text-center">
-                    {{$dispatchRegister->getRouteTime()}}
-                </td>
-            @endif
-
-            @if($isExpresoPalmira)
-                @if( Auth::user()->isSuperAdmin())
-                    <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #ffd39e">
-                        @php
-                            $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
-                        @endphp
-                        <span class="box-info">
-                        {{ $spreadsheetPassengersSync->value ?? 0 }}
-                        </span>
-                        @if($spreadsheetPassengersSync->observation)
-                            <br>
-                            <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada"
-                                   data-placement="bottom">
-                                <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengersSync->observation }}
-                            </small>
-                        @endif
-                    </td>
-                @endif
-
-                <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #b7f4ff">
-                    {{--td pasajeros planilla--}}
+            @if( $company->hasRecorderCounter() )
+                <td width="10%" class="p-r-0 p-l-0 text-center" style="background:  #b7f4ff ">
                     @php
-                        $obs = $dispatchRegister->getObservation('end_recorder');
-                        $labelEndRecorder = $isExpresoPalmira ? __('Pasajeros planilla') : __('End Recorder');
-                        $diferencePassenger =$dispatchRegister->end_recorder - $dispatchRegister->final_sensor_counter;
-                        $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
-                        $prueba= $dispatchRegister->end_recorder - $spreadsheetPassengers->value;
-                        $sumByCountManual += $spreadsheetPassengers->value;
-
-
+                        $obs = $dispatchRegister->getObservation('start_recorder');
                     @endphp
-
-                    @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
-                        <div class="tooltips box-edit" data-title="@lang('Edit') @lang('Pasajeros planilla')">
-                            <span class="box-info">
-                                {{ $spreadsheetPassengers->value ?? 0 }}
+                    @if( Auth::user()->canEditRecorders())
+                        <div class="tooltips box-edit" data-title="@lang('Edit') @lang('Start Recorder')">
+                        <span class="box-info">
+                            <span class="">
+                                {{ $startRecorder }}
                             </span>
-                            @if($spreadsheetPassengers->observation)
-                                <br>
-                                <small class="tooltips text-bold text-xs"
-                                       data-title="@lang('# Spreadsheet') sincronizada" data-placement="bottom">
-                                    <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation }}
-                                </small>
-                            @endif
-                            <div class="box-edit" style="display: none">
-                                <input id="edit-end-recorder-{{ $dispatchRegister->id }}"
+                        </span>
+                            <div class="box-edit"
+                                 style="display: none">
+                                <input id="edit-start-recorder-{{ $dispatchRegister->id }}"
                                        title="@lang('Press enter for edit')"
                                        name=""
                                        type="number"
                                        data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
                                        data-id="{{ $dispatchRegister->id }}"
-                                       data-field="spreadsheet_passengers"
-                                       data-single="true"
+                                       data-field="start_recorder"
                                        class="input-sm form-control edit-input-recorder edit-input-value"
-                                       value="{{ $spreadsheetPassengers->value }}">
-                                <div class="box-obs ">
-                                <textarea style="display: none"
-                                          name=""
-                                          rows="3"
-                                          class="input-sm form-control edit-input-obs"
-                                          placeholder="{{ $isExpresoPalmira ? __('# Spreadsheet') : __('Observations') }}">
-                                    {{ $spreadsheetPassengers->observation }}
-                                </textarea>
-                                    @if($spreadsheetPassengers->updated_at)
+                                       value="{{ $startRecorder }}">
+                                <div class="box-obs">
+                                <textarea
+                                        name=""
+                                        rows="3"
+                                        class="input-sm form-control edit-input-obs"
+                                        placeholder="@lang('Observations')"
+                                >{{ $obs->observation }}</textarea>
+                                    @if($obs->updated_at)
                                         <div class="text-muted text-center box-audit">
-                                            <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->user->username }}</small>
+                                            <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
                                             ·
-                                            <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->updated_at }}</small>
+                                            <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
                                         </div>
                                     @endif
                                     <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
@@ -491,108 +397,27 @@
                                         <i class="fa fa-times"></i>
                                     </button>
                                     <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                            title="@lang('Save')"
-                                            onclick="return confirm('Confirma que los datos son correctos')">
-
+                                            title="@lang('Save')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     @else
-                        <span class="box-info">
-                            {{ $spreadsheetPassengers->value ?? 0 }}
-                            </span>
-                        @if($spreadsheetPassengers->observation)
-                            <br>
-                            <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada"
-                                   data-placement="bottom">
-                                <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation }}
-                            </small>
-                        @endif
+                        {{ $startRecorder }}
                     @endif
-                </td>
-            @endif
-
-            @if( $company->hasRecorderCounter() )
-                <td width="10%" class="p-r-0 p-l-0 text-center" style="background:  #b7f4ff ">
-                    @php
-                        $obs = $dispatchRegister->getObservation('start_recorder');
-                    @endphp
-                    @if(!$isExpresoPalmira)
-                        @if( Auth::user()->canEditRecorders())
-                            <div class="tooltips box-edit" data-title="@lang('Edit') @lang('Start Recorder')">
-                            <span class="box-info">
-                                <span class="">
-                                    {{ $startRecorder }}
-                                </span>
-                            </span>
-                                <div class="box-edit"
-                                     style="display: none">
-                                    <input id="edit-start-recorder-{{ $dispatchRegister->id }}"
-                                           title="@lang('Press enter for edit')"
-                                           name=""
-                                           type="number"
-                                           data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
-                                           data-id="{{ $dispatchRegister->id }}"
-                                           data-field="start_recorder"
-                                           class="input-sm form-control edit-input-recorder edit-input-value"
-                                           value="{{ $startRecorder }}">
-                                    <div class="box-obs">
-                                    <textarea
-                                            name=""
-                                            rows="3"
-                                            class="input-sm form-control edit-input-obs"
-                                            placeholder="@lang('Observations')"
-                                    >{{ $obs->observation }}</textarea>
-                                        @if($obs->updated_at)
-                                            <div class="text-muted text-center box-audit">
-                                                <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
-                                                ·
-                                                <small style="font-size: 0.9rem">{{ $obs->updated_at }}</small>
-                                            </div>
-                                        @endif
-                                        <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
-                                                title="@lang('Cancel')">
-                                            <i class="fa fa-times"></i>
-                                        </button>
-                                        <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                                title="@lang('Save')">
-                                            <i class="fa fa-save"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        @else
-                            {{ $startRecorder }}
-                        @endif
-                        <hr class="m-0">
-                    @endif
+                    <hr class="m-0">
 
                     @php
                         $obs = $dispatchRegister->getObservation('end_recorder');
-                        $labelEndRecorder = $isExpresoPalmira ? __('Manual count') : __('End Recorder');
-                        $diferencePassenger=$dispatchRegister->final_sensor_counter - $dispatchRegister->end_recorder;
-                        $spreadsheetPassengers1 = $dispatchRegister->getObservation('spreadsheet_passengers')->value;
+                        $labelEndRecorder = __('End Recorder');
                     @endphp
 
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
                         <div class="tooltips box-edit" data-title="@lang('Edit') {{ $labelEndRecorder }}">
                             <span class="box-info">
                                 <span class="">
-                                    @if(!$isExpresoPalmira)
                                         {{ $endRecorder }}
-                                    @else
-                                        {{--                                      {{ $endRecorder > $spreadsheetPassengers1 ? $endRecorder: $spreadsheetPassengers1 }}--}}
-                                        {{ $endRecorder }}
-                                    @endif
-                                    @if($isExpresoPalmira && $obs->observation)
-                                        <br>
-                                        <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet')"
-                                               data-placement="bottom">
-                                            <i class="fa fa-file-o text-muted"></i> {{ $obs->observation }}
-                                        </small>
-                                    @endif
                                 </span>
                             </span>
                             <div class="box-edit" style="display: none">
@@ -610,7 +435,7 @@
                                             name=""
                                             rows="3"
                                             class="input-sm form-control edit-input-obs"
-                                            placeholder="{{ $isExpresoPalmira ? __('# Spreadsheet') : __('Observations') }}">{{ $obs->observation }}</textarea>
+                                            placeholder="{{ __('Observations') }}">{{ $obs->observation }}</textarea>
                                     @if($obs->updated_at)
                                         <div class="text-muted text-center box-audit">
                                             <small style="font-size: 0.9rem">{{ $obs->user->username }}</small>
@@ -623,8 +448,7 @@
                                         <i class="fa fa-times"></i>
                                     </button>
                                     <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                            title="@lang('Save')"
-                                            onclick="return confirm('Confirma que los datos son correctos')">
+                                            title="@lang('Save')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
@@ -632,143 +456,30 @@
                         </div>
                     @else
                         {{ $endRecorder }}
-                        @if($isExpresoPalmira)
-                            <br>
-                            <small class="tooltips text-muted" style="color: black !important;"
-                                   data-title="@lang('# Spreadsheet')"
-                                   data-placement="bottom">{{ $obs->observation }}</small>
-                        @endif
                     @endif
-                </td>
-                @if(!Auth::user()->isExpreso() || !Auth::user()->liquidatorEP())
-                    <td width="10%"
-                        class="text-center">
-                        @if( $dispatchRegister->complete() && !$isExpresoPalmira )
-                            <span title=""
-                                  class="{{ $invalid?'text-danger':'' }} tooltips"
-                                  data-original-title="{{ $invalid?__('Verify possible error in register data'):($isExpresoPalmira ? 'Vuelo' : __('Round trip').' '.($endRecorder.' - '.$startRecorder)) }}">
-                                {{ $endRecorder - $startRecorder }}
-                            </span>
-                            <hr class="m-0">
-                            <small class="{{ $invalid?'text-danger':'' }} text-bold tooltips"
-                                   data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
-                                {{ $totalPassengersByRecorder }}
-                            </small>
-                        @elseif($isExpresoPalmira)
-                            <span title=""
-                                  class=" tooltips"
-                                  data-original-title="Conteo camaras">
-                                {{ $dispatchRegister->final_sensor_counter }}
-                            </span>
 
-                        @else
-                            ...
-                            <hr class="hr">
-                            ...
-                        @endif
-                    </td>
-                @endif
-            @endif
-            @php
-                $spreadsheetPassengers1 = $dispatchRegister->getObservation('spreadsheet_passengers')->value;
-                $countBySensorfinal = $dispatchRegister->final_sensor_counter;
-                $sumByCountspredsheet += $spreadsheetPassengers1;
-                $sumByCountSensor += $countBySensorfinal;
-            @endphp
-            @if($isExpresoPalmira )
-                <td width="10%" class="text-center" style="background: #c4c9d0">
-                    @php
-                        $timeFrange=$dispatchRegister->departure_time;
-                        $promPassengers = 0;
-                        $routeProm = $dispatchRegister->route_id;
-                        if ($routeProm==285 || $routeProm==286){
-                             $promPassengers = 15;
-                        }
-                          switch (true) {
-                              case ($timeFrange >= '04:00:00' && $timeFrange <= '06:00:59'):
-                                  if ($routeProm==279||$routeProm==280){
-                                     $promPassengers = 10;
-                                  }else if ($routeProm==282){
-                                      $promPassengers = 3;
-                                  }else if ($routeProm==283){
-                                      $promPassengers = 27;
-                                  }
-                              break;
-                              case ($timeFrange >= '06:01:00' && $timeFrange <= '09:00:51'):
-                                  if ($routeProm==279||$routeProm==280){
-                                    $promPassengers = 22;
-                                  }else if ($routeProm==282){
-                                      $promPassengers = 3;
-                                  }else if ($routeProm==283){
-                                      $promPassengers = 27;
-                                  }
-                              break;
-                              case ($timeFrange >= '09:01:00' && $timeFrange <= '11:00:59'):
-                                  if ($routeProm==279||$routeProm==280){
-                                      $promPassengers = 18;
-                                  }else if ($routeProm==282){
-                                      $promPassengers = 3;
-                                  }else if ($routeProm==283){
-                                      $promPassengers = 27;
-                                  }
-                              break;
-                              case ($timeFrange >= '11:01:00' && $timeFrange <= '14:00:59'):
-                                   if ($routeProm==279||$routeProm==280){
-                                    $promPassengers = 19;
-                                  }else if ($routeProm==282){
-                                      $promPassengers = 3;
-                                  }else if ($routeProm==283){
-                                      $promPassengers = 27;
-                                  }
-                              break;
-                               case ($timeFrange >= '14:01:00' && $timeFrange <= '17:00:59'):
-                                   if ($routeProm==279||$routeProm==280){
-                                     $promPassengers = 20;
-                                  }else if ($routeProm==282){
-                                      $promPassengers = 3;
-                                  }else if ($routeProm==283){
-                                      $promPassengers = 27;
-                                  }
-                               break;
-                               case ($timeFrange >= '17:01:00' && $timeFrange <= '20:00:59'):
-                                  if ($routeProm==279||$routeProm==280){
-                                     $promPassengers = 21;
-                                  }else if ($routeProm==282){
-                                      $promPassengers = 3;
-                                  }else if ($routeProm==283){
-                                      $promPassengers = 27;
-                                  }
-                              break;
-                               case ($timeFrange >= '20:01:00' && $timeFrange <= '23:59:59'):
-                                  if ($routeProm==279||$routeProm==280){
-                                    $promPassengers = 13;
-                                  }else if ($routeProm==282){
-                                      $promPassengers = 3;
-                                  }else if ($routeProm==283){
-                                      $promPassengers = 27;
-                                  }
-                              break;
-                          }
-                    @endphp
-                    @if($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers1)
-                        <span class="tooltips" title="Número de planilla">
-                            {{$spreadsheetPassengers1}}
+                </td>
+                <td width="10%"
+                    class="text-center">
+                    @if( $dispatchRegister->complete()  )
+                        <span title=""
+                              class="{{ $invalid?'text-danger':'' }} tooltips"
+                              data-original-title="{{ $invalid?__('Verify possible error in register data'):(__('Round trip').' '.($endRecorder.' - '.$startRecorder)) }}">
+                            {{ $endRecorder - $startRecorder }}
                         </span>
+                        <hr class="m-0">
+                        <small class="{{ $invalid?'text-danger':'' }} text-bold tooltips"
+                               data-original-title="{{ $invalid?__('Verify possible error in register data'):__('Accumulated day') }}">
+                            {{ $totalPassengersByRecorder }}
+                        </small>
                     @else
-                        @if($dispatchRegister->final_sensor_counter>= $promPassengers )
-                            <span class="tooltips" title="Número de cámara">
-                                {{$countBySensorfinal}}
-                            </span>
-                        @else
-                            <span class="tooltips" style="color: darkred; font-weight: 900"
-                                  title="Número de cámara < promedio">
-                                {{$countBySensorfinal}}
-                            </span>
-                        @endif
+                        ...
+                        <hr class="hr">
+                        ...
                     @endif
                 </td>
             @endif
-
+            
             @if($company->hasSensorTotalCounter())
                 <td width="8%"
                     class="text-center">
@@ -816,100 +527,7 @@
                     </small>
                 </td>
             @endif
-            @if($isExpresoPalmira && (!Auth::user()->isExpreso() || !Auth::user()->liquidatorEP()) )
-                <td width="5%" class="text-center">
-                        <span>
-                            {{$promPassengers}}
-                        </span>
-                </td>
-            @endif
-            @if($isExpresoPalmira)
-                <td class="text-center">
-                    <div>
-                        @php
-                            $photos = $dispatchRegister->photos;
-                            $photosByCamera = $photos->sortBy('side')->groupBy('side');
 
-                            $vehicleCameras = \App\Models\Apps\Rocket\VehicleCamera::where('vehicle_id', $dispatchRegister->vehicle_id)
-                                ->get()
-                                ->pluck('camera');
-
-                            $routeTimeInMinutes = \App\Http\Controllers\Utils\StrTime::toSeg($dispatchRegister->getRouteTime())/60;
-                            $expectedTotalPhotos = intval(($routeTimeInMinutes) / 2 * $vehicleCameras->count());
-                        @endphp
-
-                        @foreach($vehicleCameras as $camera)
-                            @php
-                                $cameraPhotos = $photosByCamera->get($camera);
-                                $totalPhotos = 0;
-                                $photoStatus = "green";
-
-                                $expectedPhotos = intval($routeTimeInMinutes / 2);
-
-                                if($cameraPhotos) {
-                                    $totalPhotos = $cameraPhotos->count();
-                                    if($totalPhotos < $expectedPhotos * 0.5) $photoStatus = "warning";
-                                    else $photoStatus = "green";
-                                } else {
-                                    $photoStatus = "red";
-                                    $alertPhoto = true;
-                                }
-                            @endphp
-                            <br>
-                            <small class="badge bg-{{ $photoStatus }}">
-                                {{ $camera }} <i class="fa fa-camera"></i> {!! $totalPhotos !!}
-                            </small>
-                        @endforeach
-                        <div>{{ $photos->count() }} / {{ $expectedTotalPhotos }}</div>
-                    </div>
-                </td>
-                @if ($alertPhoto)
-                <!-- Modal -->
-                    <div class="modal fade" id="alertPhotoModal" tabindex="-1" role="dialog"
-                         aria-labelledby="labelModal"
-                         aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content" style="border: 3px solid darkred;background: silver">
-                                <div class="modal-header text-center">
-                                    <h5 class="modal-title"
-                                        style="font-weight: bold;font-size: 20px;font-family: Glyphicons-Halflings">
-                                        <i class="fa fa-warning faa-pulse"></i> @lang('alert') <i
-                                                class="fa fa-warning faa-pulse"></i>
-                                    </h5>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="alert alert-warning"
-                                         style="font-weight: bold ; color: white; background: darkred; font-size: 18px">
-                                        El vehículo número {{ $vehicle->number }} presenta una novedad en el envío de
-                                        fotos.
-                                        Por favor, comuníquese con soporte.
-                                    </div>
-                                </div>
-                                <div class="modal-footer text-center">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            @endif
-
-
-            @if(Auth::user()->isSuperAdmin())
-                @php
-                    $countMax = $dispatchRegister->final_front_sensor_counter;
-                    $sumatoriaCountMax += $countMax;
-                    $countPlanilla =  $dispatchRegister->registradora_llegada;
-                    $sumByCountPassengerPlan += $countPlanilla;
-
-                @endphp
-                <td class="text-center">
-                    <small class="tooltips text-bold"
-                           data-title="@lang('Conteo por maximos')">
-                        {{$countMax}}
-                    </small>
-                </td>
-            @endif
             <td width="15%"
                 class="text-center">
                 @if( Auth::user()->company->hasSeatSensorCounter())
@@ -1019,36 +637,17 @@
         </script>
 
     @endforeach
-    @if($dispatchRegisters->count() && Auth::user()->isSuperAdmin())
+    @if($dispatchRegisters->count())
         <tr>
-            <td colspan="8">
+            <td colspan="7">
 
             </td>
             <td class="text-center tooltips"
-                data-title="@lang(''): @lang('')">
-                {{--                {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$dispatchRegisters->count()) }}--}}
-                {{$sumByCountManual}}
+                data-title="@lang('Average'): @lang('Route time')">
+                {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$dispatchRegisters->count()) }}
             </td>
-            <td class="text-center tooltips" data-title="@lang('Sumatoria conteo Manual')">
-                {{$sumByCountPassengerPlan}}
-            </td>
-            <td class="text-center tooltips" data-title="@lang('Sumatoria conteo sistema')">
-                {{$sumByCountSensor}}
-            </td>
+            <td colspan="3">
 
-            @if($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers1)
-                <td class="text-center tooltips" data-title="@lang('Sumatoria Conteo Planilla')">
-                    {{$sumByCountspredsheet}}
-                </td>
-            @else
-                <td class="text-center tooltips" data-title="@lang('Sumatoria conteo sistema')">
-                    {{$sumByCountSensor}}
-                </td>
-            @endif
-            <td colspan="2"></td>
-            <td class="text-center tooltips"
-                data-title="@lang('Sumatoria Maximos')">
-                {{$sumatoriaCountMax}}
             </td>
         </tr>
     @endif
@@ -1096,14 +695,6 @@
         modalBody.html($('.loading').html()).load(url);
     }
     @endif
-    function confirmacion() {
-        let respuesta = confirm("El numero de planilla es el correcto")
-        if (respuesta == true) {
-            return true
-        } else {
-            return false
-        }
-    }
 
     $('.html-observations').each(function (i, el) {
         const content = $(el).find('a').data('content');
