@@ -44,6 +44,7 @@ class RouteExportEPService extends RouteExportService
                     $drObservation = $dispatchRegister->getObservation('spreadsheet_passengers');
 
                     $spreadsheet = $drObservation->observation;
+                    $passengerSpreadsheet = $drObservation->value;
                     $username = $drObservation->user ? $drObservation->user->name : '';
 
                     //$roundTrip = $dispatchRegister->round_trip;
@@ -168,6 +169,7 @@ class RouteExportEPService extends RouteExportService
                             __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
                             __('Valor pasaje') => '',                                                                       # I CELL
                             __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
+                            __('Pasajeros planilla') => $passengerSpreadsheet,                                                              # J CELL
                             __('#sensor') => $dispatchRegister->final_sensor_counter,                                                                     # K CELL
                             __('Promedio') =>"$promPassengers",                                                                     # K CELL
                             __('Total Sistema') =>$TotalCount,                                                                     # K CELL
