@@ -489,7 +489,7 @@
                                data-id="{{ $dispatchRegister->id }}"
                                data-field="spreadsheet_passengers"
                                class="input-sm form-control edit-input-recorder edit-input-value"
-                               value="{{ $endRecorder }}"/>
+                               value="{{ $spreadsheetPassengers->value }}"/>
                             <div class="box-obs">
                                     <textarea
                                             name=""
