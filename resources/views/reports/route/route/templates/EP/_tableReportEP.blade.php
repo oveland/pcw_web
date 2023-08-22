@@ -440,7 +440,9 @@
                                    data-field="spreadsheet_passengers"
                                    data-single="true"
                                    class="input-sm form-control edit-input-recorder edit-input-value"
-                                   value="{{ $spreadsheetPassengers->value }}"/>
+                                   value="{{ $spreadsheetPassengers->value }}"
+                                   onKeyUp="$('#edit-spreadsheet-passengers-obs-{{ $dispatchRegister->id }}').val($(this).val())"
+                            />
                             <div class="box-obs ">
                                 <textarea style="display: none"
                                           name=""
@@ -481,7 +483,7 @@
                             <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation ?? '0' }}
                         </span>
                         <div class="box-edit" style="display: none">
-                            <input id="edit-end-recorder-{{ $dispatchRegister->id }}"style="display: none"
+                            <input id="edit-spreadsheet-passengers-obs-{{ $dispatchRegister->id }}"style="display: none"
                                title="@lang('Press enter for edit')"
                                name=""
                                type="number"
