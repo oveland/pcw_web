@@ -41,7 +41,7 @@ class RouteExportEPService extends RouteExportService
                     $totalRoundTrip = $historyCounter->passengersByRoundTrip;
                     $deadTime = $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '';
 
-                    $drObservation = $dispatchRegister->getObservation('registradora_llegada');
+                    $drObservation = $dispatchRegister->getObservation('spreadsheet_passengers');
 
                     $spreadsheet = $drObservation->observation;
                     $username = $drObservation->user ? $drObservation->user->name : '';
