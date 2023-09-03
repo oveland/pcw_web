@@ -8,14 +8,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class MaintenanceCommand extends Command
+class FreeSizeCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'db:maintenance {--from=} {--to=}';
+    protected $signature = 'db:free-size {--from=} {--to=}';
 
     /**
      * The console command description.
@@ -48,116 +48,26 @@ class MaintenanceCommand extends Command
         $from = $this->option('from');
         $to = $this->option('to');
 
-        return collect([/*
-            [
-                'from' => '2023-04-01',
-                'to' => '2023-04-30',
-                'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ]
-                ]
+        $tables = collect([
+            'app_photos' => [
+                'restore' => false,
             ],
-            [
-                'from' => '2023-05-01',
-                'to' => '2023-05-31',
-                'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ]
-                ]
+            'vehicle_status_reports' => [
+                'restore' => false,
             ],
-            [
-                'from' => '2023-06-01',
-                'to' => '2023-06-30',
-                'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ]
-                ]
+            'locations' => [
+                'restore' => false,
             ],
+            'reports' => [
+                'restore' => false,
+            ],
+        ]);
+
+        return collect([
             [
-                'from' => '2023-08-01',
-                'to' => '2023-08-26',
-                'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ]
-                ]
-            ],*/
-            [
-                'from' => '2023-07-01',
-                'to' => '2023-07-31',
-                'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ]
-                ]
+                'from' => '2023-08-27',
+                'to' => '2023-08-27',
+                'tables' => $tables
             ],
         ]);
     }
@@ -197,9 +107,9 @@ class MaintenanceCommand extends Command
     {
         $tables = $maintenance->tables;
 
-        if ($maintenance->from && $maintenance->to && $maintenance->from < $maintenance->to) {
+        if ($maintenance->from && $maintenance->to && $maintenance->from <= $maintenance->to) {
             foreach ($tables as $table => $options) {
-                $this->processTable($table, $maintenance->from, $maintenance->to, $options->release, $options->restore);
+                $this->processTable($table, $maintenance->from, $maintenance->to, $options);
             }
         } else {
             $this->log("Invalid date range From: $maintenance->from and To: $maintenance->to");
@@ -215,27 +125,35 @@ class MaintenanceCommand extends Command
      * @param $table
      * @param $from
      * @param $to
-     * @param $release
-     * @param $restore
+     * @param $options
      * @return void
      */
-    public function processTable($table, $from, $to, $release = false, $restore = false)
+    public function processTable($table, $from, $to, $options)
     {
+        $release = $options->release ?? false;
+        $restore = $options->restore ?? false;
+
         $this->log("   Processing table: $table...");
         $tableBackup = $this->getTableBackup($table, $to);
 
         if ($restore) {
             $this->restore($table, $from, $to);
         } else {
-//            DB::statement("DROP TABLE IF EXISTS $tableBackup");
-            $query = "CREATE TABLE $tableBackup AS SELECT * FROM $table WHERE date BETWEEN '$from' AND '$to 23:59:59'";
+            DB::statement("DROP TABLE IF EXISTS $tableBackup");
+            $query = "CREATE TABLE $tableBackup AS SELECT * FROM $table WHERE date BETWEEN '$from 00:00:00' AND '$to 23:59:59'";
             $this->log("       - $query");
             DB::statement($query);
 
-            $backupSuccess = $this->processBackup($table, $from, $to);
-            if ($release && $backupSuccess) {
-                $this->releaseTable($table, $from, $to);
-            }
+            $query = "TRUNCATE TABLE $table";
+            $this->log("       - $query");
+            DB::statement($query);
+
+            $this->restore($table, $from, $to);
+
+//            $backupSuccess = $this->processBackup($table, $from, $to);
+//            if ($release && $backupSuccess) {
+//                $this->releaseTable($table, $from, $to);
+//            }
         }
     }
 
@@ -276,7 +194,7 @@ class MaintenanceCommand extends Command
     {
         $columns = collect(DB::select("SELECT column_name FROM information_schema.columns WHERE table_name   = '$table' ORDER BY ordinal_position"))->pluck('column_name');
 
-        return "(" . $columns->implode(', ') . ")";
+        return "(".$columns->implode(', ').")";
     }
 
     /**
@@ -315,7 +233,7 @@ class MaintenanceCommand extends Command
     }
 
     /**
-     * Ej locations_2030_01_27
+     * Ej locations_2030_01_27_current
      *
      * @param $table
      * @param $date

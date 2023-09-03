@@ -34,7 +34,7 @@ rm -r ${PATH_BACKUP_DIR}
 mkdir ${PATH_BACKUP_DIR}
 cd ${PATH_BACKUP_DIR}
 
-echo "\n\n**************** $(date +"%Y-%m-%d")  **************** \n" >> ${FILE_LOG}
+log "\n\n**************** $(date +"%Y-%m-%d")  **************** \n"
 
 log " ••• Starting backup process for table: ${TABLE} •••\n"
 log " ••• Exporting table ${TABLE}..."

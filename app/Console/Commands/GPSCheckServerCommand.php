@@ -140,7 +140,7 @@ class GPSCheckServerCommand extends Command
             if ($dbSizeQuery) {
                 $dbSize = intval(explode(' ', $dbSizeQuery)[0]);
                 $usagePercent = ($dbSize * 100 / $ssdSize);
-                if ($usagePercent <= 65) $dbOK = true;
+                if ($usagePercent <= 75) $dbOK = true;
             }
 
             if (!$dbOK) {

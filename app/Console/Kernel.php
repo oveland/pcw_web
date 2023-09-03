@@ -43,6 +43,7 @@ class Kernel extends ConsoleKernel
         Commands\Tools\FixMileageCommand::class,
 
         Commands\DB\MaintenanceCommand::class,
+        Commands\DB\FreeSizeCommand::class,
         Commands\DB\RefreshLocationsViews::class,
         Commands\Vehicles\Binnacles\NotificationCommand::class,
     ];
