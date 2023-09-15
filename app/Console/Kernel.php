@@ -62,7 +62,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('db:manage-markers-reports')->dailyAt('02:00');
         $schedule->command('db:manage-old-routines')->dailyAt('03:00');
 
-        $schedule->command('vehicles:binnacle:notify')->dailyAt('03:00');
+//        $schedule->command('vehicles:binnacle:notify')->dailyAt('03:00');
 
 
 //        $schedule->command('gps:restart')->dailyAt('12:00');
