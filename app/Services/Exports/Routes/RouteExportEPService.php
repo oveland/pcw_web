@@ -44,7 +44,7 @@ class RouteExportEPService extends RouteExportService
                     $drObservation = $dispatchRegister->getObservation('spreadsheet_passengers');
 
                     $spreadsheet = $drObservation->observation;
-                    $passengerSpreadsheet = $drObservation->value;
+                    $passengerSpreadsheet =(int) $drObservation->value;
                     $username = $drObservation->user ? $drObservation->user->name : '';
 
                     //$roundTrip = $dispatchRegister->round_trip;
@@ -146,14 +146,14 @@ class RouteExportEPService extends RouteExportService
                             }
                             break;
                     }
-                    $spreadsheetPassengers1 = $dispatchRegister->getObservation('spreadsheet_passengers')->value;
+                    $spreadsheetPassengers1 =(int) $dispatchRegister->getObservation('spreadsheet_passengers')->value;
                     $TotalCount=0;
                     if ($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers1){
-                        $TotalCount=$spreadsheetPassengers1;
+                        $TotalCount=(int)$spreadsheetPassengers1;
                     }elseif ($dispatchRegister->final_sensor_counter>= $promPassengers){
-                        $TotalCount=$dispatchRegister->final_sensor_counter;
+                        $TotalCount=(int)$dispatchRegister->final_sensor_counter;
                     }elseif ($dispatchRegister->final_sensor_counter<= $promPassengers){
-                        $TotalCount=$dispatchRegister->final_sensor_counter;
+                        $TotalCount=(int)$dispatchRegister->final_sensor_counter;
                     }
 
 

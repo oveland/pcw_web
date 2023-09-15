@@ -163,7 +163,8 @@
         $sumByCountSensor = 0;
         $sumByCountProm = 0;
         $sumByCountManual=0;
-        $sumByCountPassengerPlan=0;
+        $sumByCountPassengerVisual=0;
+        $sumByCountSpreadSheetFICS=0;
     @endphp
 
     @foreach( $dispatchRegisters as $dispatchRegister )
@@ -406,6 +407,7 @@
                 <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #ffd39e">
                     @php
                         $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
+                        $sumByCountSpreadSheetFICS += $spreadsheetPassengersSync->value;
                     @endphp
                     <span class="box-info">
                         {{ $spreadsheetPassengersSync->value ?? 0 }}
@@ -531,6 +533,7 @@
                 <td width="10%" class="p-r-0 p-l-0 text-center" style="background:  #b7f4ff ">
                     @php
                         $visualPassengers = $dispatchRegister->getObservation('end_recorder');
+                        $sumByCountPassengerVisual += $visualPassengers->value;
                     @endphp
 
                     @if( Auth::user()->canEditRecorders() && $dispatchRegister->complete())
@@ -817,9 +820,6 @@
                 @php
                     $countMax = $dispatchRegister->final_front_sensor_counter;
                     $sumatoriaCountMax += $countMax;
-                    $countPlanilla =  $dispatchRegister->registradora_llegada;
-                    $sumByCountPassengerPlan += $countPlanilla;
-
                 @endphp
                 <td class="text-center">
                     <small class="tooltips text-bold"
@@ -941,16 +941,22 @@
     @endforeach
     @if($dispatchRegisters->count() && Auth::user()->isSuperAdmin())
         <tr>
-            <td colspan="8">
+            <td colspan="7">
 
             </td>
+            <td class="text-center tooltips" data-title="@lang('Sumatoria pasajeros planilla FICS')">
+                {{ $sumByCountSpreadSheetFICS }}
+            </td>
             <td class="text-center tooltips"
-                data-title="@lang(''): @lang('')">
+                data-title="@lang('Sumatoria pasajeros planilla')">
                 {{--                {{ $strTime::segToStrTime($strTime::toSeg($averageRouteTime)/$dispatchRegisters->count()) }}--}}
-                {{$sumByCountManual}}
+                {{ $sumByCountManual }}
+            </td>
+            <td colspan="1">
+
             </td>
             <td class="text-center tooltips" data-title="@lang('Sumatoria conteo Manual')">
-                {{$sumByCountPassengerPlan}}
+                {{ $sumByCountPassengerVisual }}
             </td>
             <td class="text-center tooltips" data-title="@lang('Sumatoria conteo sistema')">
                 {{$sumByCountSensor}}

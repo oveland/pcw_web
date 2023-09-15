@@ -133,7 +133,7 @@ class PCWExporterEPService extends PCWExporterService
         });
         $sheet->setCellValue("I$firma", "FIRMA");
 
-        $totals = 'G' . $position . ":" . 'K' . $position;
+        $totals = 'G' . $position . ":" . 'O' . $position;
         $sheet->cells($totals, function ($cells) {
             $cells->setValignment('center');
             $cells->setAlignment('center');
@@ -167,6 +167,7 @@ class PCWExporterEPService extends PCWExporterService
         $sheet->setColumnFormat(array(
             'I4:I39' => '$#,##0_-'
         ));
+        $sheet->setCellValue("K$position", "=SUM(K$starData:K$lastRow)");
 
         $sheet->cells('A' . $starData . ':' . $config->lastLetter . $lastRow, function ($cells) {
             $cells->setValignment('center');
@@ -230,8 +231,9 @@ class PCWExporterEPService extends PCWExporterService
                 $sheet->setCellValue("G$position", "TOTALES");
                 $sheet->setCellValue("H$position", "=SUM(H$starData:H$lastRow)");
                 $sheet->setCellValue("I$position", "=SUM(I$starData:I$lastRow)");
-                $sheet->setCellValue("J$position", "=J$starData");
-                $sheet->setCellValue("K$position", "=K$starData");
+                $sheet->setCellValue("L$position", "=SUM(L$starData:L$lastRow)");
+                $sheet->setCellValue("N$position", "=SUM(N$starData:N$lastRow)");
+                $sheet->setCellValue("O$position", "=SUM(O$starData:O$lastRow)");
                 /* $diference=$lastRow-$starData;
 
                  for ($var = $starData; $var <= $diference; $var++) {
