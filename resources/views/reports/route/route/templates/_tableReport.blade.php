@@ -3,6 +3,7 @@
     $thresholdAlertNR = 2;
     $thresholdMinLocations = 100;
     $alertPhoto = false;
+    $isMmontebello = $company->id == \App\Models\Company\Company::MONTEBELLO;
 @endphp
 <!-- begin table -->
 <table id="table-report"
@@ -67,10 +68,10 @@
                 <small class="text-muted">
                     @lang('Recorder')
                 </small>
-            </th>
+            </th>f
         @endif
 
-        @if($company->hasSensorTotalCounter())
+        @if($company->hasSensorTotalCounter() || Auth::user()->isSuperAdmin() )
                 <th>
                     <i class="icon-users text-muted"></i>
                     <br>
@@ -480,7 +481,7 @@
                 </td>
             @endif
             
-            @if($company->hasSensorTotalCounter())
+            @if($company->hasSensorTotalCounter() || Auth::user()->isSuperAdmin())
                 <td width="8%"
                     class="text-center">
                     <div style="display: flex;">

@@ -256,6 +256,7 @@ class Company extends Model
         return collect([
                 self::TRANSPUBENZA,
                 self::VALLEDUPAR,
+                self::MONTEBELLO,
             ])->contains($this->id) && !auth()->user()->isSuperAdmin();
     }
 
