@@ -126,7 +126,7 @@ class PCWRouteService implements APIWebInterface
 
         if ($spreadsheetReport) {
             $allDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($spreadsheetReport) {
-                return $d->getObservation('registradora_llegada')->observation == $spreadsheetReport;
+                return $d->getObservation('spreadsheet_passengers')->observation == $spreadsheetReport;
             });
         }
 
