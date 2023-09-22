@@ -51,6 +51,7 @@ class RouteExportEPService extends RouteExportService
                     $roundTrip = $iteration + 1;
                     $tarifRoute = 4500;
                     $nameRute = "";
+                    $tariffPassenger = $dispatchRegister->route->tariff->passenger;
                     //tarifas para diferentes rutas al exportar en excel 11/01/2023
                     $routeId = $dispatchRegister->route_id;
                     switch ($routeId){
@@ -205,7 +206,7 @@ class RouteExportEPService extends RouteExportService
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
                     'type' => 'routeReportByVehicle',
-                    'tariff' => $tarifRoute,
+                    'tariff' => $tariffPassenger,
                     'nameRute' => $nameRute
                 ];
 
