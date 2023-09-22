@@ -2,9 +2,10 @@
     <div class="row" style="background: white">
         <div class=" panel-inverse col-md-12 col-sm-12 col-xs-12">
             <div class="panel-heading">
-                <div class="panel-heading-btn hide">
-                    <a href="{{ route('operation-vehicles-binnacle-show') }}?company={{ $report->company->id }}&vehicle-report={{ $report->vehicleReport }}&date-report={{ $report->dateReport }}&date-end-report={{ $report->dateEndReport }}&with-end-date={{ $report->withEndDate }}&export=true" class="btn btn-lime bg-lime-dark btn-sm btn-rounded tooltips" data-title="@lang('Export excel')">
-                        <i class="fa fa-file-excel-o"></i>
+                <div class="panel-heading-btn">
+                    <a href="{{ route('operation-vehicles-binnacle-show') }}?company={{ $report->company->id }}&vehicle-report={{ $report->vehicleReport }}&date-report={{ $report->dateReport }}&date-end-report={{ $report->dateEndReport }}&with-end-date={{ $report->withEndDate }}&export=true"
+                       class="btn green btn-circle tooltips" data-title="@lang('Export excel')">
+                        <i class="fa fa-download"></i>
                     </a>
                 </div>
                 <p class="text-white label-vehicles">

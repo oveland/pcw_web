@@ -18,7 +18,29 @@ class NoveltyService
      */
     public function export($report)
     {
-        $vehicleIssuesGroups = $report->vehicleIssues->groupBy('issue_uid');
+        $binnaclesByVehicles = $report->binnacles->groupBy('vehicle_id');
+        $dataExcel = array();
+        foreach($binnaclesByVehicles as $binnacles){
+            foreach($binnacles->sortBy('date', 0, $report->sortDescending) as $binnacle){
+
+                $vehicle = $binnacle->vehicle->number;
+                $type = $binnacle->type->name;
+                $notification = $binnacle->notification;
+
+                $dataExcel[] = [
+                    __('Vehicle') => $vehicle,
+                    __('Fecha Vencimiento') => $binnacle->date,
+                    __('Ultimo Mantenimiento') => $binnacle->prev_date,
+                    __('Type') =>$type,
+                    __('Descripción') => $binnacle->observations,
+                    __('KM Recorrido') => $binnacle->getMileageTraveled(),
+                    __('KM Vencimiento') => $binnacle->mileage_expiration,
+                    __('User create') =>$binnacle->user->name,
+                ];
+            }
+        }
+
+       /* $vehicleIssuesGroups = $report->vehicleIssues->groupBy('issue_uid');
 
         $dataExcel = array();
         foreach ($vehicleIssuesGroups as $issueUid => $vehicleIssuesGroup) {
@@ -42,7 +64,9 @@ class NoveltyService
                     __('User') => $user->name,                              # F CELL
                 ];
             }
-        }
+        }*/
+
+
 
         PCWExporterService::excel([
             'fileName' => __('Vehicle issues') . " " . __('Vehicles') . " $report->dateReport",
