@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Models\Company\Company;
 use App\Services\LM\LMRepository;
 use App\Services\LM\LMService;
-use App\Services\LM\Sources\BEA\DEFSyncService;
+use App\Services\LM\Sources\BEA\BEASyncService;
 use App\Services\LM\CommissionService;
 use App\Services\LM\DiscountService;
 use App\Services\LM\PenaltyService;
@@ -44,7 +44,7 @@ class BEAServiceProvider extends ServiceProvider
 
             $report = new LMReportService($dbId);
 
-            return new LMService(new DEFSyncService($company, $repository), $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository), $dbId);
+            return new LMService(new BEASyncService($company, $repository), $report, $repository, new DiscountService($repository), new CommissionService($repository), new PenaltyService($repository), $dbId);
         });
     }
 }
