@@ -92,10 +92,11 @@ class GPSCheckServerCommand extends Command
 //            914 => 'Coban Photo',
             912 => 'Coban',
             990 => 'Skypatrol',
-            999 => 'Ruptela',
+//            999 => 'Ruptela',
 //            9999 => 'Ruptela Aux',
             991 => 'Meitrack',
             994 => 'Antares',
+            21 => 'FTP Server',
         ];
 
         foreach ($ports as $port => $server) {
