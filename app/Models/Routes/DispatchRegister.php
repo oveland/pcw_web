@@ -937,7 +937,7 @@ class DispatchRegister extends Model
             $takings->total_production = 0;
             $takings->dispatchRegister()->associate($this);
 
-            $fuelStations = FuelStation::allByCompany($this->route->company);
+            $fuelStations = FuelStation::allByCompany($this->route ? $this->route->company : $this->vehicle->company);
             $takings->fuelStation()->associate($fuelStations->first());
         }
 

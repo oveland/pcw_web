@@ -18,7 +18,7 @@
             <div class="panel-heading-btn">
                 @if($company->canCreateDR())
                 <button class="btn btn-circle tooltips btn-primary btn-add-dr"
-                        data-title="@lang('Create')">
+                        data-title="@lang('Create round trip')">
                     <i class="fa fa-plus-square"></i>
                 </button>
                 @endif
@@ -79,26 +79,31 @@
     </div>
     <script>$('#company-report').val({{ $company->id }})</script>
 @else
-    @include('partials.alerts.noRegistersFound', ['message' => 'There are not dispatch registers on this date'])
+    <div class="col-md-12 text-center">
+        @include('partials.alerts.noRegistersFound', ['message' => 'There are not dispatch registers on this date'])
+    </div>
 
+    @if($company->canCreateDR())
+        <div class="col-md-12 text-center">
+            <button class="btn btn-circle btn-primary btn-add-dr">
+                <i class="fa fa-plus-square"></i> @lang('Create round trip')
+            </button>
+        </div>
+    @endif
+    <br>
     @if( Auth::user()->canMakeTakings())
-        <div class="m-b-10 mb-10 mt-10 col-md-6 col-md-offset-3 offset-md-3"
-             style="position: relative;top: -60px;z-index: 10000;">
-            <div class="col-md-12">
-                <div class="details col-md-8 col-md-offset-3">
-                    @if($vehicleReport && $vehicleReport != 'all' && $dateReport)
-                        <a id="btn-taking-empty" href="#modal-takings-passengers" data-toggle="modal"
-                           onclick="showTakingsForm('{{ route("operation-routes-takings-form-create", ["vehicle" => $vehicleReport, 'date' => $dateReport]) }}')"
-                           class="btn purple-sharp btn-outline sbold uppercase faa-parent animated-hover btn-circle tooltips">
-                            <i class="icon-briefcase faa-ring" style="margin-right: 0; margin-left: 0px"></i>
-                            <i class="fa fa-dollar faa-vertical" style="margin-right: 0px; margin-left: 0"></i>
-                            @lang('Register takings')
-                        </a>
-                    @else
-                        <p>@lang('To register takings you must be select a vehicle')</p>
-                    @endif
-                </div>
-            </div>
+        <div class="col-md-12 text-center">
+            @if($vehicleReport && $vehicleReport != 'all' && $dateReport)
+                <a id="btn-taking-empty" href="#modal-takings-passengers" data-toggle="modal"
+                   onclick="showTakingsForm('{{ route("operation-routes-takings-form-create", ["vehicle" => $vehicleReport, 'date' => $dateReport]) }}')"
+                   class="btn purple-sharp btn-outline sbold uppercase faa-parent animated-hover btn-circle tooltips">
+                    <i class="icon-briefcase faa-ring" style="margin-right: 0; margin-left: 0px"></i>
+                    <i class="fa fa-dollar faa-vertical" style="margin-right: 0px; margin-left: 0"></i>
+                    @lang('Register takings')
+                </a>
+            @else
+                <p>@lang('To register takings you must be select a vehicle')</p>
+            @endif
         </div>
         <script>
             function showTakingsForm(url) {

@@ -135,6 +135,7 @@ class ReportRouteController extends Controller
         }
 
         $activeRoutes = $company->activeRoutes;
+        $activeVehicles = $company->activeVehicles;
 
         return view($view, compact([
             'dispatchRegistersByVehicles',
@@ -154,7 +155,8 @@ class ReportRouteController extends Controller
             'cancelledTurns',
             'timeReport',
             'spreadsheetReport',
-            'activeRoutes'
+            'activeRoutes',
+            'activeVehicles'
         ]));
     }
 

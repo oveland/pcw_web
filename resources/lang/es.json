@@ -854,5 +854,6 @@
   "Execute DAR": "Reprocesar ubicaciones",
   "Show report details": "Ver detalle de ubicaciones",
   "Visual passengers": "Pasajeros visual",
-  "Vehicle not found": "Vehículo no encontrado"
+  "Vehicle not found": "Vehículo no encontrado",
+  "Create round trip": "Crear vuelta/vuelo"
 }

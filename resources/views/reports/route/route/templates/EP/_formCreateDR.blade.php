@@ -16,7 +16,17 @@
             <div class="modal-body grid">
                 <form id="form-add-dr" class="form" action="{{ route('route-ajax-action') }}">
                     <input type="hidden" name="option" value="addDR"/>
-                    <input type="hidden" class="dr-vehicle-id" name="dr-vehicle-id" value=""/>
+
+                    <div class="form-group">
+                        <label for="dr-vehicle-id" class="col-md-5 control-label field-required">@lang('Vehicle')</label>
+                        <div class="col-md-5">
+                            <select name="dr-vehicle-id" id="dr-vehicle-id" data-with-all="true" data-with-none="true" class="default-select2 form-control col-md-12 primary-filter">
+                                <option value="">@lang('Select a vehicle')</option>
+                                @include('partials.selects.vehicles', ['vehicles' => $activeVehicles])
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="dr-date" class="col-md-5 control-label field-required">@lang('Date')</label>
                         <div class="col-md-5">
@@ -144,7 +154,7 @@
 
         const vehicleTab = $('.report-container .nav-pills > li.active > a');
         $('.dr-vehicle-number').html(vehicleTab.data('vehicle-number'));
-        $('.dr-vehicle-id').val(vehicleTab.data('vehicle-id'));
+        $('#dr-vehicle-id').val(vehicleTab.data('vehicle-id')).change();
     });
 
     initDateTimePicker("YYYY-MM-DD", $('.dr-date'));

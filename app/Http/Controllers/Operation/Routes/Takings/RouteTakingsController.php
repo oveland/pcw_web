@@ -68,15 +68,16 @@ class RouteTakingsController extends Controller
             ->where('status', 'takings')
             ->first();
         if (!$dispatchRegister) {
-            $insert = \DB::select("INSERT INTO registrodespacho (fecha, hora, tipo_dia, id_empresa, n_turno, n_vuelta, n_vehiculo, n_placa, observaciones, cancelado, registradora_salida, registradora_llegada)
-            VALUES ('$date', current_time, 'habil', $vehicle->company_id, 1, '1', '$vehicle->number', '$vehicle->plate', 'takings', TRUE, 0, 0 ) RETURNING id_registro");
+            $insert = \DB::select("INSERT INTO registrodespacho (fecha, hora, tipo_dia, id_empresa, n_turno, n_vuelta, n_vehiculo, n_placa, observaciones, cancelado, registradora_salida, registradora_llegada, ignore_trigger)
+            VALUES ('$date', current_time, 'habil', $vehicle->company_id, 1, '1', '$vehicle->number', '$vehicle->plate', 'takings', TRUE, 0, 0, TRUE ) RETURNING id_registro");
 
             $id = collect($insert)->first()->id_registro;
 
             $dispatchRegister = DispatchRegister::find($id);
         }
 
-        $lastRoute = DispatchRegister::completed()->where('date', '<', $date)->where('vehicle_id', $vehicle->id)->orderByDesc('id')->first()->route;
+        $lastDR = DispatchRegister::completed()->where('date', '<', $date)->where('vehicle_id', $vehicle->id)->orderByDesc('id')->first();
+        $lastRoute = $lastDR ? $lastDR->route : $vehicle->company->activeRoutes->last();
 
         $dispatchRegister->route()->associate($lastRoute);
 
