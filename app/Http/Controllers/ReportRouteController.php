@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Utils\StrTime;
+use App\Models\Routes\Route;
 use App\Models\Vehicles\LastLocation;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Report;
@@ -304,20 +305,31 @@ class ReportRouteController extends Controller
                     return collect($response)->toJson();
                 }
 
+                $route = Route::find($request->get('dr-route-id'));
+
+                if(!$route) {
+                    $response->success = false;
+                    $response->message = __('Route not found');
+                    return collect($response)->toJson();
+                }
+
                 $date = $request->get('dr-date');
                 $departureTime = $request->get('dr-departure-time');
                 $arrivalTime = $request->get('dr-arrival-time');
-                $routeId = $request->get('dr-route-id');
+
                 $spreadSheetNumber = $request->get('dr-sp-number');
                 $spreadSheetPassengers = $request->get('dr-sp-passengers');
                 $visualPassengers = $request->get('dr-visual-passengers');
 
+                $userId = auth()->user()->id;
+
                 $insert = \DB::select("
                     INSERT INTO registrodespacho 
-                        (fecha, hora, h_reg_despachado, h_reg_llegada, tipo_dia, id_ruta, id_empresa, n_vehiculo, n_placa, observaciones, cancelado, registradora_salida, registradora_llegada, n_turno, ignore_trigger, h_llegada_prog)
+                        (fecha, hora, h_reg_despachado, h_reg_llegada, tipo_dia, id_ruta, id_despacho, id_empresa, n_vehiculo, n_placa, observaciones, cancelado, registradora_salida, registradora_llegada, n_turno, ignore_trigger, h_llegada_prog, updated_user_id)
                     VALUES 
-                        ('$date', '$departureTime', '$departureTime', '$arrivalTime', 'habil', $routeId, $vehicle->company_id, '$vehicle->number', '$vehicle->plate', 'Terminó', FALSE, 0, 0, 1, TRUE,
-                        '$departureTime' :: TIME :: INTERVAL + (SELECT get_route_total_time_from_dispatch_time('$date $departureTime' :: TIMESTAMP, $routeId)) :: INTERVAL 
+                        ('$date', '$departureTime', '$departureTime', '$arrivalTime', 'habil', $route->id, $route->dispatch_id, $vehicle->company_id, '$vehicle->number', '$vehicle->plate', 'Terminó', FALSE, 0, 0, 1, TRUE,
+                        '$departureTime' :: TIME :: INTERVAL + (SELECT get_route_total_time_from_dispatch_time('$date $departureTime' :: TIMESTAMP, $route->id)) :: INTERVAL,
+                         $userId
                         ) 
                     RETURNING id_registro
                 ");

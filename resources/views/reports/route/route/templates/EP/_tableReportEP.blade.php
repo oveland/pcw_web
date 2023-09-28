@@ -826,58 +826,60 @@
                         <i class="fa fa-map faa-pulse"></i>
                     </a>
 
-                    @if( Auth::user()->isSuperAdmin())
-                        <div class="p-t-5">
-                            <div class="btn-group">
-                                <a href="javascript:;" data-toggle="dropdown" class="btn btn-circle btn-outline dropdown-toggle btn-dropdown" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-route-report" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 32px, 0px);">
-                                    @if( Auth::user()->canMakeTakings()  )
-                                        <li>
-                                            <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal"
-                                               onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')">
-                                                <span class="{{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp' }}">
-                                                    <i class="fa fa-dollar faa-vertical"></i> @lang('Takings')
-                                                </span>
-                                            </a>
-                                        </li>
-                                    @endif
-
-                                    @if( Auth::user()->company->hasSeatSensorCounter())
-                                        <li>
-                                            <a href="#modal-seating-profile" data-toggle="modal"
-                                               onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')">
-                                                <i class="fa fa-users faa-pulse text-warning"></i> @lang('See profile seating report')
-                                            </a>
-                                        </li>
-                                    @endif
+                    <div class="p-t-5">
+                        <div class="btn-group">
+                            <a href="javascript:;" data-toggle="dropdown" class="btn btn-circle btn-outline dropdown-toggle btn-dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-route-report" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 32px, 0px);">
+                                @if( Auth::user()->canMakeTakings()  )
                                     <li>
-                                        <a class="text-danger tooltips edit-field-dr"
-                                           data-confirm="@lang('Confirm action for discard dispatch turn')"
-                                           data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
-                                           data-id="{{ $dispatchRegister->id }}">
-                                            <span class="text-danger">
-                                                <i class="fa fa-trash"></i> @lang('Cancel turn')
+                                        <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal"
+                                           onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')">
+                                            <span class="{{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp' }}">
+                                                <i class="fa fa-dollar faa-vertical"></i> @lang('Takings')
                                             </span>
                                         </a>
                                     </li>
-                                    <li class="divider"></li>
+                                @endif
+
+                                @if( Auth::user()->company->hasSeatSensorCounter())
                                     <li>
-                                        <a onclick="executeDAR({{ $dispatchRegister->id }})" class="{{ $dispatchRegister->process_ard ? 'text-warning' : 'text-success' }}">
-                                            <i class="fa fa-cogs faa-pulse"></i> @lang('Execute DAR')
+                                        <a href="#modal-seating-profile" data-toggle="modal"
+                                           onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')">
+                                            <i class="fa fa-users faa-pulse text-warning"></i> @lang('See profile seating report')
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="#modal-report-log" data-toggle="modal"
-                                           onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()">
-                                            <i class="fa fa-code faa-pulse"></i> @lang('Show report details')
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                                @endif
+                                @if(Auth::user()->isSuperAdmin() || !$dispatchRegister->round_trip)
+                                <li>
+                                    <a class="text-danger tooltips edit-field-dr"
+                                       data-confirm="@lang('Confirm action for discard dispatch turn')"
+                                       data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
+                                       data-id="{{ $dispatchRegister->id }}">
+                                        <span class="text-danger">
+                                            <i class="fa fa-trash"></i> @lang('Cancel turn')
+                                        </span>
+                                    </a>
+                                </li>
+                                @endif
+                                @if(Auth::user()->isSuperAdmin())
+                                <li class="divider"></li>
+                                <li>
+                                    <a onclick="executeDAR({{ $dispatchRegister->id }})" class="{{ $dispatchRegister->process_ard ? 'text-warning' : 'text-success' }}">
+                                        <i class="fa fa-cogs faa-pulse"></i> @lang('Execute DAR')
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#modal-report-log" data-toggle="modal"
+                                       onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()">
+                                        <i class="fa fa-code faa-pulse"></i> @lang('Show report details')
+                                    </a>
+                                </li>
+                                @endif
+                            </ul>
                         </div>
-                    @endif
+                    </div>
                 </td>
             @endif
         </tr>
