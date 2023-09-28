@@ -67,7 +67,7 @@
                             <i class="fa fa-search"></i> @lang('Search')
                         </button>
                         <div class="lm-sync-container">
-                            <button id="lm-sync-button" type="button" class="btn btn-info btn-sm btn-search-report">
+                            <button id="lm-sync-button" type="button" class="btn btn-info btn-sm">
                                 <i class="fa fa-refresh"></i>
                                 <span>@lang('Sync spreadsheets')</span>
                             </button>
@@ -367,8 +367,8 @@
             });
         }
 
-        function initDateTimePicker(format) {
-            const containers = $('.datetime-report');
+        function initDateTimePicker(format, els) {
+            const containers = els ? els : $('.datetime-report');
 
             containers.each(function (i, el) {
                 $(el).data("DateTimePicker")?.destroy();
@@ -376,6 +376,10 @@
                 $(el).datetimepicker({
                     format,
                     locale: 'es'
+                });
+
+                $(el).click(function() {
+                    $(this).data("DateTimePicker")?.show();
                 });
             });
         }
@@ -400,10 +404,6 @@
             }
         });
 
-        $('.datetime-report').click(function() {
-            $(this).data("DateTimePicker")?.show();
-        });
-
         $('#spreadsheet-report').keyup(function () {
             const hasValue = !!$(this).val();
             const primaryFilters = $('.primary-filter');
@@ -419,7 +419,7 @@
             const button = $(this);
             const buttonLabel = button.find('span');
             const buttonIcon = button.find('i');
-            const dateReport = $('#date-report').val();
+            const dateReport = $('#date-report').val().split(' ')[0];
 
             function processing(loading) {
                 buttonLabel.text(loading ? '@lang('Sync processing') • @lang('Date'): ' + dateReport : '@lang('Sync spreadsheets')');

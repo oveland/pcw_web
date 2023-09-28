@@ -97,6 +97,11 @@ class Company extends Model
         self::IBAGUE,
     ];
 
+    function equal($id)
+    {
+        return $this->id === $id;
+    }
+
     /**
      * @return mixed|string
      */
@@ -251,6 +256,7 @@ class Company extends Model
 
             ])->contains($this->id) || auth()->user()->isAdmin();
     }
+
     function hasSensorTotalCounter()
     {
         return collect([
@@ -472,5 +478,12 @@ class Company extends Model
         return collect(self::ALL)
             ->forget(self::TRANSPUBENZA)
             ->contains($this->id);
+    }
+
+    function canCreateDR()
+    {
+        return collect([
+            self::EXPRESO_PALMIRA
+        ])->contains($this->id);
     }
 }

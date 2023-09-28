@@ -225,6 +225,11 @@ class DispatchRegister extends Model
         return StrTime::toString($departure_time);
     }
 
+    function getUpdatedAtAttribute($updatedAt)
+    {
+        return $updatedAt ? explode('.', $updatedAt)[0] : $updatedAt;
+    }
+
     function getArrivalTimeAttribute($arrival_time)
     {
         return StrTime::toString($arrival_time);

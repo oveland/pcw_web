@@ -7,6 +7,7 @@ use App\Models\Vehicles\LastLocation;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\Report;
 use App\Models\Vehicles\Location;
+use App\Models\Vehicles\Vehicle;
 use App\Services\Auth\PCWAuthService;
 use App\Services\Reports\Routes\RouteService;
 use App\Traits\CounterByRecorder;
@@ -133,6 +134,8 @@ class ReportRouteController extends Controller
 
         }
 
+        $activeRoutes = $company->activeRoutes;
+
         return view($view, compact([
             'dispatchRegistersByVehicles',
             'reportsByVehicle',
@@ -150,7 +153,8 @@ class ReportRouteController extends Controller
             'activeTurns',
             'cancelledTurns',
             'timeReport',
-            'spreadsheetReport'
+            'spreadsheetReport',
+            'activeRoutes'
         ]));
     }
 
@@ -282,6 +286,67 @@ class ReportRouteController extends Controller
                 $response = $client->request('GET', config('gps.server.url') . "/autoDispatcher/processDispatchRegister/$dispatchRegisterId?sync=true", ['timeout' => 0]);
 
                 return $response->getBody();
+                break;
+            case 'addDR':
+                $response = (object)[
+                    'success' => true,
+                    'message' => __('Dispatch register created successfully'),
+                    'id' => null
+                ];
+
+                $vehicle = Vehicle::find($request->get('dr-vehicle-id') ?? 0); // TODO: implements in form
+
+                if(!$vehicle) {
+                    $response->success = false;
+                    $response->message = __('Vehicle not found');
+                    return collect($response)->toJson();
+                }
+
+                $date = $request->get('dr-date');
+                $departureTime = $request->get('dr-departure-time');
+                $arrivalTime = $request->get('dr-arrival-time');
+                $routeId = $request->get('dr-route-id');
+                $spreadSheetNumber = $request->get('dr-sp-number');
+                $spreadSheetPassengers = $request->get('dr-sp-passengers');
+                $visualPassengers = $request->get('dr-visual-passengers');
+
+                $insert = \DB::select("
+                    INSERT INTO registrodespacho 
+                        (fecha, hora, h_reg_despachado, h_reg_llegada, tipo_dia, id_ruta, id_empresa, n_vehiculo, n_placa, observaciones, cancelado, registradora_salida, registradora_llegada, n_turno, ignore_trigger, h_llegada_prog)
+                    VALUES 
+                        ('$date', '$departureTime', '$departureTime', '$arrivalTime', 'habil', $routeId, $vehicle->company_id, '$vehicle->number', '$vehicle->plate', 'Terminó', FALSE, 0, 0, 1, TRUE,
+                        '$departureTime' :: TIME :: INTERVAL + (SELECT get_route_total_time_from_dispatch_time('$date $departureTime' :: TIMESTAMP, $routeId)) :: INTERVAL 
+                        ) 
+                    RETURNING id_registro
+                ");
+
+                $dispatchRegister = DispatchRegister::find(collect($insert)->first()->id_registro ?? 0);
+
+                if(!$dispatchRegister) {
+                    $response->success = false;
+                    $response->message = 'Dispatch register did not created in database';
+                    return collect($response)->toJson();
+                }
+
+                $response->id = $dispatchRegister->id;
+
+                if($spreadSheetNumber) {
+                    $drObs = $dispatchRegister->getObservation('spreadsheet_passengers');
+                    $drObs->observation = $spreadSheetNumber;
+                    $drObs->value = $spreadSheetPassengers;
+                    $drObs->user()->associate(auth()->user());
+                    $drObs->save();
+                }
+
+                if($visualPassengers && $response->success) {
+                    $drObs = $dispatchRegister->getObservation('end_recorder');
+                    $drObs->observation = $spreadSheetNumber;
+                    $drObs->value = $visualPassengers;
+                    $drObs->user()->associate(auth()->user());
+                    $drObs->save();
+                }
+
+                return collect($response)->toJson();
                 break;
             default:
                 return "Nothing to do";

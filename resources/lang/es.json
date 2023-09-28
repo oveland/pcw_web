@@ -813,7 +813,7 @@
   "Absolute difference from dispatch": "Diferencia absoluta desde despacho",
   "Scheduled time - Measured time": "Tiempo programado - Tiempo medido entre puntos",
   "Average excluded": "Excluido de promedios",
-  "See profile seating report": "Ver reporte de perfil de asientos",
+  "See profile seating report": "Reporte perfil de asientos",
   "Taken passengers": "Pasajeros recaudo",
   "Invalid count": "Conteo no válido",
   "Please verify recorder or sensor values": "Porfavor verifique los valores de registradora o de sensor",
@@ -847,5 +847,12 @@
   "By range time": "Por rango horario",
   "Sync spreadsheets": "Sincroinzar planillas",
   "Sync processing": "Sincronizando datos",
-  "alert": "ALERTA"
+  "alert": "ALERTA",
+  "Add": "Agregar",
+  "Spreadsheet number": "Número de planilla",
+  "Spreadsheet passengers": "Pasajeros planilla",
+  "Execute DAR": "Reprocesar ubicaciones",
+  "Show report details": "Ver detalle de ubicaciones",
+  "Visual passengers": "Pasajeros visual",
+  "Vehicle not found": "Vehículo no encontrado"
 }
