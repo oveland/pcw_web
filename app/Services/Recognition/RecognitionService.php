@@ -3,6 +3,7 @@
 namespace App\Services\Recognition;
 
 use App\Models\Apps\Rocket\Photo;
+use Log;
 use GuzzleHttp\Client;
 
 class RecognitionService implements Recognition
@@ -36,6 +37,8 @@ class RecognitionService implements Recognition
         $client = new Client();
         $url = config('gps.server.recognitionUrlAPI') . "/$type?id=" . $this->photo->id . "&with_mask=1";
         $response = $client->request('GET', $url, ['timeout' => 0]);
+
+//        Log::info("$type response->getStatusCode() = " . $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents());
 

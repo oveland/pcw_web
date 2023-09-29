@@ -129,18 +129,27 @@ class Service4G extends SyrusService
     function getSide($fileName, $imei)
     {
         $fileNames = explode('_', $fileName);
-        if ($imei = '352557104727915') {
+        if ($imei == '352557104727915' ) {
             if ($fileNames[2] == 'ch1') return '1';
             if ($fileNames[2] == 'ch2') return '2';
             if ($fileNames[2] == 'ch3') return '4';
             if ($fileNames[2] == 'ch4') return '3';
             if ($fileNames[2] == 'ch5') return '5';
         }
-        if ($fileNames[2] == 'ch3') return '1';
-        if ($fileNames[2] == 'ch4') return '2';
-        if ($fileNames[2] == 'ch5') return '3';
-        if ($fileNames[2] == 'ch7') return '4';
-        if ($fileNames[2] == 'ch8') return '5';
+        if ($imei == '352557104743888'){
+            if ($fileNames[2] == 'ch1') return '1';
+            if ($fileNames[2] == 'ch2') return '2';
+            if ($fileNames[2] == 'ch3') return '3';
+            if ($fileNames[2] == 'ch4') return '4';
+            if ($fileNames[2] == 'ch5') return '5';
+        }
+        if ($fileNames[2] == 'ch1') return '1';
+        if ($fileNames[2] == 'ch2') return '2';
+        if ($fileNames[2] == 'ch3') return '3';
+        if ($fileNames[2] == 'ch4') return '4';
+        if ($fileNames[2] == 'ch5') return '5';
+        if ($fileNames[2] == 'ch6') return '6';
+
 
         return '0';
     }

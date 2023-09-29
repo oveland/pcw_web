@@ -16,7 +16,7 @@ class CountCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rocket:count {--vehicle-plate=WDL-057} {--type=persons_and_faces} {--camera=all} {--pa=2} {--pr=2} {--date=}';
+    protected $signature = 'rocket:count {--vehicle-plate=WDL-057} {--type=persons_and_faces} {--camera=all} {--pa=2} {--pr=2} {--date=} {--with-random-delay=}';
 
     /**
      * The console command description.
@@ -53,6 +53,14 @@ class CountCommand extends Command
         $persistenceRelease = $this->option('pr');
         $camera = $this->option('camera');
 
+        $withRandomDelay = $this->option('with-random-delay') == 'true';
+
+        if ($withRandomDelay && false) {
+            $waitSeconds = random_int(0, 15 * 60);
+            sleep($waitSeconds);
+            $this->log("Rocket count DELAY: $waitSeconds seconds...");
+        }
+
         if ($date && $vehiclePlate) {
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
@@ -83,6 +91,6 @@ class CountCommand extends Command
         $date = Carbon::now()->toDateTimeString();
         $this->info("$date • $message");
 //        Log::useDailyFiles(storage_path().'/logs/rocket.log', 10);
-        Log::info("[Rocket count] $message" );
+        Log::info("[Rocket count] $message");
     }
 }

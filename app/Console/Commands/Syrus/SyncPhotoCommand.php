@@ -54,6 +54,8 @@ class SyncPhotoCommand extends Command
         $imei = $this->option('imei');
         $company = $this->option('company');
 
+        $start = Carbon::now();
+
         if ($company) {
             $company = Company::find($company);
 
@@ -75,7 +77,8 @@ class SyncPhotoCommand extends Command
                 $company = $vehicle->company;
                 $this->log("$company->short_name | Start vehicle $vehicle->number($vehicle->id) imei $imei");
                 $response = $this->syrusService->syncPhoto($imei);
-                $this->log($response);
+                $elapsed = $this->getElapsed($start);
+                $this->log($response . " T=$elapsed seconds");
                 $success = $response->get('success');
                 $message = $response->get('message');
                 $this->log("$company->short_name | End vehicle $vehicle->number($vehicle->id) imei $imei | Success: $success | $message");
@@ -88,5 +91,9 @@ class SyncPhotoCommand extends Command
         $date = Carbon::now()->toDateTimeString();
         $this->info("$date | $message");
         Log::channel('rocket')->info("[Syrus3G sync] $message");
+    }
+
+    function getElapsed(Carbon $from) {
+        return Carbon::now()->diffInSeconds($from);
     }
 }

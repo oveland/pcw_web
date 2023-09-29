@@ -95,7 +95,7 @@
                         <div class="form-group">
                             <select name="vehicle-report" id="vehicle-report"
                                     class="default-select2 form-control col-md-12" data-with-all="true">
-                                @include('partials.selects.vehicles', compact('vehicles'), ['withAll' => true])
+                                @include('partials.selects.vehicles', compact('vehicles'), ['withOnlyActive' => true])
                             </select>
                         </div>
                     </div>

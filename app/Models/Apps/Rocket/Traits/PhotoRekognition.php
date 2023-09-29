@@ -82,7 +82,7 @@ trait PhotoRekognition
         } catch (Exception $e) {
             $success = false;
             $vn = $this->vehicle->number;
-            Log::info(" ------------------- $vn Photo $this->id ERROR ON processRekognition Error code: " . $e->getCode());
+            Log::info(" ------------------- $vn Photo $this->id ERROR ON processRekognition Error code: " . $e->getCode() ." • " . $e->getMessage());
         }
 
         return $success;

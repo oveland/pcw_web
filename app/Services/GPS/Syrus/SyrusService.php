@@ -62,7 +62,7 @@ class SyrusService
 
         $vehicle = $gpsVehicle->vehicle;
 
-        $waitSeconds = random_int(0, 15);
+        $waitSeconds = random_int(0, 30);
 
         $this->log("• Start sync for vehicle $vehicle->number in $waitSeconds");
         sleep($waitSeconds);
