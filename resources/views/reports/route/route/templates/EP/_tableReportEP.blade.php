@@ -826,13 +826,13 @@
                         <i class="fa fa-map faa-pulse"></i>
                     </a>
 
-                    <div class="p-t-5">
+                    <div class="p-t-5 {{ Auth::user()->isSuperAdmin() || !$dispatchRegister->round_trip ? '' : 'hide' }}">
                         <div class="btn-group">
                             <a href="javascript:;" data-toggle="dropdown" class="btn btn-circle btn-outline dropdown-toggle btn-dropdown" aria-expanded="false">
                                 <i class="fa fa-ellipsis-v"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-route-report" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 32px, 0px);">
-                                @if( Auth::user()->canMakeTakings()  )
+                                @if(Auth::user()->isSuperAdmin())
                                     <li>
                                         <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal"
                                            onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')">
@@ -843,7 +843,7 @@
                                     </li>
                                 @endif
 
-                                @if( Auth::user()->company->hasSeatSensorCounter())
+                                @if(Auth::user()->isSuperAdmin())
                                     <li>
                                         <a href="#modal-seating-profile" data-toggle="modal"
                                            onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')">
@@ -1091,8 +1091,8 @@
     }
 
     .dropdown-menu-route-report {
-        top: 3px !important;
-        left: -170px !important;
+        top: -38px !important;
+        left: -180px !important;
         transform: translate3d(0px, 40px, 0px) !important;
     }
 
