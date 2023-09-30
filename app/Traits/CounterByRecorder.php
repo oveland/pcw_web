@@ -68,7 +68,8 @@ trait CounterByRecorder
             $startRecorder = $firstStartRecorder;
 
             foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
-                $passengersByRoundTrip = 0;
+                $drObs = $dispatchRegister->getObservation('end_recorder');
+                $passengersByRoundTrip = $drObs ? $drObs->value : 0;
                 $endRecorder = 0;
 
 //                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
@@ -130,7 +131,7 @@ trait CounterByRecorder
                         $endRecorder = 999999 + $endRecorder;
                     }
 
-                    $passengersByRoundTrip = $endRecorder - $startRecorder;
+                    $passengersByRoundTrip = $passengersByRoundTrip ?: $endRecorder - $startRecorder;
                     $totalPassengers += $passengersByRoundTrip;
                 }
 

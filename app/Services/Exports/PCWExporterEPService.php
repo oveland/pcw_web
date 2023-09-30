@@ -21,7 +21,7 @@ class PCWExporterEPService extends PCWExporterService
                 'nameRute'=>$dataExport->nameRute,
             ];
             $sheet->setCellValue('A1', "TRANSPORTES EXPRESO PALMIRA        ".$dataExport->title);
-            $sheet->setCellValue('A2', $dataExport->subTitle.$config->nameRute);
+            $sheet->setCellValue('A2', $dataExport->subTitle." ".$config->nameRute);
 
             $sheet->fromArray($dataExport->data, null, 'A3', true, true);
 
