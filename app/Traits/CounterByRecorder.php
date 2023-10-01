@@ -69,7 +69,7 @@ trait CounterByRecorder
 
             foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
                 $drObs = $dispatchRegister->getObservation('end_recorder');
-                $passengersByRoundTrip = $drObs ? $drObs->value : 0;
+                $passengersByRoundTrip = $drObs && $vehicle->company_id ==39 ? $drObs->value : 0;
                 $endRecorder = 0;
 
 //                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
