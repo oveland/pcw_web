@@ -82,7 +82,8 @@ trait CounterBySensor
 //                $totalByRecorderByRoundTrip = $totalBySensorRecorderByRoundTrip;
 //                $totalByRecorder += $totalByRecorderByRoundTrip;
 
-                $passengersByRoundTrip = 0;
+                $drObs = $dispatchRegister->getObservation('end_recorder');
+                $passengersByRoundTrip = $drObs && $vehicle->company_id == 39 ? $drObs->value : 0;
                 $endRecorder = 0;
 
 //                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
@@ -96,7 +97,7 @@ trait CounterBySensor
                         $endRecorder = 999999 + $endRecorder;
                     }
 
-                    $passengersByRoundTrip = $endRecorder - $startRecorder;
+                    $passengersByRoundTrip = $passengersByRoundTrip ?: $endRecorder - $startRecorder;
                     $totalPassengers += $passengersByRoundTrip;
                 }
 

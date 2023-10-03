@@ -69,7 +69,7 @@ trait CounterByRecorder
 
             foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
                 $drObs = $dispatchRegister->getObservation('end_recorder');
-                $passengersByRoundTrip = $drObs && $vehicle->company_id ==39 ? $drObs->value : 0;
+                $passengersByRoundTrip = $drObs && $vehicle->company_id == 39 ? $drObs->value : 0;
                 $endRecorder = 0;
 
 //                $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
@@ -80,7 +80,7 @@ trait CounterByRecorder
 //                    $startRecorder = $dispatchRegister->start_recorder > 0 ? $dispatchRegister->start_recorder : $startRecorder;
 
 
-                    if ($startRecorder == 0 && false ) { // Commented with false, this logic is controlled by trigger on registrodespacho table
+                    if ($startRecorder == 0 && false) { // Commented with false, this logic is controlled by trigger on registrodespacho table
                         if ($classifyByRoute || true) {
                             $lastDispatchRegister = DispatchRegister::active()->where('vehicle_id', $vehicleId)
                                 ->where('date', '=', $dispatchRegister->date)
@@ -95,9 +95,9 @@ trait CounterByRecorder
                                 $endRecorderByOtherRoutes = $lastDispatchRegister->end_recorder;
                             } else {
                                 $endRecorderByOtherRoutes = $dispatchRegisters->where('vehicle_id', $vehicleId)
-                                        ->where('id', '<', $dispatchRegister->id)
-                                        ->where('id', '>=', $lastDispatchRegister->id ?? 0)
-                                        ->last()->end_recorder ?? null;
+                                    ->where('id', '<', $dispatchRegister->id)
+                                    ->where('id', '>=', $lastDispatchRegister->id ?? 0)
+                                    ->last()->end_recorder ?? null;
                             }
 
                             $startRecorder = (($endRecorderByOtherRoutes > 0 && abs($startRecorder - $endRecorderByOtherRoutes) > 1000)) ? $endRecorderByOtherRoutes : $startRecorder;
@@ -109,20 +109,20 @@ trait CounterByRecorder
 
                     if ($startRecorder == 0 && false) { // Commented with false, this logic is controlled by trigger on registrodespacho table
                         $startRecorder = DispatchRegister::active()
-                                ->where('vehicle_id', $vehicleId)
-                                ->where('date', '=', $dispatchRegister->date)
-                                ->where('id', '<', $dispatchRegister->id)
-                                ->orderByDesc('id')
-                                ->limit(1)->get()->first()
-                                ->end_recorder ?? 0;
+                            ->where('vehicle_id', $vehicleId)
+                            ->where('date', '=', $dispatchRegister->date)
+                            ->where('id', '<', $dispatchRegister->id)
+                            ->orderByDesc('id')
+                            ->limit(1)->get()->first()
+                            ->end_recorder ?? 0;
 
                         if ($startRecorder == 0) {
                             $startRecorder = DispatchRegister::active()
-                                    ->where('vehicle_id', $vehicleId)
-                                    ->where('date', '<', $dispatchRegister->date)
-                                    ->orderByDesc('id')
-                                    ->limit(1)->get()->first()
-                                    ->end_recorder ?? 0;
+                                ->where('vehicle_id', $vehicleId)
+                                ->where('date', '<', $dispatchRegister->date)
+                                ->orderByDesc('id')
+                                ->limit(1)->get()->first()
+                                ->end_recorder ?? 0;
                         }
                     }
 
