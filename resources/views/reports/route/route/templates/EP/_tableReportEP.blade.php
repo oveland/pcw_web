@@ -50,7 +50,7 @@
             <i class="fa fa-clock-o text-muted"></i><br>
             @lang('Arrival Time')
         </th>
-        @if( Auth::user()->isSuperAdmin())
+        @if( Auth::user()->isSuperAdmin()|| Auth::user()->isExpreso())
             <th width="10%" class="text-center">
                 <i class="fa fa-file  fa-3x fa-fw"></i><br>
                 @lang('Planilla FICS')
@@ -395,7 +395,7 @@
                     {{$dispatchRegister->getRouteTime()}}
                 </td>
             @endif
-            @if( Auth::user()->isSuperAdmin())
+            @if( Auth::user()->isSuperAdmin()|| Auth::user()->isExpreso())
                 <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #ffd39e">
                     @php
                         $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');

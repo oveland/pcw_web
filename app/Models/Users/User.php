@@ -132,7 +132,7 @@ class User extends Authenticatable
     {
         return $this->id == 2018101286 || $this->id == 2018101362 || $this->id == 2018101369 || $this->id == 2018101372 || $this->id == 2018101377
             || $this->id == 2018101383 || $this->id == 2018101382 || $this->id == 2018101381 || $this->id == 2018101380
-            || $this->id == 2018101379 || $this->id == 2018101378;
+            || $this->id == 2018101379 || $this->id == 2018101378 || $this->id == 2018101409 || $this->id ==2018101356;
     }
 
     public function liquidatorEP()
@@ -358,6 +358,8 @@ class User extends Authenticatable
             2018101379,
             2018101378,
             2018101398,
+            2018101409,
+
 
 
         ];
@@ -384,6 +386,7 @@ class User extends Authenticatable
             2018101369, //henny
             2018101372, //Dora
             2018101377, //diana
+            2018101409,
             2018101383,
             2018101382,
             2018101381, // nuevos usuarios EP
