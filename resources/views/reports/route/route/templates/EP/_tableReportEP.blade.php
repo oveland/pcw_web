@@ -684,7 +684,7 @@
                          if ($countBySensorFinal <= $spreadsheetPassengers->value){
                              $totalPassengers = $spreadsheetPassengers->value;
                              $title="Número de planilla";
-                         }elseif ($countBySensorFinal>= $promPassengers){
+                         }elseif ($countBySensorFinal>= $spreadsheetPassengersSync->value){
                              $totalPassengers = $countBySensorFinal;
                              $title = "Conteo por Camara";
                          }else{
