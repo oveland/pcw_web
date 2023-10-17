@@ -66,7 +66,7 @@
             <br>
             <div class="input-group input-group-sm text-center" style="display: none;">
                 <input type="text" class="form-control form-control-sm search-input">
-                 <span class="input-group-append">
+                <span class="input-group-append">
                     <button type="button" class="btn btn-info btn-sm search-button">Go!</button>
                 </span>
             </div>
@@ -134,6 +134,11 @@
                 <i class="icon-users text-muted"></i><br>
                 @lang('Conteo Maximos')
             </th>
+            <th class="text-center">
+                <i class="icon-users text-muted"></i><br>
+                @lang('Total Maximos')
+            </th>
+
         @endif
         @if($user->canViewAction())
             <th width="10%">
@@ -358,7 +363,8 @@
             @endif
 
             <td width="10%" class="text-center">
-                <span class="tooltips" title="Registrado a las {{ $dispatchRegister->updated_at }}">{{ $strTime->toString($dispatchRegister->departure_time) }}</span>
+                <span class="tooltips"
+                      title="Registrado a las {{ $dispatchRegister->updated_at }}">{{ $strTime->toString($dispatchRegister->departure_time) }}</span>
             </td>
 
             <td width="10%"
@@ -471,37 +477,38 @@
                             <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengers->observation ?? '0' }}
                         </span>
                         <div class="box-edit" style="display: none">
-                            <input id="edit-spreadsheet-passengers-obs-{{ $dispatchRegister->id }}"style="display: none"
-                               title="@lang('Press enter for edit')"
-                               name=""
-                               type="number"
-                               data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
-                               data-id="{{ $dispatchRegister->id }}"
-                               data-field="spreadsheet_passengers"
-                               class="input-sm form-control edit-input-recorder edit-input-value"
-                               value="{{ $spreadsheetPassengers->value }}"/>
+                            <input id="edit-spreadsheet-passengers-obs-{{ $dispatchRegister->id }}"
+                                   style="display: none"
+                                   title="@lang('Press enter for edit')"
+                                   name=""
+                                   type="number"
+                                   data-url="{{ route('report-passengers-manage-update',['action'=> 'editField']) }}"
+                                   data-id="{{ $dispatchRegister->id }}"
+                                   data-field="spreadsheet_passengers"
+                                   class="input-sm form-control edit-input-recorder edit-input-value"
+                                   value="{{ $spreadsheetPassengers->value }}"/>
                             <div class="box-obs">
                                     <textarea
                                             name=""
                                             rows="3"
                                             class="input-sm form-control edit-input-obs result-textarea"
                                             placeholder="@lang('# Spreadsheet')">{{ $spreadsheetPassengers->observation }}</textarea>
-                                    @if($spreadsheetPassengers->updated_at)
+                                @if($spreadsheetPassengers->updated_at)
                                     <div class="text-muted text-center box-audit">
                                         <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->user->username }}</small>
                                         ·
                                         <small style="font-size: 0.9rem">{{ $spreadsheetPassengers->updated_at }}</small>
                                     </div>
-                                    @endif
-                                     <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
-                                            title="@lang('Cancel')">
-                                            <i class="fa fa-times"></i>
-                                     </button>
-                                    <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                            title="@lang('Save')"
-                                            onclick="return confirm('Confirma que los datos son correctos')">
-                                            <i class="fa fa-save"></i>
-                                    </button>
+                                @endif
+                                <button class="btn btn-xs btn-default m-5 edit-btn-cancel"
+                                        title="@lang('Cancel')">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <button class="btn btn-xs btn-success m-5 edit-btn-save"
+                                        title="@lang('Save')"
+                                        onclick="return confirm('Confirma que los datos son correctos')">
+                                    <i class="fa fa-save"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -542,10 +549,10 @@
                                        value="{{ $visualPassengers->value }}">
                                 <div class="box-obs">
                                     <textarea style="display: none"
-                                            name=""
-                                            rows="3"
-                                            class="input-sm form-control edit-input-obs"
-                                            placeholder="@lang('# Spreadsheet')">{{ $visualPassengers->observation }}</textarea>
+                                              name=""
+                                              rows="3"
+                                              class="input-sm form-control edit-input-obs"
+                                              placeholder="@lang('# Spreadsheet')">{{ $visualPassengers->observation }}</textarea>
                                     @if($visualPassengers->updated_at)
                                         <div class="text-muted text-center box-audit">
                                             <small style="font-size: 0.9rem">{{ $visualPassengers->user->username }}</small>
@@ -658,20 +665,44 @@
                                   }
                               break;
                           }
+                        $topologies = \App\Models\Vehicles\TopologiesSeats::query() //total asientos de VH
+                            ->where('vehicle_id', $vehicle->id)
+                            ->with('vehicle')
+                            ->get();
+
+                        $totalSeats = 0;
+                        $totalPassengers = 0;
+                        $title = null;
+                        $style = false;
+
+                         foreach ($topologies as $topology) {
+                             $numSeatsCam = $topology->number_seats;
+                             if (is_numeric($numSeatsCam)) {
+                                 $totalSeats += $numSeatsCam;
+                             }
+                         }
+                         if ($countBySensorFinal <= $spreadsheetPassengers->value){
+                             $totalPassengers = $spreadsheetPassengers->value;
+                             $title="Número de planilla";
+                         }elseif ($countBySensorFinal>= $promPassengers){
+                             $totalPassengers = $countBySensorFinal;
+                             $title = "Conteo por Camara";
+                         }else{
+                             $totalPassengers = $countBySensorFinal;
+                             $title = "Conteo por cámara < promedio";
+                             $style = true;
+                         }
                     @endphp
 
-                    @if($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers->value)
-                        <span class="tooltips" title="Número de planilla">
-                            {{ $spreadsheetPassengers->value ?? 0 }}
+                    @if($style == false)
+                        <span class="tooltips"
+                              title="{{$title}}">
+                            {{ $totalPassengers>$totalSeats ? $totalSeats ?? 0 : $totalPassengers ?? 0 }}
                         </span>
-                    @elseif($dispatchRegister->final_sensor_counter>= $promPassengers )
-                        <span class="tooltips" title="Número de cámara">
-                            {{ $countBySensorFinal ?? 0 }}
-                        </span>
-                    @else
+                    @elseif( $style == true)
                         <span class="tooltips" style="color: darkred; font-weight: 900"
-                              title="Número de cámara < promedio">
-                            {{ $countBySensorFinal ?? 0 }}
+                              title="{{$title}}">
+                            {{$totalPassengers>$totalSeats ? $totalSeats ?? 0 : $totalPassengers ?? 0}}
                         </span>
                     @endif
                 </td>
@@ -815,6 +846,10 @@
                         {{$countMax}}
                     </small>
                 </td>
+                <td class="tooltips text-bold text-center"
+                    data-title="@lang('Conteo por maximos')">
+                    {{$countMax>$totalSeats ? $totalSeats??0 : $countMax??0 }}
+                </td>
             @endif
             @if($user->canViewAction())
                 <td width="15%" class="text-center">
@@ -828,13 +863,16 @@
 
                     <div class="p-t-5 {{ Auth::user()->isSuperAdmin() || !$dispatchRegister->round_trip ? '' : 'hide' }}">
                         <div class="btn-group">
-                            <a href="javascript:;" data-toggle="dropdown" class="btn btn-circle btn-outline dropdown-toggle btn-dropdown" aria-expanded="false">
+                            <a href="javascript:;" data-toggle="dropdown"
+                               class="btn btn-circle btn-outline dropdown-toggle btn-dropdown" aria-expanded="false">
                                 <i class="fa fa-ellipsis-v"></i>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-route-report" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 32px, 0px);">
+                            <ul class="dropdown-menu dropdown-menu-route-report" x-placement="bottom-start"
+                                style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 32px, 0px);">
                                 @if(Auth::user()->isSuperAdmin())
                                     <li>
-                                        <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers" data-toggle="modal"
+                                        <a id="btn-taking-{{ $dispatchRegister->id }}" href="#modal-takings-passengers"
+                                           data-toggle="modal"
                                            onclick="showTakingsForm('{{ route("operation-routes-takings-form", ["dispatchRegister" => $dispatchRegister->id]) }}')">
                                             <span class="{{ $dispatchRegister->takings->isTaken() ? 'purple' : 'purple-sharp' }}">
                                                 <i class="fa fa-dollar faa-vertical"></i> @lang('Takings')
@@ -852,30 +890,31 @@
                                     </li>
                                 @endif
                                 @if(Auth::user()->isSuperAdmin() || !$dispatchRegister->round_trip)
-                                <li>
-                                    <a class="text-danger tooltips edit-field-dr"
-                                       data-confirm="@lang('Confirm action for discard dispatch turn')"
-                                       data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
-                                       data-id="{{ $dispatchRegister->id }}">
+                                    <li>
+                                        <a class="text-danger tooltips edit-field-dr"
+                                           data-confirm="@lang('Confirm action for discard dispatch turn')"
+                                           data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
+                                           data-id="{{ $dispatchRegister->id }}">
                                         <span class="text-danger">
                                             <i class="fa fa-trash"></i> @lang('Cancel turn')
                                         </span>
-                                    </a>
-                                </li>
+                                        </a>
+                                    </li>
                                 @endif
                                 @if(Auth::user()->isSuperAdmin())
-                                <li class="divider"></li>
-                                <li>
-                                    <a onclick="executeDAR({{ $dispatchRegister->id }})" class="{{ $dispatchRegister->process_ard ? 'text-warning' : 'text-success' }}">
-                                        <i class="fa fa-cogs faa-pulse"></i> @lang('Execute DAR')
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#modal-report-log" data-toggle="modal"
-                                       onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()">
-                                        <i class="fa fa-code faa-pulse"></i> @lang('Show report details')
-                                    </a>
-                                </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a onclick="executeDAR({{ $dispatchRegister->id }})"
+                                           class="{{ $dispatchRegister->process_ard ? 'text-warning' : 'text-success' }}">
+                                            <i class="fa fa-cogs faa-pulse"></i> @lang('Execute DAR')
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#modal-report-log" data-toggle="modal"
+                                           onclick="$('#iframe-report-log').hide().attr('src','{{ route('report-route-get-log',['dispatchRegister' => $dispatchRegister->id]) }}').fadeIn()">
+                                            <i class="fa fa-code faa-pulse"></i> @lang('Show report details')
+                                        </a>
+                                    </li>
                                 @endif
                             </ul>
                         </div>
