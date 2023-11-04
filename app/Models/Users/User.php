@@ -132,7 +132,7 @@ class User extends Authenticatable
     {
         return $this->id == 2018101286 || $this->id == 2018101362 || $this->id == 2018101369 || $this->id == 2018101372 || $this->id == 2018101377
             || $this->id == 2018101383 || $this->id == 2018101382 || $this->id == 2018101381 || $this->id == 2018101380
-            || $this->id == 2018101379 || $this->id == 2018101378 || $this->id == 2018101409 || $this->id ==2018101356;
+            || $this->id == 2018101379 || $this->id == 2018101378 || $this->id == 2018101409 || $this->id ==2018101356 ||$this->id == 2018101394 ;
     }
 
     public function liquidatorEP()
@@ -372,10 +372,9 @@ class User extends Authenticatable
         $usersCan = [
             #ALAMEDA:
             999457, // GERENCIALAMEDA
-            98914189, // JEFE OPERATIVO
             31580814, // JEFE RRHH
             2018101262, // WILSONAL
-            2018101354, // MIGUEL
+            2018101411, // JEFE OPERATIVO
 
             #TRANSPUBENZA
             2018101273, // SIMONTP
