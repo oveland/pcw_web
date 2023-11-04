@@ -235,7 +235,10 @@
         }
 
         .photos-image-container-preview.enlarge {
-            width: 30% !important;
+            width: 100% !important;
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
         }
 
         .photos-image-container .photo {
@@ -462,6 +465,8 @@
                 top: -2px !important;
             }
         }
+
+
     </style>
 @endsection
 

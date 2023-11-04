@@ -78,6 +78,9 @@
                 <br>
                 {{ str_limit(__(  'Visual'), 6) }}
             </th>
+
+        @endif
+        @if(Auth::user()->isSuperAdmin())
             <th class="text-center">
                 <i class="icon-users text-muted"></i><br>
                 {{ str_limit(__('Pasajeros'),9) }}
@@ -85,6 +88,7 @@
                 {{ str_limit(__('Cámaras')) }}
             </th>
         @endif
+
         @if($user->canViewtotalSistem())
             <th>
                 <i class="icon-users text-muted">
@@ -207,7 +211,7 @@
                 }
             }
 
-        $color = $offRoadPercent > 50 ? 'red-sunglo' : ($dispatchRegister->complete() ? 'inverse' : ($dispatchRegister->isCancelled() ? 'yellow-crusta' : 'yellow-soft'));
+        $color = $offRoadPercent > 80 ? 'red-sunglo' : ($dispatchRegister->complete() ? 'inverse' : ($dispatchRegister->isCancelled() ? 'yellow-crusta' : 'yellow-soft'));
         @endphp
         <tr class="{{ $dispatchRegister->isCancelled() ? 'row-turn-cancelled' : '' }}">
             <th width="5%"
@@ -576,15 +580,16 @@
                         {{ $visualPassengers->value }}
                     @endif
                 </td>
-                @if($user->canViewtotalSistem())
-                    <td width="10%" class="text-center">
-                        <span title=""
-                              class=" tooltips"
-                              data-original-title="Conteo camaras">
-                            {{ $dispatchRegister->final_sensor_counter }}
-                        </span>
-                    </td>
-                @endif
+
+            @endif
+            @if(Auth::user()->isSuperAdmin())
+                <td width="10%" class="text-center">
+                    <span title=""
+                          class=" tooltips"
+                          data-original-title="Conteo camaras">
+                        {{ $dispatchRegister->final_sensor_counter }}
+                    </span>
+                </td>
             @endif
             @php
                 $sumByCountSpreadSheet += $spreadsheetPassengers->value;
@@ -592,7 +597,6 @@
                 $sumByCountSensor += $countBySensorFinal;
             @endphp
             @if($user->canViewtotalSistem())
-                <td width="10%" class="text-center" style="background: #c4c9d0">
                     @php
                         $timeFringe = $dispatchRegister->departure_time;
                         $promPassengers = 0;
@@ -672,8 +676,11 @@
 
                         $totalSeats = 0;
                         $totalPassengers = 0;
+                        $totalPassengersAE = 0;
                         $title = null;
+                        $titleAE = null;
                         $style = false;
+                        $styleAE = false;
 
                          foreach ($topologies as $topology) {
                              $numSeatsCam = $topology->number_seats;
@@ -682,30 +689,55 @@
                              }
                          }
                          if ($countBySensorFinal <= $spreadsheetPassengers->value){
-                             $totalPassengers = $spreadsheetPassengers->value;
-                             $title="Número de planilla";
-                         }elseif ($countBySensorFinal>= $spreadsheetPassengersSync->value){
-                             $totalPassengers = $countBySensorFinal;
-                             $title = "Conteo por Camara";
+                             $totalPassengersAE = $spreadsheetPassengers->value;
+                             $titleAE="Número de planilla";
+                         }elseif ($countBySensorFinal>= $promPassengers){
+                             $totalPassengersAE = $countBySensorFinal;
+                             $titleAE = "Conteo por Camara";
                          }else{
-                             $totalPassengers = $countBySensorFinal;
-                             $title = "Conteo por cámara < promedio";
-                             $style = true;
+                             $totalPassengersAE = $countBySensorFinal;
+                             $titleAE = "Conteo por cámara < promedio";
+                             $styleAEA = true;
+                         }
+                         $countMax = $dispatchRegister->final_front_sensor_counter;
+                         $countMaxAssets = $countMax>=$totalSeats ? $totalSeats : $countMax;
+                         $countPassengersFICS = $spreadsheetPassengersSync->value;
+
+                        $totalPassengers = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
+
+                        if ($countMaxAssets > $countPassengersFICS){
+                        $style = true;
                          }
                     @endphp
-
-                    @if($style == false)
-                        <span class="tooltips"
-                              title="{{$title}}">
-                            {{ $totalPassengers>$totalSeats ? $totalSeats ?? 0 : $totalPassengers ?? 0 }}
+                @if($routeProm==279||$routeProm==280||$routeProm==282||$routeProm==283)
+                    <td width="10%" class="text-center" style="background: #c4c9d0">
+                        @if($styleAE == false)
+                            <span class="tooltips"
+                                  title="{{$titleAE}}">
+                                {{ $totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0 }}
+                            </span>
+                        @elseif( $styleAE == true)
+                            <span class="tooltips" style="color: darkred; font-weight: 900"
+                                  title="{{$titleAE}}">
+                                {{$totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0}}
+                            </span>
+                        @endif
+                    </td>
+                @else
+                    <td width="10%" class="text-center" style="background: #c4c9d0">
+                        @if($style == false)
+                            <span class="tooltips"
+                                  title="{{$title}}">
+                            {{ $totalPassengers ? $totalPassengers : 0 }}
                         </span>
-                    @elseif( $style == true)
-                        <span class="tooltips" style="color: darkred; font-weight: 900"
-                              title="{{$title}}">
-                            {{$totalPassengers>$totalSeats ? $totalSeats ?? 0 : $totalPassengers ?? 0}}
+                        @elseif( $style == true)
+                            <span class="tooltips" style="color: darkred; font-weight: 900"
+                                  title="{{$title}}">
+                            {{ $totalPassengers ? $totalPassengers : 0 }}
                         </span>
-                    @endif
-                </td>
+                        @endif
+                    </td>
+                @endif
             @endif
             @if($company->hasSensorTotalCounter())
                 <td width="8%"
