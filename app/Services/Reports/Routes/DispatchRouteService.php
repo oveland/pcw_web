@@ -41,7 +41,7 @@ class DispatchRouteService
      * @param SpeedingService $speedingService
      * @param ControlPointService $controlPointService
      */
-    public function __construct(OffRoadService $offRoadService, SpeedingService $speedingService, ControlPointService $controlPointService)
+    public function __construct(OffRoadService $offRoadService = null, SpeedingService $speedingService = null, ControlPointService $controlPointService = null)
     {
         $this->offRoad = $offRoadService;
         $this->speeding = $speedingService;

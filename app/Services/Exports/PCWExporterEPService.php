@@ -167,7 +167,7 @@ class PCWExporterEPService extends PCWExporterService
         $sheet->setColumnFormat(array(
             'I4:I39' => '$#,##0_-'
         ));
-        $sheet->setCellValue("K$position", "=SUM(K$starData:K$lastRow)");
+       // $sheet->setCellValue("K$position", "=SUM(K$starData:K$lastRow)");
 
         $sheet->cells('A' . $starData . ':' . $config->lastLetter . $lastRow, function ($cells) {
             $cells->setValignment('center');
@@ -231,9 +231,6 @@ class PCWExporterEPService extends PCWExporterService
                 $sheet->setCellValue("G$position", "TOTALES");
                 $sheet->setCellValue("H$position", "=SUM(H$starData:H$lastRow)");
                 $sheet->setCellValue("I$position", "=SUM(I$starData:I$lastRow)");
-                $sheet->setCellValue("L$position", "=SUM(L$starData:L$lastRow)");
-                $sheet->setCellValue("N$position", "=SUM(N$starData:N$lastRow)");
-                $sheet->setCellValue("O$position", "=SUM(O$starData:O$lastRow)");
                 /* $diference=$lastRow-$starData;
 
                  for ($var = $starData; $var <= $diference; $var++) {

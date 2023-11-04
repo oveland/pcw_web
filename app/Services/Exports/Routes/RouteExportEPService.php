@@ -22,17 +22,19 @@ class RouteExportEPService extends RouteExportService
      * @param $dateReport
      * @internal param $roundTripDispatchRegisters
      */
-    public function groupedRouteReport($vehiclesDispatchRegisters, $dateReport)
+    public function groupedRouteReport($vehiclesDispatchRegisters, $dateReport, $dateEndReport = null, $store = false)
     {
-        Excel::create(__('Dispatch report') . " $dateReport", function ($excel) use ($vehiclesDispatchRegisters, $dateReport) {
+        $fileName = __('DR') . " $dateReport $dateEndReport";
+        $fileName = str_replace('-', '', str_replace(' ', '_', $fileName));
+
+        $excelFile = Excel::create($fileName, function ($excel) use ($vehiclesDispatchRegisters, $dateReport, $dateEndReport) {
+
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
                 $vehicleCounter = CounterByRecorder::reportByVehicle($vehicleId, $dispatchRegisters);
                 $dataExcel = array();
                 $lastArrivalTime = null;
-
                 $totalDeadTime = '00:00:00';
-                $tarifRoute = "";
                 $nameRute = "";
 
                 foreach ($dispatchRegisters as $iteration => $dispatchRegister) {
@@ -40,45 +42,27 @@ class RouteExportEPService extends RouteExportService
                     $route = $dispatchRegister->route;
                     $totalRoundTrip = $historyCounter->passengersByRoundTrip;
                     $deadTime = $lastArrivalTime ? StrTime::subStrTime($dispatchRegister->departure_time, $lastArrivalTime) : '';
-
                     $drObservation = $dispatchRegister->getObservation('spreadsheet_passengers');
-
                     $spreadsheet = $drObservation->observation;
                     $passengerSpreadsheet =(int) $drObservation->value;
+                    $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync')->value;
                     $username = $drObservation->user ? $drObservation->user->name : '';
-
-                    //$roundTrip = $dispatchRegister->round_trip;
                     $roundTrip = $iteration + 1;
-                    $tarifRoute = 4500;
                     $nameRute = "";
                     $tariffPassenger = $dispatchRegister->route->tariff->passenger;
-                    //tarifas para diferentes rutas al exportar en excel 11/01/2023
                     $routeId = $dispatchRegister->route_id;
+
                     switch ($routeId){
                         case $routeId ==279 || $routeId ==280:
-                            $tarifRoute = 4500;
                             $nameRute = "RUTA PALMIRA";
                             break;
                         case $routeId ==272 || $routeId ==271:
-                            $tarifRoute = 4500;
                             $nameRute = "RUTA PALMIRA ";
                             break;
                         case  $routeId == 282 || $routeId == 283:
-                            $tarifRoute = 11000;
                             $nameRute = "RUTA AEROPUERTO";
                             break;
                     }
-                    /*if ($routeId == 279 or $routeId == 280 or $routeId == 272 or $routeId == 271 ) { //Ruta Palmira
-                        $tarifRoute = 4500;
-                        $nameRute = "RUTA PALMIRA";
-                    } elseif ($routeId == 282 || $routeId == 283) { //Ruta Aeropuerto
-                        $tarifRoute = 11000;
-                        $nameRute = "RUTA AEROPUERTO";
-                    }
-                    else {
-                        $tarifRoute = "Parametrizar valor pasaje";
-                        $nameRute = "RUTA : ";
-                    }*/
                     $timeFrange=$dispatchRegister->departure_time;
                     $promPassengers = 0;
                     $routeProm = $dispatchRegister->route_id;
@@ -148,15 +132,50 @@ class RouteExportEPService extends RouteExportService
                             break;
                     }
                     $spreadsheetPassengers1 =(int) $dispatchRegister->getObservation('spreadsheet_passengers')->value;
-                    $TotalCount=0;
+                    $TotalSystema = 0;
+
+                    $topologies = \App\Models\Vehicles\TopologiesSeats::query() //total asientos de VH
+                    ->where('vehicle_id', $vehicle->id)
+                        ->with('vehicle')
+                        ->get();
+
+                    $totalSeats = 0;
+                    $totalPassengers = 0;
+                    $totalPassengersAE = 0;
+
+                    foreach ($topologies as $topology) {
+                        $numSeatsCam = $topology->number_seats;
+                        if (is_numeric($numSeatsCam)) {
+                            $totalSeats += $numSeatsCam;
+                        }
+                    }
                     if ($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers1){
-                        $TotalCount=(int)$spreadsheetPassengers1;
-                    }elseif ($dispatchRegister->final_sensor_counter>= $promPassengers){
-                        $TotalCount=(int)$dispatchRegister->final_sensor_counter;
-                    }elseif ($dispatchRegister->final_sensor_counter<= $promPassengers){
-                        $TotalCount=(int)$dispatchRegister->final_sensor_counter;
+                        $totalPassengersAE = $spreadsheetPassengers1;
+                    }elseif ($dispatchRegister->final_sensor_counter >= $promPassengers){
+                        $totalPassengersAE =$dispatchRegister->final_sensor_counter;
+                    }else{
+                        $totalPassengersAE = $dispatchRegister->final_sensor_counter;
+                    }
+                    $countMax = $dispatchRegister->final_front_sensor_counter;
+                    $countMaxAssets = $countMax>=$totalSeats ? $totalSeats : $countMax;
+                    $totalPassengers = $countMaxAssets >= $spreadsheetPassengersSync ? $countMaxAssets : $spreadsheetPassengersSync;
+
+                    if ($routeProm==279||$routeProm==280||$routeProm==282||$routeProm==283){
+                        $TotalSystema = $totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0;
+                    }else{
+                        $TotalSystema = $totalPassengers ? $totalPassengers : 0;
                     }
 
+
+
+
+                    if ($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers1){
+                        $TotalSystema = (int)$spreadsheetPassengers1;
+                    }elseif ($dispatchRegister->final_sensor_counter >= $promPassengers){
+                        $TotalSystema = (int)$dispatchRegister->final_sensor_counter;
+                    }elseif ($dispatchRegister->final_sensor_counter<= $promPassengers){
+                        $TotalSystema = (int)$dispatchRegister->final_sensor_counter;
+                    }
 
                     if (Auth::user()->isSuperAdmin()){
                         $dataExcel[] = [
@@ -173,7 +192,7 @@ class RouteExportEPService extends RouteExportService
                             __('Pasajeros planilla') => $passengerSpreadsheet,                                                              # J CELL
                             __('#sensor') => $dispatchRegister->final_sensor_counter,                                                                     # K CELL
                             __('Promedio') =>"$promPassengers",                                                                     # K CELL
-                            __('Total Sistema') =>$TotalCount,                                                                     # K CELL
+                            __('Total Sistema') =>$TotalSystema,                                                                     # K CELL
                             __('Conteo Maximos') =>$dispatchRegister->final_front_sensor_counter,                                                                     # K CELL
                         ];
                     }else{
@@ -185,8 +204,10 @@ class RouteExportEPService extends RouteExportService
                             __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # E CELL
                             __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
                             __('Status') => $dispatchRegister->status,                                                      # G CELL
-                            __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
-                            __('Valor pasaje') => '',                                                                       # I CELL
+                            __('Pass.') . " " . __('visual') => intval($totalRoundTrip),                           # H CELL
+                            __('Valor pasaje') => '',
+                            __('Total sistema') => $TotalSystema,
+                            __('FICS') => $spreadsheetPassengersSync ?? 0,
                             __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
                             __('Usuario') => $username,
                         ];
@@ -199,9 +220,10 @@ class RouteExportEPService extends RouteExportService
                     $lastArrivalTime = $dispatchRegister->arrival_time;
                 }
 
+                $dateEndTitle = $dateEndReport ? "- $dateEndReport" : "";
                 $dataExport = (object)[
                     'fileName' => __('Dispatch report') . " V $dateReport",
-                    'title' => __('Dispatch report') . " | $dateReport",
+                    'title' => __('Dispatch report') . " | $dateReport $dateEndTitle",
                     'subTitle' => "$vehicle->number | $vehicle->plate",
                     'sheetTitle' => "$vehicle->number",
                     'data' => $dataExcel,
@@ -214,6 +236,15 @@ class RouteExportEPService extends RouteExportService
                 $excel = PCWExporterEPService::createHeaders($excel, $dataExport);
                 $excel = PCWExporterEPService::createSheet($excel, $dataExport);
             }
-        })->download('xlsx');
+        });
+
+        $fileExtension = 'xlsx';
+
+        if ($store) {
+            $excelFile->store($fileExtension);
+            return "$excelFile->storagePath/$fileName.$fileExtension";
+        }
+
+        return $excelFile->download($fileExtension);
     }
 }

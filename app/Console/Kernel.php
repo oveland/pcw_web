@@ -46,6 +46,8 @@ class Kernel extends ConsoleKernel
         Commands\DB\FreeSizeCommand::class,
         Commands\DB\RefreshLocationsViews::class,
         Commands\Vehicles\Binnacles\NotificationCommand::class,
+
+        Commands\Routes\Exports\EP\DispatchCommand::class,
     ];
 
     /**
