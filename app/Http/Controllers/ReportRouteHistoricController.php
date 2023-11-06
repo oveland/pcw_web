@@ -44,18 +44,25 @@ class ReportRouteHistoricController extends Controller
 
         $companyReport = $request->get('c');
         $dateReport = $request->get('d');
+        $dateEndReport = $request->get('de');
+
+        $dateReport = $dateReport ? Carbon::createFromFormat('Y-m-d_H:i:s', $dateReport) : null;
+        $dateEndReport = $dateEndReport ? Carbon::createFromFormat('Y-m-d_H:i:s', $dateEndReport) : null;
+        $withRange = $dateReport && $dateEndReport && $dateReport->toDateString() != $dateEndReport->toDateString();
+
+        $initialTime = $dateReport ? $this->parseTimeQuery($dateReport->toTimeString()) : null;
+        $finalTime = $dateEndReport ? $this->parseTimeQuery($dateEndReport->toTimeString()) : null;
 
         $vehicleReport = Vehicle::where('number', $request->get('n'))
             ->where('company_id', $companyReport ?? 14)->first();
         $vehicleReport = $vehicleReport ? $vehicleReport->id : null;
         $vehicleReport = $vehicleReport ?: $request->get('v');
 
-        $initialTime = $this->parseTimeQuery($request->get('i'));
-        $finalTime = $this->parseTimeQuery($request->get('f'));
         $speed = $request->get('s');
         $hideMenu = session('hide-menu') || $request->get('hide-menu');
 
-        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles', 'dateReport', 'vehicleReport', 'companyReport', 'initialTime', 'finalTime', 'speed', 'hideMenu']));
+
+        return view('reports.route.historic.index', compact(['companies', 'routes', 'vehicles', 'dateReport', 'dateEndReport', 'initialTime', 'finalTime', 'withRange', 'vehicleReport', 'companyReport', 'speed', 'hideMenu']));
     }
 
     function parseTimeQuery($time)
@@ -64,10 +71,42 @@ class ReportRouteHistoricController extends Controller
 
         $timeFragments = collect(explode(':', $time));
         if ($timeFragments->count() >= 2) {
-            return intval(StrTime::toSeg($timeFragments->get(0) . ":" . $timeFragments->get(1)) / 5);
+            return intval(StrTime::toSeg($timeFragments->get(0) . ":" . $timeFragments->get(1)) / 5) ?: 1;
         }
 
-        return intval($time);
+        return intval($time) ?: 1;
+    }
+
+    function getDateRangeQuery(Request $request)
+    {
+        $byRange = $request->get('with-end-date');
+        $startDate = $request->get('date-report');
+        $endDate = $byRange ? $request->get('date-end-report') : $startDate;
+        list($startTime, $endTime) = explode(';', $request->get('time-range-report'));
+
+        if ($byRange) {
+            list($startDate, $startTime) = explode(' ', $startDate);
+            list($endDate, $endTime) = explode(' ', $endDate);
+        }
+
+        $start = Carbon::createFromFormat('Y-m-d H:i', "$startDate $startTime");
+        $end = Carbon::createFromFormat('Y-m-d H:i', "$endDate $endTime");
+
+        $message = '';
+        $invalid = $end->diffInDays($start) >= 2;
+        if ($invalid) {
+            $message = 'El rango de fechas a consultar debe ser máximo de 2 días';
+            $check = false;
+        }
+
+        return (object)[
+            'check' => (object)[
+                'success' => !$invalid,
+                'message' => $message
+            ],
+            'start' => $start->toDateTimeString(),
+            'end' => $end->toDateTimeString(),
+        ];
     }
 
     /**
@@ -77,12 +116,13 @@ class ReportRouteHistoricController extends Controller
      */
     public function show(Request $request)
     {
-        $dateReport = $request->get('date-report');
         $vehicleReport = $request->get('vehicle-report');
         $forExport = $request->get('export');
-        list($initialTime, $finalTime) = explode(';', $request->get('time-range-report'));
 
-        $report = $this->buildHistoric($dateReport, $vehicleReport, $initialTime, $finalTime, $forExport);
+        $dateTimeQuery = $this->getDateRangeQuery($request);
+        if (!$dateTimeQuery->check->success) return response()->json($dateTimeQuery->check);
+
+        $report = $this->buildHistoric($vehicleReport, $dateTimeQuery->start, $dateTimeQuery->end);
 
         if ($forExport) $this->export($report);
         $report->exportLink = $request->getRequestUri() . "&export=true";
@@ -90,19 +130,11 @@ class ReportRouteHistoricController extends Controller
         return response()->json($report);
     }
 
-    /**
-     * @param $dateReport
-     * @param $vehicleReport
-     * @param $initialTime
-     * @param $finalTime
-     * @param bool $withAddress
-     * @return object
-     */
-    public function buildHistoric($dateReport, $vehicleReport, $initialTime, $finalTime, $withAddress = false)
+    public function buildHistoric($vehicleReport, $dateTimeStart, $dateTimeEnd)
     {
         $vehicle = Vehicle::find($vehicleReport);
 
-        $locations = Location::forDate($dateReport)->whereBetween('date', ["$dateReport $initialTime", "$dateReport $finalTime"])
+        $locations = Location::forDate($dateTimeStart, $dateTimeEnd)->whereBetween('date', [$dateTimeStart, $dateTimeEnd])
             ->where('vehicle_id', $vehicleReport)
             ->where('vehicle_status_id', '<>', 2) // Excludes status disengaged
             ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.driver', 'vehicleStatus', 'passenger', 'photo', 'photos'])
@@ -152,17 +184,18 @@ class ReportRouteHistoricController extends Controller
             'countedStr' => '',
             'types' => [],
         ];
+        $photosCounter = collect([]);
 
         foreach ($locations as $index => $location) {
             $dispatchRegister = $location->dispatchRegister;
             $inRoute = $dispatchRegister && $dispatchRegister->isActive();
 
-            $period = '';
-            $averagePeriod = '';
-            if (Auth::user()->isAdmin()) {
-                $period = $location->date->diffInSeconds($lastLocation->date);
-                $averagePeriod = "--";
-            }
+//            $period = '';
+//            $averagePeriod = '';
+//            if (Auth::user()->isAdmin()) {
+//                $period = $location->date->diffInSeconds($lastLocation->date);
+//                $averagePeriod = "--";
+//            }
 
             $passenger = $location->passenger;
 
@@ -306,29 +339,33 @@ class ReportRouteHistoricController extends Controller
             }
 
             $locationPhotos = $location->photos->count() ? collect($location->photos->toArray())->pluck('id', 'side') : collect([]);
-            $photos = $vehicleCameras->map(function (VehicleCamera $vc) use ($locationPhotos) {
+            $photos = $vehicleCameras->map(function (VehicleCamera $vc) use ($locationPhotos, $photosCounter) {
+                $id = $locationPhotos->get($vc->camera);
+                $counter = ($photosCounter->get($vc->camera) ?? 0) + ($id ? 1 : 0);
+                $photosCounter->put($vc->camera, $counter);
                 return [
                     'cm' => $vc->camera,
-                    'id' => $locationPhotos->get($vc->camera)
+                    'id' => $id,
+                    'cn' => $counter
                 ];
             });
+
 
             $photoEvents = $this->processPhotoEvents($location->photo, $photoTags, $seatingCounted);
             if (!count($photoEvents->alerts)) $photoEvents = $prevEvents;
 
             $dataLocations->push((object)[
                 'id' => $location->id,
-                'inRoute' => $inRoute,
+//                'inRoute' => $inRoute,
                 'time' => $location->date->format('H:i:s'),
-                'period' => $period,
-                'averagePeriod' => $averagePeriod,
+//                'period' => $period,
+//                'averagePeriod' => $averagePeriod,
                 'date' => $location->date->format('Y-m-d'),
                 'currentMileage' => number_format(intval($location->current_mileage) / 1000, 2, '.', ''),
                 'latitude' => $location->latitude,
                 'longitude' => $location->longitude,
-//                'address' => $location->getAddress($withAddress),
-                'address' => "",
-                'odometer' => $location->odometer,
+//                'address' => "",
+//                'odometer' => $location->odometer,
                 'orientation' => $location->orientation,
                 'speed' => $location->speed,
                 'speeding' => $location->speeding,
@@ -381,11 +418,11 @@ class ReportRouteHistoricController extends Controller
         $totalLocations = $dataLocations->count();
 
         return (object)[
-            'dateReport' => $dateReport,
-            'initialTime' => $initialTime,
-            'finalTime' => $finalTime,
+            'success' => true,
+            'dateTimeStart' => $dateTimeStart,
+            'dateTimeEnd' => $dateTimeEnd,
             'vehicle' => $vehicle->getAPIFields(null, true),
-            'vehicleCameras'=> $vehicle->cameras->pluck('camera'),
+            'vehicleCameras' => $vehicle->cameras->pluck('camera'),
             'historic' => $dataLocations,
             'total' => $totalLocations,
             'from' => $totalLocations ? $dataLocations->first()->time : '--:--',
@@ -549,9 +586,9 @@ class ReportRouteHistoricController extends Controller
         }
 
         $fileData = (object)[
-            'fileName' => __('Historic') . " " . $report->vehicle->number . " $report->dateReport",
-            'title' => __('Historic') . " $report->dateReport - #" . $report->vehicle->number,
-            'subTitle' => __('Time') . " $report->initialTime - $report->finalTime ",
+            'fileName' => "H " . $report->vehicle->number . " $report->dateTimeStart - $report->dateTimeEnd",
+            'title' => __('Historic') . " #" . $report->vehicle->number,
+            'subTitle' => "$report->dateTimeStart - $report->dateTimeEnd",
             'sheetTitle' => __('Historic') . " " . $report->vehicle->number,
             'data' => $dataExcel,
             'type' => 'historicRouteReport'

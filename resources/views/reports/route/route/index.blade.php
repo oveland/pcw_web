@@ -375,7 +375,9 @@
 
                 $(el).datetimepicker({
                     format,
-                    locale: 'es'
+                    locale: 'es',
+                    sideBySide: true,
+                    showTodayButton: true
                 });
 
                 $(el).click(function() {

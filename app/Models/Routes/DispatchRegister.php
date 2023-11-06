@@ -1103,20 +1103,33 @@ class DispatchRegister extends Model
         $vehicle = $this->vehicle;
         $company = $vehicle->company;
 
+        $startDate = $this->date;
+        $endDate = $this->date_end ?? $startDate;
+
         $initialTime = $this->departure_time;
         $finalTime = $this->complete() ? $this->arrival_time : $this->arrival_time_scheduled;
 
-        $initialTime = StrTime::subStrTime($initialTime, '10:00');
-        $finalTime = StrTime::addStrTime($finalTime, '10:00');
+        $startTime = StrTime::subStrTime($initialTime, '10:00');
+        $endTime = StrTime::addStrTime($finalTime, '10:00');
+
+        $start = $this->parseDateTime("$startDate $startTime")->format('Y-m-d_H:i:s');
+        $end = $this->parseDateTime("$endDate $endTime")->format('Y-m-d_H:i:s');
 
         return collect([
             "c=$company->id",
             "n=$vehicle->number",
-            "d=$this->date",
-            "i=$initialTime",
-            "f=$finalTime",
+            "d=$start",
+            "de=$end",
         ])->reduce(function ($carry, $filter) {
             return $carry ? "$carry&$filter" : $filter;
         }, '');
+    }
+
+    function parseDateTime($text) {
+        $format = 'Y-m-d H:i:s';
+
+        if(strpos($text, "/") !== false) $format = 'd/m/Y H:i:s';
+
+        return Carbon::createFromFormat($format, $text);
     }
 }

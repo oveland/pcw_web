@@ -270,16 +270,14 @@
         }
 
         img.photo.highlight {
-            transform: scale(2);
-            aspect-ratio: 1.33 !important;
-            height: auto !important;
-            border-top: 1px;
-            border-top-style: solid;
-            border-top-color: greenyellow;
+            border: 2px;
+            border-style: solid;
+            border-color: #bbff2f;
             animation-name: flash;
-            -webkit-animation-duration: 0.2s;
-            animation-duration: 0.2s;
+            -webkit-animation-duration: 0.3s;
+            animation-duration: 0.3s;
             -webkit-animation-fill-mode: both;
+            box-shadow: 0px 0px 4px 2px #00ff27;
         }
 
         @keyframes flash {
@@ -537,38 +535,38 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-md-3 hide" ontouchstart="pause()">
-                            <div class="form-group">
-                                <label for="type-report" class="control-label">@lang('Options')</label>
-                                <div class="form-group">
-                                    <div class="has-warning">
-                                        <div class="checkbox"
-                                             style="border: 1px solid lightgray;padding: 5px;margin: 0;border-radius: 5px;">
-                                            <label class="text-bold">
-                                                <input id="type-report" name="type-report" type="checkbox"
-                                                       value="group-vehicles" checked> @lang('Group')
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2" ontouchstart="pause()">
+                        <div class="col-md-3" ontouchstart="pause()">
                             <div class="form-group">
                                 <label for="date-report"
                                        class="control-label field-required">@lang('Date report')</label>
-                                <div class="input-group date" id="datetimepicker-report">
+                                <label class="with-end-date-container text-bold">
+                                    &nbsp;• <input id="with-end-date" name="with-end-date" class="primary-filter"
+                                                   type="checkbox"> @lang('By range time')
+                                </label>
+                                <div class="input-group date datetime-report start">
                                     <input name="date-report" id="date-report" type="text" class="form-control"
                                            placeholder="yyyy-mm-dd"
-                                           value="{{ $dateReport ? $dateReport : date('Y-m-d') }}"/>
+                                           value="{{ $dateReport ? $dateReport->toDateTimeString() : date('Y-m-d') }}"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-actions hidden-xs" ontouchstart="pause()">
+                        <div class="col-md-3 date-end-container" style="display: none">
+                            <div class="form-group">
+                                <label for="date-end-report" class="control-label">@lang('Date end')</label>
+                                <div class="input-group date datetime-report end">
+                                    <input name="date-end-report" id="date-end-report" type="text"
+                                           class="form-control primary-filter" autocomplete="off"
+                                           placeholder="yyyy-mm-dd" value="{{ $dateEndReport ? $dateEndReport->toDateTimeString() : date('Y-m-d') }}"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-6 col-xs-12 form-actions hidden-xs" ontouchstart="pause()">
                             <div class="form-group">
                                 <label class="control-label hidden-xs"><br></label>
                                 <div class="form-group">
@@ -577,13 +575,13 @@
                                         <i class="fa fa-map-o"></i> @lang('Search')
                                     </button>
                                     <a href="#" class="btn btn-lime btn-export form-export" style="display: nonse">
-                                        <i class="fa fa-file-excel-o"></i> @lang('Export')
+                                        <i class="fa fa-file-excel-o"></i>
                                     </a>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="col-md-12 col-xs-12 col-sm-12 time-range-report-container">
                             <input id="time-range-report" name="time-range-report" type="text" value=""/>
                         </div>
 
@@ -948,7 +946,7 @@
                 let btnExport = $('.btn-export').fadeOut();
                 const routeSelect = $('#route-report');
                 e.preventDefault();
-                if (form.isValid()) {
+                if (form.isValid() && checkDateReport()) {
                     stop();
                     form.find('.btn-search-report').addClass(loadingClass);
 
@@ -960,6 +958,9 @@
                         data: form.serialize(),
                         success: function (report) {
                             fitHeight('#google-map-light-dream');
+
+                            if(!report.success) return gerror(report.message ?? 'Error deconocido contacte a su administrador') && false;
+
                             reportRouteHistoric.processHistoricReportData(report);
 
                             $('#slider-player').data("ionRangeSlider").update({
@@ -1139,6 +1140,61 @@
             @endif
 
             $('#photos-container').hide();
+
+            $('#with-end-date').change(function () {
+                const dec = $('.date-end-container').slideUp();
+                const timeRangeContainer = $('.time-range-report-container');
+
+                if ($(this).is(':checked')) {
+                    dec.slideDown();
+                    initDateTimePicker("YYYY-MM-DD HH:mm");
+                    timeRangeContainer.slideUp();
+
+                    $('#date-end-report').val($('#date-end-report').val().split(' ')[0] + " 23:59")
+                } else {
+                    initDateTimePicker("YYYY-MM-DD");
+                    timeRangeContainer.slideDown();
+                }
+            });
+
+            @if($withRange)
+                $('#with-end-date').prop('checked', true).change();
+                $('#date-report').val('{{ $dateReport->toDateTimeString() }}').change();
+                $('#date-end-report').val('{{ $dateEndReport->toDateTimeString() }}').change();
+                initDateTimePicker("YYYY-MM-DD HH:mm");
+            @else
+                initDateTimePicker("YYYY-MM-DD");
+            @endif
+
+            let timer;
+            function debounce(func, delay) {
+                clearTimeout(timer);
+                timer = setTimeout(func, delay ?? 500);
+            }
+
+            $(window).resize(function () {
+                debounce(() => fitHeight('#google-map-light-dream'));
+            });
+
+            function checkDateReport() {
+                if ($('#with-end-date').is(':checked')) {
+                    const start = $('#date-report').val();
+                    const end = $('#date-end-report').val();
+
+                    if (start > end) {
+                        return gerror('Rango de fechas inválido') && false;
+                    }
+
+                    const startMoment = moment(start, "YYYY-MM-DD HH:mm");
+                    const endMoment = moment(end, "YYYY-MM-DD HH:mm");
+
+                    if (endMoment.diff(startMoment, 'days') >= 2) {
+                        return gerror('El rango de fechas a consultar debe ser máximo de 2 días') && false;
+                    }
+                }
+
+                return true;
+            }
         });
 
         var min = 0;
@@ -1276,6 +1332,25 @@
             if (trackInterval) {
                 clearInterval(trackInterval);
             }
+        }
+
+        function initDateTimePicker(format, els) {
+            const containers = els ? els : $('.datetime-report');
+
+            containers.each(function (i, el) {
+                $(el).data("DateTimePicker")?.destroy();
+
+                $(el).datetimepicker({
+                    format,
+                    locale: 'es',
+                    sideBySide: true,
+                    showTodayButton: true,
+                });
+
+                $(el).click(function () {
+                    $(this).data("DateTimePicker")?.show();
+                });
+            });
         }
     </script>
 

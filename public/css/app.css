@@ -1936,3 +1936,9 @@ div.radio span.checked {
     left: 10px !important;
     position: relative !important;
 }
+
+.timepicker-sbs {
+    padding: 24px !important;
+    border-radius: 8px !important;
+    background: #fffffff4;
+}

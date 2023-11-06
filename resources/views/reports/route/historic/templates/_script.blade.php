@@ -11,6 +11,7 @@
             this.historicLocations = [];
             this.vehicleCameras = [];
             this.dataPhotos = [];
+            this.dataPhotosCounter = {};
             this.controlPoints = [];
             this.geofenceDispatches = [];
             this.markerBus = null;
@@ -363,6 +364,7 @@
             });
         }
 
+        // YA NO SE USARA. Evaluar si es puede eliminar este método:
         showPhotos(index) {
             const historicLocation = this.historicLocations[index];
             if (!historicLocation || true) return false;
@@ -390,7 +392,7 @@
                 for (let photo of photos) {
                     if(photo.id){
                         const url = this.getUrlPhoto(photo.id, photoCountedSeatingStr);
-                        photosContainer.append(this.getHtmlPhoto(url, photoWidth));
+                        photosContainer.append(this.getHtmlPhoto(url, index, false, true));
                     } else {
                         photosContainer.append(this.getHtmlEmptyPhoto(photo));
                     }
@@ -411,7 +413,7 @@
                     index,
                     cameras,
                     ref
-                })
+                });
             });
 
             let photosContainer = $('.photos-image-container');
@@ -436,15 +438,16 @@
             return `https://beta.pcwserviciosgps.com/api/v2/files/rocket/get-photo?id=${id}&with-effect=true&encode=png&title=true&counted=${countedStr}&mask=`;
         }
 
-        getHtmlPhoto(photo, index, preview) {
+        getHtmlPhoto(photo, index, preview, load) {
             const width = preview ? '100%' :`${this.getPhotoWidth()}%`;
             const height = preview ? 'auto' : `20px`;
-            const eventClick = (preview ? `togglePhotoPreviewSize()` : `reportRouteHistoric.highlightPosition(${index});togglePhotoPreviewSize(true)`);
+            const eventClick = (preview ? `togglePhotoPreviewSize()` : `reportRouteHistoric.highlightPosition(${index})`);
 
             return `<img id="photo-${preview ? 'preview-' + photo.id : photo.id}"
-                class="photo photo-${preview ? 'preview-' + index : index} photo-image photo-point"
+                class="photo photo-count-${photo.cn} photo-${preview ? 'preview' : 'view'}-${index} ${preview ? 'seen' : ''} photo-image photo-point"
                 onclick="${eventClick}"
-                src="${this.getUrlPhoto(photo.id)}"
+                data-src="${this.getUrlPhoto(photo.id)}"
+                src="${load ? this.getUrlPhoto(photo.id) : 'https://pcwserviciosgps.com/files/camera.pngx'}"
                 draggable="false"
                 style="width: ${width}; height: ${height};flex: 1 1 auto"
             />`;
@@ -458,7 +461,7 @@
             const width = preview ? '100%' :`${this.getPhotoWidth()}%`;
             const height = preview ? 'auto' : `20px`;
 
-            return `<div class="photo-${preview ? 'preview-' + index : index} photo-image-empty photo-point"
+            return `<div class="photo-${preview ? 'preview' : 'view'}-${index} photo-image-empty photo-point"
                 onclick="reportRouteHistoric.highlightPosition(${index})"
                 style="width: ${width}; height: ${height};"
             ></div>`;
@@ -476,17 +479,30 @@
             $('.photos-image-container-preview').empty();
 
             let refStr = "";
+            let counterRef = 0;
             ref?.map((photo) => {
                 refStr += `${photo.cm}: ${photo.id}, `;
                 $(`#photo-${photo.id}`).addClass('highlight');
-                $('.photos-image-container-preview').append(photo.id ? this.getHtmlPhoto(photo, index, true) : this.getHtmlEmptyPhoto(photo, index, true));
+                $('.photos-image-container-preview').append(photo.id ? this.getHtmlPhoto(photo, index, true, true) : this.getHtmlEmptyPhoto(photo, index, true));
+                counterRef = photo.cn;
             });
 
             this.updatePhotosTimeLine(index);
+            for(let i = counterRef - 2; i <= counterRef + 2; i ++) this.downloadPhoto(i);
+        }
+
+        downloadPhoto(index) {
+            $(`.photo-count-${index}:not(.seen)`).each(function(i, p) {
+                const photo = $(p);
+                if (photo && photo.data('src') && !photo.hasClass('.seen')) {
+                    photo.attr('src', photo.data('src'));
+                    photo.addClass('.seen');
+                }
+            });
         }
 
         updatePhotosTimeLine(index) {
-            const photoView = $(`.photo-${index}`);
+            const photoView = $(`.photo-view-${index}`);
 
             const leftPx = photoView.position()?.left;
             $('.photos-time-line').css('left', `${ leftPx + parseInt(photoView.width())/2 }px`);
@@ -587,8 +603,8 @@
             this.processTariffCharges(reportLocation);
 
             this.showInfo.find('.time').text(reportLocation.time);
-            this.showInfo.find('.period').text(reportLocation.period);
-            this.showInfo.find('.average-period').text(reportLocation.averagePeriod);
+            // this.showInfo.find('.period').text(reportLocation.period);
+            // this.showInfo.find('.average-period').text(reportLocation.averagePeriod);
             this.showInfo.find('.speed').text(reportLocation.speed);
 
             $('.photo-id').text(reportLocation.photo.id);
@@ -725,19 +741,12 @@
 
                 let height = '250px';
             }
-            let infoAddress = "";
-            if (r.address) {
-                infoAddress = "" +
-                    "<small class='text-bold'><i class='fa fa-map-o text-muted'></i> " + r.address + "</small><br>" +
-                    "";
-            }
 
             let contentString =
                 "<div class='historic-info-map' style='width: 200px'>" +
                 "<div class='col-md-12' style='height:" + height + "'>" +
                 "<div class=''>" +
                 "<h5 class='text-info'><i class='fa fa-bus'></i> <b>" + r.vehicle.number + "</b></h5>" +
-                infoAddress +
                 "<hr class='hr'>" +
                 "</div>" +
                 "<div class=''>" +
