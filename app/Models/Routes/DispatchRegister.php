@@ -1112,23 +1112,28 @@ class DispatchRegister extends Model
         $startTime = StrTime::subStrTime($initialTime, '10:00');
         $endTime = StrTime::addStrTime($finalTime, '10:00');
 
-        $start = $this->parseDateTime("$startDate $startTime")->format('Y-m-d_H:i:s');
-        $end = $this->parseDateTime("$endDate $endTime")->format('Y-m-d_H:i:s');
+        $start = $this->parseDateTime("$startDate $startTime");
+        $end = $this->parseDateTime("$endDate $endTime");
+
+        if (!$this->complete() && $endTime < $startTime && $startDate == $endDate) {
+            $end = $end->addDays(1);
+        }
 
         return collect([
             "c=$company->id",
             "n=$vehicle->number",
-            "d=$start",
-            "de=$end",
+            "d=" . $start->format('Y-m-d_H:i:s'),
+            "de=" . $end->format('Y-m-d_H:i:s'),
         ])->reduce(function ($carry, $filter) {
             return $carry ? "$carry&$filter" : $filter;
         }, '');
     }
 
-    function parseDateTime($text) {
+    function parseDateTime($text)
+    {
         $format = 'Y-m-d H:i:s';
 
-        if(strpos($text, "/") !== false) $format = 'd/m/Y H:i:s';
+        if (strpos($text, "/") !== false) $format = 'd/m/Y H:i:s';
 
         return Carbon::createFromFormat($format, $text);
     }
