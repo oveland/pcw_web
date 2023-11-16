@@ -35,6 +35,20 @@
             this.showInfo = $('.show-info');
 
             this.pauseOnEvent = null;
+
+            this.timerDebounce = null;
+            this.timerDebounce2 = null;
+        }
+
+
+        debounce(func, delay) {
+            clearTimeout(this.timerDebounce);
+            this.timerDebounce = setTimeout(func, delay ?? 500);
+        }
+
+        debounce2(func, delay) {
+            clearTimeout(this.timerDebounce2);
+            this.timerDebounce2 = setTimeout(func, delay ?? 500);
         }
 
         setPauseOnEvent(number) {
@@ -443,7 +457,7 @@
             const height = preview ? 'auto' : `20px`;
             const eventClick = (preview ? `togglePhotoPreviewSize()` : `reportRouteHistoric.highlightPosition(${index})`);
 
-            return `<img id="photo-${preview ? 'preview-' + photo.id : photo.id}"
+            return `<img id="photo-${preview ? 'preview-' + photo.id : photo.id}" ${preview ? 'fetchpriority="high"' : ''}
                 class="photo photo-count-${photo.cn} photo-${preview ? 'preview' : 'view'}-${index} ${preview ? 'seen' : ''} photo-image photo-point"
                 onclick="${eventClick}"
                 data-src="${this.getUrlPhoto(photo.id)}"
@@ -454,7 +468,7 @@
         }
 
         getPhotoWidth() {
-            return this.dataPhotos.length ? 100 / this.dataPhotos.length : 0;
+            return this.dataPhotos.length ? (100 / this.dataPhotos.length) - 0.1 : 0;
         }
 
         getHtmlEmptyPhoto(photo, index, preview) {
@@ -477,26 +491,29 @@
             $(`.photo-image`).removeClass('highlight');
 
             $('.photos-image-container-preview').empty();
-
-            let refStr = "";
-            let counterRef = 0;
-            ref?.map((photo) => {
-                refStr += `${photo.cm}: ${photo.id}, `;
-                $(`#photo-${photo.id}`).addClass('highlight');
-                $('.photos-image-container-preview').append(photo.id ? this.getHtmlPhoto(photo, index, true, true) : this.getHtmlEmptyPhoto(photo, index, true));
-                counterRef = photo.cn;
-            });
-
             this.updatePhotosTimeLine(index);
-            for(let i = counterRef - 2; i <= counterRef + 2; i ++) this.downloadPhoto(i);
+            this.debounce(() => {
+                let refStr = "";
+                let counterRef = 0;
+                ref?.map((photo) => {
+                    refStr += `${photo.cm}: ${photo.id}, `;
+                    $(`#photo-${photo.id}`).addClass('highlight');
+                    $('.photos-image-container-preview').append(photo.id ? this.getHtmlPhoto(photo, index, true, true) : this.getHtmlEmptyPhoto(photo, index, true));
+                    counterRef = photo.cn;
+                });
+
+                this.debounce2(() => {
+                    for (let i = counterRef; i <= counterRef + 1; i++) this.downloadPhoto(i);
+                }, 1000);
+            }, 500);
         }
 
         downloadPhoto(index) {
-            $(`.photo-count-${index}:not(.seen)`).each(function(i, p) {
+            $(`.photo-count-${index}`).each(function(i, p) {
                 const photo = $(p);
-                if (photo && photo.data('src') && !photo.hasClass('.seen')) {
+                if (photo && photo.data('src') && !photo.hasClass('.downloaded')) {
                     photo.attr('src', photo.data('src'));
-                    photo.addClass('.seen');
+                    photo.addClass('.downloaded');
                 }
             });
         }

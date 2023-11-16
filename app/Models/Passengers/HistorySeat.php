@@ -92,6 +92,8 @@ class HistorySeat extends Model
      * @return Carbon
      */
     function parseDate($value) {
+
+        if(!$value) return Carbon::now();
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $value)[0]);
     }
 }

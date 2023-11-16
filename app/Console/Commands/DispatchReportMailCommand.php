@@ -110,13 +110,13 @@ class DispatchReportMailCommand extends Command
         $this->logData("Making mail dispatches route report for '" . ($production ? 'production' : 'development') . "' case...");
 
         switch ($company->id) {
-            /*case Company::ALAMEDA:
+            case Company::ALAMEDA:
                 if ($production) {
-                    $mailTo = ['oiva.pcw@gmail.com'];
+                    $mailTo = ['olmervelasquez@hotmail.com','olatorre22@hotmail.com','gerencia@alameda.com.co'];
                 } else {
-                    $mailTo = ['oiva.pcw@gmail.com'];
+                    $mailTo = ['olmervelasquez@hotmail.com'];
                 }
-                break;*/
+                break;
             case Company::TUPAL:
                 if ($production) {
                     $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
@@ -133,9 +133,9 @@ class DispatchReportMailCommand extends Command
                 break;
             default:
                 if ($production) {
-                    $mailTo = ['Diegomanrique1970@gmail.com', 'olatorre22@hotmail.com', 'oscarivelan@gmail.com'];
+                    $mailTo = ['olmervelasquez@hotmail.com'];
                 } else {
-                    $mailTo = ['oiva.pcw@gmail.com'];
+                    $mailTo = ['fernando012795@gmail.com'];
                 }
                 break;
         }

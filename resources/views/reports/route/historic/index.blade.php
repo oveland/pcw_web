@@ -210,6 +210,12 @@
             color: #ffd500 !important;
         }
 
+        #photos-container {
+            width: 100%;
+            display: block;
+            overflow-x: auto;
+        }
+
         .photo-container {
             padding: 0 20px;
             position: fixed;
@@ -232,12 +238,14 @@
             display: flex;
             width: 10%;
             background: rgba(0, 0, 0, 0.49);
+            position: absolute;
+            bottom: 100%
         }
 
         .photos-image-container-preview.enlarge {
-            width: 100% !important;
+            width: 97.3% !important;
             display: flex;
-            gap: 4px;
+            gap: 8px;
             overflow-x: auto;
         }
 
@@ -605,7 +613,7 @@
         <!-- end search form -->
 
         <!-- begin content report -->
-        <div class="loading-report col-md-12 m-t-40"></div>
+        <div class="loading-report col-md-12"></div>
 
         <div class="historic-container col-md-12 col-xs-12 p-0">
             <div class="col-md-12 col-sm-12 col-xs-12 p-0" style="display: grid">
@@ -952,7 +960,7 @@
 
                     // reportContainer.hide();
                     loadingReport.fadeIn();
-                    reportRouteHistoric.clearMap();
+                    reportRouteHistoric?.clearMap();
                     $.ajax({
                         url: $(this).attr('action'),
                         data: form.serialize(),
@@ -1265,7 +1273,7 @@
             controls.find('.btn-pause').show();
             controls.find('.btn-play').hide();
 
-            reportRouteHistoric.showPhotos(trackIndex);
+            reportRouteHistoric?.showPhotos(trackIndex);
         }
 
 
