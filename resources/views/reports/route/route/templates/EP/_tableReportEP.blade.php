@@ -723,6 +723,12 @@
                             </span>
                         @endif
                     </td>
+                @elseif($routeProm==337||$routeProm==338)
+                    <td class="text-center">
+                         <span class="tooltips text-center" title="@lang('maximos - asientos')" >
+                            {{$countMaxAssets ? $countMaxAssets : 0 }}
+                        </span>
+                    </td>
                 @else
                     <td width="10%" class="text-center" style="background: #c4c9d0">
                         @if($style == false)
