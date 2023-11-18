@@ -2,6 +2,7 @@
 
 namespace App\Services\Reports\Passengers;
 
+use App\Http\Controllers\DriverDetailedController;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Passengers\HistorySeat;
 use App\Models\Routes\ControlPointsTariff;
@@ -24,12 +25,19 @@ class OccupationService
             $finalTimeRange = "$dispatchRegister->date_end $dispatchRegister->arrival_time";
         }
 
+        if ($dispatchRegister->vehicle->company_id == 14){
+            $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
+                ->where('date', '=', $dispatchRegister->date)
+                ->where('dispatch_register_id', '=', $dispatchRegister->id)
+                ->whereBetween('time', [$initialTimeRange, $finalTimeRange])
+                ->get()->sortBy('active_time');
+        }else{
         $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
             ->where('date', '=', $dispatchRegister->date)
             ->where('dispatch_register_id', '=', $dispatchRegister->id)
             ->whereBetween('active_time', [$initialTimeRange, $finalTimeRange])
             ->get()->sortBy('active_time');
-
+        }
         $routeDistance = $dispatchRegister->route->distance * 1000;
 
         $cpT = $route->getControlPointsTariff();
