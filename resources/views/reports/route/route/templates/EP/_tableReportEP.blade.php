@@ -680,7 +680,7 @@
                         $title = null;
                         $titleAE = null;
                         $style = false;
-                        $styleAE = false;
+                        $styleDefault = false;
 
                          foreach ($topologies as $topology) {
                              $numSeatsCam = $topology->number_seats;
@@ -697,26 +697,28 @@
                          }else{
                              $totalPassengersAE = $countBySensorFinal;
                              $titleAE = "Conteo por cámara < promedio";
-                             $styleAEA = true;
                          }
                          $countMax = $dispatchRegister->final_front_sensor_counter;
-                         $countMaxAssets = $countMax>=$totalSeats ? $totalSeats : $countMax;
+                         $countMaxAssets = $countMax >= $totalSeats ? $totalSeats : $countMax;
                          $countPassengersFICS = $spreadsheetPassengersSync->value;
 
                         $totalPassengers = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
 
-                        if ($countMaxAssets > $countPassengersFICS){
-                        $style = true;
+                        if ($totalPassengersAE > $countPassengersFICS || $totalPassengers > $countPassengersFICS){
+                            $style = true;
                          }
+                        if ($countMaxAssets != $totalPassengers){
+                            $styleDefault = true;
+                        }
                     @endphp
                 @if($routeProm==279||$routeProm==280||$routeProm==282||$routeProm==283)
                     <td width="10%" class="text-center" style="background: #c4c9d0">
-                        @if($styleAE == false)
+                        @if($style == false)
                             <span class="tooltips"
                                   title="{{$titleAE}}">
                                 {{ $totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0 }}
                             </span>
-                        @elseif( $styleAE == true)
+                        @elseif( $style == true)
                             <span class="tooltips" style="color: darkred; font-weight: 900"
                                   title="{{$titleAE}}">
                                 {{$totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0}}
@@ -724,11 +726,19 @@
                         @endif
                     </td>
                 @elseif($routeProm==337||$routeProm==338)
-                    <td class="text-center">
-                         <span class="tooltips text-center" title="@lang('maximos - asientos')" >
-                            {{$countMaxAssets ? $countMaxAssets : 0 }}
-                        </span>
-                    </td>
+                    @if($styleDefault == false)
+                        <td class="text-center">
+                             <span class="tooltips text-center" title="@lang('maximos - asientos')" >
+                                {{$countMaxAssets ? $countMaxAssets : 0 }}
+                            </span>
+                        </td>
+                    @elseif($styleDefault == true)
+                        <td class="text-center">
+                             <span class="tooltips text-center" style="color: darkred; font-weight: 900" title="@lang('maximos - asientos')" >
+                                {{$countMaxAssets ? $countMaxAssets : 0 }}
+                            </span>
+                        </td>
+                    @endif
                 @else
                     <td width="10%" class="text-center" style="background: #c4c9d0">
                         @if($style == false)
