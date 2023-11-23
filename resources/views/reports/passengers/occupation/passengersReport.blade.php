@@ -25,11 +25,12 @@
         }
 
         function formatW($value) {
-            return number_format($value - 0.08, 2, '.', ',');
+            global $correction;
+            return number_format($value - $correction, 20, '.', ',');
         }
 
         $passengersStops = json_decode($dispatchRegister->getObservation('passengers_stops')->observation);
-        $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers');
+        $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
     @endphp
     <div class="panel-inverse col-md-12">
         <div class="panel-heading">
@@ -209,14 +210,14 @@
                                                 $nextActiveKmPercent = $nextHistorySeat ? percentTo($nextHistorySeat->active_km, $routeDistance) : 100;
 
                                                 $activeSeatRouteDistance = $historySeat->active_km;
-                                                $inactiveSeatRouteDistance = $historySeat->inactive_km;
+                                                $inactiveSeatRouteDistance = $historySeat->inactive_km > 0 ? $historySeat->inactive_km : $routeDistance;
 
                                                 $initialInactivePercent = $first ? percentTo($activeSeatRouteDistance, $routeDistance) : 0;
                                                 $busyPercent = percentTo($historySeat->busy_km, $routeDistance);
-                                                $inactivePercent = percentTo($historySeat->inactive_km, $routeDistance);
+                                                $inactivePercent = percentTo($inactiveSeatRouteDistance, $routeDistance);
 
                                                 //$finalInactivePercent = $last ? (100 - $inactivePercent) : $nextActiveKmPercent - $inactivePercent;
-                                                $finalInactivePercent = $last ? (100 - $inactivePercent) : percentTo($nextHistorySeat ? $nextHistorySeat->active_km - $historySeat->inactive_km : 0, $routeDistance);
+                                                $finalInactivePercent = $last ? (100 - $inactivePercent) : percentTo($nextHistorySeat ? $nextHistorySeat->active_km - $inactiveSeatRouteDistance : 0, $routeDistance);
 
                                                 $activeKm = intval($historySeat->busy_km / 1000);
                                                 $activeTimeBy = explode('.', $historySeat->busy_time)[0];
@@ -259,6 +260,10 @@
                                                 <span class="pull-left label label-inverse {{ $first ? '' : 'hide' }}"
                                                       style="margin-left: 5px;margin-top: 5px">
                                                     @lang('Seat') {{ $historySeat->seat }} ({{ $historySeats->count() }})
+                                                    <script>
+                                                        console.log("Tipo de dato de historySeat->seat:", typeof {{ $historySeat->seat }});
+                                                        console.log("Valor de historySeat->seat:", {{ $historySeat->seat }});
+                                                    </script>
                                                 </span>
                                             </div>
 

@@ -20,23 +20,22 @@ class OccupationService
         $initialTimeRange = StrTime::subStrTime($dispatchRegister->departure_time, '00:30:00');
         $finalTimeRange = StrTime::addStrTime(($dispatchRegister->canceled ? $dispatchRegister->time_canceled : $dispatchArrivalTime), '00:30:00');
 
-        if($route->distance_in_km > 100) {
-            $initialTimeRange = "$dispatchRegister->date $dispatchRegister->departure_time";
-            $finalTimeRange = "$dispatchRegister->date_end $dispatchRegister->arrival_time";
-        }
-
-        if ($dispatchRegister->vehicle->company_id == 14){
+        if ($dispatchRegister->vehicle->company_id == 14) {
             $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
                 ->where('date', '=', $dispatchRegister->date)
                 ->where('dispatch_register_id', '=', $dispatchRegister->id)
                 ->whereBetween('time', [$initialTimeRange, $finalTimeRange])
                 ->get()->sortBy('active_time');
-        }else{
-        $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
-            ->where('date', '=', $dispatchRegister->date)
-            ->where('dispatch_register_id', '=', $dispatchRegister->id)
-            ->whereBetween('active_time', [$initialTimeRange, $finalTimeRange])
-            ->get()->sortBy('active_time');
+        } else {
+            if ($route->distance_in_km > 100 || true) {
+                $initialTimeRange = "$dispatchRegister->date $dispatchRegister->departure_time";
+                $finalTimeRange = "$dispatchRegister->date_end $dispatchRegister->arrival_time";
+            }
+            $historySeats = HistorySeat::where('plate', $dispatchRegister->vehicle->plate)
+//                ->where('date', '=', $dispatchRegister->date)
+                ->where('dispatch_register_id', '=', $dispatchRegister->id)
+                //->whereBetween('active_time', [$initialTimeRange, $finalTimeRange])
+                ->get()->sortBy('active_time');
         }
         $routeDistance = $dispatchRegister->route->distance * 1000;
 
