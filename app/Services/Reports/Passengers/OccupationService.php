@@ -35,7 +35,7 @@ class OccupationService
 //                ->where('date', '=', $dispatchRegister->date)
                 ->where('dispatch_register_id', '=', $dispatchRegister->id)
                 //->whereBetween('active_time', [$initialTimeRange, $finalTimeRange])
-                ->get()->sortBy('active_time');
+                ->get()->sortBy('seat');
         }
         $routeDistance = $dispatchRegister->route->distance * 1000;
 
@@ -68,7 +68,7 @@ class OccupationService
 
         }
 
-        $historySeats = $historySeats->sortBy('tariff.fromControlPoint.order');
+        //$historySeats = $historySeats->sortBy('tariff.fromControlPoint.order');
 
         $truncateCounts = $historySeats->where('busy_km', '>=', $thresholdKm);
         $totalProduction = $truncateCounts->sum('tariff.value');
