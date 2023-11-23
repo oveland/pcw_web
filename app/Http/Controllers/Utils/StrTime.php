@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Utils;
 
+use Carbon\Carbon;
+
 class StrTime
 {
     static function intervalToTime($interval)
@@ -95,5 +97,36 @@ class StrTime
 
         // InclusiveRange range should be at least 50% of average duration ranges
         return $inclusiveRange >= $averageDurationRanges * $inclusiveAveragePercent;
+    }
+
+    static function isInclusiveDateTimeRanges($dateTimeStartA, $dateTimeEndA, $dateTimeStartB, $dateTimeEndB)
+    {
+        $dateTimeStartA = Carbon::createFromFormat('Y-m-d H:i:s', $dateTimeStartA);
+        $dateTimeEndA = Carbon::createFromFormat('Y-m-d H:i:s', $dateTimeEndA);
+        $dateTimeStartB = Carbon::createFromFormat('Y-m-d H:i:s', $dateTimeStartB);
+        $dateTimeEndB = Carbon::createFromFormat('Y-m-d H:i:s', $dateTimeEndB);
+
+        $durationA = $dateTimeEndA->diffAsCarbonInterval($dateTimeStartA);
+        $durationB = $dateTimeEndB->diffAsCarbonInterval($dateTimeStartB);
+
+        $duration = clone $durationA;
+        $duration->add($durationB);
+        $duration->divide(2);
+
+        $averageRangesMinutes = $duration->total('minutes');
+        $inclusiveAveragePercent = $averageRangesMinutes < 60 ? 0.2 : 0.5;
+
+        $inclusiveRangeMinutes = 0;
+        if (
+            $dateTimeStartA->isBetween($dateTimeStartB, $dateTimeEndB) || $dateTimeEndA->isBetween($dateTimeStartB, $dateTimeEndB)
+            || $dateTimeStartB->isBetween($dateTimeStartA, $dateTimeEndA) || $dateTimeEndB->isBetween($dateTimeStartA, $dateTimeEndA)
+        ) {
+            $inclusiveRangeMinutes = $dateTimeEndA->min($dateTimeEndB)->diffAsCarbonInterval($dateTimeStartA->max($dateTimeStartB))->total('minutes');
+        }
+
+//        echo " >>>> Compare $inclusiveRangeMinutes >= $averageRangesMinutes * $inclusiveAveragePercent : " .($averageRangesMinutes * $inclusiveAveragePercent) ."\n" ;
+
+        // InclusiveRange range should be at least $inclusiveAveragePercent % of the average duration ranges
+        return $inclusiveRangeMinutes >= $averageRangesMinutes * $inclusiveAveragePercent;
     }
 }

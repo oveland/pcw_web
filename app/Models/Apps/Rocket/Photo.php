@@ -38,7 +38,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Photo whereId($value)
  * @method static Builder|Photo whereLocationId($value)
  * @method static Builder|Photo wherePath($value)
- * @method static Builder|Photo whereSide($value)
  * @method static Builder|Photo whereType($value)
  * @method static Builder|Photo whereUpdatedAt($value)
  * @method static Builder|Photo whereVehicleId($value)
@@ -52,6 +51,7 @@ use Illuminate\Support\Carbon;
  * @property string $disk
  * @method static Builder|Photo whereDisk($value)
  * @method static Builder|Photo whereVehicleAndDate(Vehicle $vehicle, $date)
+ * @method static Builder|Photo whereSide($side)
  * @method static Builder|Photo whereVehicleAndDateAndSide(Vehicle $vehicle, $date, $side)
  * @property string $rekognition
  * @method static Builder|Photo whereRekognition($value)
@@ -92,11 +92,19 @@ class Photo extends Model implements PhotoInterface
      */
     function scopeWhereVehicleAndDateAndSide(Builder $query, Vehicle $vehicle, $date, $side)
     {
+        return $query->whereVehicleAndDate($vehicle, $date)->whereSide($side);
+    }
+
+    /**
+     * @param Builder $query
+     * @param $side
+     * @return Builder
+     */
+    function scopeWhereSide(Builder $query, $side)
+    {
         $side = "$side";
-        $query = $query->whereVehicleAndDate($vehicle, $date);
 
         if ($side !== null && $side != 'all' && $side !== "") {
-
             if($side == '1') {
                 return $query->where(function ($q) {
                     $q->where('side', '0')->orWhere('side', '1');

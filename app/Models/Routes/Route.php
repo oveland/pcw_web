@@ -184,4 +184,14 @@ class Route extends Model
     {
         return $this->distance_in_km * 1000;
     }
+
+    function isLarge()
+    {
+        return $this->distance_in_km > 100;
+    }
+
+    function isShort()
+    {
+        return !$this->isLarge();
+    }
 }

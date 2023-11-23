@@ -75,7 +75,7 @@ class RocketController extends Controller
 
                     $response->photos = $photos
 //                        ->where('drId', '<>', null)
-                        ->sortByDesc('time')->values();
+                        ->sortByDesc('ts')->values();
 
                     $response->seating = $vehicle->getProfileSeating($camera, $date)->occupation;
                     $response->maxRecognitions = $this->processMaxRecognitions($photos);

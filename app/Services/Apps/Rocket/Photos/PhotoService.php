@@ -10,6 +10,7 @@ use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Apps\Rocket\VehicleCamera;
 use App\Models\Passengers\Passenger;
 use App\Models\Routes\DispatchRegister;
+use App\Models\Vehicles\CurrentLocation;
 use App\Models\Vehicles\Vehicle;
 use App\Models\Company\Company;
 use App\PerfilSeat;
@@ -161,7 +162,8 @@ class PhotoService
             $photo->vehicle()->associate($this->vehicle);
 
             $currentLocation = $this->vehicle->currentLocation;
-            $dr = $this->findDispatchRegisterByPhoto($photo);
+            $dr = $this->findDispatchRegisterByPhoto($photo, $currentLocation);
+
             $photo->dispatch_register_id = $dr ? $dr->id : null;
 
             $photo->location_id = $currentLocation->location_id ?? null;
@@ -235,7 +237,7 @@ class PhotoService
             [
                 'type' => 'historic',
                 'vehicle' => $this->vehicle->getAPIFields(),
-                'historic' => $historic->sortByDesc('time')->values()->toArray(),
+                'historic' => $historic->sortByDesc('ts')->values()->toArray(),
             ]
         ));
 
@@ -273,8 +275,8 @@ class PhotoService
         $historicByTurns = $historic->groupBy('drId');
 
         foreach ($historicByTurns as $dr => $historicByTurn) {
-            $firstHistoricByTurn = $historicByTurn->sortBy('time')->first();
-            $lastHistoricByTurn = $historicByTurn->sortBy('time')->last();
+            $firstHistoricByTurn = $historicByTurn->sortBy('ts')->first();
+            $lastHistoricByTurn = $historicByTurn->sortBy('ts')->last();
             $dispatchRegister = $lastHistoricByTurn->details->dispatchRegister;
 
             if ($dispatchRegister) {
@@ -286,7 +288,7 @@ class PhotoService
                     'to' => $dispatchRegister->arrival_time,
                     'count' => $lastHistoricByTurn->passengers->totalInRoundTrip,
                     'firstHistoricByTurn' => $firstHistoricByTurn,
-                    'historic' => collect($historicByTurn)->only(['time', 'passengers']),
+                    'historic' => collect($historicByTurn)->only(['ts', 'time', 'passengers']),
                     'lastHistoricByTurn' => $lastHistoricByTurn,
 
                     'prevCount' => $firstHistoricByTurn->passengers->totalInRoundTrip,
@@ -390,7 +392,7 @@ class PhotoService
         $alert = $counterLock >= 3;
     }
 
-    function findDispatchRegisterByPhoto(Photo $photo)
+    function findDispatchRegisterByPhoto(Photo $photo, CurrentLocation  $currentLocation = null)
     {
         $dr = DispatchRegister::where('date', $photo->date->toDateString())
             ->where('vehicle_id', $photo->vehicle->id)
@@ -400,11 +402,25 @@ class PhotoService
             ->orderByDesc('departure_time')
             ->active()->first();
 
+        if (!$dr && $currentLocation) $dr = DispatchRegister::find($currentLocation->dispatch_register_id);
+
         if ($dr && $dr->complete() && $dr->arrival_time < $photo->date->toTimeString()) {
             return null;
         }
 
         return $dr;
+    }
+
+    function getDispatchRegisters()
+    {
+        if (!$this->date || !$this->vehicle) return collect([]);
+
+        return DispatchRegister::where('date', $this->date)
+            ->where('vehicle_id', $this->vehicle->id)
+            ->where('route_id', '<>', null)
+            ->active()
+            ->orderBy('departure_time')
+            ->get();
     }
 
     function getVehicleCameras(): array
@@ -422,23 +438,34 @@ class PhotoService
     {
         $this->setCamera($camera);
 
-        return Photo::whereVehicleAndDateAndSide($this->vehicle, $this->date ? $this->date : Carbon::now(), $this->camera)
-//            ->whereBetween('id', [104073, 104173])
-            //->where('id', 53717);
-//            ->where('dispatch_register_id', '>', 1833559)
+        return Photo::whereVehicleAndDateAndSide($this->vehicle, $this->date ?: Carbon::now(), $this->camera)
+            ->orWhere(function($query) {
+                $side = $this->camera;
+                if ($side !== null && $side != 'all' && $side !== "") {
+                    $query = $query->whereSide($side);
+                }
+                return $query->whereIn('dispatch_register_id', $this->getDispatchRegisters()->pluck('id'));
+            })
             ->with('dispatchRegister')
-            ->limit(2000)
+            ->limit(4000)
             ->get()
             ->map(function (Photo $photo) {
-                $photo->dispatchRegister()->associate(($photo->dispatchRegister->route_id ?? null) ? $photo->dispatchRegister : null);
+                $dr = $photo->dispatchRegister;
+                //$dr = ($dr && $dr->route_id) ? $dr : null;
+                $dr = ($dr && $dr->route_id && $dr->date == $this->date) ? $dr : null;
+
+                $photo->dispatchRegister()->associate($dr);
                 return $photo;
-            });
+            })
+            ->sortBy('date');
     }
 
     function processMultiTariff(Collection $allHistoric)
     {
-        DB::statement("DELETE FROM history_seats WHERE date::DATE = '$this->date' AND vehicle_id = " . $this->vehicle->id);
         $historicByDr = $allHistoric->groupBy('drId');
+        foreach ($historicByDr as $drId => $historic) {
+            DB::statement("DELETE FROM history_seats WHERE dispatch_register_id = $drId AND vehicle_id = " . $this->vehicle->id);
+        }
 
         $countTotal = 0;
         $countByTurn = 0;
@@ -448,7 +475,7 @@ class PhotoService
             $countByTurn = 0;
             $registers = collect([]);
 
-            foreach ($historic->sortBy('time') as $photo) {
+            foreach ($historic->sortBy('ts') as $photo) {
                 $vehicle = $this->vehicle;
                 $details = $photo->details;
                 $dr = $details->dispatchRegister;
@@ -480,14 +507,14 @@ class PhotoService
 
                         $insert = DB::select("
                             INSERT INTO history_seats (plate, seat, date, time, active_time, active_km, vehicle_id, dispatch_register_id, active_latitude, active_longitude) 
-                            VALUES ('$vehicle->plate', $seat, '$this->date', '$time', '$date', $distance, $vehicle->id, $drId, $latitude, $longitude) RETURNING id
+                            VALUES ('$vehicle->plate', $seat, '".$date->toDateString()."', '$time', '$date', $distance, $vehicle->id, $drId, $latitude, $longitude) RETURNING id
                         ");
                         $id = collect($insert)->first()->id;
 
                         $registers->put($seat, (object)[
                             'id' => $id,
                             'seat' => $seat,
-                            'arrivedTime' => $this->date . " " . $dr->arrival_time,
+                            'arrivedTime' => $date->toDateString() . " " . $dr->arrival_time,
                             'routeDistance' => $dr->route->distance,
                         ]);
                     }
@@ -528,6 +555,9 @@ class PhotoService
     {
         $totalByCameras = 0;
         $allPhotos = $this->getPhotos();
+
+//        echo "Process " . $allPhotos->count() . " photos. Date = $this->date , Camera = $this->camera \n";
+
         $drIds = $allPhotos->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id')->keys();
 
         $historic = collect([]);
@@ -546,16 +576,21 @@ class PhotoService
         }
 
         foreach ($drIds as $drId) {
+            $dr = DispatchRegister::find($drId);
+            $route = $dr->route;
+
             $countByRoundTrip = 0;
             $countMaxByRoundTrip = 0;
             foreach ($historicByCameras as $historicCamera) {
                 $data = $historicCamera->get($drId);
                 if ($data) {
-                    $lastHistoricData = $data->sortBy('time')->last();
+                    $lastHistoricData = $data->sortBy('ts')->last();
                     $countByRoundTrip = $countByRoundTrip + $lastHistoricData->passengers->totalInRoundTrip;
                     $countMaxByRoundTrip = $countMaxByRoundTrip + $lastHistoricData->passengers->maxPersonByRoundTrip;
                 }
             }
+
+//            if ($dr->isActive()) echo " • DR $dr->id ($dr->status) $dr->date dep: $dr->departure_time - $dr->arrival_time $route->name Count: $countByRoundTrip \n";
 
             $drObs = DispatchRegister::find($drId)->getObservation('rocket_passengers');
             $drObs->value = $countByRoundTrip;
@@ -565,11 +600,10 @@ class PhotoService
 
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip WHERE id_registro = $drId AND id_empresa <> 39");
-            if ($this->vehicle->company_id==39) {
+            if ($this->vehicle->company_id == 39) {
                 DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_front_sensor_counter = $countMaxByRoundTrip WHERE id_registro = $drId");
             }
         }
-
 
         if ($withHistoricPassengers) {
             DB::delete("DELETE FROM passengers WHERE date::DATE = '$this->date' AND vehicle_id = " . $this->vehicle->id);
@@ -577,14 +611,14 @@ class PhotoService
             //$historic = $historicByCameras->collapse()->collapse();
             $totalByCamerasPrev = 0;
             foreach ($drIds as $drId) {
-                $historicDr = $historic->where('drId', $drId)->sortBy('time')->values();
+                $historicDr = $historic->where('drId', $drId)->sortBy('ts')->values();
                 $historicDrByLocation = $historicDr->groupBy('details.location_id');
 
                 $totalByRoundTripPrev = 0;
 
                 foreach ($historicDrByLocation as $locationId => $locationPhotos) {
                     $totalCameras = $locationPhotos->groupBy('camera')->count();
-                    $locationPhotos = collect($locationPhotos)->sortBy('time');
+                    $locationPhotos = collect($locationPhotos)->sortBy('ts');
                     $totalByCameras = 0;
                     $totalInRoundTrip = 0;
 
@@ -602,7 +636,7 @@ class PhotoService
                     $totalSeating = 0;
 
                     foreach ($locationPhotos->groupBy('camera')->sort() as $camera => $photoData) {
-                        $lastPhoto = $photoData->sortBy('time')->last();
+                        $lastPhoto = $photoData->sortBy('ts')->last();
                         $details = $lastPhoto->details;
                         $prevDetails = $lastPhoto->prevDetails;
 
@@ -879,6 +913,7 @@ class PhotoService
                 $historic->push((object)[
                     'id' => $photo->id,
                     'camera' => $photo->side,
+                    'ts' => $photo->date->timestamp,
                     'time' => $photo->date->format('H:i:s.u') . '' . $photo->id,
                     'drId' => $statusDR->getDRId(),
                     'drStatus' => $statusDR->text,

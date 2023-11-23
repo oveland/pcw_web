@@ -25,8 +25,8 @@ class Kernel extends ConsoleKernel
             /******************************************   4G   ***********************************************/
 
             $schedule->command('Sync4G:sync-photos --imei=352557104802940')->everyMinute()->runInBackground(); // Vehicle 8419 EP
-            $schedule->command('rocket:count --vehicle-plate=WHW-596 --pa=3 --pr=20 ')->everyThreeHours()->runInBackground();
-            $schedule->command("rocket:count --vehicle-plate=WHW-596 --pa=3 --pr=20 --date=$yesterday")->everyThreeHours()->runInBackground(); // Para procesar conteos de despacho de ayer. Aplica para rutas largas
+            $schedule->command('rocket:count --vehicle-plate=WHW-596 --pa=3 --pr=100 ')->everyThreeHours()->runInBackground();
+            $schedule->command("rocket:count --vehicle-plate=WHW-596 --pa=3 --pr=100 --date=$yesterday")->everyThreeHours()->runInBackground(); // Para procesar conteos de despacho de ayer. Aplica para rutas largas
 
             $schedule->command('Sync4G:sync-photos --imei=352557104743888')->everyMinute()->runInBackground(); // vehicle 2667 EP
             $schedule->command('rocket:count --vehicle-plate=KUK-593 --pa=3 --pr=20 ')->cron('*/47 * * * *')->runInBackground();
@@ -47,7 +47,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104727915')->everyMinute()->runInBackground(); // Vehicle 5961 Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=TJW-676 --pa=5 --pr=20 ')->cron('*/47 * * * *')->runInBackground();
 
-            $schedule->command('syrus:sync-photos --imei=352557104790723')->everyMinute()->runInBackground(); // Vehicle 2819 Expreso Palmira
+            $schedule->command('syrus:sync-photos --imei=352557104787232')->everyMinute()->runInBackground(); // Vehicle 2819 Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=SPK385 --pa=3 --pr=20 ')->cron('*/47 * * * *')->runInBackground();
 
             $schedule->command('syrus:sync-photos --imei=352557100774424')->everyMinute()->runInBackground(); // Vehicle 6841 Expreso Palmira
@@ -267,8 +267,11 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104506293')->everyMinute()->runInBackground(); // Vehicle 5009 Valledupar
             $schedule->command('rocket:count --vehicle-plate=WCY-771 --pa=2 --pr=20 ')->cron('*/47 * * * *')->runInBackground();
 
-            $schedule->command('syrus:sync-photos --imei=352557100803918')->everyMinute()->runInBackground(); // Vehicle 5015 Valledupar
-            $schedule->command('rocket:count --vehicle-plate=WNL-372 --pa=2 --pr=20 ')->cron('*/47 * * * *')->runInBackground();
+           //$schedule->command('syrus:sync-photos --imei=352557100803918')->everyMinute()->runInBackground(); // Vehicle 5015 Valledupar
+            //$schedule->command('rocket:count --vehicle-plate=WNL-372 --pa=2 --pr=20 ')->cron('*/47 * * * *')->runInBackground();
+
+            $schedule->command('syrus:sync-photos --imei=352557100803918')->everyMinute()->runInBackground(); // Vehicle 5010 Valledupar
+            $schedule->command('rocket:count --vehicle-plate=WCY-828 --pa=2 --pr=20 ')->cron('*/47 * * * *')->runInBackground();
 
             $schedule->command('syrus:sync-photos --imei=352557100775694')->everyMinute()->runInBackground(); // Vehicle 5001 Valledupar
             $schedule->command('rocket:count --vehicle-plate=WCY-763 --pa=2 --pr=20 ')->cron('*/47 * * * *')->runInBackground();
@@ -348,7 +351,7 @@ class Kernel extends ConsoleKernel
             //================================================================================
             //======================== Sync data passengers from EP ==========================
             //================================================================================
-            $schedule->command('lm:sync --company=39')->everyThreeHours();
+            $schedule->command("lm:sync --company=39 --date=$yesterday")->everyThreeHours();
 
         }
     }

@@ -61,6 +61,8 @@ class SeatOccupationService
                     $seatActivateThreshold = $configSeat['persistenceRoutes'][$routeId]['a'];
                 }
 
+                //if($routeId == 338)dump('$seatReleaseThreshold = ' . $seatReleaseThreshold, '$seatActivateThreshold = ' . $seatActivateThreshold);
+
                 $newData = collect($data);
 
                 $persistentInCurrent = $currentOccupied->get($seat);
@@ -110,28 +112,40 @@ class SeatOccupationService
                     $seatActivateThreshold = $configSeat['persistenceRoutes'][$routeId]['a'];
                 }
 
-                $newData = collect($data);
+                $configT2Seat = $this->getConfigT2($seat, $statusDR);
+                $seatActivateThresholdT2 = $configT2Seat['countFrom'];
 
                 $persistentPrev = $prevOccupied->get($seat);
                 $counterActivate = intval($persistentPrev->counterActivate ?? 1);
 
+                $newData = collect($data);
                 $counterRelease = $newData->get('counterRelease');
 
                 if ($statusDR->isActive()) {
                     $newData->put('detected', false);
-                    if ($persistentPrev && (!$counterRelease || $counterRelease <= 0)) {
-                        $counterActivate++;
-                        $newData->put('detected', true);
-                    } else if (!$persistentPrev) {
-//                        $inShorRoute = $statusDR->dr->route->distance_in_km < 100;
-                        $inShorRoute = !collect([285, 286])->contains($statusDR->dr->route_id); // All minus PEREIRA
-                        $persistenceByT2 = $seatingCounts->get($seat)->pa >= 2;
 
-                        $complementsT2 = $inShorRoute && $persistenceByT2;
+                    if (!$persistentPrev) { // On first activation event in seat
+                        $counterActivate = 1;
 
-                        $counterActivate = $complementsT2 ? $seatActivateThreshold : 1;
+                        if ($configT2Seat['complementsT1'] && $seatingCounts->get($seat)->counted) { // T2 Complements T1 setting $counterActivate = $seatActivateThreshold
+                            $counterActivate = $seatActivateThreshold;
+                        }
+
                         $newData->put('detected', true);
+                    } else {
+                        if (!$counterRelease || $counterRelease <= 0) {
+                            $counterActivate++;
+                            $newData->put('detected', true);
+                        }
+
+                        if(!$persistentPrev->counted) {
+                            if ($configT2Seat['complementsT1'] && $seatingCounts->get($seat)->counted) { // T2 Complements T1 setting $counterActivate = $seatActivateThreshold
+                                $counterActivate = $seatActivateThreshold;
+                                $newData->put('detected', true);
+                            }
+                        }
                     }
+
 
                     $counted = $counterActivate >= $seatActivateThreshold;
 
@@ -152,6 +166,20 @@ class SeatOccupationService
         }
     }
 
+    function getConfigT2($seat, StatusDR $statusDR)
+    {
+        $routeId = $statusDR->getRouteId();
+
+        $configT2SeatAll = $this->configSeating[$seat]['T2'];
+        $configT2Seat = $configT2SeatAll['default'];
+
+        if($routeId && $statusDR->dr->route->isLarge()) $configT2Seat = $configT2SeatAll['defaultLargeRoutes'];
+
+        if ($routeId && isset($configT2SeatAll['routes']) && isset($configT2SeatAll['routes'][$routeId])) $configT2Seat = $configT2SeatAll['routes'][$routeId];
+
+        return $configT2Seat;
+    }
+
 
     /**
      * @param $seatingCounts
@@ -165,6 +193,9 @@ class SeatOccupationService
         $seatingCounts = collect([]);
 
         foreach ($seatingCountsClone as $seat => $data) {
+            $configT2Seat = $this->getConfigT2($seat, $statusDR);
+            $seatActivateThresholdT2 = $configT2Seat['countFrom'];
+
             $seatingOccupiedInfo = $seatingOccupied->get($seat);
             $prevData = $prevSeatingCounts->get($seat);
 
@@ -195,18 +226,14 @@ class SeatOccupationService
                     break;
             }
 
-            $seatingActivated = $seatingCounts->put($seat, $data)->filter(function ($data) {
-                return collect($data)->get('pa') > 0;
-            });
+            //$seatingActivated = $seatingCounts->put($seat, $data)->filter(function ($data) {
+            //    return collect($data)->get('pa') > 0;
+            //});
+            //$averageCount = $seatingActivated->average('pa');
+            //$averageCount = 1;
+            //$data->counted = $averageCount > 0 && $data->pa >= $averageCount * 0.3 && ($data->pa / $data->photoSeq) > 0.1;
 
-            $averageCount = $seatingActivated->average('pa');
-            $averageCount = 1;
-
-            $data->counted =
-                $averageCount > 0
-//                && $data->pa >= $averageCount * 0.3
-                && $data->pa >= 2;
-//                && ($data->pa / $data->photoSeq) > 0.1;
+            $data->counted = $data->pa >= $seatActivateThresholdT2;
 
             $seatingCounts->put($seat, $data);
         }

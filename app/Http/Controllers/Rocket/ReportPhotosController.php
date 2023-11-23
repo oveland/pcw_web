@@ -64,7 +64,7 @@ class ReportPhotosController extends Controller
                     $persistenceRelease = $request->get('release');
 
                     $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date)->getHistoric(true);
-                    $response->photos = $photos->sortByDesc('time')->values();
+                    $response->photos = $photos->sortByDesc('ts')->values();
 
                     $response->seating = $vehicle->getProfileSeating($camera, $date)->occupation;
                 } else {

@@ -139,31 +139,45 @@ class ConfigProfileService
 //                $release = $rActivate ? $rActivate : 3;
 //            }
             $persistenceRoutes = null;
-             if ($this->vehicle->company_id == 39) {
-                 $persistenceRoutes = [
-                     /*286 => ['a' => 2, 'r' => 20],
-                     280 => ['a' => 2, 'r' => 20],*/
+            if ($this->vehicle->company_id == 39) {
+                $persistenceRoutes = [
+                    285 => ['a' => 5, 'r' => 30], // CALI - PEREIRA
+                    286 => ['a' => 5, 'r' => 30], // PEREIRA - CALI
 
-                     285 => ['a' => 5, 'r' => 30],
-                     286 => ['a' => 5, 'r' => 30],
+                    287 => ['a' => 5, 'r' => 30], // CALI - ARMENIA
+                    288 => ['a' => 5, 'r' => 30], // ARMENIA - CALI
 
-                     287 => ['a' => 5, 'r' => 30],
-                     288 => ['a' => 5, 'r' => 30],
+                    271 => ['a' => 2, 'r' => 18], // CALI - PALMIRA
+                    272 => ['a' => 2, 'r' => 18], // PALMIRA - CALI
 
-                     271 => ['a' => 2, 'r' => 18],
-                     272 => ['a' => 2, 'r' => 18],
+                    //282 => ['a' => 2, 'r' => 20], // CALI - AEROPUERTO
+                    //283 => ['a' => 2, 'r' => 20], // AEROPUERTO - CALI
+                ];
+            }
 
-
-
-                     /*282 => ['a' => 2, 'r' => 20],
-                     283 => ['a' => 2, 'r' => 20],*/
-
-                 ];
-             }
+            /**
+             * Params para Topologías 2 (Criterio de Llenado de vasos)
+             * En este criterio solo de toma el umbral de activación (Parámetro countFrom)
+             * Los parámetros de $configT2 son procesados en SeatOccupationService: función getConfigT2().
+             *
+             * countFrom: Umbral de mínimo de detecciones en el asiento para poderlo contar (Vaso lleno)
+             */
+            $configT2 = ['default' => ['countFrom' => 2, 'complementsT1' => false]];
+            if ($this->vehicle->company_id == 39) {
+                $configT2 = [
+                    'default' => ['countFrom' => 2, 'complementsT1' => true], // Conf por defecto a todas las rutas
+                    'defaultLargeRoutes' => ['countFrom' => 10, 'complementsT1' => true], // Para rutas largas (Ver modelo Route.php función isLarge())
+                    'routes' => [
+                        337 => ['countFrom' => 20, 'complementsT1' => true], // CALI - BOGOTA
+                        338 => ['countFrom' => 20, 'complementsT1' => true], // BOGOTA - CALI
+                    ]
+                ];
+            }
 
             $seatingConfig[$number] = [
                 'persistence' => compact(['activate', 'release']),
-                'persistenceRoutes' => $persistenceRoutes
+                'persistenceRoutes' => $persistenceRoutes,
+                'T2' => $configT2
             ];
         }
 

@@ -12,6 +12,7 @@ use App\Services\LM\SyncService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Log;
+use DB;
 
 class EPSyncService extends SyncService
 {
@@ -45,15 +46,44 @@ class EPSyncService extends SyncService
     {
     }
 
-    function tickets($date)
+    function debug($date)
     {
         $dateFrom = Carbon::createFromFormat('Y-m-d', $date ?? Carbon::now()->toDateString())->toDateString();
-        $dateTo = Carbon::createFromFormat('Y-m-d', $dateFrom)->addDays()->toDateString();
+        $dateTo = '2023-11-17';
 
-        $this->log("Start sync ticket passengers for date $dateFrom");
+        $query = "
+            SELECT bus, FechaPartida, HoraPartida, Codigo, viaje, Planilla, fecha_planilla, hora_planilla, TIPOVIAJE, parada, Origen, Destino, Suben, Bajan  
+            FROM v_saturacion_expal_h_III 
+            WHERE FechaPartida between '$dateFrom' AND '$dateTo'
+                AND bus IN ('8419') order by FechaPartida
+        ";
+
+        EPDB::select($query)
+            ->groupBy('Planilla')
+            ->each(function ($rp, $planilla) {
+                echo "\n • Agrupación por Planilla #$planilla \n";
+                collect($rp)->each(function ($report, $planilla) {
+                    echo trim($report->bus) . " • $report->FechaPartida $report->HoraPartida, $report->Codigo, $report->Origen - $report->Destino, • Viaje: $report->viaje, • Planilla: $report->Planilla, $report->fecha_planilla $report->hora_planilla, $report->Suben, $report->Bajan, $report->TIPOVIAJE, $report->parada";
+                    echo "\n";
+                });
+            });
+
+
+        return null;
+    }
+
+    function tickets($date)
+    {
+        //if ($date == '2023-11-11') return $this->debug($date);
+
+        $dateFrom = Carbon::createFromFormat('Y-m-d', $date ?? Carbon::now()->toDateString())->toDateString();
+        $dateTo = Carbon::createFromFormat('Y-m-d', $date)->addDays(1)->toDateString();
+
+        $this->log("Start sync ticket passengers for date $dateFrom - $dateTo");
 
         $activeVehicles = $this->company->activeVehicles;
         $activeVehiclesQuery = $activeVehicles
+            //->where('number', '8419')
             ->pluck('number')
             ->map(function ($number) {
                 return "'$number'";
@@ -62,16 +92,18 @@ class EPSyncService extends SyncService
 
         $query = "
             SELECT 
-                viaje travel_id, 
-                FechaPartida date, 
-                Codigo route_code, 
-                Planilla spread_sheet, 
-                Suben ascents, 
-                Bajan descents, 
-                bus vehicle_number,
-                parada stop
+                viaje           travel_id, 
+                FechaPartida    date,
+                Codigo          route_code, 
+                Planilla        spread_sheet, 
+                Suben           ascents, 
+                Bajan           descents, 
+                bus             vehicle_number,
+                parada          stop,
+                Origen          origin, 
+                Destino         destiny
             FROM v_saturacion_expal_h_III 
-            WHERE FechaPartida between '$dateFrom' AND '$dateTo'
+            WHERE FechaPartida between '$dateFrom' AND '$dateTo 23:59:59'
                 AND bus IN ($activeVehiclesQuery) 
         ";
 
@@ -82,9 +114,9 @@ class EPSyncService extends SyncService
             })
             ->groupBy('vehicle_number');
 
-        $activeVehicles->each(function (Vehicle $vehicle) use ($reportTicketsByVehicleNumber, $dateFrom) {
+        $activeVehicles->each(function (Vehicle $vehicle) use ($reportTicketsByVehicleNumber, $dateFrom, $dateTo) {
             $report = $reportTicketsByVehicleNumber->get($vehicle->number);
-            if ($report) $this->countsTicketsByVehicle($vehicle, $report, $dateFrom);
+            if ($report) $this->countsTicketsByVehicle($vehicle, $report, $dateFrom, $dateTo);
         });
 
         $this->log("End sync ticket passengers for date $dateFrom");
@@ -154,41 +186,63 @@ class EPSyncService extends SyncService
      * @param Collection $report
      * @return void
      */
-    function countsTicketsByVehicle(Vehicle $vehicle, Collection $report, $date)
+    function countsTicketsByVehicle(Vehicle $vehicle, Collection $report, $date, $dateTo)
     {
         $drs = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId(
             $this->company,
-            $date, null,
+            $date, $dateTo,
             null,
             $vehicle->id
         )
             ->active()
-            ->orderBy('departure_time')
-            ->get();
+            ->get()
+            ->sortBy(function (DispatchRegister $dr) {
+                return "$dr->date $dr->departure_time";
+            });
+        $report->sortBy('date')->groupBy('travel_id')->each(function (Collection $data, $travelId) use ($drs, $vehicle) {
+            echo " • FICS $vehicle->number Group by TravelID = $travelId";
 
-        $report->sortBy('date')->groupBy('travel_id')->each(function (Collection $data) use ($drs) {
             $dataStops = collect([]);
-            $dr = $drs->filter(function (DispatchRegister $dr) use ($data, $dataStops) {
-                $data = collect($data);
-                $dateStart = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->first()->date);
-                $dateEnd = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->last()->date);
+            $data = collect($data);
+            $dateStart = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->first()->date);
+            $dateEnd = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->last()->date);
 
-                $data->sortBy('date')->each(function ($d) use ($dataStops) {
-                    $dataStops->put($d->stop, [
-                        'a' => $d->ascents,
-                        'd' => $d->descents,
-                    ]);
-                });
+            $lastBySp = $data->groupBy('spread_sheet')->sort()->last()->last();
+            echo " Planilla $lastBySp->spread_sheet • $lastBySp->origin - $lastBySp->destiny • date range group $dateStart to $dateEnd "." Asc: " . $data->sum('ascents') . " vs Desc: " . $data->sum('descents') . "\n";
 
-//                if(!$dr->arrival_time_scheduled)dd($dr->id . " >> ". $dr->status);
+            $data->each(function ($r) use ($vehicle) {
+                echo "          > Viaje: $r->travel_id, $r->spread_sheet, $r->origin - $r->destiny, $r->date | Asc: $r->ascents vs Desc: $r->descents | Parada $r->stop\n";
+            });
 
-                return $dr->arrival_time_scheduled && StrTime::isInclusiveTimeRanges(
-                        $dateStart->toTimeString(),
-                        $dateEnd->toTimeString(),
-                        $dr->departure_time,
-                        $dr->arrival_time_scheduled
+            $data->sortBy('date')->each(function ($d) use ($dataStops) {
+                $dataStops->put($d->stop, [
+                    'a' => $d->ascents,
+                    'd' => $d->descents,
+                ]);
+            });
+
+
+            $dr = $drs->filter(function (DispatchRegister &$dr) use ($dateStart, $dateEnd, $dataStops) {
+                if (!$dr->date_end) {
+                    $dateEndSchedule = collect(DB::select("SELECT ('$dr->date'::DATE + (SELECT get_route_total_time_from_dispatch_time(('$dr->date $dr->departure_time') :: TIMESTAMP, $dr->route_id))::INTERVAL)::DATE date_end"))->first()->date_end;
+                    $dr->date_end = $dateEndSchedule;
+                }
+
+                $dr->date_end = Carbon::createFromFormat(strstr($dr->date_end, '/') ? 'd/m/Y' : 'Y-m-d', $dr->date_end)->toDateString();
+
+                //echo "Compare " . "$dr->date $dr->departure_time to " . "$dr->date_end $dr->arrival_time_scheduled \n";
+
+                return $dr->arrival_time_scheduled && StrTime::isInclusiveDateTimeRanges(
+                        $dateStart->toDateTimeString(),
+                        $dateEnd->toDateTimeString(),
+                        "$dr->date $dr->departure_time",
+                        "$dr->date_end $dr->arrival_time_scheduled"
                     );
             })->first();
+
+
+            if ($dr) dump("    • DR Found: $dr->id • $dr->date $dr->departure_time to $dr->date_end $dr->arrival_time_scheduled . Asc: " . $data->sum('ascents') . " vs Desc: " . $data->sum('descents'));
+            else echo "   x DR NOT found \n";
 
             if ($dr) {
                 $dataBySpreadSheet = $data->groupBy('spread_sheet');
@@ -231,6 +285,7 @@ class EPSyncService extends SyncService
 
     protected function log($message)
     {
+//        echo "$message\n";
         Log::info($this->company->short_name . " • $message");
     }
 }
