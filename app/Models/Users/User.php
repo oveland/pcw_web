@@ -352,6 +352,7 @@ class User extends Authenticatable
             2018101372, // Dora
             2018101377,// Diana
             2018101383,
+            2018101394,
             2018101382,
             2018101381,
             2018101380,// nuevos usuarios EP
@@ -386,6 +387,7 @@ class User extends Authenticatable
             2018101372, //Dora
             2018101377, //diana
             2018101409,
+            2018101394,
             2018101383,
             2018101382,
             2018101381, // nuevos usuarios EP
