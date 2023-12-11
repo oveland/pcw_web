@@ -5,6 +5,7 @@ namespace App\Services\Reports\Passengers;
 use App\Http\Controllers\DriverDetailedController;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Passengers\HistorySeat;
+use App\Models\Routes\ControlPoint;
 use App\Models\Routes\ControlPointsTariff;
 use App\Models\Routes\DispatchRegister;
 
@@ -73,6 +74,36 @@ class OccupationService
         $truncateCounts = $historySeats->where('busy_km', '>=', $thresholdKm);
         $totalProduction = $truncateCounts->sum('tariff.value');
 
-        return (object)compact(['historySeats', 'dispatchRegister', 'dispatchArrivalTime', 'thresholdKm', 'truncateCounts', 'totalProduction', 'totalPassengers' => $truncateCounts->count()]);
+        $controlPoints = $dispatchRegister->route->controlPoints;
+
+        $seatsInCPs = $controlPoints->sortBy('order')->mapWithKeys(function (ControlPoint $cp) use ($historySeats, $routeDistance) {
+
+
+            $distanceCpFromDispatch =  min($cp->distance_from_dispatch, $routeDistance);
+            $distanceCpNextPoint = $cp->distance_next_point;
+
+            $totalSeatsIn = $historySeats
+                ->where('active_km', '<=', $distanceCpFromDispatch)
+                ->where('inactive_km', '>=', $distanceCpFromDispatch)
+                ->count();
+            $totalSeatsOn = $historySeats
+                ->where('active_km', '<=', $cp->distance_from_dispatch)
+                ->where('inactive_km', '>=', $cp->distance_from_dispatch)
+                ->count();
+            $totalSeatsOut = $historySeats
+                ->where('active_km', '<=', $distanceCpFromDispatch + $distanceCpNextPoint * 0.5)
+                ->where('inactive_km', '>=', $distanceCpFromDispatch + $distanceCpNextPoint * 0.5)
+                ->count();
+
+            $thresholdDistancePrevPoint = $cp->distance_next_point / 2;
+
+            return [$cp->id => (object)[
+                'in' => $totalSeatsIn,
+                'on' => $totalSeatsOn,
+                'out' => $totalSeatsOut,
+            ]];
+        });
+
+        return (object)compact(['historySeats', 'dispatchRegister', 'controlPoints', 'seatsInCPs', 'dispatchArrivalTime', 'thresholdKm', 'truncateCounts', 'totalProduction', 'totalPassengers' => $truncateCounts->count()]);
     }
 }

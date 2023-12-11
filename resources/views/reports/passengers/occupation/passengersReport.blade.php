@@ -5,7 +5,8 @@
         $dispatchArrivalTime = $report->dispatchArrivalTime;
         $thresholdKm = $report->thresholdKm;
 
-        $controlPoints = $dispatchRegister->route->controlPoints;
+        $controlPoints = $report->controlPoints;
+        $seatsInCPs = $report->seatsInCPs;
 
         $truncateCounts = $report->truncateCounts;
         $totalProduction = $report->totalProduction;
@@ -32,7 +33,7 @@
         $passengersStops = json_decode($dispatchRegister->getObservation('passengers_stops')->observation);
         $spreadsheetPassengers = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
     @endphp
-    <div class="panel-inverse col-md-12">
+    <div class="panel-inverse col-md-12" style="padding-bottom: 60px">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-12">
@@ -78,7 +79,7 @@
                             <div class="passengers-stops">
                                 <span>Conteos EP: </span>
                                 @foreach($passengersStops as $stop => $data)
-                                <span class="passengers-stop">
+                                    <span class="passengers-stop">
                                     <span class="stop"><i class="fa fa-map-marker"></i> {{ $stop }}</span>
                                     <span>
                                         <span class="up">{{ $data->a }}⭡</span>
@@ -119,10 +120,23 @@
                         </div>
 
                         <div class="progress p-0 m-0 no-rounded-corner progress-lg"
-                             style="height: 60px !important;">
+                             style="height: 100px !important;">
                             @foreach($controlPoints as $controlPoint)
                                 @php
                                     $width = percentTo($controlPoint->distance_next_point, $routeDistance) - $correction;
+                                    $specialWidths = [
+                                        2642 => 50000,
+                                        2639 => 50000,
+                                        2670 => 50000,
+                                        2643 => 110000,
+                                        2672 => 110000,
+                                        2673 => 90000,
+                                    ];
+
+                                    if (isset($specialWidths[$controlPoint->id])) {
+                                        $width = percentTo($specialWidths[$controlPoint->id], $routeDistance) - $correction;
+                                    }
+
                                     $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
                                     $width = $loop->last ? 0 : $width;
                                     //$trajectory = $controlPoint->name . ' ➤ '.($loop->index+1<count($controlPoints)?$controlPoints[$loop->index + 1]->name : '');
@@ -134,6 +148,10 @@
                                         $width = 100 - $totalW - 0.2;
                                     }
                                     $totalW += $width;
+
+                                    $seatsInCP = $seatsInCPs[$controlPoint->id];
+                                    $seatsInCPIn = $seatsInCP->in;
+                                    $seatsInCPOut = $seatsInCP->out;
                                 @endphp
                                 <div class="progress-bar {{ $loop->index % 2 == 0 || true ? 'bg-cp-1' : 'bg-cp-2' }} p-t-5 text-left"
                                      style="border-left: 3px solid red;width:{{ number_format(( $width ),'1','.','') }}%; font-size: 120%;position: relative"
@@ -142,9 +160,9 @@
                                      data-placement="top"
                                      data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
                                      title="{{ '<i class="fa fa-map-signs"></i> '.$trajectory }}"
-                                >
-                                    <div class="{{ $loop->first ? 'cp-first' : ($loop->last ? 'cp-last' : 'cp-normal')  }} text-center"
-                                         style="line-height: 10px">
+                                ><br>
+                                    <div class="{{ $loop->first ? 'cp-first' : ($loop->last ? 'cp-last' : 'cp-normal')  }} text-center zoomed"
+                                         style="line-height: 10px; ">
                                         <strong>{{ $trajectory }}</strong>
                                         <div>
                                             <small class="text-muted">{{ $cpDistance }}
@@ -155,6 +173,23 @@
                                                 <i class="fa fa-users"></i> {{ $seatsByCP->count() }}
                                                 •
                                                 ${{ number_format($seatsByCP->sum('tariff.value'), 0, ',', '.') }}
+                                            </div><br>
+                                        @endif
+                                        <div style="margin-top: 2px;border-top: 1px solid #878787; font-size: 0.8rem">
+                                            <i class="fa fa-users"></i> {{ $seatsInCPIn }} vs <i
+                                                    class="fa fa-users"></i> {{ $seatsInCPOut }}
+                                        </div>
+                                        @php
+                                            $diff = $seatsInCPOut - $seatsInCPIn;
+                                            $diff = 0;
+                                        @endphp
+                                        @if(abs($diff) > 0)
+                                            <div style="margin-top: 2px;border-top: 1px solid #878787; font-size: 0.8rem; width: 100%">
+                                                @if($diff > 0)
+                                                    <span class="cp-up">{{ $diff }}⭡</span>
+                                                @else
+                                                    <span class="cp-down">{{ abs($diff) }}⭣</span>
+                                                @endif
                                             </div>
                                         @endif
                                     </div>
@@ -163,8 +198,8 @@
                         </div>
 
                         @foreach($historyBySeats as $historySeats)
-                            <div class="col-md-12 p-0">
-                                <div class="bg-white p-0"
+                             <div class="col-md-12 p-0">
+                                 <div class="bg-white p-0"
                                      style="height: auto;padding: 5px;">
                                     <div class="progress p-0 m-0 no-rounded-corner progress-xs"
                                          style="height: 8px !important;">
@@ -178,6 +213,19 @@
                                         @foreach($controlPoints as $controlPoint)
                                             @php
                                                 $width = percentTo($controlPoint->distance_next_point, $routeDistance) - $correction;
+
+                                                $specialWidths = [
+                                                    2642 => 50000,
+                                                    2639 => 50000,
+                                                    2670 => 50000,
+                                                    2643 => 110000,
+                                                    2672 => 110000,
+                                                    2673 => 90000,
+                                                ];
+                                                if (isset($specialWidths[$controlPoint->id])) {
+                                                    $width = percentTo($specialWidths[$controlPoint->id], $routeDistance) - $correction;
+                                                }
+
                                                 $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
                                                 $width = $loop->last ? 0 : $width;
                                                 $trajectory = "$controlPoint->name";
@@ -199,7 +247,7 @@
                                         @endforeach
                                     </div>
 
-                                    <div class="progress m-0 progress-md"
+                                     <div class="progress m-0 progress-md"
                                          style="border-top: 1px solid #3b3a3a">
                                         @foreach($historySeats as $historySeat)
                                             @php
@@ -258,12 +306,8 @@
                                             <div class="progress-bar initial-inactive"
                                                  style="width: {{ formatW($initialInactivePercent) }}%;background: #0c0c0c !important;">
                                                 <span class="pull-left label label-inverse {{ $first ? '' : 'hide' }}"
-                                                      style="margin-left: 5px;margin-top: 5px">
+                                                      style="margin-left: 5px;margin-top: 5px; position: relative; z-index: 2;">
                                                     @lang('Seat') {{ $historySeat->seat }} ({{ $historySeats->count() }})
-                                                    <script>
-                                                        console.log("Tipo de dato de historySeat->seat:", typeof {{ $historySeat->seat }});
-                                                        console.log("Valor de historySeat->seat:", {{ $historySeat->seat }});
-                                                    </script>
                                                 </span>
                                             </div>
 
@@ -324,6 +368,7 @@
 
         .progress.progress-lg .progress-bar {
             font-size: 20px !important;
+            z-index: 1 !important;
         }
 
         .bg-seat-active {
@@ -344,6 +389,17 @@
             color: white !important;
         }
 
+        .zoomed {
+            transform: scale(1);
+            transition: transform 0.5s ease;
+        }
+
+        .zoomed:hover {
+            transform: scale(2);
+            z-index: 1 !important;
+        }
+
+
         .cp-normal {
             font-size: 1rem !important;
             position: absolute;
@@ -353,6 +409,9 @@
             padding: 2px 10px;
             border-radius: 10px;
             color: white;
+            z-index: 2 !important;
+
+
         }
 
         .cp-first {
@@ -378,7 +437,6 @@
             color: white;
             font-weight: bold;
         }
-
         .bg-cp-1 {
             background: #000000 !important;
         }
@@ -389,6 +447,7 @@
 
         .progress-bar-route {
             background-color: #928a09 !important;
+            z-index: 1 !important;
         }
 
         .label-lime {
@@ -407,6 +466,7 @@
             margin-top: 12px;
             place-items: center;
         }
+
         .passengers-stop {
             background: #04805c;
             border: 1px solid white;
@@ -419,11 +479,13 @@
         .passengers-stop .stop {
 
         }
+
         .passengers-stop .up {
             background: #27a903;
             border: 1px solid #38ff00;
             padding: 0 4px;
         }
+
         .passengers-stop .down {
             background: #762e02;
             border: 1px solid #ff6000;
@@ -437,6 +499,20 @@
             padding: 4px 8px;
             border-radius: 4px;
         }
+
+        .cp-up {
+            background: green;
+            padding: 4px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .cp-down {
+            background: orangered;
+            padding: 4px;
+            border-radius: 4px;
+            position: relative;
+        }
     </style>
 
     <script type="text/javascript">
@@ -445,6 +521,7 @@
                 container: '#report-tab-chart'
             });
         }, 2000);
+
     </script>
 @else
     @include('partials.alerts.noRegistersFound')
