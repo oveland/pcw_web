@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\GPSRestartCommand::class,
         Commands\GPSCheckStatusCommand::class,
         Commands\GPSCheckServerCommand::class,
+        \App\Console\Commands\Vehicles\NoReport\SMSSendNoReportsCommand::class,
 
         /* Commands for SMS */
         Commands\SMSSendReportCommand::class,
@@ -58,6 +59,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('sms:send-noReports')->hourly();
+
         $schedule->command('log:parked-vehicles')->everyMinute();
 
         $schedule->command('db:pcw-migrations')->dailyAt('00:00');
