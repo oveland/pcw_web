@@ -142,6 +142,17 @@ class Service4G extends SyrusService
             if ($fileNames[2] == 'ch3') return '3';
             if ($fileNames[2] == 'ch4') return '4';
             if ($fileNames[2] == 'ch5') return '5';
+            if ($fileNames[2] == 'ch6') return '6';
+        }
+        if ($imei == '352557104802940'){
+            if ($fileNames[2] == 'ch1') return '1';
+            if ($fileNames[2] == 'ch2') return '2';
+            if ($fileNames[2] == 'ch3') return '3';
+            if ($fileNames[2] == 'ch4') return '4';
+            if ($fileNames[2] == 'ch5') return '5';
+            if ($fileNames[2] == 'ch6') return '6';
+            if ($fileNames[2] == 'ch7') return '7';
+            if ($fileNames[2] == 'ch8') return '7';
         }
         if ($fileNames[2] == 'ch1') return '1';
         if ($fileNames[2] == 'ch2') return '2';
@@ -149,6 +160,7 @@ class Service4G extends SyrusService
         if ($fileNames[2] == 'ch4') return '4';
         if ($fileNames[2] == 'ch5') return '5';
         if ($fileNames[2] == 'ch6') return '6';
+        if ($fileNames[2] == 'ch7') return '7';
 
 
         return '0';

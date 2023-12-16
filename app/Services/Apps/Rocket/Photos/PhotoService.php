@@ -475,10 +475,11 @@ class PhotoService
             $countByTurn = 0;
             $registers = collect([]);
 
+            $dr = DispatchRegister::find($drId);
+
             foreach ($historic->sortBy('ts') as $photo) {
                 $vehicle = $this->vehicle;
                 $details = $photo->details;
-                $dr = $details->dispatchRegister;
 
                 $date = Carbon::make($details->date);
                 $time = $date->toTimeString();
@@ -492,7 +493,7 @@ class PhotoService
 
                 $latitude = $location ? $location->latitude : 'null';
                 $longitude = $location ? $location->longitude : 'null';
-                $distance = $location ? $location->distance : 'null';
+                $distance = $location ? $location->distance : 0;
 
                 $seatingActivated = explode(', ', $occupation->seatingActivatedStr);
                 $seatingReleased = explode(', ', $occupation->seatingReleaseStr);
@@ -506,16 +507,16 @@ class PhotoService
                         $seat = intval($seat);
 
                         $insert = DB::select("
-                            INSERT INTO history_seats (plate, seat, date, time, active_time, active_km, vehicle_id, dispatch_register_id, active_latitude, active_longitude) 
-                            VALUES ('$vehicle->plate', $seat, '".$date->toDateString()."', '$time', '$date', $distance, $vehicle->id, $drId, $latitude, $longitude) RETURNING id
+                            INSERT INTO history_seats (plate, seat, date, time, active_time, active_km, vehicle_id, dispatch_register_id, active_latitude, active_longitude, start_photo_id) 
+                            VALUES ('$vehicle->plate', $seat, '".$date->toDateString()."', '$time', '$date', $distance, $vehicle->id, $drId, $latitude, $longitude, $photo->id) RETURNING id
                         ");
                         $id = collect($insert)->first()->id;
 
                         $registers->put($seat, (object)[
                             'id' => $id,
                             'seat' => $seat,
-                            'arrivedTime' => $date->toDateString() . " " . $dr->arrival_time,
-                            'routeDistance' => $dr->route->distance,
+                            'arrivedTime' => $dr->date_end . " " . $dr->arrival_time,
+                            'routeDistance' => $dr->route->distance_in_meters,
                         ]);
                     }
                 }
@@ -528,7 +529,7 @@ class PhotoService
                             if ($register) {
                                 $id = $register->id;
                                 if ($id) {
-                                    DB::statement("UPDATE history_seats SET inactive_time = '$date', inactive_km = $distance, inactive_latitude = $latitude, inactive_longitude = $longitude WHERE id = $id");
+                                    DB::statement("UPDATE history_seats SET inactive_time = '$date', inactive_km = $distance, inactive_latitude = $latitude, inactive_longitude = $longitude, end_photo_id = $photo->id WHERE id = $id");
                                 }
                             }
 
@@ -538,15 +539,18 @@ class PhotoService
                 }
             }
 
+            $lastLocation = Location::select(['date','distance', 'latitude', 'longitude'])->where('dispatch_register_id', $drId)->orderBy('date', 'desc')->first();
+            $lastPhoto = Photo::select(['id'])->where('dispatch_register_id', $drId)->orderBy('date', 'desc')->first();
+
+            $latitude = $lastLocation ? $lastLocation->latitude : 'null';
+            $longitude = $lastLocation ? $lastLocation->longitude : 'null';
+
             foreach ($registers as $register) {
                 $id = $register->id;
                 $arrivedTime = $register->arrivedTime;
                 $routeDistance = $register->routeDistance;
-                $seat = $register->seat;
 
-                // echo "''''''''''''''' Release seat = $seat at $arrivedTime <br>";
-
-                DB::statement("UPDATE history_seats SET inactive_time = '$arrivedTime', inactive_km = $routeDistance WHERE id = $id");
+                DB::statement("UPDATE history_seats SET inactive_time = '$arrivedTime', inactive_km = $routeDistance, inactive_latitude = $latitude, inactive_longitude = $longitude, end_photo_id = $lastPhoto->id WHERE id = $id");
             }
         }
     }
@@ -606,7 +610,9 @@ class PhotoService
         }
 
         if ($withHistoricPassengers) {
-            DB::delete("DELETE FROM passengers WHERE date::DATE = '$this->date' AND vehicle_id = " . $this->vehicle->id);
+            foreach ($drIds as $drId) {
+                DB::delete("DELETE FROM passengers WHERE dispatch_register_id = $drId");
+            }
 
             //$historic = $historicByCameras->collapse()->collapse();
             $totalByCamerasPrev = 0;
@@ -685,7 +691,7 @@ class PhotoService
                     $passenger = new Passenger([
                         'date' => $lastDatePhoto,
                         'dispatch_register_id' => $drId,
-                        'location_id' => $locationId,
+                        'location_id' => intval($locationId) ?: null,
                         'vehicle_id' => $this->vehicle->id,
                         'total' => $totalByCameras,
                         'total_prev' => $totalByCamerasPrev,

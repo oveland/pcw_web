@@ -92,6 +92,7 @@ trait PhotoGlobals
                 'round_trip' => $dispatchRegister->round_trip,
                 'roundTrip' => $dispatchRegister->round_trip,
                 'departure_time' => $dispatchRegister->departure_time,
+                'date_end' => $dispatchRegister->date_end,
                 'arrival_time' => $dispatchRegister->arrival_time,
                 'route' => (object)[
                     'id' => $dispatchRegister->route_id,
