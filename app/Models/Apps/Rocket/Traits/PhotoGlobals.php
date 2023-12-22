@@ -18,6 +18,8 @@ use App;
 
 trait PhotoGlobals
 {
+    public $cp = null;
+    
     /**
      * @param $type
      * @return PhotoRekognitionService

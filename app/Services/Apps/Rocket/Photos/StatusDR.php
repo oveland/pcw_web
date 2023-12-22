@@ -15,6 +15,8 @@ class StatusDR
     public $end;
     public $none;
 
+    public $cp;
+
     public function __construct()
     {
         $this->start = false;

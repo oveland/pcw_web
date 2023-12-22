@@ -4,11 +4,13 @@ namespace App\Services\Apps\Rocket\Photos;
 
 use App;
 use App\Events\App\Rocket\PhotoMapEvent;
+use App\Http\Controllers\Utils\Geolocation;
 use App\Models\Apps\Rocket\CurrentPhoto;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\Traits\PhotoInterface;
 use App\Models\Apps\Rocket\VehicleCamera;
 use App\Models\Passengers\Passenger;
+use App\Models\Routes\ControlPoint;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\CurrentLocation;
 use App\Models\Vehicles\Vehicle;
@@ -392,7 +394,7 @@ class PhotoService
         $alert = $counterLock >= 3;
     }
 
-    function findDispatchRegisterByPhoto(Photo $photo, CurrentLocation  $currentLocation = null)
+    function findDispatchRegisterByPhoto(Photo $photo, CurrentLocation $currentLocation = null)
     {
         $dr = DispatchRegister::where('date', $photo->date->toDateString())
             ->where('vehicle_id', $photo->vehicle->id)
@@ -436,10 +438,11 @@ class PhotoService
 
     function getPhotos($camera = null)
     {
+        $vehicle = $this->vehicle;
         $this->setCamera($camera);
 
-        return Photo::whereVehicleAndDateAndSide($this->vehicle, $this->date ?: Carbon::now(), $this->camera)
-            ->orWhere(function($query) {
+        $photosQuery = Photo::whereVehicleAndDateAndSide($vehicle, $this->date ?: Carbon::now(), $this->camera)
+            ->orWhere(function ($query) {
                 $side = $this->camera;
                 if ($side !== null && $side != 'all' && $side !== "") {
                     $query = $query->whereSide($side);
@@ -448,16 +451,55 @@ class PhotoService
             })
             ->with('dispatchRegister')
             ->limit(4000)
+            ->orderBy('date');
+
+        $start = Carbon::now();
+
+        if ($vehicle->number == '8419') { // TODO: Debe parametrizarse
+            $photosQuery = $photosQuery
+//                ->limit(10)
+                ->with(['location' => function ($query) {
+                    return $query->select(['id', 'date', 'distance', 'latitude', 'longitude'])
+                        ->with(['report' => function ($query) {
+                            return $query->select('id', 'distancem', 'location_id', 'control_point_id')
+                                ->with(['controlPoint' => function ($query) {
+                                    return $query->select('id', 'name', 'latitude', 'longitude', 'order');
+                                }]);
+                        }]);
+                }]);
+        }
+
+        $photos = $photosQuery
             ->get()
-            ->map(function (Photo $photo) {
+            ->map(function (Photo $photo) use ($vehicle) {
                 $dr = $photo->dispatchRegister;
                 //$dr = ($dr && $dr->route_id) ? $dr : null;
                 $dr = ($dr && $dr->route_id && $dr->date == $this->date) ? $dr : null;
 
                 $photo->dispatchRegister()->associate($dr);
+
+                if ($vehicle->number == '8419') {
+                    /**
+                     * @var ControlPoint $cp
+                     */
+                    $cp = $photo->location && $photo->location->report && $photo->location->report->controlPoint ? $photo->location->report->controlPoint : null;
+                    $lc = $photo->location;
+
+                    if ($cp && $cp->order > 0 && $dr && $dr->isActive()) {
+                        $r = $lc->report;
+                        $distance = Geolocation::getDistance($lc->latitude, $lc->longitude, $cp->latitude, $cp->longitude);
+                        if ($distance < $dr->route->distance_threshold) {
+//                            $routeName = $dr->route->name;
+//                            dump("$lc->date • $routeName • $r->distancem m. vs distance to CP $cp->name = $distance");
+                            $photo->cp = $cp;
+                        }
+                    }
+                }
+
                 return $photo;
-            })
-            ->sortBy('date');
+            });
+
+        return $photos->sortBy('date');
     }
 
     function processMultiTariff(Collection $allHistoric)
@@ -484,7 +526,7 @@ class PhotoService
                 $date = Carbon::make($details->date);
                 $time = $date->toTimeString();
 
-                $location = Location::select(['distance', 'latitude', 'longitude'])->where('id', $details->location_id)->first();
+                $location = Location::select(['date', 'distance', 'latitude', 'longitude'])->where('id', $details->location_id)->first();
                 $occupation = $details->occupation;
 
                 if (request()->get('d') && !$location) {
@@ -498,6 +540,9 @@ class PhotoService
                 $seatingActivated = explode(', ', $occupation->seatingActivatedStr);
                 $seatingReleased = explode(', ', $occupation->seatingReleaseStr);
 
+//                $lc = $location;
+//                dump("$photo->id • $lc->date • $lc->distance • $occupation->seatingActivatedStr vs $occupation->seatingReleaseStr");
+
                 if ($occupation->seatingActivatedStr) {
                     foreach ($seatingActivated as $seat) {
                         $countByTurn++;
@@ -508,7 +553,7 @@ class PhotoService
 
                         $insert = DB::select("
                             INSERT INTO history_seats (plate, seat, date, time, active_time, active_km, vehicle_id, dispatch_register_id, active_latitude, active_longitude, start_photo_id) 
-                            VALUES ('$vehicle->plate', $seat, '".$date->toDateString()."', '$time', '$date', $distance, $vehicle->id, $drId, $latitude, $longitude, $photo->id) RETURNING id
+                            VALUES ('$vehicle->plate', $seat, '" . $date->toDateString() . "', '$time', '$date', $distance, $vehicle->id, $drId, $latitude, $longitude, $photo->id) RETURNING id
                         ");
                         $id = collect($insert)->first()->id;
 
@@ -539,7 +584,7 @@ class PhotoService
                 }
             }
 
-            $lastLocation = Location::select(['date','distance', 'latitude', 'longitude'])->where('dispatch_register_id', $drId)->orderBy('date', 'desc')->first();
+            $lastLocation = Location::select(['date', 'distance', 'latitude', 'longitude'])->where('dispatch_register_id', $drId)->orderBy('date', 'desc')->first();
             $lastPhoto = Photo::select(['id'])->where('dispatch_register_id', $drId)->orderBy('date', 'desc')->first();
 
             $latitude = $lastLocation ? $lastLocation->latitude : 'null';
@@ -763,8 +808,33 @@ class PhotoService
             }
         }
 
+        $dr = $photo->dispatchRegister;
+
+        if ($photo->vehicle->number == '8419') {
+            $cp = $photo->cp ?? null;
+            $prevCp = $prevPhoto->cp ?? null;
+
+            $statusDR->cp = $cp;
+
+            if ($prevCp && !$cp) {
+                $statusText = 'start';
+                $statusDR->start = true;
+                $statusDR->end = false;
+            } else if ($cp) {
+                $statusText = 'end';
+                $statusDR->start = false;
+                $statusDR->end = true;
+//                $dr = null;
+            }
+            $lc = $photo->location;
+//            dump("$photo->id • $photo->date • $lc->date • $lc->distance • $photo->side • $statusText • $cp vs $prevCp");
+        }
+
         $statusDR->text = $statusText;
-        $statusDR->dr = $photo->dispatchRegister;
+        $statusDR->dr = $dr;
+
+
+//        $statysDR->cp = $photo->cp;
 
 //        if ($statusDR->dr === null) {
 //            $statusDR->dr = $this->findDispatchRegisterByPhoto($photo);
@@ -1133,6 +1203,11 @@ class PhotoService
         } catch (FileNotFoundException $e) {
             return null;
         }
+    }
+
+    function getElapsed(Carbon $from)
+    {
+        return Carbon::now()->diffInSeconds($from);
     }
 }
 

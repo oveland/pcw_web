@@ -35,6 +35,8 @@ class SeatOccupationService
         $this->persistenceActivate($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, false, $statusDR, $currentOccupation->seatingCounts);
         $this->totalPersistenceCounts($currentOccupation->seatingCounts, $prevOccupation->seatingCounts, $currentOccupation->seatingOccupied, $statusDR);
         $this->persistenceActivate($currentOccupation->seatingOccupied, $prevOccupation->seatingOccupied, false, $statusDR, $currentOccupation->seatingCounts);
+
+        if ($statusDR->cp) $currentOccupation->seatingOccupied = collect([]);
     }
 
     /**
@@ -45,7 +47,9 @@ class SeatOccupationService
      */
     private function persistenceRelease(&$currentOccupied, $prevOccupied, $withOverlap = false, StatusDR $statusDR)
     {
-        if ($statusDR->start) $prevOccupied = collect([]);
+        if ($statusDR->start) {
+            $prevOccupied = collect([]);
+        }
 
         if (!$withOverlap) {
             $routeId = $statusDR->getRouteId();
@@ -138,7 +142,7 @@ class SeatOccupationService
                             $newData->put('detected', true);
                         }
 
-                        if(!$persistentPrev->counted) {
+                        if (!$persistentPrev->counted) {
                             if ($configT2Seat['complementsT1'] && $seatingCounts->get($seat)->counted) { // T2 Complements T1 setting $counterActivate = $seatActivateThreshold
                                 $counterActivate = $seatActivateThreshold;
                                 $newData->put('detected', true);
@@ -148,6 +152,12 @@ class SeatOccupationService
 
 
                     $counted = $counterActivate >= $seatActivateThreshold;
+
+//                    if ($statusDR->cp) {
+//                        $counted = false;
+//                        $counterActivate = 1;
+//                        $newData->put('detected', false);
+//                    }
 
                     $prevCounterActivate = $persistentPrev ? collect($persistentPrev)->get('counterActivate') : 0;
                     $risingEvent = $counterActivate > $prevCounterActivate;
@@ -173,7 +183,7 @@ class SeatOccupationService
         $configT2SeatAll = $this->configSeating[$seat]['T2'];
         $configT2Seat = $configT2SeatAll['default'];
 
-        if($routeId && $statusDR->dr->route->isLarge()) $configT2Seat = $configT2SeatAll['defaultLargeRoutes'];
+        if ($routeId && $statusDR->dr->route->isLarge()) $configT2Seat = $configT2SeatAll['defaultLargeRoutes'];
 
         if ($routeId && isset($configT2SeatAll['routes']) && isset($configT2SeatAll['routes'][$routeId])) $configT2Seat = $configT2SeatAll['routes'][$routeId];
 
