@@ -906,11 +906,9 @@
             @endif
             @if($user->canViewAction())
                 <td width="15%" class="text-center">
-                    <a href="#modal-historic-report"
+                    <a href="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}&hide-menu=true" target="_blank"
                        class="btn green-haze faa-parent animated-hover btn-show-historic-report btn-circle btn-outline tooltips"
-                       data-toggle="modal"
-                       data-url="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}&hide-menu=true"
-                       data-original-title="@lang('Historic report')">
+                       data-original-title="@lang('Historic report') <i class='fa fa-external-link'></i>" data-html="true">
                         <i class="fa fa-map faa-pulse"></i>
                     </a>
 
