@@ -37,12 +37,13 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-12">
-                    <div style="position: absolute; right: 10px">
-                        <span style="color: black">
-                            <input class="threshold-km"
+                    <div style="position: absolute; right: 10px; display: flex; gap: 12px">
+                        <span style="color: black; display: flex; align-items: center">
+                            <input class="threshold-km input-sm form-control"
                                    type="number"
+                                   placeholder="Distancia mínima en m."
                                    value="{{ $thresholdKm }}"/>
-                            <button onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')">Cargar</button>
+                            <button class="btn btn-default btn-xs" style="width: 100px; height: 30px" onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')">Actualizar</button>
                         </span>
                         <a href="javascript:;"
                            class="btn btn-xs btn-icon btn-circle btn-danger"
@@ -54,46 +55,56 @@
                         </a>
                     </div>
 
-                    <div class="text-white m-t-10">
+                    <div class="text-white m-t-10" style="display: flex; align-items: center">
                         <div>
-                            <i class="fa fa-flag-o"
-                               aria-hidden="true"></i>
-                            {{ $dispatchRegister->route->name }}
-                            <hr>
-                        </div>
-                        <div>
-                            {{ $truncateCounts->count() }} @lang('passengers')
-                            •
-                            ${{ $totalProductionStr }}
-                        </div>
-                        <div>
-                            <small>{{ $historyBySeats->count() }} @lang('seats')</small>
-                        </div>
-                        <div class="">
-                            <small class="text-white">
-                                <i class="fa fa-clock-o"></i>
-                                {{ $dispatchRegister->departure_time }} @lang('to') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivalTime }}
-                            </small>
-                        </div>
-                        @if($passengersStops)
-                            <div class="passengers-stops">
-                                <span>Conteos EP: </span>
-                                @foreach($passengersStops as $stop => $data)
-                                    <span class="passengers-stop">
+                            <div>
+                                <i class="fa fa-flag-o"
+                                   aria-hidden="true"></i>
+                                {{ $dispatchRegister->route->name }}
+                                <hr>
+                            </div>
+                            <div>
+                                {{ $truncateCounts->count() }} @lang('passengers')
+                                •
+                                ${{ $totalProductionStr }}
+                            </div>
+                            <div>
+                                <small>{{ $historyBySeats->count() }} @lang('seats')</small>
+                            </div>
+                            <div class="">
+                                <small class="text-white">
+                                    <i class="fa fa-clock-o"></i>
+                                    {{ $dispatchRegister->departure_time }} @lang('to') {{ $dispatchRegister->canceled?$dispatchRegister->time_canceled:$dispatchArrivalTime }}
+                                </small>
+                            </div>
+                            @if($passengersStops)
+                                <div class="passengers-stops">
+                                    <span>Conteos EP: </span>
+                                    @foreach($passengersStops as $stop => $data)
+                                        <span class="passengers-stop">
                                     <span class="stop"><i class="fa fa-map-marker"></i> {{ $stop }}</span>
                                     <span>
                                         <span class="up">{{ $data->a }}⭡</span>
                                         <span class="down">{{ $data->d }}⭣</span>
                                     </span>
                                 </span>
-                                @endforeach
+                                    @endforeach
 
-                                <div class="spreadsheet_passengers">
-                                    <span>TOTAL {{ intval($spreadsheetPassengers->value)  }}</span>
-                                    <span class="tooltips" title="# @lang('Spreadsheet')"><i class="fa fa-file"></i> {{ intval($spreadsheetPassengers->observation)  }}</span>
+                                    <div class="spreadsheet_passengers">
+                                        <span>TOTAL {{ intval($spreadsheetPassengers->value)  }}</span>
+                                        <span class="tooltips" title="# @lang('Spreadsheet')"><i class="fa fa-file"></i> {{ intval($spreadsheetPassengers->observation)  }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
+
+                        <div style="position: absolute; right: 20px">
+                            <a target="_blank" href="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}" class="btn btn-success faa-parent animated">
+                                <i class="fa fa-map faa-pulse"></i>
+                                Ver Histórico y Fotos
+                                <i class="fa fa-external-link"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
