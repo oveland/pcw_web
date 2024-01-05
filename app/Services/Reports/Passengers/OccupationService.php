@@ -76,21 +76,21 @@ class OccupationService
 
         $controlPoints = $dispatchRegister->route->controlPoints;
 
-        $seatsInCPs = $controlPoints->sortBy('order')->mapWithKeys(function (ControlPoint $cp) use ($historySeats, $routeDistance) {
+        $seatsInCPs = $controlPoints->sortBy('order')->mapWithKeys(function (ControlPoint $cp) use ($truncateCounts, $routeDistance) {
 
 
             $distanceCpFromDispatch =  min($cp->distance_from_dispatch, $routeDistance);
             $distanceCpNextPoint = $cp->distance_next_point;
 
-            $totalSeatsIn = $historySeats
+            $totalSeatsIn = $truncateCounts
                 ->where('active_km', '<=', $distanceCpFromDispatch)
                 ->where('inactive_km', '>=', $distanceCpFromDispatch)
                 ->count();
-            $totalSeatsOn = $historySeats
+            $totalSeatsOn = $truncateCounts
                 ->where('active_km', '<=', $cp->distance_from_dispatch)
                 ->where('inactive_km', '>=', $cp->distance_from_dispatch)
                 ->count();
-            $totalSeatsOut = $historySeats
+            $totalSeatsOut = $truncateCounts
                 ->where('active_km', '<=', $distanceCpFromDispatch + $distanceCpNextPoint * 0.5)
                 ->where('inactive_km', '>=', $distanceCpFromDispatch + $distanceCpNextPoint * 0.5)
                 ->count();

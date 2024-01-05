@@ -230,7 +230,7 @@
                         lng: parseFloat(controlPoint.longitude)
                     },
                     icon: this.controlPointIcon[controlPoint.trajectory],
-                    title: controlPoint.name,
+                    title: controlPoint.name + ' • ' + controlPoint.distance_from_dispatch,
                     zIndex: 10000,
                 }));
             }
@@ -288,7 +288,7 @@
             };
 
             return new google.maps.Marker({
-                title: r.vehicleStatus.status + " " + r.time,
+                title: `${r.time} • ${r.r.cp} • ${r.r.dm}`,
                 map: null,
                 icon: icon,
                 zIndex: svg.zIndex,
@@ -314,7 +314,7 @@
             };
 
             return new google.maps.Marker({
-                title: r.vehicleStatus.status + " " + r.time,
+                title: `${r.time} • ${r.r.cp} • ${r.r.dm}`,
                 map: this.map,
                 icon: icon,
                 position: {

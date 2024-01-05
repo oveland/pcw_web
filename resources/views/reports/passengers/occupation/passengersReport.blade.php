@@ -123,7 +123,7 @@
                              style="height: 100px !important;">
                             @foreach($controlPoints as $controlPoint)
                                 @php
-                                    $width = percentTo($controlPoint->distance_next_point, $routeDistance) - $correction;
+                                    $width = percentTo($controlPoint->distance_next_point, $routeDistance) - $correction * 0.4;
                                     $specialWidths = [
                                         2642 => 50000,
                                         2639 => 50000,
@@ -134,7 +134,7 @@
                                     ];
 
                                     if (isset($specialWidths[$controlPoint->id])) {
-                                        $width = percentTo($specialWidths[$controlPoint->id], $routeDistance) - $correction;
+                                        //$width = percentTo($specialWidths[$controlPoint->id], $routeDistance) - $correction;
                                     }
 
                                     $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
@@ -145,7 +145,7 @@
                                     $seatsByCP = $historyByCP->get($controlPoint->id);
 
                                     if($width + $totalW >= 100) {
-                                        $width = 100 - $totalW - 0.2;
+//                                        $width = 100 - $totalW - 0.2;
                                     }
                                     $totalW += $width;
 
@@ -154,7 +154,7 @@
                                     $seatsInCPOut = $seatsInCP->out;
                                 @endphp
                                 <div class="progress-bar {{ $loop->index % 2 == 0 || true ? 'bg-cp-1' : 'bg-cp-2' }} p-t-5 text-left"
-                                     style="border-left: 3px solid red;width:{{ number_format(( $width ),'1','.','') }}%; font-size: 120%;position: relative"
+                                     style="border-left: 3px solid yellow;width:{{ number_format(( $width ),20,'.','') }}%; font-size: 120%;position: relative"
                                      data-toggle="tooltip"
                                      data-html="true"
                                      data-placement="top"
@@ -212,8 +212,7 @@
                                         @endphp
                                         @foreach($controlPoints as $controlPoint)
                                             @php
-                                                $width = percentTo($controlPoint->distance_next_point, $routeDistance) - $correction;
-
+                                                $width = percentTo($controlPoint->distance_next_point, $routeDistance) - $correction * 0.4;
                                                 $specialWidths = [
                                                     2642 => 50000,
                                                     2639 => 50000,
@@ -223,7 +222,7 @@
                                                     2673 => 90000,
                                                 ];
                                                 if (isset($specialWidths[$controlPoint->id])) {
-                                                    $width = percentTo($specialWidths[$controlPoint->id], $routeDistance) - $correction;
+                                                    //$width = percentTo($specialWidths[$controlPoint->id], $routeDistance) - $correction;
                                                 }
 
                                                 $cpDistance = intval($controlPoint->distance_from_dispatch / 1000);
@@ -231,12 +230,12 @@
                                                 $trajectory = "$controlPoint->name";
 
                                                 if($width + $totalW >= 100) {
-                                                    $width = 100 - $totalW;
+//                                                    $width = 100 - $totalW;
                                                 }
                                                 $totalW += $width;
                                             @endphp
                                             <div class="progress-bar bg-cp-1 p-t-5 text-left"
-                                                 style="border-left: 3px solid yellow;width:{{ number_format(( $width ),'1','.','') }}%; font-size: 120%;position: relative"
+                                                 style="border-left: 3px solid yellow;width:{{ number_format(( $width ),20,'.','') }}%; font-size: 120%;position: relative"
                                                  data-toggle="tooltip"
                                                  data-html="true"
                                                  data-placement="top"
@@ -312,21 +311,19 @@
                                             </div>
 
                                             <div class="progress-bar bg-{{ $historySeat->busy_km >= $thresholdKm ? 'seat-active' : 'danger' }} active--"
-                                                 style="width: {{ formatW($busyPercent) }}%;box-shadow: inset -10px -4px 15px -9px #000000;"
+                                                 style="width: {{ formatW($busyPercent) - ($last ? 0.4 : 0) }}%;box-shadow: inset -10px -4px 15px -9px #000000;"
                                                  data-toggle="tooltip"
                                                  data-html="true"
                                                  data-placement="bottom"
                                                  data-template="<div class='tooltip' role='tooltip'><div class='tooltip-arrow'></div><div class='tooltip-inner width-md'></div></div>"
                                                  title="{{ $html_tooltip }}">
-                                                <b class="m-l-10 pull-left text-sm">{{ $activeSeatRouteKm }}
-                                                    Km</b>
-                                                <b class="m-t-20 text-white text-sm"><label
-                                                            class="label label-lime label-sm hide">{{ $historySeat->seat }}</label> {{ $activeKm }}
-                                                    <small>Km</small>
-                                                    •
-                                                    <label class="label label-lime label-lg">${{ number_format($tariffValue, 0, ',', '.') }}</label></b>
-                                                <b class="m-r-10 pull-right text-sm">{{ $inactiveSeatRouteKm }}
-                                                    Km</b>
+                                                <b class="m-l-10 pull-left text-sm">{{ $activeSeatRouteKm }} Km</b>
+                                                <b class="m-t-20 text-white text-sm">
+                                                    <label class="label label-lime label-sm hide">{{ $historySeat->seat }}</label> {{ $activeKm }} <small>Km</small>
+                                                    <span class="hide">
+                                                        • <label class="label label-lime label-lg">${{ number_format($tariffValue, 0, ',', '.') }}</label></b>
+                                                    </span>
+                                                <b class="m-r-10 pull-right text-sm">{{ $inactiveSeatRouteKm }} Km</b>
                                             </div>
 
                                             <div class="progress-bar final-inactive"
@@ -391,12 +388,12 @@
 
         .zoomed {
             transform: scale(1);
-            transition: transform 0.5s ease;
+            transition: transform 0.2s ease;
         }
 
         .zoomed:hover {
             transform: scale(2);
-            z-index: 1 !important;
+            z-index: 10000 !important;
         }
 
 

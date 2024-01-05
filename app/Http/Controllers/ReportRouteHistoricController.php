@@ -138,6 +138,12 @@ class ReportRouteHistoricController extends Controller
             ->where('vehicle_id', $vehicleReport)
             ->where('vehicle_status_id', '<>', 2) // Excludes status disengaged
             ->with(['vehicle', 'dispatchRegister', 'dispatchRegister.driver', 'vehicleStatus', 'passenger', 'photo', 'photos'])
+            ->with(['report' => function ($query) {
+                return $query->select('id', 'distancem', 'location_id', 'control_point_id')
+                    ->with(['controlPoint' => function ($query) {
+                        return $query->select('id', 'name', 'latitude', 'longitude');
+                    }]);
+            }])
             ->orderBy('date');
         $locations = $locations->get();
 
@@ -407,6 +413,7 @@ class ReportRouteHistoricController extends Controller
                     "events" => $photoEvents
                 ],
                 'photos' => $photos,
+                'r' => $this->getRouteReport($location)
             ]);
 
             $prevTotalPassengers = $totalPassengers;
@@ -444,6 +451,16 @@ class ReportRouteHistoricController extends Controller
                     ];
                 })
             ]
+        ];
+    }
+
+    function getRouteReport(Location $location) {
+        $r = $location->report;
+        $cp = $r ? $r->controlPoint : null;
+
+        return (object) [
+            'cp' => $cp ? $cp->name : '',
+            'dm' => $r ? $r->distancem : ''
         ];
     }
 
