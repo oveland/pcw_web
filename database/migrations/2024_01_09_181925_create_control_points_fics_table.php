@@ -20,6 +20,8 @@ class CreateControlPointsFicsTable extends Migration
             $table->unsignedBigInteger('control_point_id');
 
             $table->foreign('control_point_id')->references('id')->on('control_points')->onDelete('cascade');
+
+            $table->unique(['control_point_id']);
             $table->timestamps();
         });
     }
