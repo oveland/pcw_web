@@ -5,6 +5,7 @@ namespace App\Services\LM\Sources\EP;
 use App\Facades\EPDB;
 use App\Http\Controllers\Utils\StrTime;
 use App\Models\Company\Company;
+use App\Models\Drivers\Driver;
 use App\Models\LM\Sync;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
@@ -92,19 +93,24 @@ class EPSyncService extends SyncService
 
         $query = "
             SELECT 
-                viaje           travel_id, 
+                vs.viaje         travel_id,
                 FechaPartida    date,
-                Codigo          route_code, 
-                Planilla        spread_sheet, 
-                Suben           ascents, 
-                Bajan           descents, 
+                Codigo          route_code,
+                Planilla        spread_sheet,
+                Suben           ascents,
+                Bajan           descents,
                 bus             vehicle_number,
                 parada          stop,
-                Origen          origin, 
-                Destino         destiny
-            FROM v_saturacion_expal_h_III 
+                Origen          origin,
+                Destino         destiny,
+                t.Nombre        driver_name,
+                t.Documento     driver_document,
+                t.Id            driver_code
+            FROM v_saturacion_expal_h_III vs
+            JOIN ViajesTripulantes vt on vt.Viaje = vs.viaje
+            JOIN Tripulantes t on vt.Tripulante = t.Id
             WHERE FechaPartida between '$dateFrom' AND '$dateTo 23:59:59'
-                AND bus IN ($activeVehiclesQuery) 
+                AND bus IN ($activeVehiclesQuery)
         ";
 
         $reportTicketsByVehicleNumber = EPDB::select($query)
@@ -113,7 +119,6 @@ class EPSyncService extends SyncService
                 return $report;
             })
             ->groupBy('vehicle_number');
-
         $activeVehicles->each(function (Vehicle $vehicle) use ($reportTicketsByVehicleNumber, $dateFrom, $dateTo) {
             $report = $reportTicketsByVehicleNumber->get($vehicle->number);
             if ($report) $this->countsTicketsByVehicle($vehicle, $report, $dateFrom, $dateTo);
@@ -199,16 +204,17 @@ class EPSyncService extends SyncService
             ->sortBy(function (DispatchRegister $dr) {
                 return "$dr->date $dr->departure_time";
             });
-        $report->sortBy('date')->groupBy('travel_id')->each(function (Collection $data, $travelId) use ($drs, $vehicle) {
+        $report->sortBy('date')->groupBy('travel_id')->each(function (Collection $dataWithMultipleDrivers, $travelId) use ($drs, $vehicle) {
             echo " • FICS $vehicle->number Group by TravelID = $travelId";
 
             $dataStops = collect([]);
-            $data = collect($data);
+            $data = collect($dataWithMultipleDrivers)->groupBy('driver_code')->first();
+
             $dateStart = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->first()->date);
             $dateEnd = Carbon::createFromFormat('Y-m-d H:i:s.u', $data->last()->date);
 
             $lastBySp = $data->groupBy('spread_sheet')->sort()->last()->last();
-            echo " Planilla $lastBySp->spread_sheet • $lastBySp->origin - $lastBySp->destiny • date range group $dateStart to $dateEnd "." Asc: " . $data->sum('ascents') . " vs Desc: " . $data->sum('descents') . "\n";
+            echo " Planilla $lastBySp->spread_sheet • $lastBySp->origin - $lastBySp->destiny • date range group $dateStart to $dateEnd " . " Asc: " . $data->sum('ascents') . " vs Desc: " . $data->sum('descents') . "\n";
 
             $data->each(function ($r) use ($vehicle) {
                 echo "          > Viaje: $r->travel_id, $r->spread_sheet, $r->origin - $r->destiny, $r->date | Asc: $r->ascents vs Desc: $r->descents | Parada $r->stop\n";
@@ -251,13 +257,25 @@ class EPSyncService extends SyncService
                 $data = $dataBySpreadSheet->sort()->last();
                 $passengers = intval(collect([$data->sum('ascents'), $data->sum('descents')])->average());
 
+                if ($vehicle->number == '8419') {
+                    //dd($data->count(), $data);
+                }
+
                 $spreadSheet = $data->last()->spread_sheet;
+                $driverCode = $data->last()->driver_code;
+                $nameDriver = $data->last()->driver_name;
+                $documentDriver = $data->last()->driver_document;
+                $company = $this->company->id;
+                $dateCreateDriver = Carbon::now()->toDateString();
+                $drId = $dr->id;
 
                 $drObs = $dr->getObservation('spreadsheet_passengers_sync');
                 $drObs->value = $passengers;
                 $drObs->observation = $spreadSheet;
                 $drObs->user_id = 2018101392; // Set user BOOTPCW
                 $drObs->save();
+
+                $this->processDrivers($dataWithMultipleDrivers, $dr);
 
                 if ($dataStops) {
                     $drObsStops = $dr->getObservation('passengers_stops');
@@ -268,6 +286,41 @@ class EPSyncService extends SyncService
                 }
             }
         });
+    }
+
+    function processDrivers($dataWithMultipleDrivers, DispatchRegister $dr) {
+        $company = $this->company->id;
+        $count = 1;
+        $dataWithMultipleDrivers->sortBy('driver_code')->groupBy('driver_code')->each(function($dataDriver, $driveCode) use ($company, $dr, &$count) {
+            $driverCode = $dataDriver->last()->driver_code;
+            $nameDriver = $dataDriver->last()->driver_name;
+            $documentDriver = $dataDriver->last()->driver_document;
+            $dateCreateDriver = Carbon::now()->toDateString();
+
+            $driver = Driver::where('code', $driverCode)->first();
+            if (!$driver) {
+                $driverInsert = DB::select(
+                    "INSERT INTO conductor (nombre1, apellido1, identidad, codigo_interno, empresa, creado)
+                             VALUES (?, ' ', ?, ?, ?, ?) RETURNING id_idconductor",
+                    [$nameDriver, $documentDriver, $driverCode, $company, $dateCreateDriver]
+                );
+
+                $driverId = collect($driverInsert)->first()->id_idconductor ?? 0;
+            } else {
+                $driverId = $driver->id;
+            }
+
+            DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, driver_id = $driverId, codigo_interno_conductor = $driverCode WHERE id_registro = $dr->id");
+
+            $drObs = $dr->getObservation('driver_id_' . $count);
+            $drObs->value = $driverId;
+            $drObs->observation = $driverCode;
+            $drObs->user_id = 2018101392; // Set user BOOTPCW
+            $drObs->save();
+
+            $count++;
+        });
+
     }
 
     function getLastSync(Company $company)

@@ -86,12 +86,16 @@ class ConfigProfileService
                 }
             }
 
-            // dd($vehicleRoute);
-
             if ($this->vehicle->id == 2563) { // VH 5015 valledupar   OJO!!!!!!
                 if (collect([1, 7, 15])->contains(intval($number))) { // Asientos con poca cobertura
                     $activate = 1;
                     $release = 40;
+                }
+            }
+            if ($this->vehicle->id == 1873) { // VH 5015 valledupar   OJO!!!!!!
+                if (collect([9])->contains(intval($number))) { // Asientos con poca cobertura
+                    $activate = 1;
+                    $release = 5;
                 }
             }
             if ($this->vehicle->id == 2576) { // VH 5013 valledupar   OJO!!!!!!
