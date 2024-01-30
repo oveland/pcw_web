@@ -72,9 +72,14 @@ class PassengersRecordersReportController extends Controller
 
         $passengerReport = $this->buildPassengerReport($company, $routeReport, $vehicle, $driver, $dateReport, $withEndDate, $dateEndReport, $groupByVehicle, $groupByRoute, $groupByDate, $groupByDriver);
 
-        if ($request->get('export')) return $this->export($passengerReport);
+        if ($request->get('export')) return $this->export($passengerReport,$company);
+        if ($company->id == 39){
+            return view('reports.passengers.recorders.consolidated.dates.passengersReportEP', compact('passengerReport'));
+        }else{
+            return view('reports.passengers.recorders.consolidated.dates.passengersReport', compact('passengerReport'));
+        }
 
-        return view('reports.passengers.recorders.consolidated.dates.passengersReport', compact('passengerReport'));
+
     }
 
     /**
@@ -108,13 +113,19 @@ class PassengersRecordersReportController extends Controller
 
         $totalVehicles = $allDispatchRegisters->pluck('vehicle');
         $totalDates = $allDispatchRegisters->pluck('date');
+        foreach ($allDispatchRegisters as $dispatchRegister) {
+            $route = $dispatchRegister->route;
+            if ($route) {
+                $tariff= $route->tariff->passenger;
+            }
+        }
+
 
         $reports = collect([]);
 
         $dateRange = collect($dateRange);
         foreach ($dateRange as $date) {
             $dispatchRegisters = $allDispatchRegisters->where('date', $date->toDateString());
-
             $dispatchRegistersByVehicles = $dispatchRegisters->groupBy('vehicle_id');
 
             $reportsByVehicles = collect([]);
@@ -189,6 +200,7 @@ class PassengersRecordersReportController extends Controller
                                     'totalByRecorder' => $totalByRecorder,
                                     'totalBySensor' => $r->sum('totalBySensor'),
                                     'totalAllBySensor' => $r->sum('totalAllBySensor'),
+                                    'totalByVIsual' => $r->sum('totalByVIsual'),
                                     'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
                                     'issues' => $r->pluck('issues')->collapse(),
                                     'totalVehicles' => $r->pluck('vehicleId')->unique()->count(),
@@ -198,6 +210,7 @@ class PassengersRecordersReportController extends Controller
                                     'programmedMileage' => $programmedMileage,
                                     'differenceMileage' => $differenceMileage,
                                     'IPK' => $IPK,
+                                    'tarifa' => $tariff,
                                     'frame' => '',
                                     'routeId' => $r->pluck('routeId')->first(),
                                     'route' => $r->pluck('route')->first(),
@@ -233,6 +246,7 @@ class PassengersRecordersReportController extends Controller
                                 'totalByRecorder' => $totalByRecorder,
                                 'totalBySensor' => $r->sum('totalBySensor'),
                                 'totalAllBySensor' => $r->sum('totalAllBySensor'),
+                                'totalByVIsual' => $r->sum('totalByVIsual'),
                                 'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
                                 'issues' => $r->pluck('issues')->collapse(),
                                 'totalVehicles' => $r->pluck('vehicleId')->unique()->count(),
@@ -242,6 +256,7 @@ class PassengersRecordersReportController extends Controller
                                 'programmedMileage' => $programmedMileage,
                                 'differenceMileage' => $differenceMileage,
                                 'IPK' => $IPK,
+                                'tariff' => $tariff,
                                 'frame' => '',
                                 'routeId' => $route->id ?? 0,
                                 'route' => $route,
@@ -278,6 +293,7 @@ class PassengersRecordersReportController extends Controller
                             'totalByRecorder' => $totalByRecorder,
                             'totalBySensor' => $r->sum('totalBySensor'),
                             'totalAllBySensor' => $r->sum('totalAllBySensor'),
+                            'totalByVIsual' => $r->sum('totalByVIsual'),
                             'totalBySensorRecorder' => $r->sum('totalBySensorRecorder'),
                             'issues' => $r->pluck('issues')->collapse(),
                             'totalVehicles' => $r->pluck('vehicleId')->unique()->count(),
@@ -287,6 +303,7 @@ class PassengersRecordersReportController extends Controller
                             'programmedMileage' => $programmedMileage,
                             'differenceMileage' => $differenceMileage,
                             'IPK' => $IPK,
+                            'tariff' => $tariff,
                             'frame' => '',
                             'routeId' => $r->pluck('routeId')->first(),
                             'route' => $r->pluck('route')->first(),
@@ -318,6 +335,7 @@ class PassengersRecordersReportController extends Controller
                     'programmedMileage' => 0,
                     'differenceMileage' => 0,
                     'IPK' => 0,
+                    'tariff' => $tariff,
                     'frame' => '',
                     'routeId' => $route->id ?? 0,
                     'route' => $route,
@@ -353,6 +371,7 @@ class PassengersRecordersReportController extends Controller
                             'totalByRecorder' => $totalByRecorder,
                             'totalBySensor' => $rd->sum('totalBySensor'),
                             'totalAllBySensor' => $rd->sum('totalAllBySensor'),
+                            'totalByVIsual' => $rd->sum('totalByVIsual'),
                             'totalBySensorRecorder' => $rd->sum('totalBySensorRecorder'),
                             'issues' => $rd->pluck('issues')->collapse(),
                             'totalVehicles' => $rd->sum('totalVehicles'),
@@ -362,6 +381,7 @@ class PassengersRecordersReportController extends Controller
                             'programmedMileage' => $programmedMileage,
                             'differenceMileage' => $differenceMileage,
                             'IPK' => $IPK,
+                            'tariff' => $tariff,
                             'frame' => '',
                             'routeId' => $rd->pluck('routeId')->first(),
                             'route' => $rd->pluck('route')->first(),
@@ -401,6 +421,7 @@ class PassengersRecordersReportController extends Controller
             'reports' => $reports,
             'totalSensor' => $reports->sum('totalBySensor'),
             'totalAllBySensor' => $reports->sum('totalAllBySensor'),
+            'totalByVIsual' => $reports->sum('totalByVIsual'),
             'totalRecorder' => $reports->sum('totalByRecorder'),
             'totalSensorRecorder' => $reports->sum('totalBySensorRecorder'),
             'totalDates' => $totalDates->unique()->count(),
@@ -410,6 +431,7 @@ class PassengersRecordersReportController extends Controller
             'totalProgrammedMileage' => $reports->sum('programmedMileage'),
             'totalDifferenceMileage' => $reports->sum('differenceMileage'),
             'IPK' => $IPK,
+            'tariff' => $tariff,
             'groupByVehicle' => $groupByVehicle,
             'groupByRoute' => $groupByRoute,
             'groupByDate' => $groupByDate,
@@ -456,7 +478,6 @@ class PassengersRecordersReportController extends Controller
         $reports = collect([]);
         $sensor = self::buildReportBySensorByDates($dispatchRegisters)->where('date', $date->toDateString())->first();
         $recorder = self::buildReportByRecorderByDates($dispatchRegisters)->where('date', $date->toDateString())->first();
-
         $programmedMileage = $this->getProgrammedMileage($dispatchRegisters, $programmedRoundTrips, $firstRoute);
 
         $totalVehicles = $dispatchRegisters->pluck('vehicle');
@@ -474,6 +495,7 @@ class PassengersRecordersReportController extends Controller
                 'totalByRecorder' => $recorder->totalByRecorder ?? 0,
                 'totalBySensor' => $sensor->totalBySensor ?? 0,
                 'totalAllBySensor' => $sensor->totalAllBySensor ?? 0,
+                'totalByVIsual' => $sensor->totalByVIsual ?? 0,
                 'totalBySensorRecorder' => $sensor->totalBySensorRecorder ?? 0,
                 'issues' => collect($recorder ? $recorder->issues : []),
                 'totalVehicles' => $totalVehicles->unique('id')->count(),
@@ -483,6 +505,7 @@ class PassengersRecordersReportController extends Controller
                 'programmedMileage' => $programmedMileage,
                 'differenceMileage' => $differenceMileage,
                 'IPK' => $IPK,
+//                'tariff' => $tariff,
                 'frame' => '',
                 'routeId' => $route->id ?? null,
                 'route' => $route,
@@ -504,36 +527,59 @@ class PassengersRecordersReportController extends Controller
      *
      * @param $passengerReport
      */
-    public function export($passengerReport)
+    public function export($passengerReport, $company)
     {
         $vehicle = $passengerReport->vehicle;
         $driver = $passengerReport->driver;
         $dateReport = $passengerReport->dateReport;
         $dateEndReport = $passengerReport->dateEndReport;
 
-        $dataExcel = array();
-        foreach ($passengerReport->reports as $date => $report) {
-            $data = collect([
-                __('N°') => count($dataExcel) + 1,                          # A CELL
-                __('Date') => $report->date,                                # B CELL
-                __('Route') => $report->routeProcessed,                     # C CELL
-                __('Vehicle') => $report->vehicleProcessed,                 # D CELL
-                __('Driver') => $report->driverProcessed,                   # E CELL
-                __('Total vehicles') => $report->totalVehicles,             # F CELL
-                __('Total days') => $report->totalDates,                    # G CELL
-                __('Total round trips') => $report->roundTrips,             # H CELL
-                __('Mileage round trips') => $report->mileage,              # I CELL
-                __('Mileage programmed') => $report->programmedMileage,     # J CELL
-                __('Difference mileage') => $report->differenceMileage,     # K CELL
-                __('Recorder') => $report->totalByRecorder,                 # L CELL
-                __('Sensor') => $report->totalBySensor,                     # M CELL
-                __('Sensor TOTAL') => $report->totalAllBySensor,            # N CELL
-                __('IPK') => $report->IPK,                                  # O CELL
-            ]);
-//            if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
-            $dataExcel[] = $data->toArray();
-        }
 
+        $dataExcel = array();
+        if ($company->id == 39){
+            foreach ($passengerReport->reports as $date => $report) {
+                $totalProd = $report->totalByVIsual * $report->tariff;
+                $data = collect([
+                    __('N°') => count($dataExcel) + 1,                          # A CELL
+                    __('Date') => $report->date,                                # B CELL
+                    __('Route') => $report->routeProcessed,                     # C CELL
+                    __('Vehicle') => $report->vehicleProcessed,                 # D CELL
+                    __('Total vehicles') => $report->totalVehicles,             # E CELL
+                    __('Total days') => $report->totalDates,                    # F CELL
+                    __('Total round trips') => $report->roundTrips,             # G CELL
+                    __('Mileage round trips') => $report->mileage,              # H CELL
+                    __('Mileage programmed') => $report->programmedMileage,     # I CELL
+                    __('Difference mileage') => $report->differenceMileage,     # J CELL
+                    __('Cont. Camaras') => $report->totalBySensor,              # K CELL
+                    __('Cont. Visual') => $report->totalByVIsual,               # K CELL
+                    __('Total Prod.') => $totalProd,                            # K CELL
+                ]);
+    //            if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
+                $dataExcel[] = $data->toArray();
+            }
+        }else{
+            foreach ($passengerReport->reports as $date => $report) {
+                $data = collect([
+                    __('N°') => count($dataExcel) + 1,                          # A CELL
+                    __('Date') => $report->date,                                # B CELL
+                    __('Route') => $report->routeProcessed,                     # C CELL
+                    __('Vehicle') => $report->vehicleProcessed,                 # D CELL
+                    __('Driver') => $report->driverProcessed,                   # E CELL
+                    __('Total vehicles') => $report->totalVehicles,             # F CELL
+                    __('Total days') => $report->totalDates,                    # G CELL
+                    __('Total round trips') => $report->roundTrips,             # H CELL
+                    __('Mileage round trips') => $report->mileage,              # I CELL
+                    __('Mileage programmed') => $report->programmedMileage,     # J CELL
+                    __('Difference mileage') => $report->differenceMileage,     # K CELL
+                    __('Recorder') => $report->totalByRecorder,                 # L CELL
+                    __('Sensor') => $report->totalBySensor,                     # M CELL
+                    __('Sensor TOTAL') => $report->totalAllBySensor,            # N CELL
+                    __('IPK') => $report->IPK,                                  # O CELL
+                ]);
+                //            if (Auth::user()->isAdmin()) $data->put(__('Frame'), $report->frame);
+                $dataExcel[] = $data->toArray();
+            }
+        }
         $infoVehicle = $vehicle ? " " . $vehicle->number : "";
         $infoDriver = $driver ? "C$driver->code: $driver->fullName" : "";
 
@@ -564,6 +610,7 @@ class PassengersRecordersReportController extends Controller
             $reports->put($date, (object)[
                 'date' => $date,
                 'totalBySensor' => $report->report->sum('passengersBySensor'),
+                'totalByVIsual' => $report->report->sum('totalByPassengerVisual'),
                 'totalAllBySensor' => $report->report->sum('passengersAllBySensor'),
                 'totalBySensorRecorder' => $report->report->sum('passengersBySensorRecorder'),
                 'totalRoundTrips' => count($dispatchRegistersByDate),

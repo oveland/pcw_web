@@ -31,7 +31,6 @@ trait CounterBySensor
             $report[$vehicleId] = $totalByVehicle->report;
             $totalByVehicle->issues->isNotEmpty() ? $issues[$vehicleId] = $totalByVehicle->issues : null;
         }
-
         return (object)[
             'report' => collect($report)->sortBy(function ($report) {
                 return $report->vehicle->number;
@@ -40,6 +39,8 @@ trait CounterBySensor
             'lastVehicleNumber' => $lastDispatchRegister ? $lastDispatchRegister->vehicle->number : '',
             'lastDriverName' => $lastDispatchRegister ? $lastDispatchRegister->driver_code . ($lastDispatchRegister->driver ? ' | ' . $lastDispatchRegister->driver->fullName() : '') : '',
         ];
+
+
     }
 
     static function totalByVehicle($vehicleId, $dispatchRegistersByVehicle)
@@ -55,6 +56,7 @@ trait CounterBySensor
         $totalAllBySensor = 0;
         $totalByRecorder = 0;
         $totalBySensorRecorder = 0;
+        $totalByPassengerVisual = 0;
 
         $totalPassengers = 0;
         $firstStartRecorder = 0;
@@ -72,6 +74,9 @@ trait CounterBySensor
             foreach ($dispatchRegistersByVehicle as $dispatchRegister) {
                 $totalBySensorByRoundTrip = $dispatchRegister->passengersBySensor;
                 $totalBySensor += $totalBySensorByRoundTrip;
+
+                $TotalpassengerVisualRoundTrip = (int) $dispatchRegister->getObservation('end_recorder')->value;
+                $totalByPassengerVisual += $TotalpassengerVisualRoundTrip;
 
                 $totalAllBySensorByRoundTrip = $dispatchRegister->passengersBySensorTotal;
                 $totalAllBySensor += $totalAllBySensorByRoundTrip;
@@ -114,6 +119,9 @@ trait CounterBySensor
 
                     'totalBySensorByRoundTrip' => $totalBySensorByRoundTrip,
                     'totalBySensorByRoute' => $totalBySensor,
+
+                    'TotalpassengerVisualRoundTrip' => $TotalpassengerVisualRoundTrip,
+                    'totalByPassengerVisual' => $totalByPassengerVisual,
 
                     'totalAllBySensorByRoundTrip' => $totalAllBySensorByRoundTrip,
                     'totalAllBySensorByRoute' => $totalAllBySensor,
@@ -163,6 +171,7 @@ trait CounterBySensor
 
                 'passengersBySensorRecorder' => $totalBySensorRecorder, // Passengers by Sensor recorder
                 'passengersBySensor' => $totalBySensor,                 // Passengers by Sensor
+                'totalByPassengerVisual' => $totalByPassengerVisual,
                 'passengersAllBySensor' => $totalAllBySensor,                 // Passengers by Sensor
 
                 'start_recorder' => $firstStartRecorder,
@@ -180,7 +189,6 @@ trait CounterBySensor
             ],
             'issues' => $issues
         ];
-
         return $totalByVehicle;
     }
 
