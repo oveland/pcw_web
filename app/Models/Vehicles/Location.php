@@ -46,7 +46,7 @@ trait BindsDynamically
             $tableName = "locations$indexViewId";
         }
 
-        $this->setTable($tableName);z
+        $this->setTable($tableName);
         return $query->from($tableName);
     }
 
