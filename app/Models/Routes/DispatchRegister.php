@@ -1137,4 +1137,20 @@ class DispatchRegister extends Model
 
         return Carbon::createFromFormat($format, $text);
     }
+
+    function getDateTimeDeparture() {
+        $startDate = $this->date;
+        $initialTime = $this->departure_time;
+
+        return $this->parseDateTime("$startDate $initialTime");
+    }
+
+    function getDateTimeEnd() {
+        $startDate = $this->date;
+        $endDate = $this->date_end ?? $startDate;
+
+        $finalTime = $this->complete() ? $this->arrival_time : $this->arrival_time_scheduled;
+
+        return $this->parseDateTime("$endDate $finalTime");
+    }
 }

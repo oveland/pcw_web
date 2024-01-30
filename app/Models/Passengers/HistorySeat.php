@@ -48,6 +48,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class HistorySeat extends Model
 {
+    public $cpFrom = null;
+    public $cpTo = null;
+
+    public $isAscent = false;
+    public $isDescent = false;
+
     /*protected $dates = [
       'date','time','active_time','inactive_time','busy_time'
     ];*/
@@ -72,7 +78,8 @@ class HistorySeat extends Model
         return intval($value);
     }
 
-    function getTime($type, $short = false) {
+    function getTime($type, $short = false)
+    {
         switch ($type) {
             case 'active':
                 $date = $this->parseDate($this->active_time);
@@ -91,9 +98,10 @@ class HistorySeat extends Model
      * @param $value
      * @return Carbon
      */
-    function parseDate($value) {
+    function parseDate($value)
+    {
 
-        if(!$value) return Carbon::now();
+        if (!$value) return Carbon::now();
         return Carbon::createFromFormat(config('app.simple_date_time_format'), explode('.', $value)[0]);
     }
 }

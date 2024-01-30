@@ -27,29 +27,40 @@ class DriverDetailedController extends Controller
      */
     public function show(Request $request)
     {
+
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $dateReport = $request->get('date-report');
+        $dateTimeEndRequest = $request->get('date-end-report');
         $driverReport = $request->get('driver-report');
 
-        $driverReport = $this->buildDriverReport($company, $dateReport, $driverReport);
+        $driverReport = $this->buildDriverReport($company, $dateReport, $driverReport, $dateTimeEndRequest);
 
         return view('reports.drivers.detailed.show', compact('driverReport'));
     }
 
-    function buildDriverReport($company, $dateReport, $driverReport)
+    function buildDriverReport($company, $dateReport, $driverReport, $dateTimeEndRequest)
     {
         $report = collect([]);
 
         $drivers = $company->activeDrivers();
         if ($driverReport) $drivers->whereIn('code', $driverReport);
         $drivers = $drivers->get();
+        if ($dateTimeEndRequest){
+            $dispatchRegistersByDrivers = DispatchRegister::whereBetween('date', [$dateReport,$dateTimeEndRequest])
+                ->completed()
+                ->whereIn('driver_code', $drivers->pluck('code'))
+                ->orderBy('departure_time')
+                ->get()
+                ->groupBy('driver_code');
+        }else{
+            $dispatchRegistersByDrivers = DispatchRegister::where('date', $dateReport)
+                ->completed()
+                ->whereIn('driver_code', $drivers->pluck('code'))
+                ->orderBy('departure_time')
+                ->get()
+                ->groupBy('driver_code');
+        }
 
-        $dispatchRegistersByDrivers = DispatchRegister::where('date', $dateReport)
-            ->completed()
-            ->whereIn('driver_code', $drivers->pluck('code'))
-            ->orderBy('departure_time')
-            ->get()
-            ->groupBy('driver_code');
 
         foreach ($dispatchRegistersByDrivers as $driverCode => $dispatchRegistersByDriver) {
             $deadTimeReport = collect([]);

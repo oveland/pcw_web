@@ -54,12 +54,12 @@
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="company-report" class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
                                         <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
-                                            <option value="14">ALAMEDA</option>
+                                            <option value="39">EXPRESO PALMIRA</option>
                                             @if(false)
                                                 <option value="null">@lang('Select an option')</option>
                                                 @foreach($companies as $company)
@@ -76,25 +76,42 @@
                                 <label for="driver-report" class="control-label">@lang('Driver')(es)</label>
                                 <div class="form-group">
                                     <select name="driver-report[]" id="driver-report" class="default-select2 form-control col-md-12" multiple>
-                                        @foreach(\App\Models\Drivers\Driver::where('company_id',14)->get() as $driver)
+                                        @foreach(\App\Models\Drivers\Driver::where('company_id',39)->get() as $driver)
                                             <option value="{{$driver->code}}">#{{ $driver->code }} | {{ $driver->fullName() }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="date-report" class="control-label field-required">@lang('Date')</label>
-                                <div class="input-group date datepicker" data-less="true" data-than="#final-date">
-                                    <input name="date-report" id="date-report" type="text" class="form-control" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }}"/>
-                                    <span class="input-group-addon">
+                            <div class="col-md-3">
+                                <div class="form-group form-date">
+                                    <label for="date-report" class="control-label field-required">
+                                        @lang('Date')
+                                    </label>
+                                    <label class="with-end-date-container text-bold">
+                                        &nbsp;• <input id="with-end-date" name="with-end-date" class="primary-filter" type="checkbox"> @lang('By range time')
+                                    </label>
+                                    <div class="input-group date datetime-report">
+                                        <input name="date-report" id="date-report" type="text" class="form-control primary-filter" autocomplete="off" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 00:00"/>
+                                        <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                            </div>
+                                <div class="col-md-3 date-end-container" style="display: none">
+                                    <div class="form-group">
+                                        <label for="date-end-report" class="control-label">@lang('Date end')</label>
+                                        <div class="input-group date datetime-report">
+                                            <input name="date-end-report" id="date-end-report" type="text" class="form-control primary-filter" autocomplete="off" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 23:59"/>
+                                            <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
                 </div>
             </div>
         </form>
@@ -199,6 +216,37 @@
             @if(!Auth::user()->isAdmin())
             loadRouteReport(null);
             @endif
+        });
+        initDateTimePicker("YYYY-MM-DD");
+        function initDateTimePicker(format, els) {
+            const containers = els ? els : $('.datetime-report');
+
+            containers.each(function (i, el) {
+                $(el).data("DateTimePicker")?.destroy();
+
+                $(el).datetimepicker({
+                    format,
+                    locale: 'es',
+                    sideBySide: true,
+                    showTodayButton: true
+                });
+
+                $(el).click(function() {
+                    $(this).data("DateTimePicker")?.show();
+                });
+            });
+        }
+        $('#with-end-date').change(function () {
+            const dec = $('.date-end-container').slideUp();
+
+            if ($(this).is(':checked')) {
+                dec.slideDown();
+                initDateTimePicker("YYYY-MM-DD HH:mm");
+
+                $('#date-end-report').val($('#date-end-report').val().split(' ')[0] + " 23:59")
+            } else {
+                initDateTimePicker("YYYY-MM-DD");
+            }
         });
 
         function loadRouteReport(company) {

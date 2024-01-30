@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $company_id
  * @property int $dispatch_id
  * @property int $bea_id
+ * @property int $db_id
  * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -172,6 +173,7 @@ class Route extends Model
             $tariff->route()->associate($this);
             $tariff->passenger = 0;
             $tariff->fuel = 0;
+            $tariff->value = 0;
         }
         return $tariff;
     }
@@ -184,6 +186,16 @@ class Route extends Model
     function getDistanceInMetersAttribute()
     {
         return $this->distance_in_km * 1000;
+    }
+
+    function isLarge()
+    {
+        return $this->distance_in_km > 100;
+    }
+
+    function isShort()
+    {
+        return !$this->isLarge();
     }
 
     function getControlPointsTariff()
