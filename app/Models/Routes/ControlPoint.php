@@ -59,4 +59,8 @@ class ControlPoint extends Model
     {
         return $this->belongsTo(Route::class);
     }
+    
+    function FICS() {
+        return $this->hasOne(ControlPointFICS::class);
+    }
 }

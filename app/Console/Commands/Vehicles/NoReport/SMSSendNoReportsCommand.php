@@ -66,6 +66,10 @@ class SMSSendNoReportsCommand extends Command
             var_dump('8419 no reporta');
             $this->issues->push("VH 8419 se encuentra sin reportar GPS");
             $this->sendAlerts();
+        }else if ($checkStatus == 0 || $checkStatus == 6){
+            var_dump('8419 Reportando normal');
+            $this->issues->push("VH 8419 reportando OK");
+            $this->sendAlerts();
         }
     }
     public function sendAlerts()

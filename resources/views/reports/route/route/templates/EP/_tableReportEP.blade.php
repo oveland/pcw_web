@@ -710,11 +710,14 @@
                      $countMaxAssets = $countMax >= $totalSeats ? $totalSeats : $countMax;
                      $countPassengersFICS = $spreadsheetPassengersSync->value;
 
+                     $countLongRoute = $countPassengersFICS >= $countBySensorFinal ? $countPassengersFICS : $countBySensorFinal;
+
                     $totalPassengers = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
 
-                    $styleAE = $totalPassengersAE > $countPassengersFICS;
-                    $styleDefault = $totalPassengers > $countPassengersFICS;
-                    $styleLongRoute = $countMaxAssets != $countPassengersFICS;
+                    $styleAE = $totalPassengersAE >  $spreadsheetPassengers->value;
+                    $styleDefault = $totalPassengers >  $countPassengersFICS;
+                   // $styleLongRoute = $countMaxAssets != $countPassengersFICS;
+                    $styleLongRoute = $countBySensorFinal > $countPassengersFICS;
                 @endphp
                 @if($routeProm == 279 || $routeProm == 280 || $routeProm == 282 || $routeProm == 283)
                     <td width="10%" class="text-center" style="background: #c4c9d0">
@@ -733,14 +736,15 @@
                 @elseif($routeProm == 337 || $routeProm == 338)
                     @if($styleLongRoute == false)
                         <td class="text-center">
-                             <span class="tooltips text-center" title="@lang('maximos - asientos')" >
-                                {{ $countMaxAssets ? $countMaxAssets : 0 }}
+                             <span class="tooltips text-center" title="@lang('maximos - asientos')">
+                                {{ $countLongRoute ? $countLongRoute : 0 }}
                             </span>
                         </td>
                     @elseif($styleLongRoute == true)
                         <td class="text-center">
-                             <span class="tooltips text-center" style="color: darkred; font-weight: 900" title="@lang('maximos - asientos')" >
-                                {{ $countMaxAssets ? $countMaxAssets : 0 }}
+                             <span class="tooltips text-center" style="color: darkred; font-weight: 900"
+                                   title="@lang('maximos - asientos')">
+                                {{ $countLongRoute ? $countLongRoute : 0 }}
                             </span>
                         </td>
                     @endif
@@ -906,9 +910,11 @@
             @endif
             @if($user->canViewAction())
                 <td width="15%" class="text-center">
-                    <a href="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}&hide-menu=true" target="_blank"
+                    <a href="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}&hide-menu=true"
+                       target="_blank"
                        class="btn green-haze faa-parent animated-hover btn-show-historic-report btn-circle btn-outline tooltips"
-                       data-original-title="@lang('Historic report') <i class='fa fa-external-link'></i>" data-html="true">
+                       data-original-title="@lang('Historic report') <i class='fa fa-external-link'></i>"
+                       data-html="true">
                         <i class="fa fa-map faa-pulse"></i>
                     </a>
 
@@ -970,6 +976,17 @@
                             </ul>
                         </div>
                     </div>
+                    @php
+                        $routeID = $dispatchRegister->route_id;
+                    @endphp
+                    @if(Auth::user()->isExpreso() && !in_array($routeID, [279, 280, 282, 283]))
+                        <div class="btn green-haze faa-parent animated-hover btn-show-historic-report btn-circle btn-outline tooltips">
+                            <a href="#modal-seating-profile" data-toggle="modal"
+                               onclick="loadSeatingProfile('{{ route('report-passengers-occupation-by-dispatch',['id'=>$dispatchRegister->id]) }}')">
+                                <i class="fa fa-users faa-pulse text-warning"></i>
+                            </a>
+                        </div>
+                    @endif
                 </td>
             @endif
         </tr>

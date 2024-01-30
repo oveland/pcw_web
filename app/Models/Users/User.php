@@ -132,7 +132,7 @@ class User extends Authenticatable
     {
         return $this->id == 2018101286 || $this->id == 2018101362 || $this->id == 2018101369 || $this->id == 2018101372 || $this->id == 2018101377
             || $this->id == 2018101383 || $this->id == 2018101382 || $this->id == 2018101381 || $this->id == 2018101380
-            || $this->id == 2018101379 || $this->id == 2018101378 || $this->id == 2018101409 || $this->id ==2018101356 ||$this->id == 2018101394 ;
+            || $this->id == 2018101379 || $this->id == 2018101378 || $this->id == 2018101409 || $this->id ==2018101356 ||$this->id == 2018101394 || $this->id == 2018101367 ;
     }
 
     public function liquidatorEP()

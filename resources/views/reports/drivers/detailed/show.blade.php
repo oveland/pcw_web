@@ -105,11 +105,13 @@
                                 $vehicle = $dispatchRegister->vehicle;
                             @endphp
                             <tr>
-                                <th class="bg-inverse text-white text-center">{{ $route->name }}</th>
+                                <th class="bg-inverse text-white text-center">{{ $route->name}}</th>
                                 <th class="bg-inverse text-white text-center">{{ $dispatchRegister->round_trip }}</th>
                                 <td class="text-center">{{ $dispatchRegister->turn }}</td>
-                                <td class="text-center">{{ "$vehicle->number" }}</td>
+                                <td class="text-center">{{ "$vehicle->number" }} - {{ $dispatchRegister->date}}</td>
                                 <td class="text-center">
+                                    {{ $dispatchRegister->date}}
+                                    <br>
                                     {{ $strTime->toString($dispatchRegister->departure_time) }}
                                     <br>
                                     <small class="tooltips text-primary" data-title="@lang('Dead time')" data-placement="bottom">

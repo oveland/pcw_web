@@ -9,7 +9,7 @@
     <ol class="breadcrumb pull-right">
         <li><a href="javascript:;">@lang('Reports')</a></li>
         <li><a href="javascript:;">@lang('Drivers')</a></li>
-        <li class="active">@lang('Consolidated per day')</li>
+        <li class="active">@lang('dddddd')</li>
     </ol>
     <!-- end breadcrumb -->
     <!-- begin page-header -->
