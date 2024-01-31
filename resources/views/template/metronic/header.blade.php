@@ -15,7 +15,7 @@
 <link href="{{ asset('fonts/Google_Open_Sand.css') }}" rel="stylesheet" type="text/css"/>
 
 <link href="{{asset('assets/plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet"/>
-<link href="{{asset('assets/plugins/font-awesome/css/font-awesome-animation.min.css')}}" rel="stylesheet">
+<link href="{{asset('https://cdn.jsdelivr.net/npm/font-awesome-animation@1.1.1/css/font-awesome-animation.min.css')}}" rel="stylesheet">
 
 <link href="{{asset('assets/global/plugins/simple-line-icons/simple-line-icons.min.css')}}" rel="stylesheet" type="text/css"/>
 <link href="{{asset('assets/global/plugins/uniform/css/uniform.default.css')}}" rel="stylesheet" type="text/css"/>

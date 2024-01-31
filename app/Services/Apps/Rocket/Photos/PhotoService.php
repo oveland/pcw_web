@@ -425,6 +425,12 @@ class PhotoService
             ->get();
     }
 
+    function belongsToLargeRoute($drs) {
+        return collect($drs)->filter(function(DispatchRegister $dr) {
+            return $dr->route->isLarge();
+        })->count() > 0;
+    }
+
     function getVehicleCameras(): array
     {
         $vehicleCameras = VehicleCamera::where('vehicle_id', $this->vehicle->id)->get();
@@ -441,21 +447,29 @@ class PhotoService
         $vehicle = $this->vehicle;
         $this->setCamera($camera);
 
+        $activeDrs = $this->getDispatchRegisters();
+
+        $limit = 4000;
+
+        if(request()->get('limit')) {
+            $limit = intval(request()->get('limit'));
+        }
+
         $photosQuery = Photo::whereVehicleAndDateAndSide($vehicle, $this->date ?: Carbon::now(), $this->camera)
-            ->orWhere(function ($query) {
+            ->orWhere(function ($query) use ($activeDrs) {
                 $side = $this->camera;
                 if ($side !== null && $side != 'all' && $side !== "") {
                     $query = $query->whereSide($side);
                 }
-                return $query->whereIn('dispatch_register_id', $this->getDispatchRegisters()->pluck('id'));
+                return $query->whereIn('dispatch_register_id', $activeDrs->pluck('id'));
             })
             ->with('dispatchRegister')
-            ->limit(4000)
+            ->limit($limit)
             ->orderBy('date');
 
-        $start = Carbon::now();
 
-        if ($vehicle->number == '8419') { // TODO: Debe parametrizarse
+
+        if ($this->belongsToLargeRoute($activeDrs)) {
             $photosQuery = $photosQuery
 //                ->limit(10)
                 ->with(['location' => function ($query) {
@@ -478,7 +492,7 @@ class PhotoService
 
                 $photo->dispatchRegister()->associate($dr);
 
-                if ($vehicle->number == '8419') {
+                if ($dr && $dr->route->isLarge()) {
                     /**
                      * @var ControlPoint $cp
                      */
@@ -529,10 +543,6 @@ class PhotoService
                 $location = Location::select(['date', 'distance', 'latitude', 'longitude'])->where('id', $details->location_id)->first();
                 $occupation = $details->occupation;
 
-                if (request()->get('d') && !$location) {
-                    dd($photo);
-                }
-
                 $latitude = $location ? $location->latitude : 'null';
                 $longitude = $location ? $location->longitude : 'null';
                 $distance = $location ? $location->distance : 0;
@@ -560,6 +570,7 @@ class PhotoService
                         $registers->put($seat, (object)[
                             'id' => $id,
                             'seat' => $seat,
+                            'camera' => $photo->camera,
                             'arrivedTime' => $dr->date_end . " " . $dr->arrival_time,
                             'routeDistance' => $dr->route->distance_in_meters,
                         ]);
@@ -585,7 +596,6 @@ class PhotoService
             }
 
             $lastLocation = Location::select(['date', 'distance', 'latitude', 'longitude'])->where('dispatch_register_id', $drId)->orderBy('date', 'desc')->first();
-            $lastPhoto = Photo::select(['id'])->where('dispatch_register_id', $drId)->orderBy('date', 'desc')->first();
 
             $latitude = $lastLocation ? $lastLocation->latitude : 'null';
             $longitude = $lastLocation ? $lastLocation->longitude : 'null';
@@ -594,6 +604,11 @@ class PhotoService
                 $id = $register->id;
                 $arrivedTime = $register->arrivedTime;
                 $routeDistance = $register->routeDistance;
+
+                $lastPhoto = Photo::select(['id'])
+                    ->where('dispatch_register_id', $drId)
+                    ->where('side', $register->camera)
+                    ->orderBy('date', 'desc')->first();
 
                 DB::statement("UPDATE history_seats SET inactive_time = '$arrivedTime', inactive_km = $routeDistance, inactive_latitude = $latitude, inactive_longitude = $longitude, end_photo_id = $lastPhoto->id WHERE id = $id");
             }
@@ -632,8 +647,10 @@ class PhotoService
             $countMaxByRoundTrip = 0;
             foreach ($historicByCameras as $historicCamera) {
                 $data = $historicCamera->get($drId);
+
                 if ($data) {
                     $lastHistoricData = $data->sortBy('ts')->last();
+
                     $countByRoundTrip = $countByRoundTrip + $lastHistoricData->passengers->totalInRoundTrip;
                     $countMaxByRoundTrip = $countMaxByRoundTrip + $lastHistoricData->passengers->maxPersonByRoundTrip;
                 }
@@ -810,7 +827,7 @@ class PhotoService
 
         $dr = $photo->dispatchRegister;
 
-        if ($photo->vehicle->number == '8419') {
+        if ($dr && $dr->route->isLarge()) {
             $cp = $photo->cp ?? null;
             $prevCp = $prevPhoto->cp ?? null;
 
@@ -877,6 +894,7 @@ class PhotoService
         $photos = $photos->sortBy('date')->values();
 
         $historic = collect([]);
+        $activationCounts = collect([]);
 
         if ($photos->isNotEmpty()) {
             $prevPhoto = $photos->first();
@@ -885,6 +903,9 @@ class PhotoService
 
             $personsByRoundTripT1 = 0;
             $personsByRoundTripT2 = 0;
+            $personsByRoundTripActivationCounts = 0;
+            $totalPersonsActivationCounts = 0;
+
             $totalPersonsT1 = 0;
             $totalPersonsT2 = 0;
             $totalSumOccupied = 0;
@@ -924,6 +945,11 @@ class PhotoService
                     $newPersonsT1 = $seatingActivated->count(); // By Criteria of Topologies by persistence
                     $newPersonsT2 = $statusDR->start ? $seatingCounted->count() : $seatingCounted->count() - $prevSeatingCounted->count(); // By Criteria of Topologies 2 (Nivel de llenado de Vasos)
 
+
+
+
+
+
 //                    $newPersons = max($newPersons, $newPersons2);
 
                     if ($statusDR->start) {
@@ -936,6 +962,15 @@ class PhotoService
 
                     $totalPersonsT1 += $newPersonsT1;
                     $totalPersonsT2 += $newPersonsT2;
+
+                    // Procesa conteos en rutas largas, tomando en cuenta que en cada PdC hay liberación de asientos
+                    $prevTotalActivationCounts = $activationCounts->count();
+                    $seatingActivated->pluck('number')->map(function ($seat) use (&$activationCounts) {
+                        $activationCounts->put($seat, intval($activationCounts->get($seat)) + 1);
+                    });
+
+                    $personsByRoundTripActivationCounts = $activationCounts->count();
+                    $totalPersonsActivationCounts += $personsByRoundTripActivationCounts - $prevTotalActivationCounts;
                 }
 
                 $this->processLockCam($photo, $counterLock, $alertLockCam);
@@ -947,6 +982,10 @@ class PhotoService
                 $criteriaCount = 'max';
                 $criteriaCount = 'averages';
                 $criteriaCount = 'topologies';
+
+                if ($statusDR->isActive() && $statusDR->dr->route->isLarge()) {
+                    $criteriaCount = 'seatingActivationCounts';
+                }
 
 //                $totalPersonsT = max($totalPersonsT1, $totalPersonsT2);
 //                $personsByRoundTripT = max($personsByRoundTripT1, $personsByRoundTripT2);
@@ -966,6 +1005,12 @@ class PhotoService
                         $maximumCriteria = $rekognitionCounts->get('faces');
                         $personsByRoundTrip = $maximumCriteria->max->value;
                         $totalPersons = $maximumCriteria->total;
+                        break;
+                    case 'seatingActivationCounts':
+                        ###### CRITERIO PARA CONTEOS DE ASIENTOS ACTIVADOS DURANTE TODO EL TRAYECTO
+                        $personsByRoundTrip = $personsByRoundTripActivationCounts;
+                        $totalPersons = $totalPersonsActivationCounts;
+                        $maxPersonByRoundTrip = $rekognitionCounts->get('faces')->max->value;
                         break;
                     case 'topologies':
                     default:
@@ -1009,7 +1054,8 @@ class PhotoService
                         'totalSumOccupied' => $totalSumOccupied,
                         'totalSumReleased' => $totalSumReleased,
                         'maxPersonByRoundTrip' => $maxPersonByRoundTrip,
-                    ]
+                        'seating' => $activationCounts
+                    ],
                 ]);
 
                 $prevPhoto = $photo;

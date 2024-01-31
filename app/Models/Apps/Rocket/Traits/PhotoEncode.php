@@ -184,6 +184,7 @@ trait PhotoEncode
         if ($profileSeat && $withSeating) {
             $countedSeating = request()->get('counted');
             $countedSeating = collect($countedSeating ? explode(',', $countedSeating) : []);
+
             foreach ($profileSeat->occupation as $zone) {
                 $zone = (object)$zone;
                 $center = (object)$zone->center;
@@ -195,11 +196,11 @@ trait PhotoEncode
                 });
 
                 $counted = $countedSeating->contains($zone->number);
-                $color = $counted ? '#00f9ff' : '#ffff00';
+                $color = $counted ? '#ff00d8' : '#ffff00';
                 $fontSize = 24;
 
-                if($this->vehicle->company_id == Company::EXPRESO_PALMIRA) $color = 'rgba(255, 255, 0, 0.6)';
-                if($this->vehicle->id ==2617 && $this->side==1 ) $fontSize = 24;
+                if($this->vehicle->company_id == Company::EXPRESO_PALMIRA && !$counted) $color = 'rgba(255, 255, 0, 0.6)';
+                if ($this->vehicle->id == 2617 && $this->side == 1) $fontSize = 24;
 
                 $image->text($zone->number, $center->left * $percentWidth, $center->top * $percentHeight, function ($font) use ($counted, $color, $fontSize) {
                     $font->color($color);

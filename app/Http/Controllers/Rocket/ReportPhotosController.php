@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\GeneralController;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\ProfileSeat;
+use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
 use App\Services\Auth\PCWAuthService;
@@ -64,6 +65,7 @@ class ReportPhotosController extends Controller
                     $persistenceRelease = $request->get('release');
 
                     $photos = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date)->getHistoric(true);
+
                     $response->photos = $photos->sortByDesc('ts')->values();
 
                     $response->seating = $vehicle->getProfileSeating($camera, $date)->occupation;
@@ -72,6 +74,250 @@ class ReportPhotosController extends Controller
                     $response->message = __('Vehicle not found');
                 }
                 break;
+            case 'historic-seating-counts':
+                $dr = DispatchRegister::find($request->get('dr'));
+
+                if ($dr) {
+                    $vehicle = $dr->vehicle;
+                    $date = $dr->date;
+
+                    $data = collect([
+                        [
+                            'seat' => 1,
+                            'history' => [
+                                [
+                                    'id' => 11,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => true
+                                ],
+                                [
+                                    'id' => 12,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => true
+                                ],
+                                [
+                                    'id' => 13,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => true
+                                ]
+                            ]
+                        ],
+                        [
+                            'seat' => 2,
+                            'history' => [
+                                [
+                                    'id' => 11,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => false
+                                ],
+                                [
+                                    'id' => 12,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => false
+                                ],
+                                [
+                                    'id' => 13,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => true
+                                ]
+                            ]
+                        ],
+                        [
+                            'seat' => 3,
+                            'history' => []
+                        ],
+                        [
+                            'seat' => 4,
+                            'history' => []
+                        ],
+                    ]);
+
+
+                    $persistenceActivate = $request->get('activate') ?? 3;
+                    $persistenceRelease = $request->get('release') ?? 100;
+
+                    $historic = collect((object)[]);
+
+                    foreach ($vehicle->cameras as $vc) {
+                        $h = $this->photoService->for($vehicle, $vc->camera, $persistenceActivate, $persistenceRelease, $date)->getHistoric(true)->where('drId', $dr->id);
+                        $historic->push((object)[
+                            'camera' => $vc->camera,
+                            'profileSeating' => $vehicle->getProfileSeating($vc->camera, $date)->occupation,
+                            'historic' => $h
+                        ]);
+                    }
+
+                    $response->historic = $historic->sortByDesc('ts')->values();
+
+
+                    $data = collect([]);
+
+                    // Organizar datos conforme a $data
+
+                    foreach ($response->historic as $h) {
+
+                        foreach ($h->profileSeating as $ps) {
+                            dd($ps);
+                            $seat = $ps->number;
+
+                            $dataH = collect([]);
+                            foreach ($h->historic as $hh) {
+                                $dataH->push([
+                                    'id' => 11,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => collect($hh->details->occupation->seatingActivate)->contains($seat)
+                                ]);
+                            }
+
+                            $data->push([
+                                'seat' => $seat,
+                                'history' => $dataH
+                            ]);
+                        }
+                    }
+
+                    dd($response->historic);
+                } else {
+                    $response->success = false;
+                    $response->message = __('Dispatch register not found');
+                }
+                break;
+
+            case 'guide-historic-seating-counts':
+                $dr = DispatchRegister::find($request->get('dr'));
+
+                if ($dr) {
+                    $vehicle = $dr->vehicle;
+                    $date = $dr->date;
+
+                    $data = collect([
+                        [
+                            'seat' => 1,
+                            'history' => [
+                                [
+                                    'id' => 11,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => true
+                                ],
+                                [
+                                    'id' => 12,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => true
+                                ],
+                                [
+                                    'id' => 13,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => true
+                                ]
+                            ]
+                        ],
+                        [
+                            'seat' => 2,
+                            'history' => [
+                                [
+                                    'id' => 11,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => false
+                                ],
+                                [
+                                    'id' => 12,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => false
+                                ],
+                                [
+                                    'id' => 13,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => true
+                                ]
+                            ]
+                        ],
+                        [
+                            'seat' => 3,
+                            'history' => []
+                        ],
+                        [
+                            'seat' => 4,
+                            'history' => []
+                        ],
+                    ]);
+
+
+                    $persistenceActivate = $request->get('activate') ?? 3;
+                    $persistenceRelease = $request->get('release') ?? 100;
+
+                    $historic = collect((object)[]);
+
+                    foreach ($vehicle->cameras as $vc) {
+                        $h = $this->photoService->for($vehicle, $vc->camera, $persistenceActivate, $persistenceRelease, $date)->getHistoric(true)->where('drId', $dr->id);
+                        $historic->push((object)[
+                            'camera' => $vc->camera,
+                            'profileSeating' => $vehicle->getProfileSeating($vc->camera, $date)->occupation,
+                            'historic' => $h
+                        ]);
+                    }
+
+                    $response->historic = $historic->sortByDesc('ts')->values();
+
+
+                    $data = collect([]);
+
+                    // Organizar datos conforme a $data
+
+                    foreach ($response->historic as $h) {
+
+                        foreach ($h->profileSeating as $ps) {
+                            dd($ps);
+                            $seat = $ps->number;
+
+                            $dataH = collect([]);
+                            foreach ($h->historic as $hh) {
+                                $dataH->push([
+                                    'id' => 11,
+                                    'date' => '',
+                                    'camera' => 1,
+                                    'url' => 'asasssasss',
+                                    'active' => collect($hh->details->occupation->seatingActivate)->contains($seat)
+                                ]);
+                            }
+
+                            $data->push([
+                                'seat' => $seat,
+                                'history' => $dataH
+                            ]);
+                        }
+                    }
+                } else {
+                    $response->success = false;
+                    $response->message = __('Dispatch register not found');
+                }
+                break;
+
             default:
                 $response->success = false;
                 $response->message = __('Report not found');
@@ -162,7 +408,7 @@ class ReportPhotosController extends Controller
                 ];
 
                 $vehicle = Vehicle::find($request->get('vehicle'));
-                $camera = $request->get('camera')  ?? 'all';
+                $camera = $request->get('camera') ?? 'all';
                 if ($vehicle) {
                     $seating = collect($request->get('seating'));
                     $profileSeat = ProfileSeat::findByVehicleAndCamera($vehicle, $camera);

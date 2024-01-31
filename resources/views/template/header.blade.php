@@ -12,7 +12,7 @@
 <link href="{{asset('assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet"/>
 <link href="{{asset('assets/plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet"/>
-<link href="{{asset('assets/plugins/font-awesome/css/font-awesome-animation.min.css')}}" rel="stylesheet">
+<link href="{{asset('https://cdn.jsdelivr.net/npm/font-awesome-animation@1.1.1/css/font-awesome-animation.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/plugins/ionicons/css/ionicons.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/plugins/simple-line-icons/simple-line-icons.css')}}" rel="stylesheet">
 <link href="{{asset('assets/css/animate.min.css')}}" rel="stylesheet"/>
