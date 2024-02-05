@@ -126,7 +126,18 @@ class PCWRouteService implements APIWebInterface
 
         if ($spreadsheetReport) {
             $allDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($spreadsheetReport) {
-                return $d->getObservation('spreadsheet_passengers')->observation == $spreadsheetReport;
+                $observation1 = $d->getObservation('spreadsheet_passengers')->observation;
+
+                if (($observation1 ?? '') == $spreadsheetReport) {
+                    return true;
+                } else {
+                    $observation2 = $d->getObservation('spreadsheet_passengers_sync')->observation;
+                    if (($observation2 ?? '') == $spreadsheetReport) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
             });
         }
 
@@ -134,8 +145,40 @@ class PCWRouteService implements APIWebInterface
         return $allDispatchRegisters->map(function (DispatchRegister $d) use ($passengersReport) {
             $passengersVehicle = $passengersReport->get($d->vehicle->id);
             $passengersRoundTrip = $passengersVehicle->history->get($d->id);
-
             $totalPassengers = $passengersRoundTrip->totalByRecorderByRoundTrip;
+
+            if (!($d->route_id == 279 || $d->route_id == 280 || $d->route_id == 281 || $d->route_id == 283)) {
+                $topologies = \App\Models\Vehicles\TopologiesSeats::query() //total asientos de VH
+                ->where('vehicle_id', $d->vehicle->id)
+                    ->with('vehicle')
+                    ->get();
+
+                $totalSeats = 0;
+                $totalPassengers = 0;
+                $totalPassengersAE = 0;
+
+                foreach ($topologies as $topology) {
+                    $numSeatsCam = $topology->number_seats;
+                    if (is_numeric($numSeatsCam)) {
+                        $totalSeats += $numSeatsCam;
+                    }
+                }
+                $spreadsheetPassengersSync = $d->getObservation('spreadsheet_passengers_sync');
+                $countMax = $d->final_front_sensor_counter;
+                $countMaxAssets = $countMax >= $totalSeats ? $totalSeats : $countMax;
+                $countPassengersFICS = $spreadsheetPassengersSync->value;
+                $countBySensorFinal = $d->final_sensor_counter;
+
+                $countLongRoute = $countPassengersFICS >= $countBySensorFinal ? $countPassengersFICS : $countBySensorFinal;
+
+                $totalPassengersmax = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
+
+                if ($d->route_id == 337 || $d->route_id == 338 ){
+                    $totalPassengers = $countLongRoute ? $countLongRoute : 0;
+                }else {
+                    $totalPassengers = $totalPassengersmax;
+                }
+            }
 
             // TODO: Cambiar cuando se haga recaudo:
             $tariffPassenger = $d->route->tariff->passenger;
