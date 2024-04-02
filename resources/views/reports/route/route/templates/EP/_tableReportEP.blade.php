@@ -706,13 +706,20 @@
                          $totalPassengersAE = $countBySensorFinal;
                          $titleAE = "Conteo por cámara";
                      }
+                     $countManual = $dispatchRegister->getObservation('registradora_llegada')->value;
+
                      $countMax = $dispatchRegister->final_front_sensor_counter;
                      $countMaxAssets = $countMax >= $totalSeats ? $totalSeats : $countMax;
                      $countPassengersFICS = $spreadsheetPassengersSync->value;
 
                      $countLongRoute = $countPassengersFICS >= $countBySensorFinal ? $countPassengersFICS : $countBySensorFinal;
+                     //$totalPassengers = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
+                     if ($countManual == null || $countManual == '0' ) {
+                          $totalPassengers = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
+                    } else {
+                        $totalPassengers = $countManual;
+                    }
 
-                    $totalPassengers = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
 
                     $styleAE = $totalPassengersAE >  $spreadsheetPassengers->value;
                     $styleDefault = $totalPassengers >  $countPassengersFICS;

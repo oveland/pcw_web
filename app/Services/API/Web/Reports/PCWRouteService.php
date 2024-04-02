@@ -5,9 +5,9 @@ namespace App\Services\API\Web\Reports;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Routes\DrObservation;
+use App\Models\Vehicles\Vehicle;
 use App\Services\API\Web\Contracts\APIWebInterface;
 use App\Traits\CounterBySensor;
-use App\Models\Vehicles\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -121,25 +121,24 @@ class PCWRouteService implements APIWebInterface
         if ($dateReportRequest) {
             $allDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($dateReportRequest) {
                 return $d->date == $dateReportRequest;
+
             });
         }
+
 
         if ($spreadsheetReport) {
-            $allDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($spreadsheetReport) {
-                $observation1 = $d->getObservation('spreadsheet_passengers')->observation;
-
-                if (($observation1 ?? '') == $spreadsheetReport) {
-                    return true;
-                } else {
-                    $observation2 = $d->getObservation('spreadsheet_passengers_sync')->observation;
-                    if (($observation2 ?? '') == $spreadsheetReport) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
+            $filteredDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($spreadsheetReport) {
+                return $d->getObservation('spreadsheet_passengers')->observation == $spreadsheetReport;
             });
+            if ($filteredDispatchRegisters->isNotEmpty()) {
+                $allDispatchRegisters = $filteredDispatchRegisters;
+            } else {
+                $allDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($spreadsheetReport) {
+                    return $d->getObservation('spreadsheet_passengers_sync')->observation == $spreadsheetReport;
+                });
+            }
         }
+
 
         $passengersReport = CounterBySensor::report($allDispatchRegisters)->report;
         return $allDispatchRegisters->map(function (DispatchRegister $d) use ($passengersReport) {
@@ -147,7 +146,7 @@ class PCWRouteService implements APIWebInterface
             $passengersRoundTrip = $passengersVehicle->history->get($d->id);
             $totalPassengers = $passengersRoundTrip->totalByRecorderByRoundTrip;
 
-            if (!($d->route_id == 279 || $d->route_id == 280 || $d->route_id == 281 || $d->route_id == 283)) {
+            if (!($d->route_id == 279 || $d->route_id == 280 || $d->route_id == 282 || $d->route_id == 283)) {
                 $topologies = \App\Models\Vehicles\TopologiesSeats::query() //total asientos de VH
                 ->where('vehicle_id', $d->vehicle->id)
                     ->with('vehicle')
@@ -164,18 +163,26 @@ class PCWRouteService implements APIWebInterface
                     }
                 }
                 $spreadsheetPassengersSync = $d->getObservation('spreadsheet_passengers_sync');
+                $countManual = $d->getObservation('registradora_llegada')->value;
                 $countMax = $d->final_front_sensor_counter;
                 $countMaxAssets = $countMax >= $totalSeats ? $totalSeats : $countMax;
                 $countPassengersFICS = $spreadsheetPassengersSync->value;
                 $countBySensorFinal = $d->final_sensor_counter;
 
                 $countLongRoute = $countPassengersFICS >= $countBySensorFinal ? $countPassengersFICS : $countBySensorFinal;
+                //$totalPassengersmax = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
 
-                $totalPassengersmax = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
+                if ($countManual == null || $countManual == '0' ) {
+                    $totalPassengersmax = $countMaxAssets >= $spreadsheetPassengersSync->value ? $countMaxAssets : $countPassengersFICS;
+                } else {
+                    $totalPassengersmax = $countManual;
+                }
 
-                if ($d->route_id == 337 || $d->route_id == 338 ){
+
+
+                if ($d->route_id == 337 || $d->route_id == 338) {
                     $totalPassengers = $countLongRoute ? $countLongRoute : 0;
-                }else {
+                } else {
                     $totalPassengers = $totalPassengersmax;
                 }
             }
