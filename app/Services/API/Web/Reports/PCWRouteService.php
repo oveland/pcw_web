@@ -115,16 +115,16 @@ class PCWRouteService implements APIWebInterface
             ->active()
             ->with('vehicle')
             ->with('route')
+            ->with('drObservations')
             ->orderBy('id')
             ->get();
+
 
         if ($dateReportRequest) {
             $allDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($dateReportRequest) {
                 return $d->date == $dateReportRequest;
-
             });
         }
-
 
         if ($spreadsheetReport) {
             $filteredDispatchRegisters = $allDispatchRegisters->filter(function (DispatchRegister $d) use ($spreadsheetReport) {
@@ -138,7 +138,6 @@ class PCWRouteService implements APIWebInterface
                 });
             }
         }
-
 
         $passengersReport = CounterBySensor::report($allDispatchRegisters)->report;
         return $allDispatchRegisters->map(function (DispatchRegister $d) use ($passengersReport) {

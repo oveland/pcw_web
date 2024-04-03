@@ -25,12 +25,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Routes\DispatchRegister
  *
  * @property int $id
  * @property string|null $date
+ * @property string|null $date_end
  * @property string|null $time
  * @property int|null $route_id
  * @property int|null $ard_route_id
@@ -50,6 +52,7 @@ use Illuminate\Support\Str;
  * @property int|null $end_recorder
  * @property int|null $user_id
  * @property-read Collection|Location[] $locations
+ * @property-read Collection|DrObservation[] $drObservations
  * @property-read Collection|Location[] $offRoads
  * @property-read Collection|Report[] $reports
  * @property-read Collection|Route|null $route
@@ -213,6 +216,15 @@ class DispatchRegister extends Model
         }
 
         return Carbon::createFromFormat(config('app.date_format'), explode(' ', $date)[0])->toDateString();
+    }
+
+    function getDateEndAttribute($dateEnd) {
+        if (!$dateEnd) {
+            $dateEndSchedule = collect(DB::select("SELECT ('$this->date'::DATE + (SELECT get_route_total_time_from_dispatch_time(('$this->date $this->departure_time') :: TIMESTAMP, $this->route_id))::INTERVAL)::DATE date_end"))->first()->date_end;
+            $dateEnd = $dateEndSchedule;
+        }
+
+        return Carbon::createFromFormat(strstr($dateEnd, '/') ? 'd/m/Y' : 'Y-m-d', $dateEnd)->toDateString();
     }
 
     function getTimeAttribute($time)
@@ -1007,10 +1019,15 @@ class DispatchRegister extends Model
         return $this->hasOne(DispatcherVehicle::class, 'vehicle_id', 'vehicle_id')->where('dispatch_id', $this->dispatch_id);
     }
 
+    function drObservations()
+    {
+        return $this->hasMany(DrObservation::class);
+    }
+
     function getObservation($field = null): DrObservation
     {
         $field = __($field);
-        $drObs = $this->hasOne(DrObservation::class)->where('field', $field)->first();
+        $drObs = $this->drObservations->where('field', $field)->first();
 
         if (!$drObs) {
             //$user = Auth::user();
