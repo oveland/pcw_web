@@ -2,8 +2,13 @@
 
 namespace App\Console\Commands\Tests;
 
+use App\Services\AWS\RekognitionService;
+use Aws\S3\S3Client;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Http;
+
+
+use Aws\Rekognition\RekognitionClient;
 
 class TestCommand extends Command
 {
@@ -26,10 +31,16 @@ class TestCommand extends Command
      *
      * @return void
      */
+    /**
+     * @var RekognitionService
+     */
+    private $rekognitionService;
     public function __construct()
     {
         parent::__construct();
+        $this->rekognitionService = new RekognitionService();
     }
+
 
     /**
      * Execute the console command.
@@ -38,7 +49,8 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        Log::info('Hello from test command!');
-        dd('From dd');
+        $this->rekognitionService->process('asociate');
     }
+
+
 }

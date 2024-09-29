@@ -4,6 +4,7 @@
 namespace App\Models\Apps\Rocket\Traits;
 
 
+use App\Models\Apps\Rocket\PhotoAlarm;
 use App\Models\Apps\Rocket\ProfileSeat;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\Location;
@@ -11,6 +12,7 @@ use App\Models\Vehicles\Vehicle;
 use App\Services\Apps\Rocket\Photos\PhotoRekognitionService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -65,6 +67,14 @@ trait PhotoGlobals
     public function dispatchRegister()
     {
         return $this->belongsTo(DispatchRegister::class);
+    }
+
+    /**
+     * @return HasOne | PhotoAlarm
+     */
+    function alarm()
+    {
+        return $this->hasOne(PhotoAlarm::class, 'app_photo_id');
     }
 
     /**

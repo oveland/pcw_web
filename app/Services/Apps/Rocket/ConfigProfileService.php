@@ -153,9 +153,6 @@ class ConfigProfileService
 
                     271 => ['a' => 2, 'r' => 18], // CALI - PALMIRA
                     272 => ['a' => 2, 'r' => 18], // PALMIRA - CALI
-
-                    //282 => ['a' => 2, 'r' => 20], // CALI - AEROPUERTO
-                    //283 => ['a' => 2, 'r' => 20], // AEROPUERTO - CALI
                 ];
             }
 
@@ -172,8 +169,8 @@ class ConfigProfileService
                     'default' => ['countFrom' => 2, 'complementsT1' => true], // Conf por defecto a todas las rutas
                     'defaultLargeRoutes' => ['countFrom' => 10, 'complementsT1' => true], // Para rutas largas (Ver modelo Route.php función isLarge())
                     'routes' => [
-                        337 => ['countFrom' => 10, 'complementsT1' => true], // CALI - BOGOTA
-                        338 => ['countFrom' => 10, 'complementsT1' => true], // BOGOTA - CALI
+                        337 => ['countFrom' => 50, 'complementsT1' => true], // CALI - BOGOTA
+                        338 => ['countFrom' => 50, 'complementsT1' => true], // BOGOTA - CALI
                     ]
                 ];
             }

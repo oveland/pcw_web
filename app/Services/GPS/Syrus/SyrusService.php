@@ -112,13 +112,13 @@ class SyrusService
                     /*if ($vehicle->id == 1873 && intval($side) === 2) { // Corrige el giro de la c?mara vh 02 Montebello
                         $image = $image->rotate(180);
                     }*/
-
                     $process = $service->saveImageData([
+
                         'date' => $date,
                         'img' => $image->encode('data-url'),
                         'type' => 'syrus',
                         'side' => $side,
-                        'uid' => $fileName
+                        'uid' => $vehicle->id . "_" . $fileName
                     ]);
 
                     $success = $process->response->success;

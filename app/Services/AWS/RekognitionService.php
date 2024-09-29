@@ -49,6 +49,9 @@ class RekognitionService implements Recognition
     function process($type = 'persons')
     {
         switch ($type) {
+            case 'asociate':
+                return $this->asociate();
+                break;
             case 'persons':
                 return $this->persons();
                 break;
@@ -62,6 +65,53 @@ class RekognitionService implements Recognition
         }
 
         return $data;
+    }
+    function asociate()
+    {
+        var_dump('se entra aqui');
+        $startTime = '2024-08-28 11:32:40';
+        $endTime = '2024-08-28 11:42:05';
+        $dispatchRegisterId = 3483989;
+
+        // Obtener los paths de las imágenes de S3 desde la base de datos
+        $photoPaths = \DB::table('app_photos')
+            ->where('dispatch_register_id', $dispatchRegisterId)
+            ->whereBetween('date', [$startTime, $endTime])
+            ->pluck('path'); // Paths relativos al bucket de S3
+
+        $collectionId = 'mi-coleccion-de-rostros'; // ID de la colección creada previamente
+        $results = collect();
+
+        // Verifica que haya paths
+        if ($photoPaths->isEmpty()) {
+            return 'No se encontraron imágenes en el rango de tiempo especificado.';
+        }
+        var_dump('paso aqui');
+
+        foreach ($photoPaths as $path) {
+            // Asegúrate de que el path esté correctamente formateado
+            try {
+                $result = $this->rekognition->indexFaces([
+                    'CollectionId' => $collectionId, // Añadir CollectionId aquí
+                    'Image' => [
+                        'S3Object' => [
+                            'Bucket' => 'pcw-mov-storage', // Verifica que sea el bucket correcto
+                            'Name' => ltrim($path, '/'), // Asegúrate de que no tenga '/' al inicio
+                        ],
+                    ],
+                    'Attributes' => ['ALL'],
+                ]);
+
+                // Almacenar los resultados de la indexación
+                $results->push($result);
+            } catch (\Exception $e) {
+                // Registra cualquier error en los logs
+                var_dump($e->getMessage());
+                \Log::error('Error al indexar la imagen: ' . $path . ' - ' . $e->getMessage());
+            }
+        }
+
+        return $results;
     }
 
     function faces()

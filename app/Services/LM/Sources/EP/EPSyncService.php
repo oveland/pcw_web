@@ -84,7 +84,7 @@ class EPSyncService extends SyncService
 
         $activeVehicles = $this->company->activeVehicles;
         $activeVehiclesQuery = $activeVehicles
-            //->where('number', '8419')
+            //->where('number', '6011')
             ->pluck('number')
             ->map(function ($number) {
                 return "'$number'";
@@ -125,6 +125,39 @@ class EPSyncService extends SyncService
         });
 
         $this->log("End sync ticket passengers for date $dateFrom");
+    }
+
+    function route($date){
+        $dateFrom = Carbon::createFromFormat('Y-m-d', $date ?? Carbon::now()->toDateString())->toDateString();
+        $dateTo = Carbon::createFromFormat('Y-m-d', $date)->addDays(1)->toDateString();
+
+        $this->log("Start sync Routes for date $dateFrom - $dateTo");
+
+        $activeVehicles = $this->company->activeVehicles;
+        $activeVehiclesQuery = $activeVehicles
+            ->where('number', '6011')// testing 6011
+            ->pluck('number')
+            ->map(function ($number) {
+                return "'$number'";
+            })
+            ->join(', ');
+
+        $query = "
+            SELECT 
+                Codigo          route_code
+                Origen          origin,
+                Destino         destiny
+            FROM v_saturacion_expal_h_III vs
+            WHERE FechaPartida between '$dateFrom' AND '$dateTo 23:59:59'
+                AND bus IN ($activeVehiclesQuery)
+        ";
+
+        $reportTicketsByVehicleNumber = EPDB::select($query)
+            ->map(function ($report) {
+                return $report;
+            })
+            ->groupBy('vehicle_number');
+        dd($reportTicketsByVehicleNumber);
     }
 
     function newTickets()
@@ -271,7 +304,7 @@ class EPSyncService extends SyncService
 
                 $drObs = $dr->getObservation('spreadsheet_passengers_sync');
                 $drObs->value = $passengers;
-                $drObs->observation = $spreadSheet;
+                $drObs->observation = $spreadSheet !== null ? $spreadSheet : 0;;
                 $drObs->user_id = 2018101392; // Set user BOOTPCW
                 $drObs->save();
 

@@ -80,74 +80,8 @@ class ReportPhotosController extends Controller
                 if ($dr) {
                     $vehicle = $dr->vehicle;
                     $date = $dr->date;
-
-                    $data = collect([
-                        [
-                            'seat' => 1,
-                            'history' => [
-                                [
-                                    'id' => 11,
-                                    'date' => '',
-                                    'camera' => 1,
-                                    'url' => 'asasssasss',
-                                    'active' => true
-                                ],
-                                [
-                                    'id' => 12,
-                                    'date' => '',
-                                    'camera' => 1,
-                                    'url' => 'asasssasss',
-                                    'active' => true
-                                ],
-                                [
-                                    'id' => 13,
-                                    'date' => '',
-                                    'camera' => 1,
-                                    'url' => 'asasssasss',
-                                    'active' => true
-                                ]
-                            ]
-                        ],
-                        [
-                            'seat' => 2,
-                            'history' => [
-                                [
-                                    'id' => 11,
-                                    'date' => '',
-                                    'camera' => 1,
-                                    'url' => 'asasssasss',
-                                    'active' => false
-                                ],
-                                [
-                                    'id' => 12,
-                                    'date' => '',
-                                    'camera' => 1,
-                                    'url' => 'asasssasss',
-                                    'active' => false
-                                ],
-                                [
-                                    'id' => 13,
-                                    'date' => '',
-                                    'camera' => 1,
-                                    'url' => 'asasssasss',
-                                    'active' => true
-                                ]
-                            ]
-                        ],
-                        [
-                            'seat' => 3,
-                            'history' => []
-                        ],
-                        [
-                            'seat' => 4,
-                            'history' => []
-                        ],
-                    ]);
-
-
                     $persistenceActivate = $request->get('activate') ?? 3;
                     $persistenceRelease = $request->get('release') ?? 100;
-
                     $historic = collect((object)[]);
 
                     foreach ($vehicle->cameras as $vc) {
@@ -158,39 +92,31 @@ class ReportPhotosController extends Controller
                             'historic' => $h
                         ]);
                     }
-
-                    $response->historic = $historic->sortByDesc('ts')->values();
-
-
+                    $historic = $historic->sortByDesc('ts')->values();
                     $data = collect([]);
-
-                    // Organizar datos conforme a $data
-
-                    foreach ($response->historic as $h) {
+                    foreach ($historic as $h) {
 
                         foreach ($h->profileSeating as $ps) {
-                            dd($ps);
-                            $seat = $ps->number;
-
+                            $seat = $ps['number'];
                             $dataH = collect([]);
                             foreach ($h->historic as $hh) {
                                 $dataH->push([
-                                    'id' => 11,
-                                    'date' => '',
-                                    'camera' => 1,
-                                    'url' => 'asasssasss',
-                                    'active' => collect($hh->details->occupation->seatingActivate)->contains($seat)
+                                    'id' => $hh->id,
+                                    'date' => $hh->details->date,
+                                    'camera' => $hh->camera,
+                                    'url' => $hh->details->url,
+                                    'active' => collect(explode(', ',$hh->details->occupation->seatingActivatedStr))->contains($seat)
                                 ]);
                             }
 
                             $data->push([
                                 'seat' => $seat,
-                                'history' => $dataH
+                                'history' => $dataH->take(2)
                             ]);
                         }
                     }
+                    $response->data = $data;
 
-                    dd($response->historic);
                 } else {
                     $response->success = false;
                     $response->message = __('Dispatch register not found');
@@ -292,7 +218,6 @@ class ReportPhotosController extends Controller
                     foreach ($response->historic as $h) {
 
                         foreach ($h->profileSeating as $ps) {
-                            dd($ps);
                             $seat = $ps->number;
 
                             $dataH = collect([]);

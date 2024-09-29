@@ -76,7 +76,10 @@ class SyncCommand extends Command
                 foreach ($vehicles as $vehicle) {
                     $this->sync->checkVehicleParams($vehicle);
                 }
-            } else {
+            } else if ($type === 'route') {
+                dump('entra por route');
+                $this->sync->$type($this->option('date'));
+            }else {
                 if ($type == 'tickets') $this->sync->$type($this->option('date'));
                 else $this->sync->$type();
             }

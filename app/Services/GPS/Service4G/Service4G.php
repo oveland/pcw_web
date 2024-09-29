@@ -39,8 +39,8 @@ class Service4G extends SyrusService
         $this->setStatus($imei, true);
 
         $service = new PhotoService();
-
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
+
 
         if (!$gpsVehicle) return collect([
             'success' => false,
@@ -58,7 +58,13 @@ class Service4G extends SyrusService
             'success' => true,
             'message' => "Success sync 4G",
         ]);
+
         $deviceID = $gpsVehicle->device_id;
+       /* if ($imei=='352557104788503'){
+            $date4G = '2024-06-17';
+        }else{
+            $date4G = carbon::now()->toDateString();
+        }*/
         $date4G = carbon::now()->toDateString();
         $path = "$deviceID/$date4G";
         $response->put('imei', $imei);
@@ -83,38 +89,48 @@ class Service4G extends SyrusService
                 } catch (Exception $e) {
 
                 }
-
-                $date = Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString();
-
-                $photoEvent = PhotoEvent::whereImei($imei)->whereUid($fileName)->first();
-                if ($photoEvent) {
-                    $date = $photoEvent->date->toDateTimeString();
+                $fileNames = explode('_', $fileName);
+                // Verificar si el fragmento de la fecha está en $fileNames[2] o $fileNames[3]
+                if (isset($fileNames[2]) && preg_match('/^\d{14}$/', $fileNames[2])) {
+                    $dateImag = Carbon::createFromFormat("YmdHis", $fileNames[2])->toDateTimeString();
+                } elseif (isset($fileNames[3]) && preg_match('/^\d{14}$/', $fileNames[3])) {
+                    $dateImag = Carbon::createFromFormat("YmdHis", $fileNames[3])->toDateTimeString();
                 }
+
+                $date = ($dateImag === '')
+                    ? Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString()
+                    : $dateImag;
+
+
 
                 if (!$fileHasError) {
                     $image = Image::make($storage->get($file));
 
-                    $process = $service->saveImageData([
-                        'date' => $date,
-                        'img' => $image->encode('data-url'),
-                        'type' => 'syrus',
-                        'side' => $side,
-                        'uid' => $fileName
-                    ]);
 
+                        $process = $service->saveImageData([
+                            'date' => $date,
+                            'img' => $image->encode('data-url'),
+                            'type' => 'syrus',
+                            'side' => $side,
+                            'uid' => $vehicle->id . "_" . $fileName
+                        ]);
+
+                    $success = $process->response->success;
+                    $message = $process->response->message;
                     $extra = "";
-                    if ($process->response->success === true) {
-                        $storage->delete($file);
-                        if ($photoEvent) $photoEvent->delete();
+                    if ($success === true) {
+                        $deleted = $storage->delete($file);
+                        if (!$deleted) $extra = ". Error photo NOT deleted!";
+                        $message .= $extra;
                     } else {
-                        $extra = $process->response->message;
+                        $extra = $message;
                     }
                     $this->log("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra");
-
-                    $saveFiles->push($process->response->message);
+                    $response['success'] = $success;
+                    $response['message'] = $message;
+                    $saveFiles->push($message);
                 } else {
                     $storage->delete($file);
-                    if ($photoEvent) $photoEvent->delete();
                 }
             }
         }
@@ -129,6 +145,72 @@ class Service4G extends SyrusService
     function getSide($fileName, $imei)
     {
         $fileNames = explode('_', $fileName);
+        if ($imei== '352557104727600'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '3';
+            if ($fileNames[1] == 'ch4') return '4';
+            if ($fileNames[1] == 'ch5') return '5';
+            if ($fileNames[1] == 'ch6') return '6';
+        }
+
+        if ($imei== '352557104791564'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '3';
+            if ($fileNames[1] == 'ch4') return '4';
+            if ($fileNames[1] == 'ch5') return '5';
+            if ($fileNames[1] == 'ch6') return '6';
+        }
+
+        if ($imei== '352557104555559'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '3';
+            if ($fileNames[1] == 'ch4') return '4';
+            if ($fileNames[1] == 'ch5') return '5';
+            if ($fileNames[1] == 'ch6') return '6';
+        }
+
+        if ($imei== '352557104831642'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '3';
+            if ($fileNames[1] == 'ch4') return '4';
+            if ($fileNames[1] == 'ch5') return '5';
+            if ($fileNames[1] == 'ch6') return '6';
+        }
+
+        if ($imei== '352557104788503'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '3';
+            if ($fileNames[1] == 'ch4') return '4';
+            if ($fileNames[1] == 'ch5') return '5';
+            if ($fileNames[1] == 'ch6') return '6';
+        }
+        if ($imei== '352557104839116'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '3';
+            if ($fileNames[1] == 'ch4') return '4';
+            if ($fileNames[1] == 'ch5') return '5';
+            if ($fileNames[1] == 'ch6') return '6';
+            if ($fileNames[1] == 'ch7') return '7';
+            if ($fileNames[1] == 'ch8') return '8';
+        }
+        if ($imei== '352557104723690'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '3';
+            if ($fileNames[1] == 'ch4') return '4';
+            if ($fileNames[1] == 'ch5') return '5';
+            if ($fileNames[1] == 'ch6') return '6';
+            if ($fileNames[1] == 'ch7') return '7';
+            if ($fileNames[1] == 'ch8') return '8';
+        }
+
+
         if ($imei == '352557104727915' ) {
             if ($fileNames[2] == 'ch1') return '1';
             if ($fileNames[2] == 'ch2') return '2';
@@ -154,13 +236,13 @@ class Service4G extends SyrusService
             if ($fileNames[2] == 'ch7') return '7';
             if ($fileNames[2] == 'ch8') return '7';
         }
-        if ($fileNames[2] == 'ch1') return '1';
-        if ($fileNames[2] == 'ch2') return '2';
-        if ($fileNames[2] == 'ch3') return '3';
-        if ($fileNames[2] == 'ch4') return '4';
-        if ($fileNames[2] == 'ch5') return '5';
-        if ($fileNames[2] == 'ch6') return '6';
-        if ($fileNames[2] == 'ch7') return '7';
+        if ($fileNames[1] == 'ch1') return '1';
+        if ($fileNames[1] == 'ch2') return '2';
+        if ($fileNames[1] == 'ch3') return '3';
+        if ($fileNames[1] == 'ch4') return '4';
+        if ($fileNames[1] == 'ch5') return '5';
+        if ($fileNames[1] == 'ch6') return '6';
+        if ($fileNames[1] == 'ch7') return '7';
 
 
         return '0';
