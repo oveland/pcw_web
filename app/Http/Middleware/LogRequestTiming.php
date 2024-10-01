@@ -3,18 +3,39 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Log;
 
 class LogRequestTiming
 {
     /**
-     * Handle an incoming request.
-     *
+     * Manejar una solicitud entrante.
+     *F
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        // Registrar el tiempo de inicio
+        $startTime = microtime(true);
+
+        // Ejecutar la solicitud
+        $response = $next($request);
+
+        // Calcular el tiempo que tomó la solicitud
+        $duration = microtime(true) - $startTime;
+
+        // Registrar los detalles de la solicitud y el tiempo de respuesta
+        Log::info('Solicitud a la API:', [
+            'url' => $request->fullUrl(),
+            'method' => $request->method(),
+            'params' => $request->all(),
+            'ip' => $request->ip(),
+            'user_agent' => $request->header('User-Agent'),
+            'duration' => $duration . ' segundos',
+            'status_code' => $response->getStatusCode(),
+        ]);
+
+        return $response;
     }
 }

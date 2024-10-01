@@ -102,4 +102,8 @@ class Kernel extends ConsoleKernel
     {
         require base_path('routes/console.php');
     }
+    protected $middleware = [
+        // Otros middlewares
+        \App\Http\Middleware\LogRequestTiming::class,
+    ];
 }
