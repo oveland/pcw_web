@@ -132,7 +132,8 @@ class User extends Authenticatable
     {
         return $this->id == 2018101286 || $this->id == 2018101362 || $this->id == 2018101369 || $this->id == 2018101372 || $this->id == 2018101377
             || $this->id == 2018101383 || $this->id == 2018101382 || $this->id == 2018101381 || $this->id == 2018101380
-            || $this->id == 2018101379 || $this->id == 2018101378 || $this->id == 2018101409 || $this->id ==2018101356 ||$this->id == 2018101394 || $this->id == 2018101367 ;
+            || $this->id == 2018101379 || $this->id == 2018101378 || $this->id == 2018101409 || $this->id ==2018101356 ||$this->id == 2018101394
+            || $this->id == 2018101367 || $this->id == 2018101420 || $this->id == 2018101421 || $this->id == 2018101425;
     }
 
     public function liquidatorEP()
@@ -145,6 +146,11 @@ class User extends Authenticatable
         $isNotExpreso = !$this->isExpreso();
         $isNotLiquidatorEP = !$this->liquidatorEP();
         return $isNotExpreso && $isNotLiquidatorEP;
+    }
+    function canDeleteDispatch()
+    {
+        $isNotExpreso = !$this->isExpreso();
+        return $isNotExpreso;
     }
     function canViewAction(){
         $isNotLiquidatorEP = !$this->liquidatorEP();
@@ -347,6 +353,8 @@ class User extends Authenticatable
 
             #EXPRESO PALMIRA:
             2018101286, //yuri
+            2018101425, //AngieLorena
+            2018101420, //yesenia
             2018101362,  // Paola
             2018101369, // henny
             2018101372, // Dora
@@ -360,6 +368,7 @@ class User extends Authenticatable
             2018101378,
             2018101398,
             2018101409,
+            2018101421,
 
 
 
@@ -382,6 +391,8 @@ class User extends Authenticatable
 
             #EXPRESO PALMIRA:
             2018101286, // Yuri
+            2018101425, // Angie Lorena
+            2018101420, // yesenia
             2018101362, // Paola
             2018101369, //henny
             2018101372, //Dora
@@ -394,6 +405,7 @@ class User extends Authenticatable
             2018101380,
             2018101379,
             2018101378,
+            2018101421,
 
         ];
 

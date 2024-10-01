@@ -28,6 +28,7 @@ class RouteExportEPService extends RouteExportService
         $fileName = str_replace('-', '', str_replace(' ', '_', $fileName));
 
         $excelFile = Excel::create($fileName, function ($excel) use ($vehiclesDispatchRegisters, $dateReport, $dateEndReport) {
+            $tariffPassenger =[];
 
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
                 $vehicle = Vehicle::find($vehicleId);
@@ -49,7 +50,14 @@ class RouteExportEPService extends RouteExportService
                     $username = $drObservation->user ? $drObservation->user->name : '';
                     $roundTrip = $iteration + 1;
                     $nameRute = "";
+
                     $tariffPassenger = $dispatchRegister->route->tariff->passenger;
+                    if (in_array($dispatchRegister->route->id, [280, 279])) {
+                        if (in_array($dispatchRegister->date, ["2024-04-02", "2024-04-01","2024-04-03", "2024-03-31"])){
+                            $tariffPassenger=4500;
+                        }
+                    }
+
                     $routeId = $dispatchRegister->route_id;
 
                     switch ($routeId){
@@ -187,7 +195,7 @@ class RouteExportEPService extends RouteExportService
                             __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
                             __('Status') => $dispatchRegister->status,                                                      # G CELL
                             __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
-                            __('Valor pasaje') => '',                                                                       # I CELL
+                            __('Valor pasaje') => intval($totalRoundTrip) * $tariffPassenger,                                                                       # I CELL
                             __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
                             __('Pasajeros planilla') => $passengerSpreadsheet,                                                              # J CELL
                             __('#sensor') => $dispatchRegister->final_sensor_counter,                                                                     # K CELL
@@ -205,11 +213,12 @@ class RouteExportEPService extends RouteExportService
                             __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
                             __('Status') => $dispatchRegister->status,                                                      # G CELL
                             __('Pass.') . " " . __('visual') => intval($totalRoundTrip),                           # H CELL
-                            __('Valor pasaje') => '',
+                            __('Valor pasaje') => intval($totalRoundTrip) * $tariffPassenger,
                             __('Total sistema') => $TotalSystema,
                             __('FICS') => $spreadsheetPassengersSync ?? 0,
                             __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
                             __('Usuario') => $username,
+                            __('id') => $route->id
                         ];
                     }
 
@@ -229,7 +238,8 @@ class RouteExportEPService extends RouteExportService
                     'data' => $dataExcel,
                     'type' => 'routeReportByVehicle',
                     'tariff' => $tariffPassenger,
-                    'nameRute' => $nameRute
+                    'nameRute' => $nameRute,
+                    'routeID' =>$route->id
                 ];
 
                 /* SHEETS */

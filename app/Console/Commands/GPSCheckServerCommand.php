@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Log;
 class GPSCheckServerCommand extends Command
 {
     const ALERT_SMS_NUMBERS = [
-        3145224312,
-        3108844273
+        //3145224312,
+        3108844273,
+        3117132662
     ];
 
     private $issues = [];
@@ -54,7 +55,6 @@ class GPSCheckServerCommand extends Command
     public function handle()
     {
         $this->issues = collect([]);
-
         $this->checkGPSServer();
 //        $this->checkRecognitionServer();
 
@@ -124,7 +124,6 @@ class GPSCheckServerCommand extends Command
             if ($response->getStatusCode() == 200) $isServerOK = true;
         } catch (\Exception $x) {
         }
-
         if (!$isServerOK) {
             $this->issues->push("GPS server is down! $this->now");
         }
@@ -170,3 +169,4 @@ class GPSCheckServerCommand extends Command
         Log::info($message);
     }
 }
+

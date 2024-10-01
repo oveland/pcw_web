@@ -218,10 +218,13 @@ class DispatchRegister extends Model
         return Carbon::createFromFormat(config('app.date_format'), explode(' ', $date)[0])->toDateString();
     }
 
-    function getDateEndAttribute($dateEnd) {
+    function getDateEndAttribute($dateEnd) { //$dr->date_end
         if (!$dateEnd) {
             $dateEndSchedule = collect(DB::select("SELECT ('$this->date'::DATE + (SELECT get_route_total_time_from_dispatch_time(('$this->date $this->departure_time') :: TIMESTAMP, $this->route_id))::INTERVAL)::DATE date_end"))->first()->date_end;
             $dateEnd = $dateEndSchedule;
+        }
+        if ($dateEnd == null){
+            $dateEnd = $this->date;
         }
 
         return Carbon::createFromFormat(strstr($dateEnd, '/') ? 'd/m/Y' : 'Y-m-d', $dateEnd)->toDateString();
@@ -1126,7 +1129,7 @@ class DispatchRegister extends Model
         $initialTime = $this->departure_time;
         $finalTime = $this->complete() ? $this->arrival_time : $this->arrival_time_scheduled;
 
-        $startTime = StrTime::subStrTime($initialTime, '10:00');
+        $startTime = StrTime::addStrTime($initialTime, '05:00');
         $endTime = StrTime::addStrTime($finalTime, '10:00');
 
         $start = $this->parseDateTime("$startDate $startTime");

@@ -185,9 +185,15 @@ class PCWRouteService implements APIWebInterface
                     $totalPassengers = $totalPassengersmax;
                 }
             }
+            $tariffPassenger = $d->route->tariff->passenger;
 
             // TODO: Cambiar cuando se haga recaudo:
-            $tariffPassenger = $d->route->tariff->passenger;
+            if (in_array($d->route->id, [280, 279])) {
+                if (in_array($d->date, ["2024-05-02", "2024-05-01","2024-04-30", "2024-04-29"])){
+                    $tariffPassenger=3000;
+                }
+            }
+           // $tariffPassenger = $d->route->tariff->passenger;
             $totalProduction = $tariffPassenger * $totalPassengers;
 
             return [

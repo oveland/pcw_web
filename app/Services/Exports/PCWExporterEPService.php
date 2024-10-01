@@ -225,7 +225,18 @@ class PCWExporterEPService extends PCWExporterService
                     $sheet->setCellValue("N$i", "=M$i+" . (($i > $starData) ? ("N" . ($i - 1)) : "0"));
                 }*/
                 for ($i = $starData; $i < $lastRow; $i++) {
-                    $sheet->setCellValue("I$i", "=H$i*".intval($config->tariff));
+                    $routeId = $sheet->getCell("N$i")->getValue();
+                    $date = $sheet->getCell("A$i")->getValue();
+                    $hour = ($sheet->getCell("D$i")->getValue());
+
+                    /*$tariff = $config->tariff;
+
+                    if (in_array($routeId, [279, 280]) && in_array($date, ["2024-05-02", "2024-05-01","2024-04-30", "2024-04-29"])) {
+                        $tariff = 3000;
+                    }
+                  
+                    $sheet->setCellValue("I$i", "=H$i*$tariff");*/
+
                 }
 
                 $sheet->setCellValue("G$position", "TOTALES");

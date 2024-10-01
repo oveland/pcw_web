@@ -9,12 +9,12 @@
                     </a>
                 </li>
                 @if( $simGPSList )
-                <li class="">
-                    <a href="#tab-2" data-toggle="tab">
-                        <i class="fa fa-podcast"></i>
-                        @lang('Manage SIM GPS')
-                    </a>
-                </li>
+                    <li class="">
+                        <a href="#tab-2" data-toggle="tab">
+                            <i class="fa fa-podcast"></i>
+                            @lang('Manage SIM GPS')
+                        </a>
+                    </li>
                 @endif
             </ul>
             <div class="tab-content m-b-0 p-40">
@@ -35,18 +35,23 @@
                                 <div class="col-md-12">
                                     <div class="m-b-15 col-md-12 p-0">
                                         @if( $simGPSList )
-                                            <select id="sim-gps" name="sim-gps[]" class="form-control select default-select2 col-md-12" multiple>
+                                            <select id="sim-gps" name="sim-gps[]"
+                                                    class="form-control select default-select2 col-md-12" multiple>
                                                 @foreach($simGPSList as $simGPS)
-                                                    <option value="{{ $simGPS->sim }}" {{ in_array($simGPS->vehicle->number,$selection) ?'selected':'' }}
-                                                    data-reset-command="{{ $simGPS->getResetCommand() }}"
+                                                    <option value="{{ $simGPS->sim }}"
+                                                            {{ in_array($simGPS->vehicle->number,$selection) ?'selected':'' }}
+                                                            data-reset-command="{{ $simGPS->getResetCommand() }}"
                                                             data-gps-type="{{ $simGPS->gps_type }}"
                                                             data-vehicle-id="{{ $simGPS->vehicle->id ?? null }}">
-                                                        {{ $simGPS->gps_type }}: #{{ $simGPS->vehicle->number ?? 'NONE'  }} ({{ $simGPS->vehicle->plate ?? 'NONE'  }})
+                                                        {{ $simGPS->gps_type }}:
+                                                        #{{ $simGPS->vehicle->number ?? 'NONE'  }}
+                                                        ({{ $simGPS->vehicle->plate ?? 'NONE'  }})
                                                     </option>
                                                 @endforeach
                                             </select>
                                         @else
-                                            <input id="sim-gps" name="sim-gps" type="text" class="form-control" data-any-gps="true" data-gps-type="SKYPATROL">
+                                            <input id="sim-gps" name="sim-gps" type="text" class="form-control"
+                                                   data-any-gps="true" data-gps-type="SKYPATROL">
                                         @endif
                                     </div>
                                 </div>
@@ -57,12 +62,17 @@
                                         <div class="col-md-12">
                                             @if( $gpsReport != 'all' )
                                                 @if(Auth::user()->canSendSMS())
-                                                    <button type="button" class="btn btn-warning m-b-10 btn-sm btn-submit pull-right" data-toggle="modal" data-target="#modal-show-sms-console">
-                                                        <i class="fa fa-paper-plane" aria-hidden="true"></i> @lang('GPS Command')
+                                                    <button type="button"
+                                                            class="btn btn-warning m-b-10 btn-sm btn-submit pull-right"
+                                                            data-toggle="modal" data-target="#modal-show-sms-console">
+                                                        <i class="fa fa-paper-plane"
+                                                           aria-hidden="true"></i> @lang('GPS Command')
                                                     </button>
                                                 @endif
                                             @else
-                                                <small class="pull-right">Para enviar comandos debe seleccionar un modelo GPS</small><hr>
+                                                <small class="pull-right">Para enviar comandos debe seleccionar un
+                                                    modelo GPS</small>
+                                                <hr>
                                             @endif
                                             <label class="control-label">
                                                 <i class="fa fa-podcast faa-burst animated"></i>
@@ -70,7 +80,8 @@
                                             </label>
                                         </div>
                                         <div class="col-md-12">
-                                            <pre class="col-md-12 text-info status-gps-container text-center" style="overflow: auto">@lang('Select a SIM number')</pre>
+                                            <pre class="col-md-12 text-info status-gps-container text-center"
+                                                 style="overflow: auto">@lang('Select a SIM number')</pre>
                                         </div>
                                     @endif
                                 </div>
@@ -78,182 +89,217 @@
                         </div>
 
                         @if( $gpsReport != 'all' && Auth::user()->canSendSMS() )
-                        <div class="modal fade" id="modal-show-sms-console">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                        <h4 class="modal-title">@lang('SMS Console')</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <!-- begin nav-pills -->
-                                                <ul class="nav nav-pills nav-pills-inverse nav-justified">
-                                                    <li class="active">
-                                                        <a href="#nav-pills-justified-1" data-toggle="tab">
-                                                            <i class="fa fa-envelope"></i> @lang('GPS Command')
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#nav-pills-justified-2" data-toggle="tab" class="tab-console-log">
-                                                            <i class="fa fa-code"></i> @lang('Console log')
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                                <!-- end nav-pills -->
-                                                <!-- begin tab-content -->
-                                                <div class="tab-content panel row m-0 p-t-5">
-                                                    <div class="tab-pane fade active in" id="nav-pills-justified-1">
-                                                        <div class="col-md-12">
-                                                            <div class="btn-group">
-                                                                <button type="submit" class="btn btn-success btn-sm btn-submit">
-                                                                    @lang('Send') <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                                                                </button>
-                                                                <button data-toggle="dropdown" class="btn btn-success btn-sm dropdown-toggle" aria-expanded="false">
-                                                                    <span class="caret"></span>
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    @if( Auth::user()->canSendSMS(true) )
-                                                                        @if( $gpsReport === \App\Models\Vehicles\SimGPS::SKYPATROL )
-                                                                        <li>
-                                                                            <a href="javascript:getScript('general-skypatrol-8750+')">
-                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Skypatrol TT8750+')
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="javascript:getScript('apn-skypatrol-8750+')">
-                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('APN Skypatrol TT8750+')
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="javascript:getScript('ip-skypatrol-8750+')">
-                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('IP Skypatrol TT8750+')
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="javascript:getScript('plate-skypatrol-8750+')">
-                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('ID GPS Skypatrol TT8750+')
-                                                                            </a>
-                                                                        </li>
-                                                                        <li class="divider"></li>
-                                                                        <li>
-                                                                            <a href="javascript:getScript('new-skypatrol-8750+')">
-                                                                                <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('Instrucciones generales')
-                                                                            </a>
-                                                                        </li>
-                                                                        <li class="divider"></li>
-                                                                        @endif
-                                                                        @if( $gpsReport === \App\Models\Vehicles\SimGPS::SKYPATROL_OLD )
-                                                                            <li>
-                                                                                <a href="javascript:getScript('general-skypatrol-8750')">
-                                                                                    <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Skypatrol TT8750')
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="javascript:getScript('apn-skypatrol-8750')">
-                                                                                    <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('APN Skypatrol TT8750')
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="javascript:getScript('ip-skypatrol-8750')">
-                                                                                    <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('IP Skypatrol TT8750')
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="javascript:getScript('id-skypatrol-8750')">
-                                                                                    <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('ID GPS Skypatrol TT8750')
-                                                                                </a>
-                                                                            </li>
-                                                                            <li class="divider"></li>
-                                                                        @endif
-                                                                        @if( $gpsReport === \App\Models\Vehicles\SimGPS::COBAN )
-                                                                        <li>
-                                                                            <a href="javascript:getScript('apn-claro-coban')">
-                                                                                <i class="fa fa-podcast text-danger" aria-hidden="true"></i> @lang('Script Coban - CLARO')
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="javascript:getScript('apn-movistar-coban')">
-                                                                                <i class="fa fa-podcast text-info" aria-hidden="true"></i> @lang('Script Coban - MOVISTAR')
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="javascript:getScript('apn-avantel-coban')">
-                                                                                <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Coban - AVANTEL')
-                                                                            </a>
-                                                                        </li>
-                                                                        <li class="divider"></li>
-                                                                        @endif
-                                                                        @if( $gpsReport === \App\Models\Vehicles\SimGPS::RUPTELA )
-                                                                            <li>
-                                                                                <a href="javascript:getScript('ip-ruptela')">
-                                                                                    <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | Migrate 1°
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="javascript:getScript('connection-report-ruptela')">
-                                                                                    <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | Migrate 2°
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="javascript:getScript('time-report-ruptela')">
-                                                                                    <i class="fa fa-podcast text-purple" aria-hidden="true"></i> @lang('Script Ruptela') | @lang('Time report')
-                                                                                </a>
-                                                                            </li>
-                                                                            <li class="divider"></li>
+                            <div class="modal fade" id="modal-show-sms-console">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                ×
+                                            </button>
+                                            <h4 class="modal-title">@lang('SMS Console')</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <!-- begin nav-pills -->
+                                                    <ul class="nav nav-pills nav-pills-inverse nav-justified">
+                                                        <li class="active">
+                                                            <a href="#nav-pills-justified-1" data-toggle="tab">
+                                                                <i class="fa fa-envelope"></i> @lang('GPS Command')
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#nav-pills-justified-2" data-toggle="tab"
+                                                               class="tab-console-log">
+                                                                <i class="fa fa-code"></i> @lang('Console log')
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <!-- end nav-pills -->
+                                                    <!-- begin tab-content -->
+                                                    <div class="tab-content panel row m-0 p-t-5">
+                                                        <div class="tab-pane fade active in" id="nav-pills-justified-1">
+                                                            <div class="col-md-12">
+                                                                <div class="btn-group">
+                                                                    <button type="submit"
+                                                                            class="btn btn-success btn-sm btn-submit">
+                                                                        @lang('Send') <i class="fa fa-paper-plane"
+                                                                                         aria-hidden="true"></i>
+                                                                    </button>
+                                                                    <button data-toggle="dropdown"
+                                                                            class="btn btn-success btn-sm dropdown-toggle"
+                                                                            aria-expanded="false">
+                                                                        <span class="caret"></span>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        @if( Auth::user()->canSendSMS(true) )
+                                                                            @if( $gpsReport === \App\Models\Vehicles\SimGPS::SKYPATROL )
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('general-skypatrol-8750+')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('Script Skypatrol TT8750+')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('apn-skypatrol-8750+')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('APN Skypatrol TT8750+')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('ip-skypatrol-8750+')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('IP Skypatrol TT8750+')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('plate-skypatrol-8750+')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('ID GPS Skypatrol TT8750+')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('new-skypatrol-8750+')">
+                                                                                        <i class="fa fa-podcast text-danger"
+                                                                                           aria-hidden="true"></i> @lang('Instrucciones generales')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                            @endif
+                                                                            @if( $gpsReport === \App\Models\Vehicles\SimGPS::SKYPATROL_OLD )
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('general-skypatrol-8750')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('Script Skypatrol TT8750')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('apn-skypatrol-8750')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('APN Skypatrol TT8750')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('ip-skypatrol-8750')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('IP Skypatrol TT8750')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('id-skypatrol-8750')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('ID GPS Skypatrol TT8750')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                            @endif
+                                                                            @if( $gpsReport === \App\Models\Vehicles\SimGPS::COBAN )
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('apn-claro-coban')">
+                                                                                        <i class="fa fa-podcast text-danger"
+                                                                                           aria-hidden="true"></i> @lang('Script Coban - CLARO')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('apn-movistar-coban')">
+                                                                                        <i class="fa fa-podcast text-info"
+                                                                                           aria-hidden="true"></i> @lang('Script Coban - MOVISTAR')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('apn-avantel-coban')">
+                                                                                        <i class="fa fa-podcast text-purple"
+                                                                                           aria-hidden="true"></i> @lang('Script Coban - AVANTEL')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                            @endif
+                                                                            @if( $gpsReport === \App\Models\Vehicles\SimGPS::RUPTELA )
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('ip-ruptela')">
+                                                                                        <i class="fa fa-podcast text-purple"
+                                                                                           aria-hidden="true"></i> @lang('Script Ruptela')
+                                                                                        | Migrate 1°
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('connection-report-ruptela')">
+                                                                                        <i class="fa fa-podcast text-purple"
+                                                                                           aria-hidden="true"></i> @lang('Script Ruptela')
+                                                                                        | Migrate 2°
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="javascript:getScript('time-report-ruptela')">
+                                                                                        <i class="fa fa-podcast text-purple"
+                                                                                           aria-hidden="true"></i> @lang('Script Ruptela')
+                                                                                        | @lang('Time report')
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                            @endif
+
                                                                         @endif
 
-                                                                    @endif
-
-                                                                    <li>
-                                                                        <a href="javascript:;" class="set-reset-command">
-                                                                            <i class="fa fa-undo text-primary" aria-hidden="true"></i>
-                                                                            @lang('Reset Command')
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="divider"></li>
-                                                                    <li>
-                                                                        <a href="javascript:$('#command-gps').val('');">
-                                                                            <i class="fa fa-trash text-danger" aria-hidden="true"></i> @lang('Clear')
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                            <div class="btn-group" style="
+                                                                        <li>
+                                                                            <a href="javascript:;"
+                                                                               class="set-reset-command">
+                                                                                <i class="fa fa-undo text-primary"
+                                                                                   aria-hidden="true"></i>
+                                                                                @lang('Reset Command')
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="divider"></li>
+                                                                        <li>
+                                                                            <a href="javascript:$('#command-gps').val('');">
+                                                                                <i class="fa fa-trash text-danger"
+                                                                                   aria-hidden="true"></i> @lang('Clear')
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="btn-group" style="
                                                                 border-left: 1px solid lightgray;
                                                                 margin-left: 20px;
                                                                 padding-left: 20px;
                                                             ">
-                                                                <div class="checkbox">
-                                                                    <label title="Establece el Id del dispositivo por defecto como el campo Imei configurado en plataforma">
-                                                                        <input name="auto-set-plate" type="checkbox" value="true" checked style="margin-left: -15px;">
-                                                                        @lang('Auto set GPS ID')
-                                                                    </label>
+                                                                    <div class="checkbox">
+                                                                        <label title="Establece el Id del dispositivo por defecto como el campo Imei configurado en plataforma">
+                                                                            <input name="auto-set-plate" type="checkbox"
+                                                                                   value="true" checked
+                                                                                   style="margin-left: -15px;">
+                                                                            @lang('Auto set GPS ID')
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
+                                                                <label for="command-gps"
+                                                                       class="control-label col-md-12 field-required text-right">@lang('Commands')</label>
+                                                                <textarea id="command-gps"
+                                                                          {{ Auth::user()->isSuperAdmin() ? "" : "readonly" }} name="command-gps"
+                                                                          class="form-control pre" rows="40"
+                                                                          placeholder="@lang('Type here the commands')"></textarea>
                                                             </div>
-                                                            <label for="command-gps" class="control-label col-md-12 field-required text-right">@lang('Commands')</label>
-                                                            <textarea id="command-gps" {{ Auth::user()->isSuperAdmin() ? "" : "readonly" }} name="command-gps" class="form-control pre" rows="40" placeholder="@lang('Type here the commands')"></textarea>
+                                                        </div>
+                                                        <div class="tab-pane fade" id="nav-pills-justified-2">
+                                                            <i class="fa fa-envelope faa-horizontal animated"></i> @lang('SMS Response')
+                                                            <hr class="hr">
+                                                            <pre class="pre sms-response-container"></pre>
                                                         </div>
                                                     </div>
-                                                    <div class="tab-pane fade" id="nav-pills-justified-2">
-                                                        <i class="fa fa-envelope faa-horizontal animated"></i> @lang('SMS Response')
-                                                        <hr class="hr">
-                                                        <pre class="pre sms-response-container"></pre>
-                                                    </div>
+                                                    <!-- end tab-content -->
                                                 </div>
-                                                <!-- end tab-content -->
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn width-100 btn-default btn-rounded btn-sm" data-dismiss="modal">
-                                            <i class="fa fa-undo"></i> @lang('Close')
-                                        </button>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn width-100 btn-default btn-rounded btn-sm"
+                                                    data-dismiss="modal">
+                                                <i class="fa fa-undo"></i> @lang('Close')
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @endif
                     </form>
                 </div>
@@ -263,15 +309,19 @@
                         <div class="panel panel-inverse">
                             <div class="panel-heading">
                                 <div class="panel-heading-btn pull-rigth">
-                                    <a class="btn btn-sm btn-icon btn-rounded btn-lime" data-toggle="modal" data-target="#modal-create-sim-gps">
+                                    <a class="btn btn-sm btn-icon btn-rounded btn-lime" data-toggle="modal"
+                                       data-target="#modal-create-sim-gps">
                                         <i class="icon-plus"></i> @lang('Create')
                                     </a>
-                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                                       data-click="panel-expand"><i class="fa fa-expand"></i></a>
                                 </div>
                                 <div class="navbar-form form-input-flat pull-right m-0">
                                     <div class="form-group">
-                                        <input type="text" class="form-control input-sm input-search-vehicle" placeholder="@lang('Search vehicle')">
-                                        <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+                                        <input type="text" class="form-control input-sm input-search-vehicle"
+                                               placeholder="@lang('Search vehicle')">
+                                        <button type="submit" class="btn btn-search"><i class="fa fa-search"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <h4 class="panel-title">
@@ -310,7 +360,8 @@
                                         </th>
                                         <th class="text-center">
                                             <i class="fa fa-calendar"></i><br>
-                                            @lang('Created')<hr class="hr">@lang('Updated')
+                                            @lang('Created')
+                                            <hr class="hr">@lang('Updated')
                                         </th>
                                         <th class="text-center">
                                             <i class="fa fa-cogs"></i><br>
@@ -322,7 +373,8 @@
                                     @foreach($simGPSList as $simGPS)
                                         @php( $vehicle = $simGPS->vehicle )
                                         @php( $gpsVehicle = $vehicle->gpsVehicle )
-                                        <tr id="detail-{{ $simGPS->id }}" class="vehicle-list" data-vehicle-number="{{ $vehicle->number ?? '' }}">
+                                        <tr id="detail-{{ $simGPS->id }}" class="vehicle-list"
+                                            data-vehicle-number="{{ $vehicle->number ?? '' }}">
                                             @include('admin.gps.manage.gpsVehicleDetail')
                                         </tr>
                                         <tr id="edit-{{ $simGPS->id }}" class="hide">
@@ -336,12 +388,15 @@
                         <!-- end panel -->
 
                         <div class="modal fade" id="modal-create-sim-gps">
-                            <form id="form-create-sim-gps" action="{{ route('admin-gps-manage-create-sim-gps') }}" class="form-create-sim-gps">
+                            <form id="form-create-sim-gps" action="{{ route('admin-gps-manage-create-sim-gps') }}"
+                                  class="form-create-sim-gps">
                                 <input type="hidden" id="create-register" value="">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                ×
+                                            </button>
                                             <h4 class="modal-title">@lang('Create register')</h4>
                                         </div>
                                         <div class="modal-body">
@@ -350,17 +405,21 @@
                                                 <div class="col-md-8 col-md-offset-1">
                                                     <div class="form-group">
                                                         <div class="text-right col-md-5">
-                                                            <label for="vehicle_id" class="control-label field-required">
+                                                            <label for="vehicle_id"
+                                                                   class="control-label field-required">
                                                                 @lang('Vehicle')
                                                             </label>
                                                             <i class="fa fa-car"></i>
                                                         </div>
                                                         <div class="input-group col-md-7">
-                                                            <select id="vehicle_id" name="vehicle_id" class="default-select2 form-control input-sm" title="@lang('Vehicle')"
+                                                            <select id="vehicle_id" name="vehicle_id"
+                                                                    class="default-select2 form-control input-sm"
+                                                                    title="@lang('Vehicle')"
                                                                     onchange="$('#create-imei').val($(this).find('option:selected').data('plate'))">
                                                                 <option value="">@lang('Select an option')</option>
                                                                 @foreach( $unAssignedVehicles as $vehicle )
-                                                                    <option data-plate="{{ $vehicle->plate }}" value="{{ $vehicle->id }}">{{ "#$vehicle->number | $vehicle->plate" }}</option>
+                                                                    <option data-plate="{{ $vehicle->plate }}"
+                                                                            value="{{ $vehicle->id }}">{{ "#$vehicle->number | $vehicle->plate" }}</option>
                                                                 @endforeach
                                                             </select>
                                                             <small>{{ count($unAssignedVehicles) }} @lang('unassigned vehicles')</small>
@@ -374,9 +433,12 @@
                                                             <i class="fa fa-podcast"></i>
                                                         </div>
                                                         <div class="input-group col-md-7">
-                                                            <select id="gps_type" name="gps_type" class="default-select2 form-control input-sm" title="@lang('GPS type')">
+                                                            <select id="gps_type" name="gps_type"
+                                                                    class="default-select2 form-control input-sm"
+                                                                    title="@lang('GPS type')">
                                                                 @foreach( \App\Models\Vehicles\SimGPS::DEVICES as $device )
-                                                                    <option value="{{ $device }}" {{ $device == $gpsReport?'selected':'' }} data-reset-command="{{ \App\Models\Vehicles\SimGPS::RESET_COMMAND[ $device ] }}">
+                                                                    <option value="{{ $device }}"
+                                                                            {{ $device == $gpsReport?'selected':'' }} data-reset-command="{{ \App\Models\Vehicles\SimGPS::RESET_COMMAND[ $device ] }}">
                                                                         {{ $device }}
                                                                     </option>
                                                                 @endforeach
@@ -392,7 +454,9 @@
                                                         </div>
                                                         <div class="input-group col-md-7">
                                                             <div class="form-group has-success has-feedback m-b-0">
-                                                                <input id="create-imei" name="imei" type="text" class="form-control input-sm" value="" placeholder="Imei" style="border-radius: 50px">
+                                                                <input id="create-imei" name="imei" type="text"
+                                                                       class="form-control input-sm" value=""
+                                                                       placeholder="Imei" style="border-radius: 50px">
                                                                 <span class="fa fa-tag form-control-feedback"></span>
                                                             </div>
                                                         </div>
@@ -406,7 +470,9 @@
                                                         </div>
                                                         <div class="input-group col-md-7">
                                                             <div class="form-group has-success has-feedback m-b-0">
-                                                                <input name="sim" type="number" class="form-control input-sm" value="" placeholder="SIM" style="border-radius: 50px">
+                                                                <input name="sim" type="number"
+                                                                       class="form-control input-sm" value=""
+                                                                       placeholder="SIM" style="border-radius: 50px">
                                                                 <span class="fa fa-phone form-control-feedback"></span>
                                                             </div>
                                                         </div>
@@ -415,10 +481,12 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn width-100 btn-default btn-rounded btn-sm" data-dismiss="modal">
+                                            <button type="button" class="btn width-100 btn-default btn-rounded btn-sm"
+                                                    data-dismiss="modal">
                                                 <i class="fa fa-undo"></i> @lang('Close')
                                             </button>
-                                            <button type="submit" class="btn width-100 btn-lime btn-rounded btn-sm" onclick="$('#create-register').val(true)">
+                                            <button type="submit" class="btn width-100 btn-lime btn-rounded btn-sm"
+                                                    onclick="$('#create-register').val(true)">
                                                 <i class="icon-plus"></i> @lang('Create')
                                             </button>
                                         </div>
@@ -438,11 +506,11 @@
     let editedSIM = false;
     $('.default-select2').select2();
     setTimeout(function () {
-        $('.form-send-message .select2-container').css('width','100%');
+        $('.form-send-message .select2-container').css('width', '100%');
         $('#sim-gps').change();
-    },100);
+    }, 100);
 
-    $('.input-search-vehicle').keyup(function(){
+    $('.input-search-vehicle').keyup(function () {
         let target = $(this).val();
         $('.vehicle-list').each(function (i, e) {
             if (String($(e).data('vehicle-number')).toLowerCase() === target.toLowerCase() || target === '') {
@@ -456,14 +524,14 @@
     function getScript(device) {
         let url = '{{ route('admin-gps-manage-get-script','_DEVICE') }}';
         $.ajax({
-            url: url.replace('_DEVICE',device),
+            url: url.replace('_DEVICE', device),
             success: function (data) {
                 $('#command-gps').val(data);
             }
         });
     }
 
-    $('.form-send-message').submit(function(e){
+    $('.form-send-message').submit(function (e) {
         e.preventDefault();
         let smsResponseContainer = $('.sms-response-container');
         let formSendSMS = $(this);
@@ -478,10 +546,10 @@
                 success: function (data) {
                     smsResponseContainer.empty().html(data);
                 },
-                error: function(){
+                error: function () {
                     smsResponseContainer.empty().html('@lang('An error occurred in the process. Contact your administrator')');
                 },
-                complete:function(){
+                complete: function () {
                     smsResponseContainer.removeClass('hide').hide().fadeIn();
                     formSendSMS.find('.btn-submit').removeClass(loadingClass);
                     $('.tab-console-log').tab('show');
@@ -490,22 +558,22 @@
         }
     });
 
-    $('.form-edit-sim-gps').submit(function(event){
+    $('.form-edit-sim-gps').submit(function (event) {
         event.preventDefault();
         let form = $(this);
         let simGPSId = form.data('id');
-        if( form.isValid() ){
+        if (form.isValid()) {
             $.ajax({
                 url: form.attr('action'),
                 data: form.serialize(),
                 type: 'POST',
-                success:function(data){
-                    $( form.data('target') ).empty().hide().html(data).fadeIn();
+                success: function (data) {
+                    $(form.data('target')).empty().hide().html(data).fadeIn();
                 },
-                error:function(){
+                error: function () {
                     gerror('@lang('An error occurred in the process. Contact your administrator')');
                 },
-                complete:function () {
+                complete: function () {
                     $('#detail-' + simGPSId).removeClass('hide');
                     $('#edit-' + simGPSId).addClass('hide');
                     editedSIM = true;
@@ -514,71 +582,71 @@
         }
     });
 
-    $('#form-create-sim-gps').submit(function(e){
+    $('#form-create-sim-gps').submit(function (e) {
         e.preventDefault();
         let form = $(this);
-        if( form.isValid() ){
+        if (form.isValid()) {
             $.ajax({
                 url: form.attr('action'),
                 data: form.serialize(),
                 type: 'POST',
-                success: function(data){
-                    if( data.success ){
+                success: function (data) {
+                    if (data.success) {
                         gsuccess(data.message);
                         editedSIM = true;
                         $('.modal').modal('hide');
-                        setTimeout(function(){
+                        setTimeout(function () {
                             $('.form-search-report').submit();
-                        },1000);
-                    }else{
+                        }, 1000);
+                    } else {
                         gerror(data.message);
                     }
                 },
-                error:function () {
+                error: function () {
                     gerror('@lang('An error occurred in the process. Contact your administrator')');
                 },
-                complete:function(){
+                complete: function () {
 
                 }
             });
         }
     });
 
-    $('.form-delete-sim-gps').submit(function(e){
+    $('.form-delete-sim-gps').submit(function (e) {
         e.preventDefault();
         let form = $(this);
         $.ajax({
             url: form.attr('action'),
             type: 'DELETE',
-            success: function(data){
-                if( data.success ){
+            success: function (data) {
+                if (data.success) {
                     gsuccess(data.message);
                     $('.modal').modal('hide');
-                }else{
+                } else {
                     gerror(data.message);
                 }
             },
-            error:function () {
+            error: function () {
                 gerror('@lang('An error occurred in the process. Contact your administrator')');
             },
-            complete:function(){
-                setTimeout(function(){
+            complete: function () {
+                setTimeout(function () {
                     $('.form-search-report').submit();
-                },500);
+                }, 500);
             }
         });
     });
 
-    $('.set-reset-command').click(function(){
+    $('.set-reset-command').click(function () {
         let resetCommand = $('#gps-type').data('reset-command');
-        if( is_not_null(resetCommand) ){
+        if (is_not_null(resetCommand)) {
             $('#command-gps').val(resetCommand);
-        }else{
+        } else {
             gwarning('@lang('Select a SIM number')');
         }
     });
 
     let gpsType = $('#gps-type');
-    gpsType.val( $("#gps-report").val() );
+    gpsType.val($("#gps-report").val());
     gpsType.data('reset-command', $('#gps-report option:selected').data('reset-command'));
 </script>

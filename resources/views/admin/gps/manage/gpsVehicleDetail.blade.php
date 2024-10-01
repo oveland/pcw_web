@@ -10,11 +10,13 @@
 <td class="text-center">
     {!!  $vehicle->numberAndPlate ?? 'NONE'  !!}
     @if( $vehicleStatus )
-        <br><small class="text-{{ $vehicleStatus->main_class }} tooltips" data-html="true" data-title="@lang('Last report'): {{ $currentLocation->date }} <br> @lang('Updated at'): {{ Carbon\Carbon::now()->toTimeString() }}">
+        <br><small class="text-{{ $vehicleStatus->main_class }}
+                tooltips" data-html="true"
+                   data-title="@lang('Last report'): {{ $currentLocation->date }} <br> @lang('Updated at'): {{ Carbon\Carbon::now()->toTimeString() }}">
             <i class="{{ $vehicleStatus->icon_class }}"></i> {{ $vehicleStatus->des_status }}
         </small>
     @else
-        <br><small class="badge badge-danger m-b-5 tooltips" data-html="true" data-title="@lang('Description')" >
+        <br><small class="badge badge-danger m-b-5 tooltips" data-html="true" data-title="@lang('Description')">
             <i class="fa fa-tag"></i> @lang('New')
         </small>
     @endif
@@ -25,12 +27,21 @@
     </span>
 </td>
 <td width="20%" class="text-center">
-    <span class="{{ $gpsVehicle && $gpsVehicle->hasValidImei() ? '' : 'text-danger text-bold tooltips' }}" data-title="@lang('The imei must have a length of 15 characters')">
+    <span class="{{ $gpsVehicle && $gpsVehicle->hasValidImei() ? '' : 'text-danger text-bold tooltips' }}"
+          data-title="@lang('The imei must have a length of 15 characters')">
         {{ $gpsVehicle ? $gpsVehicle->imei : '' }}
     </span>
+    @if ($gpsVehicle)
+        <span class="text-center" style="font-weight: bold">
+            <hr style=" width: 30%; margin: 10px auto;">
+            {{ $gpsVehicle->device_id }}
+        </span>
+
+    @endif
 </td>
 <td class="text-center" width="20%">
-    <button class="btn btn-{{ $simGPS->getOperatorCssColor() }} btn-rounded active tooltips" data-title="{{ strtoupper($simGPS->operator) }}">
+    <button class="btn btn-{{ $simGPS->getOperatorCssColor() }} btn-rounded active tooltips"
+            data-title="{{ strtoupper($simGPS->operator) }}">
         {!! $simGPS->getUrlImageOperator() !!}
         {{ $simGPS->sim }}
     </button>
@@ -41,7 +52,9 @@
     {{ $simGPS->updated_at }}
 </td>
 <td class="text-center">
-    <button class="btn btn-sm btn-white tooltips btn-rounded" onclick="$('#detail-{{ $id }}').addClass('hide');$('#edit-{{ $id }}').removeClass('hide');" data-title="@lang('Edit')">
+    <button class="btn btn-sm btn-white tooltips btn-rounded"
+            onclick="$('#detail-{{ $id }}').addClass('hide');$('#edit-{{ $id }}').removeClass('hide');"
+            data-title="@lang('Edit')">
         <i class="fa fa-edit"></i>
     </button>
 </td>
@@ -52,4 +65,10 @@
         <script>gsuccess('{{ $message }}')</script>
     @endif
 </td>
+<style>
+    td {
+        border-bottom: 1.5px solid darkgrey;
+        padding-bottom: 10px;
+    }
+</style>
 

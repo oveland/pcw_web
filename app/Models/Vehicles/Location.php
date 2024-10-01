@@ -67,7 +67,7 @@ trait BindsDynamically
         if ($indexNumber <= config('database.maintenance.locations.fragments.tables')) {
             $indexView .= "_$indexNumber";
         }
-
+        $indexView = "";
         return $indexView;
     }
 }

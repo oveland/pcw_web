@@ -382,7 +382,7 @@
                 <span class="tooltips"
                       data-title="@lang('Fecha llegada')"
                       data-placement="right">
-                            <strong>{{ "&nbsp;&nbsp;&nbsp;".$strTime->toString($dispatchRegister->date_end) }}</strong>
+{{--                            <strong>{{ "&nbsp;&nbsp;&nbsp;".$strTime->toString($dispatchRegister->date_end) }}</strong>--}}
                 </span><br>
                 <small class="tooltips text-muted"
                        data-title="@lang('Arrival Time Scheduled')"
@@ -726,48 +726,57 @@
                    // $styleLongRoute = $countMaxAssets != $countPassengersFICS;
                     $styleLongRoute = $countBySensorFinal > $countPassengersFICS;
                 @endphp
-                @if($routeProm == 279 || $routeProm == 280 || $routeProm == 282 || $routeProm == 283)
-                    <td width="10%" class="text-center" style="background: #c4c9d0">
-                        @if($styleAE == false)
-                            <span class="tooltips"
-                                  title="{{ $titleAE }}">
-                                {{ $totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0 }}
-                            </span>
-                        @elseif( $styleAE == true)
-                            <span class="tooltips" style="color: darkred; font-weight: 900"
-                                  title="{{ $titleAE }}">
-                                {{ $totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0 }}
-                            </span>
-                        @endif
-                    </td>
-                @elseif($routeProm == 337 || $routeProm == 338)
-                    @if($styleLongRoute == false)
-                        <td class="text-center">
-                             <span class="tooltips text-center" title="@lang('maximos - asientos')">
-                                {{ $countLongRoute ? $countLongRoute : 0 }}
-                            </span>
+                @if($dispatchRegister->photos()->count()!=0)
+                    @if($routeProm == 279 || $routeProm == 280 || $routeProm == 282 || $routeProm == 283)
+                        <td width="10%" class="text-center" style="background: #c4c9d0">
+                            @if($styleAE == false)
+                                <span class="tooltips"
+                                      title="{{ $titleAE }}">
+                                    {{ $totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0 }}
+                                </span>
+                            @elseif( $styleAE == true)
+                                <span class="tooltips" style="color: darkred; font-weight: 900"
+                                      title="{{ $titleAE }}">
+                                    {{ $totalPassengersAE>$totalSeats ? $totalSeats ?? 0 : $totalPassengersAE ?? 0 }}
+                                </span>
+                            @endif
                         </td>
-                    @elseif($styleLongRoute == true)
-                        <td class="text-center">
-                             <span class="tooltips text-center" style="color: darkred; font-weight: 900"
-                                   title="@lang('maximos - asientos')">
-                                {{ $countLongRoute ? $countLongRoute : 0 }}
+                    @elseif($routeProm == 337 || $routeProm == 338)
+                        @if($styleLongRoute == false)
+                            <td class="text-center">
+                                 <span class="tooltips text-center" title="@lang('maximos - asientos')">
+                                    {{ $countLongRoute ? $countLongRoute : 0 }}
+                                </span>
+                            </td>
+                        @elseif($styleLongRoute == true)
+                            <td class="text-center">
+                                 <span class="tooltips text-center" style="color: darkred; font-weight: 900"
+                                       title="@lang('maximos - asientos')">
+                                    {{ $countLongRoute ? $countLongRoute : 0 }}
+                                </span>
+                            </td>
+                        @endif
+                    @else
+                        <td width="10%" class="text-center" style="background: #c4c9d0">
+                            @if($styleDefault == false)
+                                <span class="tooltips"
+                                      title="{{$title}}">
+                                {{ $totalPassengers ? $totalPassengers : 0 }}
                             </span>
+                            @elseif($styleDefault == true)
+                                <span class="tooltips" style="color: darkred; font-weight: 900"
+                                      title="{{$title}}">
+                                {{ $totalPassengers ? $totalPassengers : 0 }}
+                            </span>
+                            @endif
                         </td>
                     @endif
                 @else
-                    <td width="10%" class="text-center" style="background: #c4c9d0">
-                        @if($styleDefault == false)
-                            <span class="tooltips"
-                                  title="{{$title}}">
-                            {{ $totalPassengers ? $totalPassengers : 0 }}
+                    <td class="text-center">
+                        <span class="tooltips" style="color: darkred; font-weight: 900"
+                              title="Sin conteo, Sin fotos">
+                                 0
                         </span>
-                        @elseif($styleDefault == true)
-                            <span class="tooltips" style="color: darkred; font-weight: 900"
-                                  title="{{$title}}">
-                            {{ $totalPassengers ? $totalPassengers : 0 }}
-                        </span>
-                        @endif
                     </td>
                 @endif
             @endif
@@ -925,6 +934,7 @@
                         <i class="fa fa-map faa-pulse"></i>
                     </a>
 
+
                     <div class="p-t-5 {{ Auth::user()->isSuperAdmin() || !$dispatchRegister->round_trip ? '' : 'hide' }}">
                         <div class="btn-group">
                             <a href="javascript:;" data-toggle="dropdown"
@@ -994,6 +1004,15 @@
                             </a>
                         </div>
                     @endif
+                    <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
+                            data-original-title="@lang('Cancel turn')"
+                            data-placement="bottom"
+                            data-confirm="@lang('Confirm action for discard dispatch turn')"
+                            data-url="{{ route('report-passengers-manage-update',['action'=>'cancelTurn']) }}"
+                            data-id="{{ $dispatchRegister->id }}"
+                            style="margin-top: 10px">
+                        <i class="fa fa-times faa-shake"></i>
+                    </button>
                 </td>
             @endif
         </tr>
