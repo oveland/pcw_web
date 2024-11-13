@@ -23,8 +23,8 @@ class Kernel extends ConsoleKernel
             $schedule->command('telescope:prune')->daily();
 
             /******************************************   5G   ***********************************************/
-            $schedule->command('Sync4G:sync-photos --imei=352557104834810')->everyMinute()->runInBackground(); // Vehicle 8511  Expreso Palmira
-            $schedule->command('Sync4G:sync-photos --imei=352557104777777')->everyMinute()->runInBackground(); // Vehicle 8511  Expreso Palmira}
+            //$schedule->command('Sync4G:sync-photos --imei=352557104834810')->everyMinute()->runInBackground(); // Vehicle 8511  Expreso Palmira
+            //$schedule->command('Sync4G:sync-photos --imei=352557104777777')->everyMinute()->runInBackground(); // Vehicle 8511  Expreso Palmira}
 
             $schedule->command('Sync4G:sync-photos --imei=352557104466092')->everyMinute()->runInBackground(); // Vehicle 8337  Expreso Palmira
             $schedule->command('Sync4G:sync-photos --imei=352557104777778')->everyMinute()->runInBackground(); // Vehicle 8337  Expreso Palmira}
