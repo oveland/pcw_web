@@ -108,10 +108,10 @@ class SyrusService
 
                 if (!$fileHasError) {
                     $image = Image::make($storage->get($file));
-
-                    /*if ($vehicle->id == 1873 && intval($side) === 2) { // Corrige el giro de la c?mara vh 02 Montebello
+                    /*if ($vehicle->id == 2615 && intval($side) === 1) { // Corrige el giro de la c?mara vh 02 Montebello
                         $image = $image->rotate(180);
                     }*/
+
                     $process = $service->saveImageData([
 
                         'date' => $date,

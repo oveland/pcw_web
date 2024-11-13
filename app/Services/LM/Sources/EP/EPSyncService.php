@@ -268,9 +268,16 @@ class EPSyncService extends SyncService
                 }
 
                 $dr->date_end = Carbon::createFromFormat(strstr($dr->date_end, '/') ? 'd/m/Y' : 'Y-m-d', $dr->date_end)->toDateString();
+                if ($dr->arrival_time_scheduled) {
+                    $dr->arrival_time_scheduled = strstr($dr->arrival_time_scheduled, '.') ?
+                        Carbon::createFromFormat('H:i:s.u', $dr->arrival_time_scheduled)->format('H:i:s') :
+                        Carbon::createFromFormat('H:i:s', $dr->arrival_time_scheduled)->format('H:i:s');
+                }
+
+
+
 
                 //echo "Compare " . "$dr->date $dr->departure_time to " . "$dr->date_end $dr->arrival_time_scheduled \n";
-
                 return $dr->arrival_time_scheduled && StrTime::isInclusiveDateTimeRanges(
                         $dateStart->toDateTimeString(),
                         $dateEnd->toDateTimeString(),
