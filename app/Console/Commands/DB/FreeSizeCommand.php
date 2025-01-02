@@ -144,7 +144,7 @@ class FreeSizeCommand extends Command
             $this->log("       - $query");
             DB::statement($query);
 
-            $query = "TRUNCATE TABLE $table";
+//            $query = "TRUNCATE TABLE $table";
             $this->log("       - $query");
             DB::statement($query);
 

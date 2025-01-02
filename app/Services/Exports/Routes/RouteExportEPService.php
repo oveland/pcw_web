@@ -203,6 +203,21 @@ class RouteExportEPService extends RouteExportService
                             __('Total Sistema') =>$TotalSystema,                                                                     # K CELL
                             __('Conteo Maximos') =>$dispatchRegister->final_front_sensor_counter,                                                                     # K CELL
                         ];
+                    }else if (Auth::user()->id == 2018101286){
+                        $dataExcel[] = [
+                            __('Date') => $dispatchRegister->date,                                                          # A CELL
+                            __('Route') => $route->name,                                                                    # B CELL
+                            __('Round Trip') => $roundTrip,                                                                 # C CELL
+                            __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
+                            __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # E CELL
+                            __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
+                            __('Status') => $dispatchRegister->status,                                                      # G CELL
+                            __('Pass.') . " " . __('Visual') => intval($totalRoundTrip),                           # H CELL
+                            __('Valor pasaje') => intval($totalRoundTrip) * $tariffPassenger,
+                            __('Pasajeros Planilla') => $spreadsheetPassengers1 ?? 0,
+                            __('FICS') => $spreadsheetPassengersSync ?? 0,
+                            __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
+                        ];
                     }else{
                         $dataExcel[] = [
                             __('Date') => $dispatchRegister->date,                                                          # A CELL

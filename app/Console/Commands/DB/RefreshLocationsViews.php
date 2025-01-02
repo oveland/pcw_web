@@ -13,7 +13,7 @@ class RefreshLocationsViews extends Command
      *
      * @var string
      */
-    protected $signature = 'db:refresh-locations-views';
+    protected $signature = 'db:refresh-locations-views {--truncate-locations-0}';
 
     /**
      * The console command description.
@@ -39,6 +39,8 @@ class RefreshLocationsViews extends Command
      */
     public function handle()
     {
+        $truncateLocation0 = $this->option('truncate-locations-0');
+
         $now = Carbon::now();
         $this->info('Executing db refresh locations views at ' . $now->toDateTimeString());
 
@@ -51,9 +53,15 @@ class RefreshLocationsViews extends Command
             $this->info($sql);
         }
 
-        $sql = "TRUNCATE TABLE locations_0";
-        DB::statement($sql);
-        $this->info($sql);
+        if($truncateLocation0){
+            $sql = "TRUNCATE TABLE locations_0";
+            DB::statement($sql);
+            $this->info($sql);
+
+            $sql = "TRUNCATE TABLE app_photos_0";
+            DB::statement($sql);
+            $this->info($sql);
+        }
         $this->info("Refresh locations views finished at " . Carbon::now()->toDateTimeString());
     }
 }

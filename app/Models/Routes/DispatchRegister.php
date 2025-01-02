@@ -1129,7 +1129,7 @@ class DispatchRegister extends Model
         $initialTime = $this->departure_time;
         $finalTime = $this->complete() ? $this->arrival_time : $this->arrival_time_scheduled;
 
-        $startTime = StrTime::addStrTime($initialTime, '05:00');
+        $startTime = StrTime::addStrTime($initialTime, '00:00');
         $endTime = StrTime::addStrTime($finalTime, '10:00');
 
         $start = $this->parseDateTime("$startDate $startTime");

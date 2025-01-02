@@ -49,6 +49,9 @@ class Kernel extends ConsoleKernel
         Commands\Vehicles\Binnacles\NotificationCommand::class,
 
         Commands\Routes\Exports\EP\DispatchCommand::class,
+
+        Commands\FTP\RefreshPhotoPaths::class,
+        \App\Console\Commands\CheckNoPhotosDispatch::class,
     ];
 
     /**
@@ -90,7 +93,10 @@ class Kernel extends ConsoleKernel
 
         /* Close the fake dispatch registers */
         $schedule->command('dispatch-registers:close')->dailyAt('00:05');
-        $schedule->command('db:refresh-locations-views')->dailyAt('00:01');
+        $schedule->command('db:refresh-locations-views --truncate-locations-0')->dailyAt('00:01');
+
+        /*Alert Photos */
+        $schedule->command('check:no-photos-dispatch')->dailyAt('23:50');
     }
 
     /**
@@ -102,8 +108,7 @@ class Kernel extends ConsoleKernel
     {
         require base_path('routes/console.php');
     }
-    protected $middleware = [
-        // Otros middlewares
+    /*protected $middleware = [
         \App\Http\Middleware\LogRequestTiming::class,
-    ];
+    ];*/
 }

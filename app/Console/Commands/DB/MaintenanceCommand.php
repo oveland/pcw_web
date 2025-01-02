@@ -48,117 +48,95 @@ class MaintenanceCommand extends Command
         $from = $this->option('from');
         $to = $this->option('to');
 
-        return collect([/*
+        return collect([
             [
-                'from' => '2023-04-01',
-                'to' => '2023-04-30',
+                'from' => '2024-07-01',
+                'to' => '2024-07-31',
                 'tables' => [
                     'app_photos' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
+//                    'vehicle_status_reports' => [
+//                        'restore' => true,
+//                        'release' => true,
+//                    ],
                     'locations' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ],
                     'reports' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ]
                 ]
             ],
             [
-                'from' => '2023-05-01',
-                'to' => '2023-05-31',
+                'from' => '2024-08-01',
+                'to' => '2024-08-31',
                 'tables' => [
                     'app_photos' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
+//                    'vehicle_status_reports' => [
+//                        'restore' => true,
+//                        'release' => true,
+//                    ],
                     'locations' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ],
                     'reports' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ]
                 ]
             ],
             [
-                'from' => '2023-06-01',
-                'to' => '2023-06-30',
+                'from' => '2024-09-01',
+                'to' => '2024-09-30',
                 'tables' => [
                     'app_photos' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
+//                    'vehicle_status_reports' => [
+//                        'restore' => true,
+//                        'release' => true,
+//                    ],
                     'locations' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ],
                     'reports' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ]
                 ]
             ],
             [
-                'from' => '2023-08-01',
-                'to' => '2023-08-26',
+                'from' => '2024-10-01',
+                'to' => '2024-10-03',
                 'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
+//                    'app_photos' => [
+//                        'restore' => true,
+//                        'release' => true,
+//                    ],
+//                    'vehicle_status_reports' => [
+//                        'restore' => true,
+//                        'release' => true,
+//                    ],
                     'locations' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ],
                     'reports' => [
                         'restore' => true,
-                        'release' => false,
+                        'release' => true,
                     ]
                 ]
-            ],*/
-            [
-                'from' => '2023-07-01',
-                'to' => '2023-07-31',
-                'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'vehicle_status_reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => false,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => false,
-                    ]
-                ]
-            ],
+            ]
         ]);
     }
 
@@ -259,7 +237,11 @@ class MaintenanceCommand extends Command
         $query = "INSERT INTO $table $tableColumns SELECT * FROM $tableBackup";
         $this->log("       - $query");
 
-        DB::statement($query);
+        try {
+            DB::statement($query);
+        }catch (\Exception $e){
+            $this->log("       - Error restoring: " . $e->getMessage());
+        }
 
         $now = Carbon::now();
         $this->log("       - END: at " . $now->toDateTimeString() . " | Started = " . $now->diffForHumans($initialDate));

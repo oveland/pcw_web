@@ -1,0 +1,47 @@
+PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+Executing db maintenance at 2024-10-04 21:16:21
+   Processing table: locations...
+       ******** RESTORING TABLE locations FROM TABLE locations_2024_10_03 at 2024-10-04 21:16:21
+       - INSERT INTO locations (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer, orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations_2024_10_03
+       - END: at 2024-10-04 21:16:43 | Started = 21 seconds after
+   Processing table: reports...
+       ******** RESTORING TABLE reports FROM TABLE reports_2024_10_03 at 2024-10-04 21:16:43
+       - INSERT INTO reports (id, version, date, date_created, dispatch_register_id, distanced, distancem, distancep, last_updated, status, timed, timem, timep, location_id, status_in_minutes, control_point_id, fringe_id) SELECT * FROM reports_2024_10_03
+       - END: at 2024-10-04 21:16:54 | Started = 11 seconds after
+   Processing table: app_photos...
+       ******** RESTORING TABLE app_photos FROM TABLE app_photos_2024_09_30 at 2024-10-04 21:16:54
+       - INSERT INTO app_photos (id, date, vehicle_id, dispatch_register_id, location_id, path, side, type, data, created_at, updated_at, persons, disk, effects, rekognition, data_persons, data_faces, data_properties, uid) SELECT * FROM app_photos_2024_09_30
+       - END: at 2024-10-04 21:19:50 | Started = 2 minutes after
+   Processing table: locations...
+       ******** RESTORING TABLE locations FROM TABLE locations_2024_09_30 at 2024-10-04 21:19:50
+       - INSERT INTO locations (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer, orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations_2024_09_30
+       - END: at 2024-10-04 21:23:49 | Started = 3 minutes after
+   Processing table: reports...
+       ******** RESTORING TABLE reports FROM TABLE reports_2024_09_30 at 2024-10-04 21:23:49
+       - INSERT INTO reports (id, version, date, date_created, dispatch_register_id, distanced, distancem, distancep, last_updated, status, timed, timem, timep, location_id, status_in_minutes, control_point_id, fringe_id) SELECT * FROM reports_2024_09_30
+       - END: at 2024-10-04 21:25:48 | Started = 1 minute after
+   Processing table: app_photos...
+       ******** RESTORING TABLE app_photos FROM TABLE app_photos_2024_08_31 at 2024-10-04 21:25:48
+       - INSERT INTO app_photos (id, date, vehicle_id, dispatch_register_id, location_id, path, side, type, data, created_at, updated_at, persons, disk, effects, rekognition, data_persons, data_faces, data_properties, uid) SELECT * FROM app_photos_2024_08_31
+       - END: at 2024-10-04 21:28:53 | Started = 3 minutes after
+   Processing table: locations...
+       ******** RESTORING TABLE locations FROM TABLE locations_2024_08_31 at 2024-10-04 21:28:53
+       - INSERT INTO locations (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer, orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations_2024_08_31
+       - END: at 2024-10-04 21:33:17 | Started = 4 minutes after
+   Processing table: reports...
+       ******** RESTORING TABLE reports FROM TABLE reports_2024_08_31 at 2024-10-04 21:33:17
+       - INSERT INTO reports (id, version, date, date_created, dispatch_register_id, distanced, distancem, distancep, last_updated, status, timed, timem, timep, location_id, status_in_minutes, control_point_id, fringe_id) SELECT * FROM reports_2024_08_31
+       - END: at 2024-10-04 21:35:32 | Started = 2 minutes after
+   Processing table: app_photos...
+       ******** RESTORING TABLE app_photos FROM TABLE app_photos_2024_07_31 at 2024-10-04 21:35:32
+       - INSERT INTO app_photos (id, date, vehicle_id, dispatch_register_id, location_id, path, side, type, data, created_at, updated_at, persons, disk, effects, rekognition, data_persons, data_faces, data_properties, uid) SELECT * FROM app_photos_2024_07_31
+       - END: at 2024-10-04 21:38:59 | Started = 3 minutes after
+   Processing table: locations...
+       ******** RESTORING TABLE locations FROM TABLE locations_2024_07_31 at 2024-10-04 21:38:59
+       - INSERT INTO locations (id, version, date, date_created, dispatch_register_id, distance, last_updated, latitude, longitude, odometer, orientation, speed, status, vehicle_id, off_road, vehicle_status_id, speeding, current_mileage, ard_off_road) SELECT * FROM locations_2024_07_31
+       - END: at 2024-10-04 21:43:35 | Started = 4 minutes after
+   Processing table: reports...
+       ******** RESTORING TABLE reports FROM TABLE reports_2024_07_31 at 2024-10-04 21:43:35
+       - INSERT INTO reports (id, version, date, date_created, dispatch_register_id, distanced, distancem, distancep, last_updated, status, timed, timem, timep, location_id, status_in_minutes, control_point_id, fringe_id) SELECT * FROM reports_2024_07_31
+       - END: at 2024-10-04 21:45:49 | Started = 2 minutes after
+Maintenance finished at 2024-10-04 21:45:49 | From 29 minutes after

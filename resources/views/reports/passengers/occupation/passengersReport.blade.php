@@ -1,4 +1,4 @@
-@if(count($report->historySeats))
+
     @php
         $historySeats = $report->historySeats;
         $dispatchRegister = $report->dispatchRegister;
@@ -645,6 +645,4 @@
             });
         }, 500);
     </script>
-@else
-    @include('partials.alerts.noRegistersFound')
-@endif
+

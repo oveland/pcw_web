@@ -173,7 +173,7 @@ class Route extends Model
             $tariff->route()->associate($this);
             $tariff->passenger = 0;
             $tariff->fuel = 0;
-            $tariff->value = 0;
+            //$tariff->value = 0;
         }
         return $tariff;
     }

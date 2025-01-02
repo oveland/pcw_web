@@ -250,7 +250,8 @@ class MigrationController extends Controller
                 }
                 $tariffValue = collect(DB::select("SELECT tarifa passenger, fuel_tariff fuel FROM tarifas_rutas WHERE id_ruta = $route->id"))->first();
                 $routeTariff->passenger = $tariffValue ? $tariffValue->passenger : 0;
-                $routeTariff->fuel = $tariffValue ? $tariffValue->fuel : 0;
+                $routeTariff->fuel = $tariffValue ? (float) $tariffValue->fuel : 0.0;
+
                 $routeTariff->save();
 
                 $new ? $totalCreated++ : $totalUpdated++;

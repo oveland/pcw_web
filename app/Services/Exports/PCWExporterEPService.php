@@ -19,6 +19,7 @@ class PCWExporterEPService extends PCWExporterService
                 'totalRows' => count($dataExport->data) + $startIndex,
                 'tariff'=>$dataExport->tariff,
                 'nameRute'=>$dataExport->nameRute,
+                'routeID'=>$dataExport->routeID,
             ];
             $sheet->setCellValue('A1', "TRANSPORTES EXPRESO PALMIRA        ".$dataExport->title);
             $sheet->setCellValue('A2', $dataExport->subTitle." ".$config->nameRute);
@@ -225,17 +226,17 @@ class PCWExporterEPService extends PCWExporterService
                     $sheet->setCellValue("N$i", "=M$i+" . (($i > $starData) ? ("N" . ($i - 1)) : "0"));
                 }*/
                 for ($i = $starData; $i < $lastRow; $i++) {
-                    $routeId = $sheet->getCell("N$i")->getValue();
+                    $routeId = $config->routeID;
                     $date = $sheet->getCell("A$i")->getValue();
                     $hour = ($sheet->getCell("D$i")->getValue());
+                    $tariff = $config->tariff;
+                    // dd($config->routeID);
 
-                    /*$tariff = $config->tariff;
-
-                    if (in_array($routeId, [279, 280]) && in_array($date, ["2024-05-02", "2024-05-01","2024-04-30", "2024-04-29"])) {
-                        $tariff = 3000;
+                    if (in_array($routeId, [279, 280, 276, 275]) && in_array($date, ["2024-12-18", "2024-12-17","2024-12-16", "2024-12-15","2024-12-19","2024-12-20","2024-12-14","2024-12-13"])) {
+                        $tariff = 4500;
                     }
                   
-                    $sheet->setCellValue("I$i", "=H$i*$tariff");*/
+                    $sheet->setCellValue("I$i", "=H$i*$tariff");
 
                 }
 

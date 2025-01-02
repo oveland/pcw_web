@@ -15,7 +15,7 @@ class GPSService
         try {
             $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
             socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array(
-                "sec" => 1, // Timeout in seconds
+                "sec" => 3, // Timeout in seconds
                 "usec" => 0  // I assume timeout in microseconds
             ));
 

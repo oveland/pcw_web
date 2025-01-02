@@ -179,6 +179,7 @@
     @foreach( $dispatchRegisters as $dispatchRegister )
         @php
             $route = $dispatchRegister->route;
+            $routeFics = $dispatchRegister->getObservation('route_FICS')->observation;
             $driver = $dispatchRegister->driver;
             $vehicle = $dispatchRegister->vehicle;
             $historyCounter = $reportsByVehicle[$vehicle->id]->report->history[$dispatchRegister->id];
@@ -234,8 +235,18 @@
                         <span class="label label-lime label-lg">{{ $route->name }}</span>
                         <small class="text-muted"
                                style="margin-top: 12px;display: block">{{ $dv ? $dv->route->name : '---' }}</small>
+                        @if($routeFics)
+                        <span class="label label-yellow label-lg"
+                              style="margin-top: 12px;display: block"
+                              title="Ruta FICS">{{ $routeFics }}</span>
+                        @endif
                     @else
                         <span>{{ $route->name }}</span>
+                        @if($routeFics)
+                        <span class="label label-yellow label-lg"
+                              style="margin-top: 12px;display: block"
+                              title="Ruta FICS">{{ $routeFics }}</span>
+                        @endif
                     @endif
                 </span>
 
@@ -404,13 +415,13 @@
                     {{ $dispatchRegister->getRouteTime() }}
                 </small>
             </td>
-
+            @php
+                $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
+                $sumByCountSpreadSheetFICS += $spreadsheetPassengersSync->value;
+            @endphp
             @if( Auth::user()->isSuperAdmin()|| Auth::user()->isExpreso())
                 <td width="6%" class="p-r-0 p-l-0 text-center" style="font-weight: 900; background: #ffd39e">
-                    @php
-                        $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
-                        $sumByCountSpreadSheetFICS += $spreadsheetPassengersSync->value;
-                    @endphp
+
                     <span class="box-info">
                         {{ $spreadsheetPassengersSync->value ?? 0 }}
                         </span>
@@ -726,7 +737,7 @@
                    // $styleLongRoute = $countMaxAssets != $countPassengersFICS;
                     $styleLongRoute = $countBySensorFinal > $countPassengersFICS;
                 @endphp
-                @if($dispatchRegister->photos()->count()!=0)
+                @if($dispatchRegister->photos()->count()!=0 && $countBySensorFinal != 0 )
                     @if($routeProm == 279 || $routeProm == 280 || $routeProm == 282 || $routeProm == 283)
                         <td width="10%" class="text-center" style="background: #c4c9d0">
                             @if($styleAE == false)
@@ -1175,6 +1186,9 @@
 
     .label-lime {
         background: #74a400;
+    }
+    .label-yellow{
+        background: #c0b313;
     }
 
     .label-lg {
