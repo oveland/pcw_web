@@ -7,6 +7,7 @@ use App\Models\Routes\DispatchRegister;
 use App\Http\Controllers\Utils\StrTime;
 use Auth;
 use Illuminate\Http\Request;
+use App\Services\Exports\Drivers\DriverExportService;
 
 class DriverDetailedController extends Controller
 {
@@ -27,21 +28,30 @@ class DriverDetailedController extends Controller
      */
     public function show(Request $request)
     {
-
         $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
         $dateReport = $request->get('date-report');
         $dateTimeEndRequest = $request->get('date-end-report');
         $driverReport = $request->get('driver-report');
-
+        $export = $request->get('export');
         $driverReport = $this->buildDriverReport($company, $dateReport, $driverReport, $dateTimeEndRequest);
 
         return view('reports.drivers.detailed.show', compact('driverReport'));
+    }
+    public function export(Request $request)
+    {
+        $company = Auth::user()->isAdmin() ? Company::find($request->get('company-report')) : Auth::user()->company;
+        $dateReport = $request->get('date-report');
+        $dateTimeEndRequest = $request->get('date-end-report');
+        $driverReport = $request->get('driver-report');
+        $driverReport = $this->buildDriverReport($company, $dateReport, $driverReport, $dateTimeEndRequest);
+
+        $driverExportService = new DriverExportService();
+        $driverExportService->exportDriverReport($driverReport);
     }
 
     function buildDriverReport($company, $dateReport, $driverReport, $dateTimeEndRequest)
     {
         $report = collect([]);
-
         $drivers = $company->activeDrivers();
         if ($driverReport) $drivers->whereIn('code', $driverReport);
         $drivers = $drivers->get();
@@ -60,7 +70,6 @@ class DriverDetailedController extends Controller
                 ->get()
                 ->groupBy('driver_code');
         }
-
 
         foreach ($dispatchRegistersByDrivers as $driverCode => $dispatchRegistersByDriver) {
             $deadTimeReport = collect([]);
@@ -85,8 +94,6 @@ class DriverDetailedController extends Controller
                 'deadTimeReport' => $deadTimeReport
             ]);
         }
-
         return $report->sortBy('totalDeadTime');
     }
-
 }

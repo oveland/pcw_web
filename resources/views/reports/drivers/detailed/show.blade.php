@@ -1,44 +1,35 @@
 @if(count($driverReport))
     <div class="panel panel-inverse">
-        <div class="panel-heading">
-            <div class="panel-heading-btn">
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime pull-left" data-click="panel-expand" title="@lang('Expand / Compress')">
-                    <i class="fa fa-expand"></i>
-                </a>
-            </div>
-            <div class="row">
-                <div class="col-md-12 p-0 m-b-10">
+        <div class="panel-heading" style="display: flex; justify-content: flex-end; align-items: center;">
+
+        </div>
+            <div class="panel-heading" style="display: flex; justify-content: space-between; align-items: center;">
+                <!-- Lista de conductores -->
+                <div>
                     <ul class="nav nav-pills nav-pills-success nav-vehicles">
                         @foreach($driverReport as $driverCode => $report)
                             @php( $driver = \App\Models\Drivers\Driver::withCode($driverCode) )
-                            <li class="{{$loop->first?'active':''}}" onclick="$('.driver-name').hide().text('{{ $driver->fullName() }}').slideDown()">
-                                <a  href="#report-tab-{{ $driverCode }}" data-toggle="tab" aria-expanded="true" class="text-center"
-                                   data-original-title="{{ $driver->fullName() }}">
-                                    <span class="icon-report f-s-8">{{ $loop->iteration }}</span>
-                                    <strong><i class="icon-user f-s-9"></i> {{ $driver->code }}</strong>
-                                    <hr class="no-padding m-5">
-                                    <span class="btn btn-white btn-xs tooltips" data-title="@lang('Total dead time')" data-placement="bottom">
-                                        <i class="ion-android-stopwatch"></i> {{ $report->totalDeadTime }}
-                                    </span>
-                                </a>
-                            </li>
+                            @if($driver)
+                                <li class="fixed-size-tab" onclick="$('.driver-name').hide().text('{{ $driver->fullName() }}').slideDown()">
+                                    <a href="#report-tab-{{ $driverCode }}" data-toggle="tab" aria-expanded="true" class="text-center"
+                                       data-original-title="{{ $driver->fullName() }}"
+                                       title="{{ $driver->fullName() }}">
+                                        <strong><i class="icon-user f-s-9"></i> {{ $driver->first_name }} {{ $driver->last_name }}</strong>
+                                        <strong><i></i> Cédula: {{ $driver->identity }}</strong>
+                                        <hr class="no-padding m-5">
+                                        <span class="btn btn-white btn-xs tooltips" data-title="@lang('Total dead time')" data-placement="bottom">
+                                    <i class="ion-android-stopwatch"></i> {{ $report->totalDeadTime }}
+                                </span>
+                                    </a>
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
                 </div>
-                <div class="col-md-1 hide">
-                    <a href="{{ route('report-route-search') }}?type-report=vehicle&export=true" class="btn btn-lime bg-lime-dark pull-right" style="position: absolute;left: -20px;">
-                        <i class="fa fa-file-excel-o"></i> @lang('Export excel')
-                    </a>
-                </div>
-                <div class="p-0">
-                    <hr class="hr">
-                    <blockquote class="m-b-0">
-                        <i class="icon-user f-s-24 text-muted" style="position: absolute;left: 40px;"></i>
-                        <p class="driver-name m-l-40"></p>
-                    </blockquote>
-                </div>
+                <!-- Botón de exportar -->
+
             </div>
-        </div>
+
 
         <div class="tab-content panel p-0">
             @foreach($driverReport as $driverCode => $report)
@@ -212,6 +203,45 @@
         hideSideBar();
         $('.nav-vehicles li:first').click();
     </script>
+    <style>
+        /* Establece el contenedor como un grid con 5 columnas */
+        .nav-pills {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* Crea 5 columnas de igual tamaño */
+            gap: 20px; /* Espacio entre los elementos */
+            padding: 0;
+        }
+
+        /* Estilo para cada cuadro */
+        .fixed-size-tab {
+            padding: 10px;
+            border: 1px solid #ddd;  /* Un borde sencillo para cada cuadro */
+            text-align: center;
+            height: auto;  /* Deja que la altura sea dinámica según el contenido */
+            box-sizing: border-box;
+        }
+
+        /* Asegura que los nombres no se desborden */
+        .fixed-size-tab strong {
+            display: block;  /* Asegura que el nombre se muestre en bloque */
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Estilo adicional para el contenido (por ejemplo, el total de tiempo muerto) */
+        .fixed-size-tab .btn {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .fixed-size-tab::before {
+            content: none !important; /* Elimina cualquier ::before no deseado */
+        }
+        .nav:after, .nav:before{
+            content: none !important;
+        }
+
+    </style>
 @else
     @include('partials.alerts.noRegistersFound')
 @endif

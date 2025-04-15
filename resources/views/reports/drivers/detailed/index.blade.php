@@ -2,7 +2,7 @@
 
 @section('stylesheets')
     <style>
-        .icons-info-drivers .badge{
+        .icons-info-drivers .badge {
             position: relative !important;
             font-size: 55% !important;
             top: -35px !important;
@@ -47,23 +47,30 @@
                             <i class="fa fa-minus"></i>
                         </a>
                     </div>
-                    <button type="submit" class="btn btn-success btn-sm btn-search-report">
-                        <i class="fa fa-search"></i> @lang('Search')
-                    </button>
+                    <div class="d-flex gap-2"> <!-- Acomoda los botones alineados -->
+                        <button type="submit" class="btn btn-success btn-sm btn-search-report">
+                            <i class="fa fa-search"></i> @lang('Search')
+                        </button>
+                        <a href="javascript:void(0);" id="export-excel-btn" class="btn btn-lime bg-lime-dark">
+                            <i class="fa fa-file-excel-o"></i> @lang('Exportar Excel')
+                        </a>
+                    </div>
                 </div>
                 <div class="panel-body p-b-15">
                     <div class="form-input-flat">
                         @if(Auth::user()->isAdmin())
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="company-report" class="control-label field-required">@lang('Company')</label>
+                                    <label for="company-report"
+                                           class="control-label field-required">@lang('Company')</label>
                                     <div class="form-group">
-                                        <select name="company-report" id="company-report" class="default-select2 form-control col-md-12">
+                                        <select name="company-report" id="company-report"
+                                                class="default-select2 form-control col-md-12">
                                             <option value="39">EXPRESO PALMIRA</option>
                                             @if(false)
                                                 <option value="null">@lang('Select an option')</option>
                                                 @foreach($companies as $company)
-                                                        <option value="{{$company->id}}">{{ $company->short_name }}</option>
+                                                    <option value="{{$company->id}}">{{ $company->short_name }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -75,51 +82,56 @@
                             <div class="form-group">
                                 <label for="driver-report" class="control-label">@lang('Driver')(es)</label>
                                 <div class="form-group">
-                                    <select name="driver-report[]" id="driver-report" class="default-select2 form-control col-md-12" multiple>
-                                        @foreach(\App\Models\Drivers\Driver::where('company_id',39)->get() as $driver)
-                                            <option value="{{$driver->code}}">#{{ $driver->code }} | {{ $driver->fullName() }}</option>
+                                    <select name="driver-report[]" id="driver-report"
+                                            class="default-select2 form-control col-md-12" multiple>
+                                        @foreach(\App\Models\Drivers\Driver::where('company_id',Auth::user()->company_id)->get() as $driver)
+                                            <option value="{{$driver->code}}">#{{ $driver->code }}
+                                                | {{ $driver->fullName() }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
-                            <div class="col-md-3">
-                                <div class="form-group form-date">
-                                    <label for="date-report" class="control-label field-required">
-                                        @lang('Date')
-                                    </label>
-                                    <label class="with-end-date-container text-bold">
-                                        &nbsp;• <input id="with-end-date" name="with-end-date" class="primary-filter" type="checkbox"> @lang('By range time')
-                                    </label>
-                                    <div class="input-group date datetime-report">
-                                        <input name="date-report" id="date-report" type="text" class="form-control primary-filter" autocomplete="off" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 00:00"/>
-                                        <span class="input-group-addon">
+                        <div class="col-md-3">
+                            <div class="form-group form-date">
+                                <label for="date-report" class="control-label field-required">
+                                    @lang('Date')
+                                </label>
+                                {{--<label class="with-end-date-container text-bold">
+                                    &nbsp;• <input id="with-end-date" name="with-end-date" class="primary-filter" type="checkbox"> @lang('By range time')
+                                </label>--}}
+                                <div class="input-group date datetime-report">
+                                    <input name="date-report" id="date-report" type="text"
+                                           class="form-control primary-filter" autocomplete="off"
+                                           placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 00:00"/>
+                                    <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
-                                    </div>
                                 </div>
                             </div>
-                            </div>
-                                <div class="col-md-3 date-end-container" style="display: none">
-                                    <div class="form-group">
-                                        <label for="date-end-report" class="control-label">@lang('Date end')</label>
-                                        <div class="input-group date datetime-report">
-                                            <input name="date-end-report" id="date-end-report" type="text" class="form-control primary-filter" autocomplete="off" placeholder="yyyy-mm-dd" value="{{ date('Y-m-d') }} 23:59"/>
-                                            <span class="input-group-addon">
+                        </div>
+                    </div>
+                    <div class="col-md-3 date-end-container" style="display: none">
+                        <div class="form-group">
+                            <label for="date-end-report" class="control-label">@lang('Date end')</label>
+                            <div class="input-group date datetime-report">
+                                <input name="date-end-report" id="date-end-report" type="text"
+                                       class="form-control primary-filter" autocomplete="off" placeholder="yyyy-mm-dd"
+                                       value="{{ date('Y-m-d') }} 23:59"/>
+                                <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
-                                        </div>
-                                    </div>
-                                </div>
-                             </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </form>
-        <!-- end search form -->
-        <hr class="hr">
-        <!-- begin content report -->
-        <div class="report-container col-md-12"></div>
-        <!-- end content report -->
+    </form>
+    <!-- end search form -->
+    <hr class="hr">
+    <!-- begin content report -->
+    <div class="report-container col-md-12"></div>
+    <!-- end content report -->
     </div>
     <!-- end row -->
 
@@ -170,7 +182,7 @@
                         success: function (data) {
                             $('.report-container').empty().hide().html(data).fadeIn();
                         },
-                        complete:function(){
+                        complete: function () {
                             form.find('.btn-search-report').removeClass(loadingClass);
                         }
                     });
@@ -218,6 +230,7 @@
             @endif
         });
         initDateTimePicker("YYYY-MM-DD");
+
         function initDateTimePicker(format, els) {
             const containers = els ? els : $('.datetime-report');
 
@@ -231,11 +244,12 @@
                     showTodayButton: true
                 });
 
-                $(el).click(function() {
+                $(el).click(function () {
                     $(this).data("DateTimePicker")?.show();
                 });
             });
         }
+
         $('#with-end-date').change(function () {
             const dec = $('.date-end-container').slideUp();
 
@@ -258,5 +272,14 @@
                 routeSelect.trigger('change.select2');
             });
         }
+        document.getElementById('export-excel-btn').addEventListener('click', function() {
+            var form = document.querySelector('.form-search-report');
+            var formData = new FormData(form);
+            var params = new URLSearchParams(formData);
+            params.append('export', 'true');
+
+            var exportUrl = "{{ route('report-drivers-detailed-export') }}?" + params.toString();
+            window.location.href = exportUrl;
+        });
     </script>
 @endsection
