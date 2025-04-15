@@ -189,10 +189,11 @@ class PCWRouteService implements APIWebInterface
 
             // TODO: Cambiar cuando se haga recaudo:
             if (in_array($d->route->id, [280,279,276,275])) {
-                if (in_array($d->date, ["2024-12-18", "2024-12-17","2024-12-16", "2024-12-15","2024-12-14","2024-12-13","2024-12-19","2024-12-20"])){
-                    $tariffPassenger=4500;
+                if (in_array($d->date, ["2025-01-26", "2025-01-27","2025-01-28", "2025-01-29","2025-01-25","2025-01-24","2025-01-23","2025-01-22"])){
+                    $tariffPassenger=5000;
                 }
             }
+
            // $tariffPassenger = $d->route->tariff->passenger;
             $totalProduction = $tariffPassenger * $totalPassengers;
 
