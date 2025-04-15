@@ -6,6 +6,7 @@ namespace App\Services\Exports\Routes;
 
 use App\Http\Controllers\Utils\Geolocation;
 use App\Http\Controllers\Utils\StrTime;
+use App\Models\Vehicles\GpsVehicle;
 use App\Models\Vehicles\Vehicle;
 use App\Services\Exports\PCWExporterService;
 use App\Traits\CounterByRecorder;
@@ -430,6 +431,10 @@ class RouteExportService
             foreach ($currentVehicleStatusReport as $vehicleStatusReport) {
                 $vehicle = $vehicleStatusReport->vehicle;
                 $vehicle = Vehicle::find($vehicle->id);
+                $gpsVehicle = GpsVehicle::where('vehicle_id', $vehicle->id)->first();
+                if (!$gpsVehicle) {
+                    continue;
+                }
                 $dispatcherVehicle = $vehicleStatusReport->dispatcherVehicle;
                 $currentDispatchRegister = $vehicleStatusReport->currentDispatchRegister;
                 $currentLocation = $vehicleStatusReport->currentLocation;
@@ -445,7 +450,7 @@ class RouteExportService
                 }
 
                 $data = collect([
-                    __('#') => $dataExcel->count() + 1,                                                                                                                     # A CELL
+                    //__('#') => $dataExcel->count() + 1,                                                                                                                     # A CELL
                     __('Vehicle') => $vehicle->number,                                                                                                                      # B CELL
                     __('Status') => $vehicleStatus->des_status ?? '---',                                                                                                    # C CELL
                     __('Observations') => $vehicleObservations,                                                                                                             # D CELL
