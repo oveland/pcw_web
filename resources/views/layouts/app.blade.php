@@ -520,6 +520,13 @@
                                     </a>
                                 </li>
 
+                                <li class="nav-item menu-report-control-points">
+                                    <a href="{{ route('report-route-average-passeger')  }}" class="faa-parent animated-hover nav-link">
+                                        <i class="fa fa-map-marker faa-vertical" aria-hidden="true"></i>
+                                        @lang('Promedios')
+                                    </a>
+                                </li>
+
                                 <li class="nav-item menu-routes-takings">
                                     <a href="{{ route('reports.routes.takings')  }}" class="faa-parent animated-hover nav-link">
                                         <i class="icon-briefcase faa-ring"></i>
@@ -545,6 +552,8 @@
                                         @lang('Control Points')
                                     </a>
                                 </li>
+
+
                                 <li class="nav-item menu-report-routes-dispatch-users">
                                     <a href="{{ route('report-route-dispatch-users')  }}" class="faa-parent animated-hover nav-link">
                                         <i class="fa fa-users faa-vertical" aria-hidden="true"></i>
