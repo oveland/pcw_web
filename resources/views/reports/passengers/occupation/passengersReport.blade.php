@@ -79,12 +79,15 @@
                                     <small>Conteos FICS: </small>
                                     @foreach($passengersStopsFICS as $stop => $data)
                                         <span class="passengers-stop">
-                                    <span class="stop"><i class="fa fa-map-marker"></i> {{ $stop }}</span>
-                                    <span>
-                                        <span class="up">{{ $data->a }}⭡</span>
-                                        <span class="down">{{ $data->d }}⭣</span>
-                                    </span>
-                                </span>
+                                            <span class="time"><i class="fa fa-clock"></i> Hora:&nbsp;&nbsp; {{" "}}{{ $data->time }}</span>
+                                            <div class="details">
+                                                <span class="stop"><i class="fa fa-map-marker"></i> {{ $stop }}</span>
+                                                <span>
+                                                    <span class="up">{{ $data->a }}⭡</span>
+                                                    <span class="down">{{ $data->d }}⭣</span>
+                                                </span>
+                                            </div>
+                                        </span>
                                     @endforeach
 
                                     <div class="spreadsheet_passengers">
@@ -475,13 +478,21 @@
             border-radius: 2px;
             padding: 2px 4px;
             display: flex;
+            flex-direction: column;
             gap: 8px;
             font-size: 0.9rem;
             align-items: center;
         }
+        .passengers-stop .time {
+            font-size: 0.9rem;
+            color: #fff;
+            margin-bottom: 1px;
+            text-align: center;
+        }
+
 
         .passengers-stop .stop {
-
+            margin-bottom: 0px;
         }
 
         .passengers-stop .up {
