@@ -943,7 +943,7 @@
                 loadScript("https://www.pcwserviciosgps.com/google/plugins/jquery.easing.min.js", function () {
                     loadScript("https://www.pcwserviciosgps.com/google/plugins/markerAnimate.js", function () {
                         loadScript("https://www.pcwserviciosgps.com/google/plugins/SlidingMarker.min.js", function () {
-                            SlidingMarker.initializeGlobally();
+                          //  SlidingMarker.initializeGlobally();
                             fitHeight('#google-map-light-dream');
                         });
                     });
