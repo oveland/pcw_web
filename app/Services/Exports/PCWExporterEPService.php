@@ -20,6 +20,7 @@ class PCWExporterEPService extends PCWExporterService
                 'tariff'=>$dataExport->tariff,
                 'nameRute'=>$dataExport->nameRute,
                 'routeID'=>$dataExport->routeID,
+                'stopFics'=>$dataExport->exportFiCS,
             ];
             $sheet->setCellValue('A1', "TRANSPORTES EXPRESO PALMIRA        ".$dataExport->title);
             $sheet->setCellValue('A2', $dataExport->subTitle." ".$config->nameRute);
@@ -109,6 +110,12 @@ class PCWExporterEPService extends PCWExporterService
         $sheet->setSize('L' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
         $sheet->setSize('M' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
         $sheet->setSize('N' . $starData . ':' . $config->lastLetter . $lastRow, 20, 1000);
+        if ($config->stopFics) {
+            $sheet->setSize('A' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
+            $sheet->setSize('B' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
+            $sheet->setSize('C' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
+            $sheet->setSize('D' . $starData . ':' . $config->lastLetter . $lastRow, 25, 1000);
+        }
 
         //firma
         $f = 'I' . $firma . ":" . 'J' . $firma;
@@ -220,6 +227,7 @@ class PCWExporterEPService extends PCWExporterService
                 break;
 
             case 'routeReportByVehicle':
+                //dd('aqui',$config);
                 // Set general formulas
                 /*for ($i = $starData; $i < $lastRow; $i++) {
                     $sheet->setCellValue("M$i", "=L$i-K$i");
@@ -230,13 +238,14 @@ class PCWExporterEPService extends PCWExporterService
                     $date = $sheet->getCell("A$i")->getValue();
                     $hour = ($sheet->getCell("D$i")->getValue());
                     $tariff = $config->tariff;
+
                     // dd($config->routeID);
 
                     if (in_array($routeId, [279, 280, 276, 275]) && in_array($date, ["2024-12-18", "2024-12-17","2024-12-16", "2024-12-15","2024-12-19","2024-12-20","2024-12-14","2024-12-13"])) {
                         $tariff = 4500;
                     }
                   
-                    $sheet->setCellValue("I$i", "=H$i*$tariff");
+                    //$sheet->setCellValue("I$i", "=H$i*$tariff");
 
                 }
 

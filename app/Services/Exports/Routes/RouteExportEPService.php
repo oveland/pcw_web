@@ -22,12 +22,12 @@ class RouteExportEPService extends RouteExportService
      * @param $dateReport
      * @internal param $roundTripDispatchRegisters
      */
-    public function groupedRouteReport($vehiclesDispatchRegisters, $dateReport, $dateEndReport = null, $store = false)
+    public function groupedRouteReport($vehiclesDispatchRegisters, $dateReport, $dateEndReport = null, $store = false, $exportFiCS = false)
     {
         $fileName = __('DR') . " $dateReport $dateEndReport";
         $fileName = str_replace('-', '', str_replace(' ', '_', $fileName));
 
-        $excelFile = Excel::create($fileName, function ($excel) use ($vehiclesDispatchRegisters, $dateReport, $dateEndReport) {
+        $excelFile = Excel::create($fileName, function ($excel) use ($vehiclesDispatchRegisters, $dateReport, $dateEndReport, $exportFiCS) {
             $tariffPassenger =[];
 
             foreach ($vehiclesDispatchRegisters as $vehicleId => $dispatchRegisters) {
@@ -37,7 +37,7 @@ class RouteExportEPService extends RouteExportService
                 $lastArrivalTime = null;
                 $totalDeadTime = '00:00:00';
                 $nameRute = "";
-
+                
                 foreach ($dispatchRegisters as $iteration => $dispatchRegister) {
                     $historyCounter = $vehicleCounter->report->history[$dispatchRegister->id];
                     $route = $dispatchRegister->route;
@@ -47,14 +47,15 @@ class RouteExportEPService extends RouteExportService
                     $spreadsheet = $drObservation->observation;
                     $passengerSpreadsheet =(int) $drObservation->value;
                     $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync')->value;
+                    $passengersStopsFICS = json_decode($dispatchRegister->getObservation('passengers_stops')->observation,true);
                     $username = $drObservation->user ? $drObservation->user->name : '';
                     $roundTrip = $iteration + 1;
-                    $nameRute = "";
+                    //$nameRute = "";
 
                     $tariffPassenger = $dispatchRegister->route->tariff->passenger;
-                    if (in_array($dispatchRegister->route->id, [280, 279])) {
-                        if (in_array($dispatchRegister->date, ["2024-04-02", "2024-04-01","2024-04-03", "2024-03-31"])){
-                            $tariffPassenger=4500;
+                    if (in_array($dispatchRegister->route->id, [280,279,276,275])) {
+                        if (in_array($dispatchRegister->date, ["2025-01-26", "2025-01-27","2025-01-28", "2025-01-29","2025-01-25","2025-01-24","2025-01-23","2025-01-22"])){
+                            $tariffPassenger=5000;
                         }
                     }
 
@@ -185,7 +186,8 @@ class RouteExportEPService extends RouteExportService
                         $TotalSystema = (int)$dispatchRegister->final_sensor_counter;
                     }
 
-                    if (Auth::user()->isSuperAdmin()){
+
+                    if (Auth::user()->isSuperAdmin() && $exportFiCS == false){
                         $dataExcel[] = [
                             __('Date') => $dispatchRegister->date,                                                          # A CELL
                             __('Route') => $route->name,                                                                    # B CELL
@@ -193,17 +195,40 @@ class RouteExportEPService extends RouteExportService
                             __('Departure time') => StrTime::toString($dispatchRegister->departure_time),                   # D CELL
                             __('Arrival Time') => StrTime::toString($dispatchRegister->arrival_time),                       # E CELL
                             __('Route Time') => $dispatchRegister->getRouteTime(),                                          # F CELL
-                            __('Status') => $dispatchRegister->status,                                                      # G CELL
-                            __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                           # H CELL
-                            __('Valor pasaje') => intval($totalRoundTrip) * $tariffPassenger,                                                                       # I CELL
-                            __('N° planilla') => $spreadsheet ?: "",                                                              # J CELL
-                            __('Pasajeros planilla') => $passengerSpreadsheet,                                                              # J CELL
-                            __('#sensor') => $dispatchRegister->final_sensor_counter,                                                                     # K CELL
-                            __('Promedio') =>"$promPassengers",                                                                     # K CELL
-                            __('Total Sistema') =>$TotalSystema,                                                                     # K CELL
-                            __('Conteo Maximos') =>$dispatchRegister->final_front_sensor_counter,                                                                     # K CELL
+                            __('Status') => $dispatchRegister->status,                                                       # G CELL
+                            __('Pass.') . " " . __('Round Trip') => intval($totalRoundTrip),                             # H CELL
+                            __('Valor pasaje') => intval($totalRoundTrip) * $tariffPassenger,                                # I CELL
+                            __('N° planilla') => $spreadsheet ?: "",                                                         # J CELL
+                            __('Pasajeros planilla') => $passengerSpreadsheet,                                               # J CELL
+                            __('#sensor') => $dispatchRegister->final_sensor_counter,                                        # K CELL
+                            __('Promedio') =>"$promPassengers",                                                              # K CELL
+                            __('Total Sistema') =>$TotalSystema,                                                             # K CELL
+                            __('Conteo Maximos') =>$dispatchRegister->final_front_sensor_counter,                            # K CELL
                         ];
-                    }else if (Auth::user()->id == 2018101286){
+                    }elseif ($exportFiCS && !empty($passengersStopsFICS))
+                    {
+                        foreach ($passengersStopsFICS as $stop => $values) {
+                            $dataExcel[] = [
+                                'Parada' => $stop,
+                                'Ascienden' => $values['a'],
+                                'Descienden' => $values['d'],
+                                'Hora' => $values['time'],
+                            ];
+                        }
+                        $dataExcel[] = [
+                            'Parada' => '',
+                            'Ascienden' => '',
+                            'Descienden' => '',
+                            'Hora' => '',
+                        ];
+                        $dataExcel[] = [
+                            'Parada' => '',
+                            'Ascienden' => '',
+                            'Descienden' => '',
+                            'Hora' => '',
+                        ];
+                    }
+                    else if (Auth::user()->id == 2018101286){
                         $dataExcel[] = [
                             __('Date') => $dispatchRegister->date,                                                          # A CELL
                             __('Route') => $route->name,                                                                    # B CELL
@@ -239,10 +264,12 @@ class RouteExportEPService extends RouteExportService
 
 
 
+
                     $totalDeadTime = $deadTime ? StrTime::addStrTime($totalDeadTime, $deadTime) : $totalDeadTime;
 
                     $lastArrivalTime = $dispatchRegister->arrival_time;
                 }
+
 
                 $dateEndTitle = $dateEndReport ? "- $dateEndReport" : "";
                 $dataExport = (object)[
@@ -254,7 +281,8 @@ class RouteExportEPService extends RouteExportService
                     'type' => 'routeReportByVehicle',
                     'tariff' => $tariffPassenger,
                     'nameRute' => $nameRute,
-                    'routeID' =>$route->id
+                    'routeID' =>$route->id,
+                    'exportFiCS' =>$exportFiCS
                 ];
 
                 /* SHEETS */

@@ -90,6 +90,8 @@ class ReportRouteController extends Controller
         $activeTurns = $request->get('active-turns');
         $cancelledTurns = $request->get('cancelled-turns');
         $noTakenTurns = $request->get('no-taken-turns');
+        $exportFiCS = $request->get('export-FICS');
+
 
         $timeReport = $request->get('time-range-report');
         //$timeRange = collect(explode(';', $timeReport));
@@ -125,7 +127,9 @@ class ReportRouteController extends Controller
 
         switch ($typeReport) {
             case 'group-vehicles':
-                if ($request->get('export')) $this->routeService->getExporter($company)->groupedRouteReport($dispatchRegistersByVehicles, $dateReport);
+                if ($request->get('export')) $this->routeService->getExporter($company)
+                    ->groupedRouteReport($dispatchRegistersByVehicles, $dateReport, null, false, $exportFiCS);
+
                 $view = 'reports.route.route.routeReportByVehicle';
                 break;
             default:

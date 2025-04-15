@@ -1,4 +1,6 @@
-@php use App\Models\Company\Company; @endphp
+@php
+    use App\Models\Company\Company;
+@endphp
 @if(count($dispatchRegistersByVehicles))
     <div class="alert alert-warning p-t-10 container-alert-new-values"
          style="display: none;position: absolute;z-index: 10;margin-top: 0">
@@ -27,6 +29,13 @@
                    data-title="@lang('Export grouped report') | @lang('Excel')">
                     <i class="fa fa-download"></i>
                 </a>
+                @if(Auth::user()->isSuperAdmin())
+                    <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ urlencode($dateTimeRequest) }}&date-end-report={{ urlencode($dateTimeEndRequest) }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&spreadsheet-report={{ $spreadsheetReport }}&completed-turns={{ $completedTurns }}&active-turns={{ $activeTurns }}&cancelled-turns={{ $cancelledTurns }}&type-report=group-vehicles&export=true&export-FICS=true"
+                       class="btn green btn-circle tooltips"
+                       data-title="@lang('Exportar FICS')">
+                        <i class="fa fa-arrow-circle-down"></i>
+                    </a>
+                @endif
             </div>
             <div class="row">
                 <div class="col-md-11">
