@@ -217,6 +217,12 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::get('/', 'ControlPointsReportController@index')->name('report-route-control-points');
                 Route::get('/show', 'ControlPointsReportController@searchReport')->name('report-route-control-points-search-report');
             });
+            /* Average Passengers */
+            Route::prefix(__('average-passenger'))->group(function () {
+                Route::get('/', 'AveragePassenger@index')->name('report-route-average-passeger');
+                Route::get('/show', 'AveragePassenger@show')->name('report-route-average-passenger-show');
+                Route::get('/export', 'AveragePassenger@export')->name('report-route-average-passenger-export');
+            });
 
             /* Control Points report */
             Route::prefix(__('dispatch-users'))->group(function () {
@@ -374,6 +380,7 @@ Route::group(['middleware' => ['auth']], function () {
 
             /* Router for General Reports */
             Route::prefix(__('detailed'))->group(function () {
+                Route::get('/', 'DriverDetailedController@index')->name('report-drivers-detailed');
                 Route::get('/', 'DriverDetailedController@index')->name('report-drivers-detailed');
                 Route::get('/show', 'DriverDetailedController@show')->name('report-drivers-detailed-search');
                 Route::get('/export', 'DriverDetailedController@export')->name('report-drivers-detailed-export');
