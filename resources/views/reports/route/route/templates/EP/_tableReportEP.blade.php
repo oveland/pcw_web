@@ -124,7 +124,7 @@
         @if($user->canViewAverageCount())
             <th>
                 <i class="icon-users text-muted">
-                </i><br>{{"Promedio"}}
+                </i><br>{{"Count 5G"}}
             </th>
         @endif
         @if($user->CanViewInfoPhotos())
@@ -417,6 +417,8 @@
             </td>
             @php
                 $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
+                $PassengerStop = $dispatchRegister->getObservation('passengers_stops')->observation;
+                $passengerStops = json_decode($PassengerStop, true);
                 $sumByCountSpreadSheetFICS += $spreadsheetPassengersSync->value;
             @endphp
             @if( Auth::user()->isSuperAdmin()|| Auth::user()->isExpreso())
@@ -600,7 +602,7 @@
 
             @endif
             @if(Auth::user()->isSuperAdmin())
-                <td width="10%" class="text-center">
+                <td width="5%" class="text-center">
                     <span title=""
                           class=" tooltips"
                           data-original-title="Conteo camaras">
@@ -615,78 +617,7 @@
             @endphp
             @if($user->canViewtotalSistem())
                 @php
-                    $timeFringe = $dispatchRegister->departure_time;
-                    $promPassengers = 0;
                     $routeProm = $dispatchRegister->route_id;
-                    if ($routeProm == 285 || $routeProm == 286){
-                         $promPassengers = 15;
-                    }
-                    switch (true) {
-                      case ($timeFringe >= '04:00:00' && $timeFringe <= '06:00:59'):
-                          if ($routeProm == 279 || $routeProm == 280){
-                             $promPassengers = 10;
-                          }else if ($routeProm == 282){
-                              $promPassengers = 3;
-                          }else if ($routeProm == 283){
-                              $promPassengers = 27;
-                          }
-                      break;
-                      case ($timeFringe >= '06:01:00' && $timeFringe <= '09:00:51'):
-                          if ($routeProm == 279||$routeProm == 280){
-                            $promPassengers = 22;
-                          }else if ($routeProm == 282){
-                              $promPassengers = 3;
-                          }else if ($routeProm == 283){
-                              $promPassengers = 27;
-                          }
-                      break;
-                      case ($timeFringe >= '09:01:00' && $timeFringe <= '11:00:59'):
-                          if ($routeProm==279 || $routeProm==280){
-                              $promPassengers = 18;
-                          }else if ($routeProm == 282){
-                              $promPassengers = 3;
-                          }else if ($routeProm == 283){
-                              $promPassengers = 27;
-                          }
-                      break;
-                      case ($timeFringe >= '11:01:00' && $timeFringe <= '14:00:59'):
-                           if ($routeProm==279 || $routeProm==280){
-                            $promPassengers = 19;
-                          }else if ($routeProm == 282){
-                              $promPassengers = 3;
-                          }else if ($routeProm == 283){
-                              $promPassengers = 27;
-                          }
-                      break;
-                       case ($timeFringe >= '14:01:00' && $timeFringe <= '17:00:59'):
-                           if ($routeProm == 279 || $routeProm == 280){
-                             $promPassengers = 20;
-                          }else if ($routeProm == 282){
-                              $promPassengers = 3;
-                          }else if ($routeProm == 283){
-                              $promPassengers = 27;
-                          }
-                       break;
-                       case ($timeFringe >= '17:01:00' && $timeFringe <= '20:00:59'):
-                          if ($routeProm == 279 || $routeProm == 280){
-                             $promPassengers = 21;
-                          }else if ($routeProm == 282){
-                              $promPassengers = 3;
-                          }else if ($routeProm == 83){
-                              $promPassengers = 27;
-                          }
-                      break;
-                       case ($timeFringe >= '20:01:00' && $timeFringe <= '23:59:59'):
-                          if ($routeProm == 279 || $routeProm == 280){
-                            $promPassengers = 13;
-                          }else if ($routeProm == 282){
-                              $promPassengers = 3;
-                          }else if ($routeProm == 283){
-                              $promPassengers = 27;
-                          }
-                      break;
-                    }
-
                     $topologies = \App\Models\Vehicles\TopologiesSeats::query() //total asientos de VH
                         ->where('vehicle_id', $vehicle->id)
                         ->with('vehicle')
@@ -710,9 +641,6 @@
                      if ($countBySensorFinal <= $spreadsheetPassengers->value){
                          $totalPassengersAE = $spreadsheetPassengers->value;
                          $titleAE="Número de planilla";
-                     }elseif ($countBySensorFinal>= $promPassengers){
-                         $totalPassengersAE = $countBySensorFinal;
-                         $titleAE = "Conteo por Camara";
                      }else{
                          $totalPassengersAE = $countBySensorFinal;
                          $titleAE = "Conteo por cámara";
@@ -792,7 +720,7 @@
                 @endif
             @endif
             @if($company->hasSensorTotalCounter())
-                <td width="8%"
+                <td width="5%"
                     class="text-center">
                     <div style="display: flex;">
                         <div style="width: 100%">
@@ -805,19 +733,6 @@
                             <small class="tooltips text-bold text-muted"
                                    data-title="@lang('Accumulated day')">
                                 {{ $totalPassengersBySensor }}
-                            </small>
-                        </div>
-                        <div class="{{ $company->id == $company::TRANSPUBENZA ? '' : 'hide' }}"
-                             style="width: 50%">
-                            <span class="tooltips"
-                                  data-title="@lang('Round trip')"
-                                  style="font-size: 1.5rem !important;">
-                                {{ $dispatchRegister->passengersBySensorTotal }}
-                            </span>
-                            <hr class="m-0">
-                            <small class="tooltips text-bold text-muted"
-                                   data-title="@lang('Accumulated day')">
-                                {{ $totalPassengersBySensorTotal }}
                             </small>
                         </div>
                     </div>
@@ -839,9 +754,12 @@
                 </td>
             @endif
             @if($isExpresoPalmira && $user->canViewAverageCount() )
-                <td width="5%" class="text-center">
-                        <span>
-                            {{$promPassengers}}
+                <td width="10%" class="text-center">
+                        <span title="Conteo por AREA">
+                            {{$dispatchRegister->rocket_5g_area}}
+                        </span><br>
+                        <span title="Conteo por ID">
+                            {{$dispatchRegister->rocket_5g_id}}
                         </span>
                 </td>
             @endif
@@ -921,14 +839,35 @@
 
             @if(Auth::user()->isSuperAdmin())
                 @php
-                    $countMax = $dispatchRegister->final_front_sensor_counter;
-                    $sumatoriaCountMax += $countMax;
+                    $finalData = json_decode($dispatchRegister->count_max_faces, true);
+                    $countMax = $finalData['count'] ?? 0;
+                    $countMaxperson = $finalData['countPerson'] ?? 0;
+                    $hasExactDateMatch = $finalData['hasExactDateMatch'] ?? false;
+
                 @endphp
                 <td class="text-center">
-                    <small class="tooltips text-bold"
-                           data-title="@lang('Conteo por maximos')">
-                        {{$countMax}}
-                    </small>
+                    @if($hasExactDateMatch)
+                        <small class="tooltips text-bold"
+                               data-title="@lang('Conteo por maximos FACES')">
+                            {{$countMax}}
+                        </small><br>
+                    @else
+                        <small class="tooltips text-bold" style="font-weight:bold; color: red"
+                               data-title="@lang('Conteo por maximos FACES')">
+                            {{$countMax}}
+                        </small><br>
+                    @endif
+                    @if($hasExactDateMatch)
+                        <small class="tooltips text-bold"
+                               data-title="@lang('Conteo por maximos PERSON')">
+                            {{$countMaxperson}}
+                        </small><br>
+                    @else
+                        <small class="tooltips text-bold" style="font-weight:bold; color: red"
+                               data-title="@lang('Conteo por maximos PERSON')">
+                            {{$countMaxperson}}
+                        </small><br>
+                    @endif
                 </td>
                 <td class="tooltips text-bold text-center"
                     data-title="@lang('Conteo por maximos')">
@@ -1083,11 +1022,7 @@
                     {{$sumByCountSensor}}
                 </td>
             @endif
-            <td colspan="2"></td>
-            <td class="text-center tooltips"
-                data-title="@lang('Sumatoria Maximos')">
-                {{$sumatoriaCountMax}}
-            </td>
+
         </tr>
     @endif
     </tbody>
