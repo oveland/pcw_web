@@ -79,12 +79,13 @@ class EPSyncService extends SyncService
 
         $dateFrom = Carbon::createFromFormat('Y-m-d', $date ?? Carbon::now()->toDateString())->toDateString();
         $dateTo = Carbon::createFromFormat('Y-m-d', $date)->addDays(1)->toDateString();
+        //$dateTo = '2024-12-05';
 
         $this->log("Start sync ticket passengers for date $dateFrom - $dateTo");
 
         $activeVehicles = $this->company->activeVehicles;
         $activeVehiclesQuery = $activeVehicles
-            //->where('number', '6011')
+            //->where('number', '8511')
             ->pluck('number')
             ->map(function ($number) {
                 return "'$number'";
@@ -112,7 +113,8 @@ class EPSyncService extends SyncService
             WHERE FechaPartida between '$dateFrom' AND '$dateTo 23:59:59'
                 AND bus IN ($activeVehiclesQuery)
         ";
-
+        //dd($dateFrom);
+        //dd(EPDB::select($query));
         $reportTicketsByVehicleNumber = EPDB::select($query)
             ->map(function ($report) {
                 $report->vehicle_number = trim($report->vehicle_number);
@@ -157,7 +159,6 @@ class EPSyncService extends SyncService
                 return $report;
             })
             ->groupBy('vehicle_number');
-        dd($reportTicketsByVehicleNumber);
     }
 
     function newTickets()
@@ -254,9 +255,11 @@ class EPSyncService extends SyncService
             });
 
             $data->sortBy('date')->each(function ($d) use ($dataStops) {
+
                 $dataStops->put($d->stop, [
                     'a' => $d->ascents,
                     'd' => $d->descents,
+                    'time' => \Carbon\Carbon::createFromFormat('Y-m-d H:i:s.u', $d->date)->format('H:i'),
                 ]);
             });
 
@@ -302,6 +305,7 @@ class EPSyncService extends SyncService
                 }
 
                 $spreadSheet = $data->last()->spread_sheet;
+                $routeFICS = $data->last()->origin . ' - ' . $data->last()->destiny;
                 $driverCode = $data->last()->driver_code;
                 $nameDriver = $data->last()->driver_name;
                 $documentDriver = $data->last()->driver_document;
@@ -311,9 +315,17 @@ class EPSyncService extends SyncService
 
                 $drObs = $dr->getObservation('spreadsheet_passengers_sync');
                 $drObs->value = $passengers;
-                $drObs->observation = $spreadSheet !== null ? $spreadSheet : 0;;
+                $drObs->observation = $spreadSheet !== null ? $spreadSheet : 0;
                 $drObs->user_id = 2018101392; // Set user BOOTPCW
                 $drObs->save();
+
+                $drObs = $dr->getObservation('route_FICS');
+                $drObs->value = 0;
+                $drObs->observation =$routeFICS;
+                $drObs->user_id = 2018101392; // Set user BOOTPCW
+                $drObs->save();
+
+
 
                 $this->processDrivers($dataWithMultipleDrivers, $dr);
 

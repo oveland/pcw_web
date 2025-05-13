@@ -16,7 +16,6 @@ use Illuminate\Support\Str;
 use Image;
 use Log;
 use Storage;
-use Symfony\Component\ErrorHandler\Error\FatalError;
 
 class Service5G extends SyrusService
 {
@@ -36,34 +35,28 @@ class Service5G extends SyrusService
         $this->setStatus($imei, true);
 
         $service = new PhotoService();
-        echo "IMEI original: $imei\n";
-
-// Guarda el IMEI original en otra variable
         $imeiOriginal = $imei;
-
-// Define el arreglo de reemplazos
         $replacements = [
             '352557104777777' => '352557104834810',
-            '352557104777778' => '352557104466092'
+            '352557104123456789' => '352557104834810',
+            '352557104777778' => '352557104466092',
+            '3525571048064201' => '352557104806420',
+            '3525571047276001' => '352557104727600',
+            '3525571048126912' => '352557104812691',
+            '3525571044860331' => '352557104486033',
+            '3525571044846321' => '352557104484632',
+            '3525571044662171' => '352557104466217',
+            '3525571044662172' => '352557104466217',
+            '3525571047885031' => '352557104788503',
+            '3525571047806411' => '352557104813640',
+            '3525571047806412' => '352557104813640',
         ];
-
-// Si el IMEI existe en los reemplazos
         if (array_key_exists($imei, $replacements)) {
             $imeiParaConsulta = $replacements[$imei];
         } else {
             $imeiParaConsulta = $imei;
         }
-
-        echo "IMEI procesado para consulta: $imeiParaConsulta\n";
-
-// Realiza la consulta con el IMEI modificado
         $gpsVehicle = GpsVehicle::where('imei', $imeiParaConsulta)->first();
-
-// Imprime el resultado y mantén el IMEI original para otros usos
-        echo "PRUEBAAAA  $gpsVehicle->device_id\n";
-        echo "IMEI después de la consulta (original): $imeiOriginal\n";
-
-
 
         if (!$gpsVehicle) return collect([
             'success' => false,
@@ -81,20 +74,26 @@ class Service5G extends SyrusService
             'success' => true,
             'message' => "Success sync 4G",
         ]);
-        if($imei=='352557104777777' || $imei=='352557104777778'){
+        if ($imei == '352557104777777' || $imei == '352557104777778' || $imei == '3525571048064201'
+            || $imei == '3525571047276001' || $imei == '3525571048126912'
+            || $imei == '3525571044860331' || $imei == '3525571044846321'
+            || $imei == '3525571044662171'
+            || $imei == '3525571047885031'|| $imei == '3525571047806411')
+        {
             $deviceID = $gpsVehicle->tags;
-            echo "passs aqui con";
-        }else{
-           $deviceID = $gpsVehicle->device_id;
-            echo "IMEI procesado: $deviceID\n";
+        }
+        elseif ($imei == '3525571044662172'|| $imei == '3525571047806412'|| $imei == '352557104123456789') {
+            $deviceID = $gpsVehicle->device_id_2;
+        }
+        else {
+            $deviceID = $gpsVehicle->device_id;
         }
 
-        /* if ($imei=='352557104788503'){
-             $date4G = '2024-06-17';
-         }else{
-             $date4G = carbon::now()->toDateString();
-         }*/
+
+
         $date5G = carbon::now()->toDateString();
+        //$date5G = carbon::now()->toDateString();
+        //$date5G = '2024-12-12';
         $path = "$deviceID/$date5G";
         $response->put('imei', $imei);
 
@@ -107,18 +106,22 @@ class Service5G extends SyrusService
         foreach ($files as $index => $file) {
             $fileName = collect(explode('/', $file))->last();
 
-            if (Str::endsWith($file, '.jpg') && !Photo::where('uid', $file)->first()) {
+            if (Str::endsWith($file,['T.jpg','E.jpg']) && !Photo::where('uid', $file)->first()) {
+              //  dd('no existe la foto en la base de datos', $file);
+                var_dump('ingresa a sincronizar esta foto en 5G', $file);
                 $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
+                var_dump($side);
 
                 $fileHasError = false;
                 try {
-                    $jpegInfo = exec("jpeginfo -c " . $storage->path($file));
+                    $jpegInfo = exec("jpeginfo -c " . escapeshellarg($storage->path($file)));
                     $fileHasError = Str::contains($jpegInfo, "ERROR");
                 } catch (Exception $e) {
 
                 }
                 $fileNames = explode('_', $fileName);
+                $dateImag = '';
                 // Verificar si el fragmento de la fecha está en $fileNames[2] o $fileNames[3]
                 if (isset($fileNames[2]) && preg_match('/^\d{14}$/', $fileNames[2])) {
                     $dateImag = Carbon::createFromFormat("YmdHis", $fileNames[2])->toDateTimeString();
@@ -126,37 +129,42 @@ class Service5G extends SyrusService
                     $dateImag = Carbon::createFromFormat("YmdHis", $fileNames[3])->toDateTimeString();
                 }
 
-                $date = ($dateImag === '')
+                $date = ($dateImag == '')
                     ? Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString()
                     : $dateImag;
                 if (!$fileHasError) {
-
                     $image = Image::make($storage->get($file));
-
-
-                    $process = $service->saveImage5GData([
+                    $fileType = Str::endsWith($file, 'T.jpg') ? 'T.jpg' : 'E.jpg';
+                    $process = $service->saveImageData([
                         'date' => $date,
                         'img' => $image->encode('data-url'),
                         'type' => 'syrus',
                         'side' => $side,
-                        'uid' => $vehicle->id . "_" . $fileName
+                        'uid' => $vehicle->id . "_" . $fileName,
+                        'file_type' => $fileType,
+                        'file_name' => $fileName
                     ]);
 
                     $success = $process->response->success;
                     $message = $process->response->message;
                     $extra = "";
-                    if ($success === true) {
+                    if ($success === true && $vehicle->number !== '8331' && $vehicle->number !== '6605' && $vehicle->number !== '2907'&& $vehicle->number !== '8511') {
                         $deleted = $storage->delete($file);
-                        if (!$deleted) $extra = ". Error photo NOT deleted!";
+
+                        if (!$deleted) {
+                            $extra = ". Error photo NOT deleted!";
+                        }
                         $message .= $extra;
                     } else {
                         $extra = $message;
                     }
-                    $this->log("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra");
+                    $this->log("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra" . $message);
                     $response['success'] = $success;
                     $response['message'] = $message;
                     $saveFiles->push($message);
+
                 } else {
+
                     $storage->delete($file);
                 }
             }
@@ -172,6 +180,94 @@ class Service5G extends SyrusService
     function getSide($fileName, $imei)
     {
         $fileNames = explode('_', $fileName);
+
+
+
+        if ($imei == '352557104813640'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+
+        }
+        if ($imei == '3525571047806411'){
+            if ($fileNames[1] == 'ch1') return '3';
+            if ($fileNames[1] == 'ch2') return '4';
+
+        }
+        if ($imei == '3525571047806412'){
+            if ($fileNames[1] == 'ch1') return '5';
+            if ($fileNames[1] == 'ch2') return '6';
+            if ($fileNames[1] == 'ch3') return '7';
+
+        }
+        if ($imei == '3525571044662171'){
+            if ($fileNames[1] == 'ch1') return '2';
+            if ($fileNames[1] == 'ch2') return '3';
+        }
+        if ($imei == '3525571047885031'){ //8217 xvr 2
+            if ($fileNames[1] == 'ch1') return '3';
+            if ($fileNames[1] == 'ch2') return '4';
+        }
+        if ($imei == '352557104788503'){ //8217 xvr 1
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '5';
+            if ($fileNames[1] == 'ch4') return '6';
+        }
+
+        if ($imei == '3525571044662172'){
+            if ($fileNames[1] == 'ch1') return '5';
+            if ($fileNames[1] == 'ch2') return '4';
+        }
+
+        if ($imei == '352557104466217'){
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '6';
+            if ($fileNames[1] == 'ch3') return '7';
+        }
+
+        
+        if ($imei == '3525571044846321') {
+            if ($fileNames[1] == 'ch1') return '3';
+            if ($fileNames[1] == 'ch2') return '4';
+            if ($fileNames[1] == 'ch4') return '5';
+            if ($fileNames[1] == 'ch3') return '6';
+        }
+
+        if ($imei == '3525571044860331') {
+            if ($fileNames[1] == 'ch1') return '3';
+            if ($fileNames[1] == 'ch2') return '4';
+            if ($fileNames[1] == 'ch4') return '5';
+            if ($fileNames[1] == 'ch3') return '6';
+        }
+
+        if ($imei == '352557104812691') {
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch4') return '3';
+            if ($fileNames[1] == 'ch3') return '4';
+        }
+        if ($imei == '3525571048126912') {
+            if ($fileNames[1] == 'ch1') return '3';
+            if ($fileNames[1] == 'ch2') return '4';
+            if ($fileNames[1] == 'ch3') return '5';
+            if ($fileNames[1] == 'ch4') return '6';
+        }
+
+        if ($imei == '352557104806420') {
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '2';
+            if ($fileNames[1] == 'ch3') return '5';
+            if ($fileNames[1] == 'ch4') return '6';
+        }
+        if ($imei == '3525571048064201') {
+            if ($fileNames[1] == 'ch1') return '3';
+            if ($fileNames[1] == 'ch2') return '4';
+        }
+        if ($imei == '3525571047276001') {
+            if ($fileNames[1] == 'ch1') return '3';
+            if ($fileNames[1] == 'ch2') return '4';
+        }
+
         if ($imei == '352557104727600') {
             if ($fileNames[1] == 'ch1') return '1';
             if ($fileNames[1] == 'ch2') return '2';
@@ -239,12 +335,18 @@ class Service5G extends SyrusService
         if ($imei == '352557104834810') {
             if ($fileNames[1] == 'ch1') return '1';
             if ($fileNames[1] == 'ch2') return '2';
-            if ($fileNames[1] == 'ch3') return '5';
-            if ($fileNames[1] == 'ch4') return '6';
-         }
+
+        }
         if ($imei == '352557104777777') {
             if ($fileNames[1] == 'ch1') return '3';
             if ($fileNames[1] == 'ch2') return '4';
+        }
+        if ($imei == '352557104123456789') {
+            dump($fileNames[1]);
+            if ($fileNames[1] == 'ch1') return '5';
+            if ($fileNames[1] == 'ch2') return '6';
+            if ($fileNames[1] == 'ch3') return '7';
+            if ($fileNames[1] == 'ch4') return '8';
         }
         if ($imei == '352557104466092') {
             if ($fileNames[1] == 'ch1') return '1';

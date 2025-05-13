@@ -69,16 +69,16 @@ trait PhotoRekognition
             $config = $this->photoRekognitionService($type)->config;
             if (isset($config->photo)) $this->effects = $config->photo->effects;
 
-            if ($this->canProcessRecognition() && $this->vehicle->company_id != 2) {
+            if ($this->canProcessRecognition()) {
 //            $this->recognitionService = app('recognition.aws');
                 $this->recognitionService = app('recognition.opencv');
 
                 $column = "data_$type";
                 $this->$column = $this->recognitionService->setPhoto($this)->process($type);
+                Log::info("__________________________ Recognition OK $type " . $this->vehicle->number);
             }
 
             $success = true;
-            Log::info("__________________________ Recognition OK $type " . $this->vehicle->number);
         } catch (Exception $e) {
             $success = false;
             $vn = $this->vehicle->number;
@@ -92,6 +92,7 @@ trait PhotoRekognition
     {
         return $this->vehicle->company->canPhotoRecognition()
             && $this->dispatchRegister
-            && $this->dispatchRegister->isActive();
+            && $this->dispatchRegister->isActive()
+            && $this->vehicle->company_id != 2;
     }
 }

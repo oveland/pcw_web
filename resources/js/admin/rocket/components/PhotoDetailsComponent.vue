@@ -7,7 +7,7 @@
 						<span class="title">
 							<i class="fa fa-calendar"></i>
 						</span>
-						<span class="detail">{{ photo.details.date }} | {{ photo.id }}</span>
+						<span class="detail">{{ photo.details.date }} | {{ photo.id }} {{console.log(photo)}}</span>
                     </p>
                 </div>
                 <div v-if="photo.details.dispatchRegister" class="route col-md-12 p-0">

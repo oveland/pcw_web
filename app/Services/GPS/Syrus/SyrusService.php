@@ -8,6 +8,7 @@ use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\PhotoEvent;
 use App\Models\Vehicles\GpsVehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
+use App\Services\Apps\Rocket\Photos\SavePhotoService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -51,7 +52,24 @@ class SyrusService
 
         $this->setStatus($imei, true);
 
-        $service = new PhotoService();
+        $imeisForPhotoService = [
+            '352557100781619',
+            '352557104744845',
+            '352557104791069',
+            '352557104743391',
+            '352557104787257',
+            '352557104787240',
+            '352557104743243',
+            '352557104743219',
+            '352557104743052',
+            '352557104743383',
+            '352557104791234',
+            '352557104787356',
+            '352557104790533',
+            '352557104791127'
+        ];
+
+        $service = in_array($imei, $imeisForPhotoService) ? new PhotoService() : new SavePhotoService();
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
 
@@ -89,6 +107,7 @@ class SyrusService
 
             if (Str::endsWith($file, '.jpeg') && !Photo::where('uid', $file)->first()) {
                 $side = $this->getSide($fileName, $imei);
+
                 $service->for($vehicle, $side);
 
                 $fileHasError = false;
@@ -111,9 +130,7 @@ class SyrusService
                     /*if ($vehicle->id == 2615 && intval($side) === 1) { // Corrige el giro de la c?mara vh 02 Montebello
                         $image = $image->rotate(180);
                     }*/
-
                     $process = $service->saveImageData([
-
                         'date' => $date,
                         'img' => $image->encode('data-url'),
                         'type' => 'syrus',
@@ -171,6 +188,17 @@ class SyrusService
                 return '3';
             }
         }
+
+        if ($imei == '352557104787075') {
+            if (Str::startsWith($fileName, '1')) {
+                return '2';
+            } else if (Str::startsWith($fileName, '3')) {
+                return '3';
+            } else if (Str::startsWith($fileName, '2')) {
+                return '1';
+            }
+        }
+
         if ($imei == '352557104791572') {
             if (Str::startsWith($fileName, '1')) {
                 return '2';

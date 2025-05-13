@@ -76,6 +76,13 @@ return [
             'days' => 7,
         ],
 
+        'sync5g' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/sync5g.log'),
+            'level' => 'debug',
+            'days' => 7,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

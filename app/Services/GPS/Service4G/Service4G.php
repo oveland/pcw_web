@@ -7,6 +7,7 @@ namespace App\Services\GPS\Service4G;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Vehicles\GpsVehicle;
 use App\Services\Apps\Rocket\Photos\PhotoService;
+use App\Services\Apps\Rocket\Photos\SavePhotoService;
 use App\Services\GPS\Syrus\SyrusService;
 use Carbon\Carbon;
 use Exception;
@@ -35,42 +36,42 @@ class Service4G extends SyrusService
 
         $this->setStatus($imei, true);
 
-        $service = new PhotoService();
-        echo "IMEI original: $imei\n";
+        $imeisForPhotoService = [
+            '352557104839868',
+            '352557104794196',
+            '352557104839869',
+            '352557104791564',
+            '352557104788131',
+            '352557104788503', //8217
+            '352557104839116',
+            '352557104831642',
+            '352557104466092',
+            '352557104777778',
+            '352557104791564',
+            '352557104794196'
 
-// Guarda el IMEI original en otra variable
-        $imeiOriginal = $imei;
 
-// Define el arreglo de reemplazos
+        ];
+
+        $service = in_array($imei, $imeisForPhotoService) ? new PhotoService() : new SavePhotoService();
+
         $replacements = [
             '352557104777777' => '352557104834810',
             '352557104777778' => '352557104466092'
         ];
 
-// Si el IMEI existe en los reemplazos, úsalo para la consulta
         if (array_key_exists($imei, $replacements)) {
             $imeiParaConsulta = $replacements[$imei];
         } else {
             $imeiParaConsulta = $imei;
         }
-
-        echo "IMEI procesado para consulta: $imeiParaConsulta\n";
-
-// Realiza la consulta con el IMEI modificado
         $gpsVehicle = GpsVehicle::where('imei', $imeiParaConsulta)->first();
-
-// Imprime el resultado y mantén el IMEI original para otros usos
-        echo "PRUEBAAAA  $gpsVehicle->device_id\n";
-        echo "IMEI después de la consulta (original): $imeiOriginal\n";
-
-
+        $vehicle = $gpsVehicle->vehicle;
 
         if (!$gpsVehicle) return collect([
             'success' => false,
             'message' => "Imei $imei is not associated with a vehicle",
         ]);
-
-        $vehicle = $gpsVehicle->vehicle;
 
         $waitSeconds = random_int(0, 40);
         $this->log("Sync photo from API GPS Syrus and vehicle $vehicle->number id: $vehicle->id in next $waitSeconds seconds");
@@ -81,23 +82,16 @@ class Service4G extends SyrusService
             'success' => true,
             'message' => "Success sync 4G",
         ]);
+
         if($imei=='352557104777777' || $imei=='352557104777778'){
             $deviceID = $gpsVehicle->tags;
-            echo "passs aqui con";
         }else{
            $deviceID = $gpsVehicle->device_id;
-            echo "IMEI procesado: $deviceID\n";
         }
-
-        /* if ($imei=='352557104788503'){
-             $date4G = '2024-06-17';
-         }else{
-             $date4G = carbon::now()->toDateString();
-         }*/
         $date4G = carbon::now()->toDateString();
+        //$date4G = '2025-01-11';
         $path = "$deviceID/$date4G";
         $response->put('imei', $imei);
-
         $storage = Storage::disk('Sync4G');
         $files = collect($storage->files($path));
 
@@ -110,16 +104,15 @@ class Service4G extends SyrusService
             if (Str::endsWith($file, '.jpg') && !Photo::where('uid', $file)->first()) {
                 $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
-
                 $fileHasError = false;
+                
                 try {
                     $jpegInfo = exec("jpeginfo -c " . $storage->path($file));
                     $fileHasError = Str::contains($jpegInfo, "ERROR");
                 } catch (Exception $e) {
-
+                    
                 }
                 $fileNames = explode('_', $fileName);
-                // Verificar si el fragmento de la fecha está en $fileNames[2] o $fileNames[3]
                 if (isset($fileNames[2]) && preg_match('/^\d{14}$/', $fileNames[2])) {
                     $dateImag = Carbon::createFromFormat("YmdHis", $fileNames[2])->toDateTimeString();
                 } elseif (isset($fileNames[3]) && preg_match('/^\d{14}$/', $fileNames[3])) {
@@ -129,20 +122,15 @@ class Service4G extends SyrusService
                 $date = ($dateImag === '')
                     ? Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString()
                     : $dateImag;
-
-
                 if (!$fileHasError) {
                     $image = Image::make($storage->get($file));
-
-
-                    $process = $service->saveImageData([
-                        'date' => $date,
-                        'img' => $image->encode('data-url'),
-                        'type' => 'syrus',
-                        'side' => $side,
-                        'uid' => $vehicle->id . "_" . $fileName
-                    ]);
-
+                        $process = $service->saveImageData([
+                            'date' => $date,
+                            'img' => $image->encode('data-url'),
+                            'type' => 'syrus',
+                            'side' => $side,
+                            'uid' => $vehicle->id . "_" . $fileName
+                        ]);
                     $success = $process->response->success;
                     $message = $process->response->message;
                     $extra = "";
@@ -164,15 +152,21 @@ class Service4G extends SyrusService
         }
 
         $response->put('sync', $saveFiles);
-
         $this->setStatus($imei, false);
-
         return $response;
     }
 
     function getSide($fileName, $imei)
     {
         $fileNames = explode('_', $fileName);
+        if ($imei == '352557104485654') {
+            if ($fileNames[1] == 'ch1') return '1';
+            if ($fileNames[1] == 'ch2') return '3';
+            if ($fileNames[1] == 'ch3') return '2';
+            if ($fileNames[1] == 'ch4') return '4';
+            if ($fileNames[1] == 'ch5') return '5';
+        }
+
         if ($imei == '352557104727600') {
             if ($fileNames[1] == 'ch1') return '1';
             if ($fileNames[1] == 'ch2') return '2';

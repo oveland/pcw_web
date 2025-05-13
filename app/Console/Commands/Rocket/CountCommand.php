@@ -64,7 +64,7 @@ class CountCommand extends Command
         if ($date && $vehiclePlate) {
             $vehicle = Vehicle::where('plate', $vehiclePlate)->first();
 
-            if ($vehicle) {
+            if ($vehicle  ) {
                 $initial = Carbon::now();
                 $this->log("Start count: Vehicle = $vehicle->number • Camera = $camera • Date = $date");
                 $response = $this->photoService->for($vehicle, $camera, $persistenceActivate, $persistenceRelease, $date)->processCount();

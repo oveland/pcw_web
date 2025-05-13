@@ -13,8 +13,8 @@ use App\Models\Passengers\Passenger;
 use App\Models\Routes\ControlPoint;
 use App\Models\Routes\DispatchRegister;
 use App\Models\Vehicles\CurrentLocation;
+use App\Models\Vehicles\Location;
 use App\Models\Vehicles\Vehicle;
-use App\Models\Company\Company;
 use App\PerfilSeat;
 use App\Services\Apps\Rocket\Photos\Rekognition\Zone;
 use App\Services\Apps\Rocket\SeatOccupationService;
@@ -28,7 +28,6 @@ use Illuminate\Support\Collection;
 use Image;
 use Storage;
 use Validator;
-use App\Models\Vehicles\Location;
 
 class PhotoService
 {
@@ -148,6 +147,8 @@ class PhotoService
         $message = "";
         $photo = null;
         $uid = $data['uid'];
+        $fileType = $data['file_type'] ?? 'T.jpg'; // Por defecto T.jpg si no se pasa
+        $fileName = $data['file_name'] ?? 'error'; // Aseguramos un valor por defecto
 
         $validator = Validator::make($data->toArray(), [
             'date' => 'required',
@@ -157,6 +158,11 @@ class PhotoService
             'uid' => 'required|unique:app_photos'
         ]);
 
+        // Solo para depuración, podrías quitar esto en producción
+        if ($validator->fails()) {
+            var_dump($validator->errors()->all());
+        }
+
         if ($validator->passes()) {
             $photo = new Photo($data->toArray());
             $photo->disk = self::DISK;
@@ -165,56 +171,72 @@ class PhotoService
 
             $currentLocation = $this->vehicle->currentLocation;
             $dr = $this->findDispatchRegisterByPhoto($photo, $currentLocation);
+            $dispatchRegisterId = $dr ? $dr->id : null;
 
-            $photo->dispatch_register_id = $dr ? $dr->id : null;
-
+            $photo->dispatch_register_id = $dispatchRegisterId;
             $photo->location_id = $currentLocation->location_id ?? null;
             $vId = $this->vehicle->id;
             $initialDate = $photo->date->toDateString();
             $finalDate = $photo->date->toDateTimeString();
-            $location = collect(DB::select("SELECT id from locations WHERE vehicle_id = $vId and date between '$initialDate' AND '$finalDate' ORDER BY date DESC LIMIT 1"))->first();
+            $location = collect(DB::select("SELECT id FROM locations WHERE vehicle_id = $vId AND date BETWEEN '$initialDate' AND '$finalDate' ORDER BY date DESC LIMIT 1"))->first();
 
             $photo->location_id = $location ? $location->id : null;
 
-            $image = $this->decodeImageData($data->get('img'));
+            // Guardar siempre en file_names, independientemente del tipo
+            $date = $data->get('date');
+            $this->saveFileName($uid, $vId, $dispatchRegisterId, $fileType, $fileName, $date);
 
+            if ($fileType === 'T.jpg') {
+                $image = $this->decodeImageData($data->get('img'));
 
-            try {
-                $storageResponse = $this->storage->put($photo->path, $image);
+                try {
+                    $storageResponse = $this->storage->put($photo->path, $image);
 
-                if ($photo->save() && $storageResponse) {
-                    $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
-                    $currentPhoto->fill($data->toArray());
-                    $currentPhoto->disk = $photo->disk;
-                    $currentPhoto->date = $photo->date;
-                    $currentPhoto->data = $photo->data;
-                    $currentPhoto->persons = $photo->persons;
-                    $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
-                    $currentPhoto->location_id = $photo->location_id;
-                    $currentPhoto->path = $photo->path;
+                    if ($photo->save() && $storageResponse) {
+                        $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
+                        $currentPhoto->fill($data->toArray());
+                        $currentPhoto->disk = $photo->disk;
+                        $currentPhoto->date = $photo->date;
+                        $currentPhoto->data = $photo->data;
+                        $currentPhoto->persons = $photo->persons;
+                        $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
+                        $currentPhoto->location_id = $photo->location_id;
+                        $currentPhoto->path = $photo->path;
 
-                    $currentPhoto->save();
+                        $currentPhoto->save();
 
-                    $success = $photo->processRekognition(false, null, true);
+                        $success = $photo->processRekognition(false, null, true);
 
-                    if ($success) $message = "Photo $uid saved successfully";
-                    else $message = "Photo $uid saved successfully with error in processRekognition";
-                } else {
-                    if (!$storageResponse) $message = "Image $uid has invalid format!";
-                    else $message = "Error saving data $uid";
+                        if ($success) {
+                            $message = "Photo $uid saved successfully";
+                        } else {
+                            $message = "Photo $uid saved successfully with error in processRekognition";
+                        }
+                    } else {
+                        if (!$storageResponse) {
+                            $message = "Image $uid has invalid format!";
+                        } else {
+                            $message = "Error saving data $uid";
+                        }
+                    }
+                } catch (Exception $e) {
+                    $message = "Error saving file $uid: " . $e->getMessage();
+                    $success = false;
                 }
-
-            } catch (Exception $e) {
-                throw $e;
-                $message = "Error saving file $uid: " . $e;
+            } else {
+                // Para E.jpg, solo registramos en file_names (ya lo hicimos arriba)
+                $success = true;
+                $message = "File $uid (E.jpg) registered successfully";
             }
         } else {
+            // Manejo de errores de validación
             $photoSaved = Photo::where('uid', $uid)->first();
 
-            if ($uid) {
+            if ($photoSaved) {
                 $success = $photoSaved->processRekognition(false, null, true);
-                if ($success === true) $message = "Photo $uid updated successfully";
-                else $message = "Photo $uid is currently saved but processRekognition has error";
+                $message = $success
+                    ? "Photo $uid updated successfully"
+                    : "Photo $uid is currently saved but processRekognition has error";
             } else {
                 $success = false;
                 $message = "Error saving photo $uid: " . collect($validator->errors())->flatten()->implode(' ');
@@ -229,87 +251,28 @@ class PhotoService
             'photo' => $success && $withPhoto ? $photo->getAPIFields() : null
         ];
     }
+
     function saveImage5GData($data, $withPhoto = false)
     {
-        $data = collect($data);
-        $success = false;
-        $message = "";
-        $photo = null;
-        $uid = $data['uid'];
+        dd();
+    }
 
-        $validator = Validator::make($data->toArray(), [
-            'date' => 'required',
-            'img' => 'required',
-            'type' => 'required',
-            'side' => 'required',
-            'uid' => 'required|unique:app_photos'
-        ]);
+    protected function saveFileName($uid, $vehicleId, $dispatchRegisterId, $fileType, $fileName, $date)
+    {
+        //dd("entro a guardar");
 
-        if ($validator->passes()) {
-            $photo = new Photo($data->toArray());
-            $photo->disk = self::DISK;
-            $photo->date = Carbon::createFromFormat('Y-m-d H:i:s', $data->get('date'), 'America/Bogota');
-            $photo->vehicle()->associate($this->vehicle);
-
-            $currentLocation = $this->vehicle->currentLocation;
-            $dr = $this->findDispatchRegisterByPhoto($photo, $currentLocation);
-
-            $photo->dispatch_register_id = $dr ? $dr->id : null;
-
-            $photo->location_id = $currentLocation->location_id ?? null;
-            $vId = $this->vehicle->id;
-            $initialDate = $photo->date->toDateString();
-            $finalDate = $photo->date->toDateTimeString();
-            $location = collect(DB::select("SELECT id from locations WHERE vehicle_id = $vId and date between '$initialDate' AND '$finalDate' ORDER BY date DESC LIMIT 1"))->first();
-
-            $photo->location_id = $location ? $location->id : null;
-
-            $image = $this->decodeImageData($data->get('img'));
-
-
-            try {
-                $storageResponse = $this->storage->put($photo->path, $image);
-
-                if ($photo->save() && $storageResponse) {
-                    $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
-                    $currentPhoto->fill($data->toArray());
-                    $currentPhoto->disk = $photo->disk;
-                    $currentPhoto->date = $photo->date;
-                    $currentPhoto->data = $photo->data;
-                    $currentPhoto->persons = $photo->persons;
-                    $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
-                    $currentPhoto->location_id = $photo->location_id;
-                    $currentPhoto->path = $photo->path;
-
-                    $currentPhoto->save();
-                    $message = "Photo $uid saved successfully  processRekognition";
-                } else {
-                    if (!$storageResponse) $message = "Image $uid has invalid format!";
-                    else $message = "Error saving data $uid";
-                }
-
-            } catch (Exception $e) {
-                throw $e;
-                $message = "Error saving file $uid: " . $e;
-            }
-        } else {
-            $photoSaved = Photo::where('uid', $uid)->first();
-
-            if ($uid) {
-                 $message = "Photo $uid is currently saved but processRekognition has error";
-            } else {
-                $success = false;
-                $message = "Error saving photo $uid: " . collect($validator->errors())->flatten()->implode(' ');
-            }
-        }
-
-        return (object)[
-            'response' => (object)[
-                'success' => $success,
-                'message' => $message,
-            ],
-            'photo' => $success && $withPhoto ? $photo->getAPIFields() : null
-        ];
+        \DB::table('file_names')->updateOrInsert(
+            ['file_name' => $fileName, 'vehicle_id' => $vehicleId],
+            [
+                'file_name' => $fileName,
+                'vehicle_id' => $vehicleId,
+                'dispatch_register_id' => $dispatchRegisterId,
+                'date' => $date,
+                'file_type' => $fileType,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        );
     }
 
     function notifyToMap()
@@ -507,10 +470,11 @@ class PhotoService
             ->get();
     }
 
-    function belongsToLargeRoute($drs) {
-        return collect($drs)->filter(function(DispatchRegister $dr) {
-            return $dr->route->isLarge();
-        })->count() > 0;
+    function belongsToLargeRoute($drs)
+    {
+        return collect($drs)->filter(function (DispatchRegister $dr) {
+                return $dr->route->isLarge();
+            })->count() > 0;
     }
 
     function getVehicleCameras(): array
@@ -533,7 +497,7 @@ class PhotoService
 
         $limit = 4000;
 
-        if(request()->get('limit')) {
+        if (request()->get('limit')) {
             $limit = intval(request()->get('limit'));
         }
 
@@ -548,7 +512,6 @@ class PhotoService
             ->with('dispatchRegister')
             ->limit($limit)
             ->orderBy('date');
-
 
 
         if ($this->belongsToLargeRoute($activeDrs)) {
@@ -702,10 +665,9 @@ class PhotoService
         $totalByCameras = 0;
         $allPhotos = $this->getPhotos();
 
-//        echo "Process " . $allPhotos->count() . " photos. Date = $this->date , Camera = $this->camera \n";
+        echo "Process " . $allPhotos->count() . " photos. Date = $this->date , Camera = $this->camera \n";
 
         $drIds = $allPhotos->where('dispatch_register_id', '<>', null)->groupBy('dispatch_register_id')->keys();
-
         $historic = collect([]);
         $historicByCameras = collect([]);
         foreach ($this->getVehicleCameras() as $sideCamera) {
@@ -720,23 +682,76 @@ class PhotoService
         if ($withMultiTariff || true) {
             $this->processMultiTariff($historic);
         }
-
         foreach ($drIds as $drId) {
             $dr = DispatchRegister::find($drId);
             $route = $dr->route;
 
             $countByRoundTrip = 0;
             $countMaxByRoundTrip = 0;
+            $countMaxPersonByRoundTrip = 0;
             foreach ($historicByCameras as $historicCamera) {
+                //dd($drId);
                 $data = $historicCamera->get($drId);
-
                 if ($data) {
                     $lastHistoricData = $data->sortBy('ts')->last();
-
                     $countByRoundTrip = $countByRoundTrip + $lastHistoricData->passengers->totalInRoundTrip;
-                    $countMaxByRoundTrip = $countMaxByRoundTrip + $lastHistoricData->passengers->maxPersonByRoundTrip;
+                    //$countMaxByRoundTrip = $countMaxByRoundTrip + $lastHistoricData->passengers->maxPersonByRoundTrip;
+
+
+                    $currentCameraTime = Carbon::parse($lastHistoricData->passengers->dateMAxFACE);
+
+                    $validCamera = true;
+
+                    // Validar coincidencia de tiempo ±30 segundos con las otras cámaras
+                    foreach ($historicByCameras as $otherCamera) {
+
+                        $otherData = $otherCamera->get($drId);
+                        if ($otherData && $otherCamera !== $historicCamera) {
+                            $otherHistoricData = $otherData->sortBy('ts')->last();
+                            $otherTime = Carbon::parse($otherHistoricData->passengers->dateMAxFACE);
+
+                            if (abs($currentCameraTime->diffInSeconds($otherTime)) > 30) {
+                                $validCamera = false;
+                                break;
+                            }
+                        }
+                    }
+                    dump(
+                        'TODO: eliminar'
+                    );
+                    $hasExactDateMatch = $validCamera;
+                    if ($validCamera) {
+                        $countMaxByRoundTrip += $lastHistoricData->passengers->maxPersonByRoundTrip;
+                        $countMaxPersonByRoundTrip += $lastHistoricData->passengers->PersonByRoundTripMax;
+                        dump(
+                            'passe', $lastHistoricData->passengers->maxPersonByRoundTrip,
+                            'Cama->>', $lastHistoricData->camera,
+                            'date->>', $lastHistoricData->passengers->dateMAxFACE,
+                            'id->>', $lastHistoricData->passengers->idMAXFACE,
+                            'id->>', $drId, '     ', '     '
+                        );
+                        // $countMaxPersonByRoundTrip += $lastHistoricData->passengers->PersonByRoundTripMax;
+                    } else {
+                        $countMaxByRoundTrip += $lastHistoricData->passengers->maxPersonByRoundTrip;
+                        $countMaxPersonByRoundTrip += $lastHistoricData->passengers->PersonByRoundTripMax;
+                    }
+                    $jsonData = json_encode([
+                        'count' => $countMaxByRoundTrip,
+                        'hasExactDateMatch' => $hasExactDateMatch,
+                        'countPerson' => $countMaxPersonByRoundTrip,
+                    ]);
+
+
+                    /* dump('pasajeros->>',$lastHistoricData->passengers->maxPersonByRoundTrip,
+                                 'Camara->>',$lastHistoricData->camera,
+                                 'fecha foto->>',$lastHistoricData->passengers->dateMAxFACE,
+                                 'id foto->>',$lastHistoricData->passengers->idMAXFACE,
+                                 'id registro->>',$drId,'     ','     ');
+                     $countMaxPersonByRoundTrip = $countMaxPersonByRoundTrip + $lastHistoricData->passengers->PersonByRoundTripMax;*/
+
                 }
             }
+
 
 //            if ($dr->isActive()) echo " • DR $dr->id ($dr->status) $dr->date dep: $dr->departure_time - $dr->arrival_time $route->name Count: $countByRoundTrip \n";
 
@@ -748,8 +763,153 @@ class PhotoService
 
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip WHERE id_registro = $drId AND id_empresa <> 39");
-            if ($this->vehicle->company_id == 39) {
-                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_front_sensor_counter = $countMaxByRoundTrip WHERE id_registro = $drId");
+
+            if ($this->vehicle->company_id == 39 && ($this->vehicle->number == '8511' || $this->vehicle->number == '2907')) {
+                /*  DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, count_max_faces = :jsonData WHERE id_registro = :drId", [
+                      'jsonData' => $jsonData,
+                      'drId' => $drId
+                  ]);*/  //se comenta porque no se usa, puede ser que mas adelante se use...
+
+                /* Implementation count 5G AREA */
+                // Parámetros configurables
+                $preArrivalTimeMinutes = 15; // Tiempo en minutos para restar a la hora de salida
+                $postArrivalTimeMinutes = 0; // Tiempo en minutos para añadir a la hora de llegada
+                $minFilesPerArea = 1;        // Número mínimo de archivos requeridos por área
+
+                $departure = Carbon::createFromFormat('Y-m-d H:i:s', "{$dr->date} {$dr->departure_time}");
+                $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "{$dr->date_end} {$dr->arrival_time}");
+
+                $startTime = $departure->copy()->subMinutes($preArrivalTimeMinutes);
+                $endTime = $arrival->copy()->subMinutes($postArrivalTimeMinutes);
+
+                dump("=== PARÁMETROS DE BÚSQUEDA ===");
+                dump("ID Registro: $drId");
+                dump("Rango de fechas: {$startTime->toDateTimeString()} hasta {$endTime->toDateTimeString()}");
+                dump("Vehículo ID: {$dr->vehicle_id}");
+
+                $fileNames = DB::table('file_names')
+                    ->whereBetween('date', [$startTime->toDateTimeString(), $endTime->toDateTimeString()])
+                    ->where('vehicle_id', $dr->vehicle_id)
+                    ->pluck('file_name')
+                    ->collect();
+
+                dump("Total de archivos encontrados: " . $fileNames->count());
+
+                $groupedFiles = $fileNames->filter(function ($fileName) {
+                    $pattern = '/^.*ch[0-9]+_(\d+)(?:_id\d+)?_(\d{14})_[TE]\.jpg$/';
+                    if (preg_match($pattern, $fileName, $matches)) {
+                        return true;
+                    }
+                    dump("Archivo descartado (sin área explícita): $fileName");
+                    return false;
+                })->groupBy(function ($fileName) {
+                    // Extraer el área del nombre de archivo
+                    preg_match('/^.*ch[0-9]+_(\d+)(?:_id\d+)?_\d{14}_[TE]\.jpg$/', $fileName, $matches);
+                    return $matches[1]; // Agrupar por el número de área
+                });
+
+                dump("=== GRUPOS DETECTADOS POR ÁREA ===");
+                $sortedGroups = $groupedFiles->sortKeysDesc();
+
+                foreach ($sortedGroups as $area => $files) {
+                    dump("Área: $area - Total archivos: " . $files->count());
+                    foreach ($files as $f) {
+                        dump("  - $f");
+                    }
+                    dump("--------------------------------------");
+                }
+
+                // Filtrar grupos que tengan al menos el mínimo de archivos configurado
+                $filteredGroups = $groupedFiles->filter(function ($group) use ($minFilesPerArea) {
+                    // Solo criterio: Tener igual o mayor al mínimo de archivos configurado
+                    return $group->count() >= $minFilesPerArea;
+                });
+
+                $CountArea5G = $filteredGroups->count();
+                if ($CountArea5G) {
+                    DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, rocket_5g_area = $CountArea5G WHERE id_registro = $drId");
+                }
+
+                dump("=== RESUMEN DE RESULTADOS ===");
+                dump("Total de áreas con al menos $minFilesPerArea archivos: " . $CountArea5G);
+
+                dump("=== ÁREAS VÁLIDAS CON AL MENOS $minFilesPerArea ARCHIVOS ===");
+                foreach ($filteredGroups as $area => $files) {
+                    dump("Área: $area - Archivos: " . $files->count());
+                    foreach ($files as $f) {
+                        dump("  - $f");
+                    }
+                }
+
+                dump("=== ÁREAS DESCARTADAS (MENOS DE $minFilesPerArea ARCHIVOS) ===");
+                $fewFilesGroups = $groupedFiles->filter(function ($group) use ($minFilesPerArea) {
+                    return $group->count() < $minFilesPerArea;
+                });
+
+                if ($fewFilesGroups->count() > 0) {
+                    dump("Grupos con menos de $minFilesPerArea archivos: " . $fewFilesGroups->count());
+                    foreach ($fewFilesGroups as $area => $files) {
+                        dump("Área: $area - Archivos: " . $files->count());
+                        foreach ($files as $f) {
+                            dump("  - $f");
+                        }
+                    }
+                } else {
+                    dump("No hay áreas descartadas por tener menos de $minFilesPerArea archivos");
+                }
+//                //conteo por ID
+//                $hasIdFiles = $fileNames->filter(function ($fileName) {
+//                        return preg_match('/^.*_ch[0-9]+_\d+_id\d+_\d{14}_[TE]\.jpg$/', $fileName);
+//                    })->count() > 0;
+//
+//                // Solo proceder si hay archivos con ID
+//                if ($hasIdFiles) {
+//                    // Filtrar y agrupar archivos por ID
+//                    $groupedFilesById = $fileNames->filter(function ($fileName) {
+//                        // Expresión regular para validar el formato del nombre de archivo con ID
+//                        $pattern = '/^.*_ch[0-9]+_\d+_id(\d+)_\d{14}_[TE]\.jpg$/';
+//                        if (!preg_match($pattern, $fileName, $matches)) {
+//                            dump("Archivo descartado para ID (formato inválido): $fileName");
+//                            return false;
+//                        }
+//
+//                        // $matches[1] contiene el ID
+//                        return true;
+//                    })->groupBy(function ($fileName) {
+//                        // Extraer el ID usando la misma expresión regular
+//                        preg_match('/^.*_ch[0-9]+_\d+_id(\d+)_\d{14}_[TE]\.jpg$/', $fileName, $matches);
+//                        return $matches[1]; // Agrupar por ID
+//                    });
+//
+//                    // Debug de grupos por ID
+//                    dump("=== GRUPOS POR ID DETECTADOS ===");
+//                    dump($drId, $startTime->toDateString(), $endTime->toDateString());
+//
+//                    // Ordenamos por ID de mayor a menor
+//                    $sortedGroupsById = $groupedFilesById->sortKeysDesc();
+//
+//                    foreach ($sortedGroupsById as $id => $files) {
+//                        dump("ID: $id - Total archivos: " . $files->count());
+//                        foreach ($files as $f) {
+//                            dump("  - $f");
+//                        }
+//                    }
+//
+//                    // Filtrado de grupos con 2 o más archivos
+//                    $filteredGroupsById = $groupedFilesById->filter(function ($group) {
+//                        return $group->count() >= 2;
+//                    });
+//
+//                    // Contar los grupos filtrados por ID
+//                    $CountID5G = $filteredGroupsById->count();
+//
+//                    // Actualizar la base de datos si hay grupos válidos
+//
+//                } else {
+//                    dump("No se encontraron archivos con formato ID para el registro: $drId");
+//
+//                }
+
             }
         }
 
@@ -1028,10 +1188,6 @@ class PhotoService
                     $newPersonsT2 = $statusDR->start ? $seatingCounted->count() : $seatingCounted->count() - $prevSeatingCounted->count(); // By Criteria of Topologies 2 (Nivel de llenado de Vasos)
 
 
-
-
-
-
 //                    $newPersons = max($newPersons, $newPersons2);
 
                     if ($statusDR->start) {
@@ -1100,6 +1256,9 @@ class PhotoService
                         $personsByRoundTrip = $personsByRoundTripT;
                         $totalPersons = $totalPersonsT;
                         $maxPersonByRoundTrip = $rekognitionCounts->get('faces')->max->value;
+                        $maxDATE = $rekognitionCounts->get('faces')->max->date ? $rekognitionCounts->get('faces')->max->date->toDateTimeString() : null;
+                        $maxID = $rekognitionCounts->get('faces')->max->photoId;
+                        $PersonByRoundTripMax = $rekognitionCounts->get('persons')->max->value ?? 0;
                         break;
                 }
 
@@ -1136,6 +1295,9 @@ class PhotoService
                         'totalSumOccupied' => $totalSumOccupied,
                         'totalSumReleased' => $totalSumReleased,
                         'maxPersonByRoundTrip' => $maxPersonByRoundTrip,
+                        'dateMAxFACE' => $maxDATE ?? '',
+                        'idMAXFACE' => $maxID ?? 0,
+                        'PersonByRoundTripMax' => $PersonByRoundTripMax ?? 0,
                         'seating' => $activationCounts
                     ],
                 ]);
@@ -1167,6 +1329,7 @@ class PhotoService
 
     function processRekognitionCounts($details, $prevDetails, $pevRekognitionCounts = null, Photo $photo, $firstPhotoInRoundTrip)
     {
+        //dd($prevDetails, $details);
         $rekognitionCounts = collect([]);
 
         $types = [
@@ -1226,6 +1389,7 @@ class PhotoService
             // Calculate max in round trip
             $prevMaxDetection = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->max->detection : 0;
             $prevMaxPhotoId = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->max->photoId : '';
+            $prevMaxDate = $pevRekognitionCounts ? collect($pevRekognitionCounts)->get($type)->max->date : null;
 
             $maxValue = 0;
 
@@ -1234,13 +1398,16 @@ class PhotoService
 
             if ($firstPhotoInRoundTrip) {
                 $maxDetection = 0;
+                $maxDate = $photo->date;
             }
 
             if ($photo->dispatch_register_id) {
+                $maxDate = $prevMaxDate ?? $photo->date;
                 if ($count > $prevMaxDetection) {
                     $total = $total + ($count - $maxDetection);
                     $maxDetection = $count;
                     $maxPhotoId = $photo->id;
+                    $maxDate = $photo->date;
                 }
 
                 $maxValue = $maxDetection > 0 ? $maxDetection : 0;
@@ -1260,6 +1427,7 @@ class PhotoService
                     'photoId' => $maxPhotoId,
                     'value' => $maxValue,
                     'detection' => $maxDetection,
+                    'date' => $maxDate ?? null,
                     'dr' => (object)[
                         'id' => $photo->dispatch_register_id,
                         'routeName' => $photo->dispatchRegister ? $photo->dispatchRegister->route->name : '',
@@ -1310,7 +1478,7 @@ class PhotoService
      * @param $base64
      * @return false|string
      */
-    private function decodeImageData($base64)
+    protected function decodeImageData($base64)
     {
         $image_parts = explode(";base64,", $base64);
 
