@@ -643,6 +643,15 @@
                                         @lang('Video')
                                     </a>
                                 </li>
+                             {{--   @if(Auth::user()->isAdmin())
+                                    <li class="nav-item menu-trama-5g">
+                                        <a href="{{ route('report.passengers.frames') }}" class="faa-parent animated-hover nav-link nav-toggle">
+                                            <i class="fa fa-video-camera faa-vertical"></i>
+                                            @lang('Tramas 5G')
+                                        </a>
+                                    </li>
+                                @endif--}}
+
                                 @if( Auth::user() && (Auth::user()->isAdmin() ||  Auth::user()->company->hasRecorderCounter()) )
                                     <li class="nav-item menu-passengers-recorders">
                                         <a href="{{ route('report-passengers-consolidated')  }}" class="faa-parent animated-hover nav-link">

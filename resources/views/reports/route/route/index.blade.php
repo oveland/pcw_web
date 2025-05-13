@@ -72,6 +72,14 @@
                                 <span>@lang('Sync spreadsheets')</span>
                             </button>
                         </div>
+                        @if(Auth::user()->isAdmin() ||  Auth::user()->isExpreso())
+                            <div class="excel-export-container">
+                                <button id="excel-export-button" type="button" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-file-excel-o"></i>
+                                    <span>@lang('Vuelos Acomulados')</span>
+                                </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="panel-body p-b-15">
@@ -443,6 +451,41 @@
                     gerror('Ocurrió un error al procesar la solicutd. Contacte a su administrador');
                     processing(false);
                 })
+        });
+        $('#excel-export-button').click(function() {
+            const button = $(this);
+            const buttonLabel = button.find('span');
+            const buttonIcon = button.find('i');
+
+            // Get form values
+            const companyId = $('#company-report').val() || '';
+            const dateReport = $('#date-report').val() || '';
+
+            function processing(loading) {
+                buttonLabel.text(loading ? '@lang('Exporting...') ' : '@lang('Excel vuelos')');
+                loading ? buttonIcon.addClass('fa-spin') : buttonIcon.removeClass('fa-spin');
+                button.prop('disabled', loading);
+            }
+
+            if (!form.isValid()) {
+                return;
+            }
+
+            processing(true);
+
+            // Build the URL with all the parameters
+            let url = '{{ route('report-route-export-acomulated') }}?';
+            url += 'company-report=' + encodeURIComponent(companyId);
+            url += '&date-report=' + encodeURIComponent(dateReport);
+
+
+            // Download the file
+            window.location.href = url;
+
+            // Reset button state after a delay
+            setTimeout(function() {
+                processing(false);
+            }, 3000);
         });
     </script>
 @endsection

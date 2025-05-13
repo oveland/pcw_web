@@ -20,6 +20,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use function foo\func;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Services\Exports\Routes\RouteReportExportAcomulated;
+use DB;
 
 class ReportRouteController extends Controller
 {
@@ -127,7 +130,7 @@ class ReportRouteController extends Controller
 
         switch ($typeReport) {
             case 'group-vehicles':
-                if ($request->get('export')) $this->routeService->getExporter($company)
+                if ($request->get('export')) return $this->routeService->getExporter($company)
                     ->groupedRouteReport($dispatchRegistersByVehicles, $dateReport, null, false, $exportFiCS);
 
                 $view = 'reports.route.route.routeReportByVehicle';
@@ -371,4 +374,192 @@ class ReportRouteController extends Controller
                 break;
         }
     }
+    public function exportAcomulated(Request $request)
+    {
+        // Get parameters from request
+        $companyId = $request->get('company-report') ?? 39;
+        $dateReport = $request->get('date-report');
+        $routeIdsInput = $request->get('route_ids'); // Asumiendo que el parámetro se llama route_ids
+
+        // Validate required fields
+        if (empty($dateReport)) {
+            return back()->with('error', __('La fecha es obligatoria'));
+        }
+
+        // Get route IDs
+        $routeIdsArray = [279, 280, 276, 275]; // Default routes
+        if (!empty($routeIdsInput) && $routeIdsInput !== 'all' && $routeIdsInput !== 'null') {
+            $routeIdsArray = explode(',', $routeIdsInput);
+        }
+
+        // Get report data
+        $reportData = $this->getRouteDispatchReport($dateReport, $companyId, $routeIdsArray);
+
+
+
+        // Instanciar tu clase preparadora de datos
+        $exportProcessor = new RouteReportExportAcomulated($reportData);
+
+        // Generate filename with date
+        $filename = 'reporte_despachos_' . str_replace('-', '_', $dateReport); // Nombre de archivo sin extensión aún
+
+        // Export to Excel usando sintaxis v2.1
+        return Excel::create($filename, function($excel) use ($exportProcessor,$dateReport) {
+
+            $excel->sheet($exportProcessor->getTitle(), function($sheet) use ($exportProcessor, $dateReport) {
+
+                $mainTitle = 'RUTA PALMIRA';
+                $sheet->mergeCells('A1:B1');
+                $sheet->row(1, [$mainTitle]);
+                $sheet->row(1, function($row) {
+                    $row->setFontWeight('bold');
+                    $row->setFontColor('#000000');
+                    $row->setBackground('#4472C4');
+                    $row->setAlignment('center');
+                });
+                $dateExport = $dateReport;
+                $sheet->mergeCells('A2:B2');
+                $sheet->row(2, ['FECHA: ' . $dateReport]);
+                $sheet->row(2, function($row) {
+                    $row->setFontWeight('bold');
+                    $row->setFontColor('#000000');
+                    $row->setBackground('#4472C4');
+                    $row->setAlignment('center');
+                });
+
+                $sheet->row(3, $exportProcessor->getHeadings());
+
+                $sheet->row(3, function($row) {
+                    $row->setFontWeight('bold');
+                    $row->setFontColor('#000000');
+                    $row->setBackground('#4472C4');
+                    $row->setAlignment('center');
+                });
+
+                // 3. Añadir los datos
+                $dataToExport = $exportProcessor->getExportData();
+
+
+                // Solo añadir filas si dataToExport no está vacío o si no es la fila placeholder
+                // La clase RouteReportExportAcomulated ahora asegura que si no hay datos,
+                // getExportData() devuelve [['', '']] para que las cabeceras tengan el ancho correcto.
+                // Si solo quieres cabeceras y ningún dato (ni siquiera fila vacía) si no hay resultados:
+                if (!empty($dataToExport)) {
+                    // ...
+                    $rowIndex = 4; // Empezamos en la fila 3, ya que 1 es el título y 2 es la cabecera
+
+                    foreach ($dataToExport as $rowData) {
+                        $sheet->row($rowIndex, $rowData);
+
+                        $sheet->row($rowIndex, function($row) {
+                            $row->setAlignment('center');
+                            // Si querés vertical también:
+                            // $row->setValignment('center');
+                        });
+
+                        $rowIndex++;
+                    }
+                } else {
+                    dd('NO EXISTEN DATOS'); // <--- O AQUÍ
+                }
+
+
+                // 4. Aplicar bordes a todas las celdas con contenido
+                // Es importante hacer esto DESPUÉS de añadir todos los datos
+                $highestRow = $sheet->getHighestDataRow(); // Obtiene la última fila con datos
+                $highestColumn = $sheet->getHighestDataColumn(); // Obtiene la última columna con datos
+
+                if ($highestRow > 0) { // Solo si hay alguna fila (al menos cabeceras)
+                    $sheet->setBorder("A1:{$highestColumn}{$highestRow}", 'thin');
+                }
+
+                // 5. Zebra striping para filas de datos (desde la fila 2)
+                if ($highestRow > 1) { // Solo si hay más que la cabecera
+                    for ($i = 2; $i <= $highestRow; $i++) {
+                        if ($i % 2 == 0) { // Filas pares del Excel (segunda fila de datos, cuarta, etc.)
+                            $sheet->row($i, function($row) {
+                                $row->setBackground('#DDEBF7');
+                            });
+                        }
+                    }
+                }
+
+                // 6. ShouldAutoSize (Ajustar ancho de columnas automáticamente)
+                $sheet->setAutoSize(true);
+                // O para columnas específicas si es necesario:
+                // $sheet->setAutoSize(['A', 'B']);
+            });
+
+        })->download('xlsx'); // Especifica la extensión aquí
+    }
+
+    /**
+     * Get the route dispatch report data
+     *
+     * @param string $dateReport
+     * @param int $companyId
+     * @param array $routeIds
+     * @return array
+     */
+    private function getRouteDispatchReport($dateReport, $companyId, $routeIds)
+    {
+        // Asegurarse que los IDs de ruta sean numéricos para evitar inyección SQL
+        $sanitizedRouteIds = array_map('intval', $routeIds);
+        if (empty($sanitizedRouteIds)) {
+            // Si después de sanitizar no quedan IDs, o no se proporcionaron,
+            // podrías devolver un array vacío o manejarlo como un error.
+            // Para este ejemplo, si está vacío, la consulta fallará o devolverá 0 resultados,
+            // lo cual está bien si las cabeceras aún se muestran.
+            // Si es un requisito que siempre haya rutas, añade una validación.
+            // Por ahora, si está vacío, la cláusula IN será IN() que puede dar error en algunos SQL.
+            // Es mejor asegurarse que no esté vacío, o construir la query condicionalmente.
+            // Por simplicidad, asumimos que $routeIds siempre tendrá valores válidos.
+            // Si $routeIds puede estar vacío y eso es válido, la query debe manejarlo.
+            // Una forma simple es no incluir la cláusula AND r.id_ruta IN si $sanitizedRouteIds está vacío,
+            // pero eso cambiaría la lógica del reporte.
+            // Por ahora, si $sanitizedRouteIds está vacío, la query SQL con IN () fallará.
+            // Una solución simple si se permite vacío es `AND (1=0 OR r.id_ruta IN (...))`
+            // o simplemente no añadir esa parte del WHERE si no hay routeIds.
+            // Por ahora, asumimos que $routeIds siempre tiene elementos.
+            if (empty($sanitizedRouteIds)) {
+                return []; // Devolver vacío si no hay rutas válidas, para evitar error en IN()
+            }
+        }
+
+        $results = DB::select("
+        SELECT
+            r.n_vehiculo,
+            COUNT(*) AS cantidad_despachos
+        FROM registrodespacho r
+            LEFT JOIN dr_observations obs_spreadsheet
+                   ON r.id_registro = obs_spreadsheet.dispatch_register_id
+                      AND obs_spreadsheet.field = 'spreadsheet_passengers'
+            LEFT JOIN dr_observations obs_registradora
+                   ON r.id_registro = obs_registradora.dispatch_register_id
+                      AND obs_registradora.field = 'registradora_llegada'
+            LEFT JOIN routes rt
+                   ON r.id_ruta = rt.id
+        WHERE
+            r.fecha = ?
+          AND r.id_empresa = ?
+          AND r.cancelado = FALSE
+          AND r.observaciones = 'Terminó'
+          AND r.id_ruta IN (" . implode(',', $sanitizedRouteIds) . ") /* Usar los IDs sanitizados */
+        GROUP BY r.n_vehiculo
+        ORDER BY cantidad_despachos ASC
+    ", [$dateReport, $companyId]);
+        // Format for Excel
+        $formattedData = [];
+        foreach ($results as $row) {
+            $formattedData[] = [
+                'Vehículo' => $row->n_vehiculo,
+                'Cantidad de Despachos' => $row->cantidad_despachos
+                // No necesitas más campos si tu reporte solo tiene estos dos.
+                // Si tu query devolviera más campos y los quisieras, añádelos aquí.
+            ];
+        }
+
+        return $formattedData;
+    }
+
 }

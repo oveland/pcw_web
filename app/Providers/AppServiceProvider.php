@@ -6,6 +6,7 @@ use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
+use App\Helpers\PHPExcelFix;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if (App::environment(['production', 'dev'])) {
             URL::forceScheme('https');
+            //CountPatch::register();
         }
     }
 

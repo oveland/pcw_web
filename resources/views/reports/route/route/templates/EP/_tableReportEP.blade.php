@@ -80,7 +80,7 @@
             </th>
 
         @endif
-        @if(Auth::user()->isSuperAdmin())
+        @if(Auth::user()->isSuperAdmin()|| $user->id =='2018101356' || $user->isExpreso())
             <th class="text-center">
                 <i class="icon-users text-muted"></i><br>
                 {{ str_limit(__('Pasajeros'),9) }}
@@ -89,12 +89,12 @@
             </th>
         @endif
 
-        @if($user->canViewtotalSistem())
+        {{--@if($user->canViewtotalSistem())
             <th>
                 <i class="icon-users text-muted">
                 </i><br>{{"Total Sistema"}}
             </th>
-        @endif
+        @endif--}}
         @if($company->hasSensorTotalCounter())
             <th>
                 <i class="icon-users text-muted"></i>
@@ -121,7 +121,7 @@
                 </small>
             </th>
         @endif
-        @if($user->canViewAverageCount())
+        @if($user->canViewAverageCount()  || $user->id =='2018101356' )
             <th>
                 <i class="icon-users text-muted">
                 </i><br>{{"Count 5G"}}
@@ -133,7 +133,7 @@
                 @lang('Info. Fotos')
             </th>
         @endif
-        @if(Auth::user()->isSuperAdmin())
+        {{--@if(Auth::user()->isSuperAdmin())
             <th class="text-center">
                 <i class="icon-users text-muted"></i><br>
                 @lang('Conteo Maximos')
@@ -143,7 +143,7 @@
                 @lang('Total Maximos')
             </th>
 
-        @endif
+        @endif--}}
         @if($user->canViewAction())
             <th width="10%">
                 <i class="fa fa-rocket text-muted"></i><br>
@@ -171,9 +171,10 @@
         $sumByCountSpreadSheet = 0;
         $sumByCountSensor = 0;
         $sumByCountProm = 0;
-        $sumByCountManual=0;
-        $sumByCountPassengerVisual=0;
-        $sumByCountSpreadSheetFICS=0;
+        $sumByCountManual = 0;
+        $sumByCountPassengerVisual = 0;
+        $sumByCountSpreadSheetFICS = 0;
+        $sumByCount5G = 0;
     @endphp
 
     @foreach( $dispatchRegisters as $dispatchRegister )
@@ -236,16 +237,16 @@
                         <small class="text-muted"
                                style="margin-top: 12px;display: block">{{ $dv ? $dv->route->name : '---' }}</small>
                         @if($routeFics)
-                        <span class="label label-yellow label-lg"
-                              style="margin-top: 12px;display: block"
-                              title="Ruta FICS">{{ $routeFics }}</span>
+                            <span class="label label-yellow label-lg"
+                                  style="margin-top: 12px;display: block"
+                                  title="Ruta FICS">{{ $routeFics }}</span>
                         @endif
                     @else
                         <span>{{ $route->name }}</span>
                         @if($routeFics)
-                        <span class="label label-yellow label-lg"
-                              style="margin-top: 12px;display: block"
-                              title="Ruta FICS">{{ $routeFics }}</span>
+                            <span class="label label-yellow label-lg"
+                                  style="margin-top: 12px;display: block"
+                                  title="Ruta FICS">{{ $routeFics }}</span>
                         @endif
                     @endif
                 </span>
@@ -601,7 +602,7 @@
                 </td>
 
             @endif
-            @if(Auth::user()->isSuperAdmin())
+            @if(Auth::user()->isSuperAdmin() || $user->id=='2018101356' || $user->isExpreso())
                 <td width="5%" class="text-center">
                     <span title=""
                           class=" tooltips"
@@ -615,7 +616,7 @@
                 $countBySensorFinal = $dispatchRegister->final_sensor_counter;
                 $sumByCountSensor += $countBySensorFinal;
             @endphp
-            @if($user->canViewtotalSistem())
+            {{--@if($user->canViewtotalSistem())
                 @php
                     $routeProm = $dispatchRegister->route_id;
                     $topologies = \App\Models\Vehicles\TopologiesSeats::query() //total asientos de VH
@@ -718,7 +719,7 @@
                         </span>
                     </td>
                 @endif
-            @endif
+            @endif--}}
             @if($company->hasSensorTotalCounter())
                 <td width="5%"
                     class="text-center">
@@ -753,15 +754,27 @@
                     </small>
                 </td>
             @endif
-            @if($isExpresoPalmira && $user->canViewAverageCount() )
+            @if($isExpresoPalmira && $user->isSuperAdmin() || $user->id =='2018101356' )
+                @php
+                    $sumByCount5G += $dispatchRegister->rocket_5g_area;
+                @endphp
                 <td width="10%" class="text-center">
-                        <span title="Conteo por AREA">
-                            {{$dispatchRegister->rocket_5g_area}}
-                        </span><br>
-                        <span title="Conteo por ID">
-                            {{$dispatchRegister->rocket_5g_id}}
-                        </span>
+                    <span title="Conteo por Área" style="font-weight: bold">
+                        {{ $dispatchRegister->rocket_5g_area }}
+                        @php
+                            $visualCount = (int) ($visualPassengers->value ?? 0);
+                            $observationCount = $dispatchRegister->rocket_5g_area ?? 0;
+                            $diferencia = $visualCount - $observationCount;
+                            $color = $diferencia === 0 ? 'green' : 'red';
+                        @endphp
+                    </span>
+                    <br>
+                    <span title="Diferencia" style="color: {{ $color }};">
+                      {{ $diferencia != 0 ? ($diferencia >= 0 ? '-' : '+') : '' }}{{ abs($diferencia) }}
+                    </span>
+
                 </td>
+
             @endif
             @if($user->CanViewInfoPhotos())
                 <td width="10%" class="text-center">
@@ -837,43 +850,43 @@
             @endif
 
 
-            @if(Auth::user()->isSuperAdmin())
-                @php
-                    $finalData = json_decode($dispatchRegister->count_max_faces, true);
-                    $countMax = $finalData['count'] ?? 0;
-                    $countMaxperson = $finalData['countPerson'] ?? 0;
-                    $hasExactDateMatch = $finalData['hasExactDateMatch'] ?? false;
+            {{--  @if(Auth::user()->isSuperAdmin())
+                  @php
+                      $finalData = json_decode($dispatchRegister->count_max_faces, true);
+                      $countMax = $finalData['count'] ?? 0;
+                      $countMaxperson = $finalData['countPerson'] ?? 0;
+                      $hasExactDateMatch = $finalData['hasExactDateMatch'] ?? false;
 
-                @endphp
-                <td class="text-center">
-                    @if($hasExactDateMatch)
-                        <small class="tooltips text-bold"
-                               data-title="@lang('Conteo por maximos FACES')">
-                            {{$countMax}}
-                        </small><br>
-                    @else
-                        <small class="tooltips text-bold" style="font-weight:bold; color: red"
-                               data-title="@lang('Conteo por maximos FACES')">
-                            {{$countMax}}
-                        </small><br>
-                    @endif
-                    @if($hasExactDateMatch)
-                        <small class="tooltips text-bold"
-                               data-title="@lang('Conteo por maximos PERSON')">
-                            {{$countMaxperson}}
-                        </small><br>
-                    @else
-                        <small class="tooltips text-bold" style="font-weight:bold; color: red"
-                               data-title="@lang('Conteo por maximos PERSON')">
-                            {{$countMaxperson}}
-                        </small><br>
-                    @endif
-                </td>
-                <td class="tooltips text-bold text-center"
-                    data-title="@lang('Conteo por maximos')">
-                    {{$countMax>$totalSeats ? $totalSeats??0 : $countMax??0 }}
-                </td>
-            @endif
+                  @endphp
+                  <td class="text-center">
+                      @if($hasExactDateMatch)
+                          <small class="tooltips text-bold"
+                                 data-title="@lang('Conteo por maximos FACES')">
+                              {{$countMax}}
+                          </small><br>
+                      @else
+                          <small class="tooltips text-bold" style="font-weight:bold; color: red"
+                                 data-title="@lang('Conteo por maximos FACES')">
+                              {{$countMax}}
+                          </small><br>
+                      @endif
+                      @if($hasExactDateMatch)
+                          <small class="tooltips text-bold"
+                                 data-title="@lang('Conteo por maximos PERSON')">
+                              {{$countMaxperson}}
+                          </small><br>
+                      @else
+                          <small class="tooltips text-bold" style="font-weight:bold; color: red"
+                                 data-title="@lang('Conteo por maximos PERSON')">
+                              {{$countMaxperson}}
+                          </small><br>
+                      @endif
+                  </td>
+                 --}}{{-- <td class="tooltips text-bold text-center"
+                      data-title="@lang('Conteo por maximos')">
+                      {{$countMax>$totalSeats ? $totalSeats??0 : $countMax??0 }}
+                  </td>--}}{{--
+              @endif--}}
             @if($user->canViewAction())
                 <td width="15%" class="text-center">
                     <a href="{!! route('report-route-historic') !!}?{{ $dispatchRegister->getHistoricReportQueryParams() }}&hide-menu=true"
@@ -1013,15 +1026,20 @@
                 {{$sumByCountSensor}}
             </td>
 
-            @if($dispatchRegister->final_sensor_counter <= $spreadsheetPassengers->value)
-                <td class="text-center tooltips" data-title="@lang('Sumatoria Conteo Planilla')">
-                    {{ $sumByCountSpreadSheet }}
-                </td>
-            @else
-                <td class="text-center tooltips" data-title="@lang('Sumatoria conteo sistema')">
-                    {{$sumByCountSensor}}
-                </td>
-            @endif
+            <td class="text-center tooltips" data-title="@lang('Sumatoria area 5G')">
+                {{$sumByCount5G}}
+            </td>
+            @php
+                $porcentaje5G = 0;
+                if ($sumByCountPassengerVisual > 0) {
+                    $porcentaje5G = ($sumByCount5G / $sumByCountPassengerVisual) * 100;
+                }
+
+            @endphp
+            <td class="text-center tooltips" data-title="@lang('Porcentaje área 5G respecto a conteo manual')">
+                {{ number_format($porcentaje5G, 2) }}%
+            </td>
+
 
         </tr>
     @endif
@@ -1122,7 +1140,8 @@
     .label-lime {
         background: #74a400;
     }
-    .label-yellow{
+
+    .label-yellow {
         background: #c0b313;
     }
 
