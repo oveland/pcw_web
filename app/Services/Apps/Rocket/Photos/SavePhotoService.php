@@ -25,9 +25,10 @@ class SavePhotoService extends PhotoService
             'side' => 'required',
             'uid' => 'required|unique:app_photos'
         ]);
-        var_dump('passss');
+        //dd($validator->errors(), $validator->passes(), $validator->validated(), $data);
 
         if ($validator->passes()) {
+
             $photo = new Photo($data->toArray());
             $photo->disk = self::DISK;
             $photo->date = Carbon::createFromFormat('Y-m-d H:i:s', $data->get('date'), 'America/Bogota');
@@ -76,7 +77,7 @@ class SavePhotoService extends PhotoService
                 $message = "Error saving file $uid: " . $e;
             }
         } else {
-            var_dump(" null validator ");
+
             $photoSaved = Photo::where('uid', $uid)->first();
 
             if ($uid) {

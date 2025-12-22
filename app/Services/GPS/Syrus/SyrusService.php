@@ -66,10 +66,12 @@ class SyrusService
             '352557104791234',
             '352557104787356',
             '352557104790533',
-            '352557104791127'
+            '352557104791127',
+            '352557100774424'
         ];
 
-        $service = in_array($imei, $imeisForPhotoService) ? new PhotoService() : new SavePhotoService();
+        //$service = in_array($imei, $imeisForPhotoService) ? new PhotoService() : new SavePhotoService();
+        $service = new SavePhotoService();
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
 

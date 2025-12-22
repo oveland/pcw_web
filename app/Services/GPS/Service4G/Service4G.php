@@ -53,11 +53,12 @@ class Service4G extends SyrusService
 
         ];
 
-        $service = in_array($imei, $imeisForPhotoService) ? new PhotoService() : new SavePhotoService();
+        $service = new SavePhotoService();
 
         $replacements = [
             '352557104777777' => '352557104834810',
-            '352557104777778' => '352557104466092'
+            '352557104777778' => '352557104466092',
+            '3525571047885031' => '352557104788503'
         ];
 
         if (array_key_exists($imei, $replacements)) {
@@ -83,12 +84,15 @@ class Service4G extends SyrusService
             'message' => "Success sync 4G",
         ]);
 
-        if($imei=='352557104777777' || $imei=='352557104777778'){
+        if($imei=='352557104777777' || $imei=='352557104777778' || $imei == '3525571047885031'){
             $deviceID = $gpsVehicle->tags;
         }else{
            $deviceID = $gpsVehicle->device_id;
         }
         $date4G = carbon::now()->toDateString();
+     /*   if ($vehicle->number == '8217'){
+            $date4G ='2025-10-29';
+        }*/
         //$date4G = '2025-01-11';
         $path = "$deviceID/$date4G";
         $response->put('imei', $imei);
@@ -206,10 +210,15 @@ class Service4G extends SyrusService
         if ($imei == '352557104788503') {
             if ($fileNames[1] == 'ch1') return '1';
             if ($fileNames[1] == 'ch2') return '2';
-            if ($fileNames[1] == 'ch3') return '3';
-            if ($fileNames[1] == 'ch4') return '4';
-            if ($fileNames[1] == 'ch5') return '5';
-            if ($fileNames[1] == 'ch6') return '6';
+            if ($fileNames[1] == 'ch3') return 'E';
+            if ($fileNames[1] == 'ch4') return 'E';
+
+        }
+        if ($imei == '3525571047885031'){
+            if ($fileNames[1] == 'ch1') return '3';
+            if ($fileNames[1] == 'ch2') return '4';
+            if ($fileNames[1] == 'ch3') return '5';
+            if ($fileNames[1] == 'ch4') return '6';
         }
         if ($imei == '352557104839116') {
             if ($fileNames[1] == 'ch1') return '1';

@@ -259,8 +259,6 @@ class PhotoService
 
     protected function saveFileName($uid, $vehicleId, $dispatchRegisterId, $fileType, $fileName, $date)
     {
-        //dd("entro a guardar");
-
         \DB::table('file_names')->updateOrInsert(
             ['file_name' => $fileName, 'vehicle_id' => $vehicleId],
             [
@@ -764,7 +762,15 @@ class PhotoService
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, final_sensor_counter = $countByRoundTrip WHERE id_registro = $drId");
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip WHERE id_registro = $drId AND id_empresa <> 39");
 
-            if ($this->vehicle->company_id == 39 && ($this->vehicle->number == '8511' || $this->vehicle->number == '2907')) {
+            if (
+                $this->vehicle->company_id == 39 &&
+                in_array($this->vehicle->number, [
+                    '8235','8401','8407','8403','8311','8353','8507','8515','8505','8509',
+                    '8517','8501','8253','8419','8295','8217','8321','8503','8511','8337',
+                    '8339','8319','8283','8287','8331','8251','2907','6605'
+                ])
+            ) {
+                var_dump("contando 5G>>>>>>>>>>>>>>>>");
                 /*  DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, count_max_faces = :jsonData WHERE id_registro = :drId", [
                       'jsonData' => $jsonData,
                       'drId' => $drId
@@ -772,17 +778,28 @@ class PhotoService
 
                 /* Implementation count 5G AREA */
                 // Parámetros configurables
-                $preArrivalTimeMinutes = 15; // Tiempo en minutos para restar a la hora de salida
+                $preArrivalTimeMinutes = 10; // Tiempo en minutos para restar a la hora de salida
                 $postArrivalTimeMinutes = 0; // Tiempo en minutos para añadir a la hora de llegada
-                $minFilesPerArea = 1;        // Número mínimo de archivos requeridos por área
+                if ($this->vehicle->number == '2907'){
+                    $minFilesPerArea = 2;
+                }else{
+                    $minFilesPerArea = 15;
+                }
+                     // Número mínimo de archivos requeridos por área
 
                 $departure = Carbon::createFromFormat('Y-m-d H:i:s', "{$dr->date} {$dr->departure_time}");
                 $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "{$dr->date_end} {$dr->arrival_time}");
 
+
                 $startTime = $departure->copy()->subMinutes($preArrivalTimeMinutes);
-                $endTime = $arrival->copy()->subMinutes($postArrivalTimeMinutes);
+                $endTime = $arrival->copy()->addMinutes($postArrivalTimeMinutes);
+//                if ($dr->id == '3557380') {
+//                    $startTime = Carbon::parse('2025-05-22 17:15:27');
+//                    $endTime = Carbon::parse('2025-05-22 17:35:31');
+//                }
 
                 dump("=== PARÁMETROS DE BÚSQUEDA ===");
+                dump("ARCHIVOS MINIMOS ",$minFilesPerArea);
                 dump("ID Registro: $drId");
                 dump("Rango de fechas: {$startTime->toDateTimeString()} hasta {$endTime->toDateTimeString()}");
                 dump("Vehículo ID: {$dr->vehicle_id}");
@@ -827,6 +844,7 @@ class PhotoService
 
                 $CountArea5G = $filteredGroups->count();
                 if ($CountArea5G) {
+                    var_dump("entra a insert ",$CountArea5G,$drId);
                     DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, rocket_5g_area = $CountArea5G WHERE id_registro = $drId");
                 }
 
@@ -857,6 +875,79 @@ class PhotoService
                 } else {
                     dump("No hay áreas descartadas por tener menos de $minFilesPerArea archivos");
                 }
+
+
+
+                dump("******************** Agrupación: aquí empiezan los ID ******************");
+
+                // === AGRUPACIÓN POR ID ===
+                $idGroupedFiles = $fileNames->filter(function ($fileName) {
+                    return preg_match('/_id(\d+)_/', $fileName);
+                })->groupBy(function ($fileName) {
+                    preg_match('/_id(\d+)_/', $fileName, $matches);
+                    return $matches[1];
+                });
+
+                dump("=== GRUPOS DETECTADOS POR ID ===");
+                $sortedIdGroups = $idGroupedFiles->sortKeys();
+
+                $totalGrupos = $sortedIdGroups->count();
+                $gruposConMasDe5 = 0;
+
+                foreach ($sortedIdGroups as $id => $files) {
+                    $sortedFiles = $files->sortBy(function ($fileName) {
+                        preg_match('/_(\d{14})_[TE]\.jpg$/', $fileName, $matches);
+                        return $matches[1];
+                    })->values();
+
+                    dump("📦 ID: $id - Total archivos: " . $sortedFiles->count());
+
+                    if ($sortedFiles->count() >= 21) {
+                        $gruposConMasDe5++;
+                    }
+
+                    $maxDiff = 0;
+                    $fileA = null;
+                    $fileB = null;
+
+                    for ($i = 1; $i < $sortedFiles->count(); $i++) {
+                        preg_match('/_(\d{14})_[TE]\.jpg$/', $sortedFiles[$i - 1], $matchPrev);
+                        preg_match('/_(\d{14})_[TE]\.jpg$/', $sortedFiles[$i], $matchCurr);
+
+                        $timePrev = Carbon::createFromFormat('YmdHis', $matchPrev[1]);
+                        $timeCurr = Carbon::createFromFormat('YmdHis', $matchCurr[1]);
+
+                        $diffInSeconds = $timeCurr->diffInSeconds($timePrev);
+
+                        if ($diffInSeconds > $maxDiff) {
+                            $maxDiff = $diffInSeconds;
+                            $fileA = $sortedFiles[$i - 1];
+                            $fileB = $sortedFiles[$i];
+                        }
+                    }
+
+                    foreach ($sortedFiles as $f) {
+                        dump("  - $f");
+                    }
+
+                    if ($fileA && $fileB) {
+                        $minutes = floor($maxDiff / 60);
+                        $seconds = $maxDiff % 60;
+
+                        dump("⏱️ Mayor diferencia en ID $id: $maxDiff segundos ({$minutes} minutos y {$seconds} segundos)");
+                        dump("    📁 1) $fileA");
+                        dump("    📁 2) $fileB");
+                    }
+
+                    dump("--------------------------------------------------------");
+                }
+
+                dump("✅ Total de IDs agrupados: $totalGrupos");
+                dump("📊 Grupos con más de 5 archivos: $gruposConMasDe5");
+
+
+
+
 //                //conteo por ID
 //                $hasIdFiles = $fileNames->filter(function ($fileName) {
 //                        return preg_match('/^.*_ch[0-9]+_\d+_id\d+_\d{14}_[TE]\.jpg$/', $fileName);
