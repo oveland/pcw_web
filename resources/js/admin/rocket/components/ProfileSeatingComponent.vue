@@ -111,7 +111,7 @@
                 Swal.fire({
                     title: this.$t('Loading'),
                     text: this.$t('Please wait'),
-                    target: '.tab-profile-seating',
+                   
                     onBeforeOpen: () => {
                         Swal.showLoading();
                     },

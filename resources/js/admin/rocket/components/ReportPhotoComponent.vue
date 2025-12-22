@@ -66,19 +66,19 @@
 				this.seating = [];
 				this.photos = [];
 
-                Swal.fire({
-                    title: this.$t('Loading'),
-                    text: this.$t('Please wait'),
-                    target: '.tab-report-photos',
-                    onBeforeOpen: () => {
-                        Swal.showLoading();
-                    },
-                    heightAuto: true,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    showConfirmButton: false
-                });
-                axios.get(`${this.apiUrl}/report/historic`, {params: this.searchParams}).then(response => {
+              Swal.fire({
+                title: this.$t('Loading'),
+                text: this.$t('Please wait'),
+                onBeforeOpen: () => {
+                  Swal.showLoading();
+                },
+                heightAuto: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false
+              });
+
+              axios.get(`${this.apiUrl}/report/historic`, {params: this.searchParams}).then(response => {
                     const data = response.data;
 
                     if (data.success) {
