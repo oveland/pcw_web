@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\API\Rocket\PhotoUrlController;
 
 Route::group([
     'prefix' => 'auth'
@@ -40,7 +41,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 |
 */
 
-Route::any('/{resource}', 'API\APIController@app');
+
 
 
 /*
@@ -53,7 +54,7 @@ Route::any('/{resource}', 'API\APIController@app');
 */
 
 /* General route */
-Route::any('/v1/{resource}/{service}', 'API\APIController@web');
+
 
 
 /*
@@ -62,7 +63,13 @@ Route::any('/v1/{resource}/{service}', 'API\APIController@web');
 |--------------------------------------------------------------------------
 |
 */
-Route::any('/v2/{platform}/{resource}/{service}', 'API\APIController@serve');
 
 Route::any('/v2/test', 'API\APIController@test');
+
+Route::get('/v2/rocket/photos/urls', [PhotoUrlController::class, 'getUrls']);
+
+// Luego (después) tu catch-all
+Route::any('/{resource}', 'API\APIController@app');
+Route::any('/v1/{resource}/{service}', 'API\APIController@web');
+Route::any('/v2/{platform}/{resource}/{service}', 'API\APIController@serve');
 

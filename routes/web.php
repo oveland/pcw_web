@@ -117,6 +117,8 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::any('/{name}/save', 'Rocket\RocketController@setParams')->name('admin.rocket.params.set');
             });
         });
+        Route::post('/admin/rocket/run-sync5g', [\App\Http\Controllers\Admin\RocketController::class, 'runSync5G'])
+            ->name('admin.rocket.run-sync5g');
     });
 
     /* Routes for operation pages */
