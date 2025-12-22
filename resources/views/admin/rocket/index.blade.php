@@ -20,7 +20,6 @@
     </h1>
 
     <!-- end page-header -->
-
     <!-- begin row -->
     <div id="vue-container" class="row">
         <!-- begin search form -->
@@ -83,6 +82,7 @@
     {{--    <script src="{{ mix('resources/js/admin/rocket/main.js') }}" type="application/ecmascript"></script>--}}
 
     <script type="application/ecmascript">
-        $('.menu-admin, .menu-admin-rocket').addClass('active-animated');
+
     </script>
+
 @endsection
