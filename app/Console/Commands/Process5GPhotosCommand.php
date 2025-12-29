@@ -165,21 +165,23 @@ class Process5GPhotosCommand extends Command
             if ($CountArea5G > 0) {
                 $this->info("  -> Encontradas $CountArea5G áreas válidas. Actualizando...");
                 
-                DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, rocket_5g_area = $CountArea5G WHERE id = $drId");
+                // Usando query builder que es más seguro y consistente
+                DB::table('registrodespacho')
+                    ->where('id_registro', $drId)
+                    ->update([
+                        'rocket_5g_area' => $CountArea5G,
+                        'ignore_trigger' => true
+                    ]);
               
             } else {
                 $this->line("  -> 0 áreas válidas encontradas.");
                 // Opcional: Marcar como 0 para no volver a procesar?
-                // DB::table('registrodespacho')->where('id', $drId)->update(['rocket_5g_area' => 0]);
+                // DB::table('registrodespacho')->where('id_registro', $drId)->update(['rocket_5g_area' => 0]);
             }
             
-            
-            DB::table('registrodespacho')
-                ->where('id_registro', $drId)
-                ->update([
-                    'rocket_5g_area' => $CountArea5G,
-                    'ignore_trigger' => true
-                ]);
+            // ELIMINADO bloque duplicado que causaba error porque intentaba actualizar siempre al final
+            // y el update anterior ya cubría el caso > 0.
+            // Si queremos actualizar siempre (incluso si es 0), descomentar la linea en el else.
 
         } catch (\Exception $e) {
             $this->error("Error procesando registro $drId: " . $e->getMessage());
