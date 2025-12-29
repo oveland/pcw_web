@@ -63,7 +63,7 @@ class Process5GPhotosCommand extends Command
         // Hacemos un join con gps_vehicles para filtrar por technology = '5G'
         
         $pendingDispatches = DB::table('registrodespacho as rd')
-            ->join('vehicles as v', 'rd.vehicle_id', '=', 'v.id')
+            ->join('vehicles as v', 'rd.id_vehiculo', '=', 'v.id')
             ->join('gps_vehicles as gv', 'v.id', '=', 'gv.vehicle_id') // Join con gps_vehicles
             ->select('rd.*', 'v.number as vehicle_number', 'v.company_id')
             ->where('v.company_id', $companyId)
@@ -124,7 +124,7 @@ class Process5GPhotosCommand extends Command
             // Consultar archivos
             $fileNames = DB::table('file_names')
                 ->whereBetween('date', [$startTime->toDateTimeString(), $endTime->toDateTimeString()])
-                ->where('vehicle_id', $dr->vehicle_id)
+                ->where('vehicle_id', $dr->id_vehiculo)
                 ->pluck('file_name'); // pluck devuelve una Collection en Laravel reciente o array en viejos. DB builder ->pluck devuelve Collection.
 
             // Grouping logic
