@@ -40,28 +40,12 @@ class Process5GPhotosCommand extends Command
      */
     public function handle()
     {
-        /*
-        $targetVehicleNumbers = [
-            '8235','8401','8407','8403','8311','8353','8507','8515','8505','8509',
-            '8517','8501','8253','8419','8295','8217','8321','8503','8511','8337',
-            '8339','8319','8283','8287','8331','8251','2907','6605'
-        ];
-        */
-
-        // Obtener vehículos 5G dinámicamente
-        // Se asume que gps_vehicles tiene una columna 'technology' (o en tags, o related)
-        // El usuario indicó: "deseo sacarlos de una tabla gps_vehicles ya esta un modelo creo y la conidcion es que la columna technology sea igual a '5G'"
-        // Nota: El modelo GpsVehicle actual no muestra la propiedad 'technology' en los docblocks, 
-        // pero confiaremos en la instrucción del usuario y usaremos DB::table si es necesario o el modelo si tiene la columna.
-        // Dado que el modelo es Eloquent, intentaremos usar el modelo o un join directo.
-        
+    
         $companyId = 39;
 
         $this->info("Iniciando proceso de fotos 5G para empresa $companyId...");
 
-        // Buscar vehículos 5G
-        // Hacemos un join con gps_vehicles para filtrar por technology = '5G'
-        
+        // Buscar vehículos 5G        
         $pendingDispatches = DB::table('registrodespacho as rd')
             ->join('vehicles as v', 'rd.n_vehiculo', '=', 'v.number') // Join usando el número del vehículo y la compañía
             ->join('gps_vehicles as gv', 'v.id', '=', 'gv.vehicle_id') // Join con gps_vehicles
@@ -106,12 +90,13 @@ class Process5GPhotosCommand extends Command
             }
 
             // Construir fechas
-            $departure = Carbon::createFromFormat('Y-m-d H:i:s', "{$dr->fecha} {$dr->h_reg_despachado}");
-            
-            // rd.date_end puede ser null si no terminó, pero filtramos por arrival_time not null.
-            // Asumimos date_end existe. Si no, usamos date.
+            $dateStr = explode(' ', $dr->fecha)[0]; // Tomar solo YYYY-MM-DD
+            $timeStr = explode('.', $dr->h_reg_despachado)[0]; // Quitar milisegundos si existen
+            $departure = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
             $dateEnd = $dr->date_end ?? $dr->fecha;
-            $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "{$dateEnd} {$dr->h_reg_llegada}");
+            $dateEndStr = explode(' ', $dateEnd)[0];
+            $timeEndStr = explode('.', $dr->h_reg_llegada)[0];
+            $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "$dateEndStr $timeEndStr");
 
             $startTime = $departure->copy()->subMinutes($preArrivalTimeMinutes);
             $endTime = $arrival->copy()->addMinutes($postArrivalTimeMinutes);
@@ -145,20 +130,13 @@ class Process5GPhotosCommand extends Command
                 $this->info("  -> Encontradas $CountArea5G áreas válidas. Actualizando...");
                 
                 DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, rocket_5g_area = $CountArea5G WHERE id = $drId");
-                // Nota: Usé 'WHERE id =' asumiendo que el PK es id. Si es id_registro, debo cambiarlo.
-                // En el código original decía 'WHERE id_registro = $drId'.
-                // Voy a usar id_registro si id no funciona o ambos.
-                // Mejor usar query builder update para ser seguro.
+              
             } else {
                 $this->line("  -> 0 áreas válidas encontradas.");
                 // Opcional: Marcar como 0 para no volver a procesar?
                 // DB::table('registrodespacho')->where('id', $drId)->update(['rocket_5g_area' => 0]);
             }
             
-            // Para evitar reprocesar los que dieron 0, deberíamos setear rocket_5g_area = 0 si es null.
-            // El código original solo hace update si $CountArea5G (es decir > 0).
-            // Si no hago update a 0, el comando volverá a coger este registro en la próxima ejecución.
-            // Asumiré que debo marcarlo como 0 también.
             
             DB::table('registrodespacho')
                 ->where('id_registro', $drId)
