@@ -89,14 +89,40 @@ class Process5GPhotosCommand extends Command
                 $minFilesPerArea = 15;
             }
 
-            // Construir fechas
+            // Log raw dates for debugging
+            $this->line("Raw dates - Fecha: '{$dr->fecha}', Despacho: '{$dr->h_reg_despachado}', Llegada: '{$dr->h_reg_llegada}', DateEnd: '{$dr->date_end}'");
+
+            // Limpiamos los datos antes de parsear para evitar "Unexpected data"
             $dateStr = explode(' ', $dr->fecha)[0]; // Tomar solo YYYY-MM-DD
             $timeStr = explode('.', $dr->h_reg_despachado)[0]; // Quitar milisegundos si existen
-            $departure = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
+            
+            if (empty($dateStr) || empty($timeStr)) {
+                $this->error("Fecha o hora de despacho inválida/vacía para registro $drId");
+                return;
+            }
+
+            try {
+                $departure = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
+            } catch (\Exception $e) {
+                $this->error("Error parseando salida: '$dateStr $timeStr' - " . $e->getMessage());
+                return;
+            }
+            
             $dateEnd = $dr->date_end ?? $dr->fecha;
             $dateEndStr = explode(' ', $dateEnd)[0];
             $timeEndStr = explode('.', $dr->h_reg_llegada)[0];
-            $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "$dateEndStr $timeEndStr");
+
+            if (empty($dateEndStr) || empty($timeEndStr)) {
+                $this->error("Fecha o hora de llegada inválida/vacía para registro $drId");
+                return;
+            }
+
+            try {
+                $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "$dateEndStr $timeEndStr");
+            } catch (\Exception $e) {
+                $this->error("Error parseando llegada: '$dateEndStr $timeEndStr' - " . $e->getMessage());
+                return;
+            }
 
             $startTime = $departure->copy()->subMinutes($preArrivalTimeMinutes);
             $endTime = $arrival->copy()->addMinutes($postArrivalTimeMinutes);
