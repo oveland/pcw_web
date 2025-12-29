@@ -63,10 +63,11 @@ class Process5GPhotosCommand extends Command
         // Hacemos un join con gps_vehicles para filtrar por technology = '5G'
         
         $pendingDispatches = DB::table('registrodespacho as rd')
-            ->join('vehicles as v', 'rd.id_vehiculo', '=', 'v.id')
+            ->join('vehicles as v', 'rd.n_vehiculo', '=', 'v.number') // Join usando el número del vehículo y la compañía
             ->join('gps_vehicles as gv', 'v.id', '=', 'gv.vehicle_id') // Join con gps_vehicles
-            ->select('rd.*', 'v.number as vehicle_number', 'v.company_id')
+            ->select('rd.*', 'v.number as vehicle_number', 'v.company_id', 'v.id as real_vehicle_id') // Obtenemos el ID real del vehículo
             ->where('v.company_id', $companyId)
+            ->where('rd.id_empresa', $companyId) // Aseguramos que el despacho sea de la misma empresa
             ->where('gv.technology', '5G') // Filtro dinámico por tecnología 5G
             ->where('rd.status', 'Terminó') // Filtrar por estado 'Terminó'
             ->whereNull('rd.rocket_5g_area') // Solo los no procesados
@@ -124,7 +125,7 @@ class Process5GPhotosCommand extends Command
             // Consultar archivos
             $fileNames = DB::table('file_names')
                 ->whereBetween('date', [$startTime->toDateTimeString(), $endTime->toDateTimeString()])
-                ->where('vehicle_id', $dr->id_vehiculo)
+                ->where('vehicle_id', $dr->real_vehicle_id)
                 ->pluck('file_name'); // pluck devuelve una Collection en Laravel reciente o array en viejos. DB builder ->pluck devuelve Collection.
 
             // Grouping logic
