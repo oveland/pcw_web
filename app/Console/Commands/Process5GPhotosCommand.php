@@ -69,10 +69,12 @@ class Process5GPhotosCommand extends Command
             ->where('v.company_id', $companyId)
             ->where('rd.id_empresa', $companyId) // Aseguramos que el despacho sea de la misma empresa
             ->where('gv.technology', '5G') // Filtro dinámico por tecnología 5G
-            ->where('rd.status', 'Terminó') // Filtrar por estado 'Terminó'
-            ->whereNull('rd.rocket_5g_area') // Solo los no procesados
-            ->whereNotNull('rd.arrival_time') // Que hayan llegado
-            ->where('rd.date', '>=', Carbon::now()->subDays(2)->toDateString()) // Límite de seguridad
+            ->whereNotNull('rd.h_reg_llegada') 
+            ->where(function($q) {
+                $q->whereNull('rd.cancelado')->orWhere('rd.cancelado', 0)->orWhere('rd.cancelado', false);
+            })
+            ->whereNull('rd.rocket_5g_area')
+            ->where('rd.fecha', '>=', Carbon::now()->subDays(2)->toDateString()) // date -> fecha
             ->get();
 
 
@@ -88,15 +90,8 @@ class Process5GPhotosCommand extends Command
 
     private function processDispatch($dr)
     {
-        $drId = $dr->id; // En registrodespacho usualmente es id_registro o id? 
-        // En el modelo DispatchRegister es 'id'. En la tabla 'registrodespacho' a veces es 'id_registro'.
-        // Verificando el update del PhotoService: WHERE id_registro = $drId
-        // Si el select * trae 'id_registro', usaremos ese. Si trae 'id', usaremos ese.
-        // DB::table('registrodespacho') usualmente devuelve columnas tal cual.
-        // Asumiremos 'id' o 'id_registro'. Revisaré las columnas si falla, pero por ahora intentaré detectar.
+        $drId = $dr->id_registro; // Usando columna correcta id_registro
         
-        $drId = isset($dr->id_registro) ? $dr->id_registro : $dr->id;
-
         $this->line("Procesando registro ID: $drId - Vehículo: $dr->vehicle_number");
 
         try {
@@ -111,13 +106,12 @@ class Process5GPhotosCommand extends Command
             }
 
             // Construir fechas
-            // rd.date y rd.departure_time son strings en la DB
-            $departure = Carbon::createFromFormat('Y-m-d H:i:s', "{$dr->date} {$dr->departure_time}");
+            $departure = Carbon::createFromFormat('Y-m-d H:i:s', "{$dr->fecha} {$dr->h_reg_despachado}");
             
             // rd.date_end puede ser null si no terminó, pero filtramos por arrival_time not null.
             // Asumimos date_end existe. Si no, usamos date.
-            $dateEnd = $dr->date_end ?? $dr->date;
-            $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "{$dateEnd} {$dr->arrival_time}");
+            $dateEnd = $dr->date_end ?? $dr->fecha;
+            $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "{$dateEnd} {$dr->h_reg_llegada}");
 
             $startTime = $departure->copy()->subMinutes($preArrivalTimeMinutes);
             $endTime = $arrival->copy()->addMinutes($postArrivalTimeMinutes);
