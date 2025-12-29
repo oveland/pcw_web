@@ -93,7 +93,7 @@ class Process5GPhotosCommand extends Command
             $this->line("Raw dates - Fecha: '{$dr->fecha}', Despacho: '{$dr->h_reg_despachado}', Llegada: '{$dr->h_reg_llegada}', DateEnd: '{$dr->date_end}'");
 
             // Limpiamos los datos antes de parsear para evitar "Unexpected data"
-            $dateStr = explode(' ', $dr->fecha)[0]; // Tomar solo YYYY-MM-DD
+            $dateStr = explode(' ', $dr->fecha)[0]; // Tomar solo la fecha
             $timeStr = explode('.', $dr->h_reg_despachado)[0]; // Quitar milisegundos si existen
             
             if (empty($dateStr) || empty($timeStr)) {
@@ -102,7 +102,13 @@ class Process5GPhotosCommand extends Command
             }
 
             try {
-                $departure = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
+                // Intentar primero con Y-m-d
+                if (strpos($dateStr, '-') !== false) {
+                    $departure = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
+                } else {
+                    // Si no tiene guiones, asumir d/m/Y (formato detectado en logs: 27/12/2025)
+                    $departure = Carbon::createFromFormat('d/m/Y H:i:s', "$dateStr $timeStr");
+                }
             } catch (\Exception $e) {
                 $this->error("Error parseando salida: '$dateStr $timeStr' - " . $e->getMessage());
                 return;
@@ -118,7 +124,11 @@ class Process5GPhotosCommand extends Command
             }
 
             try {
-                $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "$dateEndStr $timeEndStr");
+                if (strpos($dateEndStr, '-') !== false) {
+                    $arrival = Carbon::createFromFormat('Y-m-d H:i:s', "$dateEndStr $timeEndStr");
+                } else {
+                    $arrival = Carbon::createFromFormat('d/m/Y H:i:s', "$dateEndStr $timeEndStr");
+                }
             } catch (\Exception $e) {
                 $this->error("Error parseando llegada: '$dateEndStr $timeEndStr' - " . $e->getMessage());
                 return;
