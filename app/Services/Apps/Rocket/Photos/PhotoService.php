@@ -763,7 +763,7 @@ class PhotoService
             DB::statement("UPDATE registrodespacho SET ignore_trigger = TRUE, registradora_llegada = $countByRoundTrip WHERE id_registro = $drId AND id_empresa <> 39");
 
             if (
-                $this->vehicle->company_id == 39 &&
+                false && $this->vehicle->company_id == 39 &&
                 in_array($this->vehicle->number, [
                     '8235','8401','8407','8403','8311','8353','8507','8515','8505','8509',
                     '8517','8501','8253','8419','8295','8217','8321','8503','8511','8337',
