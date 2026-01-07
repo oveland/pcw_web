@@ -137,12 +137,14 @@
                                                     </span> Storage server failed. </span>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                @if(auth()->user()->company_id == 41 || auth()->user()->isSuperAdmin())
+                <li class="nav-item">
                     <a href="#" class="faa-parent animated-hover nav-link">
                         <i class="fa fa-map-marker faa-vertical"></i>
-                        <span class="text-bold">Valledupar</span>
+                        <span>Valledupar</span>
                     </a>
                 </li>
+                @endif
             </ul>
                         </li>
                     </ul>
@@ -787,12 +789,14 @@
                         </li>
                     </ul>
                 </li>
+                @if(auth()->user()->company_id == 41 || auth()->user()->isSuperAdmin())
                 <li class="nav-item">
                     <a href="#" class="faa-parent animated-hover nav-link">
                         <i class="fa fa-map-marker faa-vertical"></i>
-                        <span class="text-bold">Valledupar</span>
+                        <span>Valledupar</span>
                     </a>
                 </li>
+                @endif
             </ul>
 
             <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">

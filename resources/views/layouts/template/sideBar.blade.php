@@ -363,12 +363,14 @@
                 </ul>
             </li>
 
+            @if(auth()->user()->company_id == 41 || auth()->user()->isSuperAdmin())
             <li class="has-sub">
                 <a href="#" class="faa-parent animated-hover">
                     <i class="fa fa-map-marker faa-horizontal"></i>
                     <span>Valledupar</span>
                 </a>
             </li>
+            @endif
 
             <br>
             <li class="divider has-minify-btn">
