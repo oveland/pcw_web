@@ -163,6 +163,11 @@
                                     <i class="fa fa-tag faa-tada"></i>
                                     <input type="radio" name="option-selection" value="new" autocomplete="off">
                                 </label>
+
+                                <label class="btn btn-inverse tooltips" data-title="5G" id="btn-filter-5g" style="display: none;">
+                                    <i class="fa fa-wifi"></i> 5G
+                                    <input type="checkbox" id="filter-5g" autocomplete="off">
+                                </label>
                             </div>
                         </div>
 
@@ -353,5 +358,74 @@
                 routeSelect.val('all').change();
             });
         }
+
+        // 5G Filter Logic
+        function check5GFilterVisibility() {
+            var companyId = $('#company-report').val();
+            @if(!Auth::user()->isAdmin())
+                companyId = '{{ Auth::user()->company_id }}';
+            @endif
+
+            if (companyId == 39) {
+                $('#btn-filter-5g').show();
+            } else {
+                $('#btn-filter-5g').hide();
+                // Reset filter if company changes
+                if ($('#filter-5g').is(':checked')) {
+                    $('#filter-5g').prop('checked', false);
+                    $('#btn-filter-5g').removeClass('active');
+                    // filter5GVehicles will be called by ajax reload anyway
+                }
+            }
+        }
+
+        $('#company-report').change(check5GFilterVisibility);
+        $(document).ready(check5GFilterVisibility);
+
+        $('#filter-5g').change(function() {
+             var checked = $(this).is(':checked');
+             if (checked) {
+                 $('#btn-filter-5g').addClass('active');
+             } else {
+                 $('#btn-filter-5g').removeClass('active');
+             }
+             filter5GVehicles();
+        });
+
+        // Delegate search input to handle both
+        $(document).on('keyup', '.input-search-vehicle', function() {
+            filter5GVehicles();
+        });
+
+        function filter5GVehicles() {
+            var show5GOnly = $('#filter-5g').is(':checked');
+            var searchText = $('.input-search-vehicle').val();
+
+            $('.vehicle-list').each(function() {
+                var is5G = $(this).data('technology') == '5G';
+                var vehicleNum = String($(this).data('vehicle-number'));
+                // Existing search logic: exact match or empty
+                var matchesSearch = searchText === '' || vehicleNum === searchText;
+
+                if (show5GOnly && !is5G) {
+                    $(this).hide();
+                } else if (matchesSearch) {
+                    $(this).slideDown();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        // Re-apply filter after AJAX load
+        $(document).ajaxComplete(function(event, xhr, settings) {
+            // Check if the ajax request was the one loading the list
+            // settings.url might contain 'admin-gps-manage-list'
+            if (settings.url.indexOf('admin-gps-manage-list') !== -1 || settings.url.indexOf('search-report') !== -1) {
+                if ($('#filter-5g').is(':checked')) {
+                    filter5GVehicles();
+                }
+            }
+        });
     </script>
 @endsection

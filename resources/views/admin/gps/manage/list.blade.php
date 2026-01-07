@@ -374,7 +374,8 @@
                                         @php( $vehicle = $simGPS->vehicle )
                                         @php( $gpsVehicle = $vehicle->gpsVehicle )
                                         <tr id="detail-{{ $simGPS->id }}" class="vehicle-list"
-                                            data-vehicle-number="{{ $vehicle->number ?? '' }}">
+                                            data-vehicle-number="{{ $vehicle->number ?? '' }}"
+                                            data-technology="{{ $gpsVehicle->technology ?? '' }}">
                                             @include('admin.gps.manage.gpsVehicleDetail')
                                         </tr>
                                         <tr id="edit-{{ $simGPS->id }}" class="hide">
