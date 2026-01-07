@@ -173,4 +173,13 @@ class Photo extends Model implements PhotoInterface
             ->limit(600)
             ->with(['dispatchRegister', 'vehicle']);
     }
+    public function scopeWithinDispatch($query, DispatchRegister $dr)
+    {
+        $start = $dr->getDateTimeDeparture();   // date + departure_time
+        $end   = $dr->getDateTimeEnd();         // date_end + arrival_time (o arrival_time_scheduled)
+
+        return $query->whereBetween('date', [$start, $end])
+            ->where('vehicle_id', $dr->vehicle_id)
+            ->orderBy('date', 'asc');
+    }
 }
