@@ -112,7 +112,7 @@ class ReportRouteController extends Controller
             $dispatchRegistersByVehicles = $this->routeService->dispatch->allBySpreadsheet($spreadsheetReport);
             if($dispatchRegistersByVehicles->count()) $company = $dispatchRegistersByVehicles->first()->first()->vehicle->company;
         } else {
-            $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns, $initialTime, $finalTime, $activeTurns, $cancelledTurns);
+            $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns, $initialTime, $finalTime, $activeTurns, $cancelledTurns, ['drObservations', 'dispatcherVehicle.route', 'routeTakings', 'photos', 'vehicle.cameras']);
         }
 
 

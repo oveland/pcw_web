@@ -61,12 +61,16 @@ class DispatchRouteService
      * @param false $cancelledTurns
      * @return DispatchRegister[]|Builder[]|\Illuminate\Database\Eloquent\Collection|Collection
      */
-    public function all($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $activeTurns = true, $cancelledTurns = false)
+    public function all($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $activeTurns = true, $cancelledTurns = false, $withRelations = [])
     {
         $q = DispatchRegister::whereCompanyAndDateRangeAndRouteIdAndVehicleId($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport)
             ->whereStatusType($completedTurns, $activeTurns, $cancelledTurns)
             ->orderBy('date')
             ->orderBy('departure_time');
+
+        if (!empty($withRelations)) {
+            $q->with($withRelations);
+        }
 
         return $q->get()->sortBy(function (DispatchRegister $d) {
             return $d->departure_time . $d->id;
@@ -83,11 +87,14 @@ class DispatchRouteService
      * @param bool $noTakenTurns
      * @param string $initialTime
      * @param string $finalTime
+     * @param bool $activeTurns
+     * @param bool $cancelledTurns
+     * @param array $withRelations
      * @return DispatchRegister[]|Builder[]|Collection
      */
-    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false, $initialTime = '00:00', $finalTime = '23:59', $activeTurns = true, $cancelledTurns = false)
+    public function allByVehicles($company, $dateReport, $dateEndReport = null, $routeReport = 'all', $vehicleReport = 'all', $completedTurns = true, $noTakenTurns = false, $initialTime = '00:00', $finalTime = '23:59', $activeTurns = true, $cancelledTurns = false, $withRelations = [])
     {
-        $dispatchRegisters = $this->all($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $activeTurns, $cancelledTurns);
+        $dispatchRegisters = $this->all($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $activeTurns, $cancelledTurns, $withRelations);
 
         if ($dateEndReport) {
             $dispatchRegisters = $dispatchRegisters->filter(function (DispatchRegister $dr) use ($dateReport, $dateEndReport, $initialTime, $finalTime) {

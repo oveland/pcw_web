@@ -786,14 +786,13 @@
                 <td width="10%" class="text-center">
                     <div>
                         @php
-                                $photos = \App\Models\Apps\Rocket\Photo::withinDispatch($dispatchRegister)->get();
-                               // $photos = $dispatchRegister->photos;
+                                //$photos = \App\Models\Apps\Rocket\Photo::withinDispatch($dispatchRegister)->get();
+                                $photos = $dispatchRegister->photos;
 
                                 $photosByCamera = $photos->sortBy('side')->groupBy('side');
 
-                                $vehicleCameras = \App\Models\Apps\Rocket\VehicleCamera::where('vehicle_id', $dispatchRegister->vehicle_id)
-                                    ->get()
-                                    ->pluck('camera');
+                                //$vehicleCameras = \App\Models\Apps\Rocket\VehicleCamera::where('vehicle_id', $dispatchRegister->vehicle_id)->get()->pluck('camera');
+                                $vehicleCameras = $dispatchRegister->vehicle->cameras->pluck('camera');
 
                                 $routeTimeInMinutes = \App\Http\Controllers\Utils\StrTime::toSeg($dispatchRegister->getRouteTime())/60;
                                 $expectedTotalPhotos = intval(($routeTimeInMinutes) / 2 * $vehicleCameras->count());

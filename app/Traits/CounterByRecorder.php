@@ -46,7 +46,17 @@ trait CounterByRecorder
     {
         $history = collect([]);
         $issues = collect([]);
-        $vehicle = Vehicle::find($vehicleId);
+
+        if ($vehicleId instanceof Vehicle) {
+            $vehicle = $vehicleId;
+        } else {
+            // Optimization: check if vehicle is loaded in the first dispatch register
+            if ($dispatchRegistersByVehicle->isNotEmpty() && $dispatchRegistersByVehicle->first()->relationLoaded('vehicle')) {
+                $vehicle = $dispatchRegistersByVehicle->first()->vehicle;
+            } else {
+                $vehicle = Vehicle::find($vehicleId);
+            }
+        }
 
         if ($vehicle->countAllFromSensorRecorder()) return CounterBySensor::totalByVehicle($vehicleId, $dispatchRegistersByVehicle);
 
