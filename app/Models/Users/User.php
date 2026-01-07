@@ -133,7 +133,8 @@ class User extends Authenticatable
         return $this->id == 2018101286 || $this->id == 2018101362 || $this->id == 2018101369 || $this->id == 2018101372 || $this->id == 2018101377
             || $this->id == 2018101383 || $this->id == 2018101382 || $this->id == 2018101381 || $this->id == 2018101380
             || $this->id == 2018101379 || $this->id == 2018101378 || $this->id == 2018101409 || $this->id ==2018101356 ||$this->id == 2018101394
-            || $this->id == 2018101367 || $this->id == 2018101420 || $this->id == 2018101421 || $this->id == 2018101425 || $this->id == 2018101431 || $this->id == 2018101430;
+            || $this->id == 2018101367 || $this->id == 2018101420 || $this->id == 2018101421 || $this->id == 2018101425 || $this->id == 2018101431
+            || $this->id == 2018101430 || $this->id == 2018101432 || $this->id == 1006184957;
     }
 
     public function liquidatorEP()
@@ -355,6 +356,7 @@ class User extends Authenticatable
             2018101286, //yuri
             2018101425, //AngieLorena
             2018101431,
+            1006184957,
             2018101430,
             2018101366,
             2018101420, //yesenia
@@ -372,6 +374,7 @@ class User extends Authenticatable
             2018101398,
             2018101409,
             2018101421,
+            2018101432,
 
 
 
@@ -396,6 +399,7 @@ class User extends Authenticatable
             2018101286, // Yuri
             2018101425, // Angie Lorena
             2018101431,
+            1006184957,
             2018101430,
             2018101366,
             2018101420, // yesenia
@@ -412,6 +416,7 @@ class User extends Authenticatable
             2018101379,
             2018101378,
             2018101421,
+            2018101432,
 
         ];
 
