@@ -33,9 +33,16 @@
     {{ $gpsVehicle && $gpsVehicle->imei ? $gpsVehicle->imei : '' }}
       @if($gpsVehicle && ($gpsVehicle->device_id || $gpsVehicle->tags || $gpsVehicle->type_device))
           <div class="gps-info">
-            <span title="XVR 1"><strong></strong> {{ $gpsVehicle->device_id ?? '' }}</span>
-            <span title="XVR 2"><strong></strong> {{ $gpsVehicle->tags ?? '' }}</span>
-              <span title="XVR 2"><strong></strong> {{ $gpsVehicle->device_id_2 ?? '' }}</span>
+              @if(isset($gpsVehicle->technology) && $gpsVehicle->technology == '5G')
+                  <span title="XVR 1"><strong></strong> {{ $gpsVehicle->device_id ?? '' }}</span>
+                  <span title="XVR 2"><strong></strong> {{ $gpsVehicle->tags ?? '' }}</span>
+                  <span title="XVR 3"><strong></strong> {{ $gpsVehicle->device_id_2 ?? '' }}</span>
+              @elseif($gpsVehicle->device_id && $gpsVehicle->tags)
+                  <span title="XVR 1"><strong></strong> {{ $gpsVehicle->device_id ?? '' }}</span>
+                  <span title="XVR 2"><strong></strong> {{ $gpsVehicle->tags ?? '' }}</span>
+              @elseif($gpsVehicle->device_id)
+                  <span title="XVR 1"><strong></strong> {{ $gpsVehicle->device_id ?? '' }}</span>
+              @endif
         </div>
       @endif
       @if($company==39)
