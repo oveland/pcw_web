@@ -55,7 +55,7 @@ class GPSCheckServerCommand extends Command
     public function handle()
     {
         $this->issues = collect([]);
-        $this->checkGPSServer();
+        //$this->checkGPSServer();
 //        $this->checkRecognitionServer();
 
         $this->checkDatabaseServer();
