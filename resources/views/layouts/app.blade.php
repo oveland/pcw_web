@@ -139,10 +139,19 @@
                                 </li>
                                 @if(auth()->user()->company_id == 41 || auth()->user()->isSuperAdmin())
                 <li class="nav-item">
-                    <a href="#" class="faa-parent animated-hover nav-link">
+                    <a href="#" class="faa-parent animated-hover nav-link nav-toggle">
                         <i class="fa fa-map-marker faa-vertical"></i>
                         <span>Valledupar</span>
+                        <span class="arrow"></span>
                     </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item">
+                            <a href="#" class="faa-parent animated-hover nav-link">
+                                <i class="fa fa-list-alt faa-vertical"></i>
+                                <span>Reporte de conteo 5g</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 @endif
             </ul>
@@ -791,10 +800,19 @@
                 </li>
                 @if(auth()->user()->company_id == 41 || auth()->user()->isSuperAdmin())
                 <li class="nav-item">
-                    <a href="#" class="faa-parent animated-hover nav-link">
+                    <a href="#" class="faa-parent animated-hover nav-link nav-toggle">
                         <i class="fa fa-map-marker faa-vertical"></i>
                         <span>Valledupar</span>
+                        <span class="arrow"></span>
                     </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item">
+                            <a href="#" class="faa-parent animated-hover nav-link">
+                                <i class="fa fa-list-alt faa-vertical"></i>
+                                <span>Reporte de conteo 5g</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 @endif
             </ul>

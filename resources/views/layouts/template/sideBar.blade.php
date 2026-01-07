@@ -369,6 +369,14 @@
                     <i class="fa fa-map-marker faa-horizontal"></i>
                     <span>Valledupar</span>
                 </a>
+                <ul class="sub-menu">
+                    <li class="has-sub">
+                        <a href="#" class="faa-parent animated-hover">
+                            <i class="fa fa-list-alt faa-vertical"></i>
+                            <span>Reporte de conteo 5g</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             @endif
 
