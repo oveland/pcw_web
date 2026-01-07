@@ -35,6 +35,7 @@
           <div class="gps-info">
             <span title="XVR 1"><strong></strong> {{ $gpsVehicle->device_id ?? '' }}</span>
             <span title="XVR 2"><strong></strong> {{ $gpsVehicle->tags ?? '' }}</span>
+              <span title="XVR 2"><strong></strong> {{ $gpsVehicle->device_id_2 ?? '' }}</span>
         </div>
       @endif
       @if($company==39)
