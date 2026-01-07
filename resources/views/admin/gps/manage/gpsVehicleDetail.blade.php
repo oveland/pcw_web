@@ -34,7 +34,7 @@
       @if($gpsVehicle && ($gpsVehicle->device_id || $gpsVehicle->tags || $gpsVehicle->type_device))
           <div class="gps-info">
               @if(isset($gpsVehicle->technology) && $gpsVehicle->technology == '5G')
-                  <span class="badge badge-info" style="margin-bottom: 2px;">5G</span>
+                  <span class="badge badge-info" style="margin-bottom: 2px;">5G</span><br>
                   <span title="XVR 1"><strong></strong> {{ $gpsVehicle->device_id ?? '' }}</span>
                   <span title="XVR 2"><strong></strong> {{ $gpsVehicle->tags ?? '' }}</span>
                   <span title="XVR 3"><strong></strong> {{ $gpsVehicle->device_id_2 ?? '' }}</span>
