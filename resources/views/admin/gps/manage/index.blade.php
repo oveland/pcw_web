@@ -18,6 +18,16 @@
         .btn-group-gps .radio{
             visibility: hidden;
         }
+        /* Specific styles for 5G button to handle text/icon properly */
+        #btn-filter-5g i {
+            position: static !important;
+            opacity: 1 !important;
+            font-size: 1em !important;
+            margin-right: 5px;
+        }
+        #btn-filter-5g.active i {
+            font-size: 1.2em !important;
+        }
     </style>
 @endsection
 
@@ -164,9 +174,9 @@
                                     <input type="radio" name="option-selection" value="new" autocomplete="off">
                                 </label>
 
-                                <label class="btn btn-inverse tooltips" data-title="5G" id="btn-filter-5g" style="display: none;">
+                                <label class="btn btn-purple tooltips" data-title="5G" id="btn-filter-5g" style="display: none; align-items: center;">
                                     <i class="fa fa-wifi"></i> 5G
-                                    <input type="checkbox" id="filter-5g" autocomplete="off">
+                                    <input type="checkbox" id="filter-5g" autocomplete="off" style="display: none;">
                                 </label>
                             </div>
                         </div>
