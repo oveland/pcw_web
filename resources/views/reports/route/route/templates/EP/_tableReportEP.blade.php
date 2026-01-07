@@ -124,7 +124,7 @@
         @if($user->canViewAverageCount()  || $user->id =='2018101356' )
             <th>
                 <i class="icon-users text-muted">
-                </i><br>{{"Count 5G"}}
+                </i><br>{{"Conteo  5G"}}
             </th>
         @endif
         @if($user->CanViewInfoPhotos())
@@ -219,6 +219,9 @@
         <tr class="{{ $dispatchRegister->isCancelled() ? 'row-turn-cancelled' : '' }}">
             <th width="5%"
                 class="bg-{{ $color }} text-white text-center">
+                <div class="text-sm">
+                    <small>{{ $dispatchRegister->id }}</small>
+                </div>
                 {{ $dispatchRegister->date }}
                 @if( Auth::user()->isSuperAdmin() )
                     <div class="text-sm">
@@ -307,6 +310,9 @@
                            data-original-title="{!! $totalLocations !!} @lang('Locations')"
                            data-placement="bottom">
                         <i class="fa fa-location-arrow"></i> {!! $totalLocations !!}
+                    </small>
+                    <small>
+                        {{ $vehicle->id}}
                     </small>
                 @endif
             </th>
@@ -765,12 +771,12 @@
                             $visualCount = (int) ($visualPassengers->value ?? 0);
                             $observationCount = $dispatchRegister->rocket_5g_area ?? 0;
                             $diferencia = $visualCount - $observationCount;
-                            $color = $diferencia === 0 ? 'green' : 'red';
+
                         @endphp
                     </span>
                     <br>
-                    <span title="Diferencia" style="color: {{ $color }};">
-                      {{ $diferencia != 0 ? ($diferencia >= 0 ? '-' : '+') : '' }}{{ abs($diferencia) }}
+                    <span title="Diferencia" style="font-weight: bold">
+                      {{ $dispatchRegister->count_5g_v2 }}
                     </span>
 
                 </td>
@@ -780,15 +786,17 @@
                 <td width="10%" class="text-center">
                     <div>
                         @php
-                            $photos = $dispatchRegister->photos;
-                            $photosByCamera = $photos->sortBy('side')->groupBy('side');
+                                $photos = \App\Models\Apps\Rocket\Photo::withinDispatch($dispatchRegister)->get();
+                               // $photos = $dispatchRegister->photos;
 
-                            $vehicleCameras = \App\Models\Apps\Rocket\VehicleCamera::where('vehicle_id', $dispatchRegister->vehicle_id)
-                                ->get()
-                                ->pluck('camera');
+                                $photosByCamera = $photos->sortBy('side')->groupBy('side');
 
-                            $routeTimeInMinutes = \App\Http\Controllers\Utils\StrTime::toSeg($dispatchRegister->getRouteTime())/60;
-                            $expectedTotalPhotos = intval(($routeTimeInMinutes) / 2 * $vehicleCameras->count());
+                                $vehicleCameras = \App\Models\Apps\Rocket\VehicleCamera::where('vehicle_id', $dispatchRegister->vehicle_id)
+                                    ->get()
+                                    ->pluck('camera');
+
+                                $routeTimeInMinutes = \App\Http\Controllers\Utils\StrTime::toSeg($dispatchRegister->getRouteTime())/60;
+                                $expectedTotalPhotos = intval(($routeTimeInMinutes) / 2 * $vehicleCameras->count());
                         @endphp
 
                         @foreach($vehicleCameras as $camera)
