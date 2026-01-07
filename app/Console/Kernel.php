@@ -74,7 +74,7 @@ class Kernel extends ConsoleKernel
 
 
 //        $schedule->command('gps:restart')->dailyAt('12:00');
-        $schedule->command('gps:restart --company=37')->everyFiveMinutes();
+        //$schedule->command('gps:restart --company=37')->everyFiveMinutes();
         $schedule->command('gps:check-status')->everyMinute();
 
 //        $schedule->command('gps:check-server')->everyFiveMinutes();
@@ -97,6 +97,7 @@ class Kernel extends ConsoleKernel
 
         /*Alert Photos */
         $schedule->command('check:no-photos-dispatch')->dailyAt('23:50');
+        $schedule->command('check:no-photos-dispatch')->dailyAt('12:00');
     }
 
     /**
