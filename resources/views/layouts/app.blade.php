@@ -137,7 +137,13 @@
                                                     </span> Storage server failed. </span>
                                     </a>
                                 </li>
-                            </ul>
+                                <li class="nav-item">
+                    <a href="#" class="faa-parent animated-hover nav-link">
+                        <i class="fa fa-map-marker faa-vertical"></i>
+                        <span class="text-bold">Valledupar</span>
+                    </a>
+                </li>
+            </ul>
                         </li>
                     </ul>
                 </li>
@@ -780,6 +786,12 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="faa-parent animated-hover nav-link">
+                        <i class="fa fa-map-marker faa-vertical"></i>
+                        <span class="text-bold">Valledupar</span>
+                    </a>
                 </li>
             </ul>
 

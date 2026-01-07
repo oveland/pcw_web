@@ -362,6 +362,14 @@
                     @endif
                 </ul>
             </li>
+
+            <li class="has-sub">
+                <a href="#" class="faa-parent animated-hover">
+                    <i class="fa fa-map-marker faa-horizontal"></i>
+                    <span>Valledupar</span>
+                </a>
+            </li>
+
             <br>
             <li class="divider has-minify-btn">
                 <!-- begin sidebar minify button -->
