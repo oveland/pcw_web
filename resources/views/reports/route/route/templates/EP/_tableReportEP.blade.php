@@ -991,24 +991,6 @@
             $lastArrivalTime[$vehicle->id] = $dispatchRegister->arrival_time;
         @endphp
 
-        <script>
-            @if($offRoadPercent)
-            $('.icon-car-{{ $vehicle->id }}').removeClass('f-s-8').removeClass('fa-car').addClass('fa-random text-{{ $offRoadPercent < 50 ? 'warning': 'danger' }} faa-flash animated');
-            @endif
-
-                    @if($maxInvalidGPSPercent)
-            if (parseFloat('{{ $maxInvalidGPSPercent }}') > 0) {
-                $('.car-ss-percent-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $maxInvalidGPSPercent < $thresholdAlertSS ? 'white': 'danger' }} faa-pulse animated');
-            }
-            @endif
-
-                    @if($lowerGPSReport)
-            if (parseFloat('{{ $lowerGPSReport }}') > 1) {
-                $('.car-nr-{{ $vehicle->id }}').removeClass('hide').addClass('text-{{ $lowerGPSReport < $thresholdAlertNR ? 'white': 'danger' }}');
-            }
-            @endif
-        </script>
-
     @endforeach
     @if($dispatchRegisters->count() && Auth::user()->isSuperAdmin())
         <tr>
@@ -1054,6 +1036,68 @@
 </table>
 <!-- end table -->
 <script type="application/javascript">
+    (function() {
+        // Optimización JS Fase C: Procesar visualizaciones desde atributos data
+        // Esto evita tener múltiples bloques <script> dentro del bucle foreach
+        const vehiclesData = [
+            @foreach($dispatchRegisters as $dispatchRegister)
+            @php
+                 $vehicle = $dispatchRegister->vehicle;
+                 $offRoadPercent = $dispatchRegister->getOffRoadPercent();
+                 $invalidGPSPercent = 0;
+                 if(Auth::user()->isSuperAdmin()){
+                     $invalidGPSPercent = $dispatchRegister->invalidGPSPercent();
+                 }
+                 $totalLocations = $dispatchRegister->locations()->count(); // Optimization pending for this count
+                 $lowerGPSReport = $totalLocations < $thresholdMinLocations ? 2 : 0; // Using 2 as flag > 1
+                 $alertPhoto = isset($alertPhoto) ? $alertPhoto : false;
+            @endphp
+            {
+                id: {{ $vehicle->id }},
+                offRoadPercent: {{ $offRoadPercent }},
+                maxInvalidGPSPercent: {{ $invalidGPSPercent }},
+                lowerGPSReport: {{ $lowerGPSReport }},
+                alertPhoto: {{ $alertPhoto ? 'true' : 'false' }},
+                thresholdAlertSS: {{ $thresholdAlertSS }},
+                thresholdAlertNR: {{ $thresholdAlertNR }}
+            },
+            @endforeach
+        ];
+
+        vehiclesData.forEach(function(v) {
+            // OffRoad Icon Logic
+            if (v.offRoadPercent) {
+                const colorClass = v.offRoadPercent < 50 ? 'text-warning' : 'text-danger';
+                $('.icon-car-' + v.id)
+                    .removeClass('f-s-8 fa-car')
+                    .addClass('fa-random ' + colorClass + ' faa-flash animated');
+            }
+
+            // Invalid GPS Logic
+            if (v.maxInvalidGPSPercent > 0) {
+                const colorClass = v.maxInvalidGPSPercent < v.thresholdAlertSS ? 'text-white' : 'text-danger';
+                $('.car-ss-percent-' + v.id)
+                    .removeClass('hide')
+                    .addClass(colorClass + ' faa-pulse animated');
+            }
+
+            // Low GPS Report Logic
+            if (v.lowerGPSReport > 1) {
+                const colorClass = v.lowerGPSReport < v.thresholdAlertNR ? 'text-white' : 'text-danger';
+                $('.car-nr-' + v.id)
+                    .removeClass('hide')
+                    .addClass(colorClass);
+            }
+        });
+
+        // Photo Alert Modal
+        const hasPhotoAlert = vehiclesData.some(v => v.alertPhoto);
+        if (hasPhotoAlert) {
+            $(document).ready(function () {
+                $('#alertPhotoModal').modal('show');
+            });
+        }
+    })();
 
     @if( Auth::user()->belongsToCootransol() )
     let modalExecuteDAR = $('#modal-execute-DAR');
@@ -1107,15 +1151,7 @@
         const content = $(el).find('a').data('content');
         $(el).html($(el).text() + (content && content !== undefined ? '<br><span>' + content + '</span>' : ''))
     });
-        @if($dispatchRegister->complete()){
-        $(document).ready(function () {
-                    @if ($alertPhoto)
-                    $('#alertPhotoModal').modal('show');
-                    @endif
-            }
-        );
-    }
-    @endif
+
     document.addEventListener("DOMContentLoaded", function () {
         // Agrega el evento de clic a cada botón de búsqueda
         document.addEventListener("DOMContentLoaded", function () {
