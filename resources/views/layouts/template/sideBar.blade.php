@@ -372,8 +372,8 @@
                 <ul class="sub-menu">
                     <li class="has-sub">
                         <a href="#" class="faa-parent animated-hover">
-                            <i class="fa fa-list-alt faa-vertical"></i>
-                            <span>Reporte de conteo 5g</span>
+                            <i class="fa fa-sort-numeric-asc faa-vertical"></i>
+                            <span>Conteo 5G</span>
                         </a>
                     </li>
                 </ul>
