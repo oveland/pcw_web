@@ -36,8 +36,8 @@
               @if(isset($gpsVehicle->type_device) && $gpsVehicle->type_device == '5G')
                   <span class="badge badge-info" style="margin-bottom: 2px;">5G</span><br>
                   <span title="XVR 1"><strong></strong> {{ $gpsVehicle->device_id ?? '' }}</span><br>
-                  <span title="XVR 2"><strong></strong> {{ $gpsVehicle->tags ?? '' }}</span><br>
-                  <span title="XVR 3"><strong></strong> {{ $gpsVehicle->device_id_2 ?? '' }}</span>
+                  <span title="XVR 2"><strong></strong> {{ $gpsVehicle->device_id_2 ?? '' }}</span><br>
+                  <span title="XVR 3"><strong></strong> {{ $gpsVehicle->device_id_3 ?? '' }}</span>
               @elseif($gpsVehicle->device_id && $gpsVehicle->tags)
                   <span title="XVR 1"><strong></strong> {{ $gpsVehicle->device_id ?? '' }}</span><br>
                   <span title="XVR 2"><strong></strong> {{ $gpsVehicle->tags ?? '' }}</span>
