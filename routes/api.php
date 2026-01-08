@@ -67,6 +67,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::any('/v2/test', 'API\APIController@test');
 
 Route::get('/v2/rocket/photos/urls', [PhotoUrlController::class, 'getUrls']);
+Route::post('/v2/rocket/photos/count5g', [PhotoUrlController::class, 'updateCount5gV2']);
 
 // Luego (después) tu catch-all
 Route::any('/{resource}', 'API\APIController@app');

@@ -6,9 +6,55 @@ use App\Http\Controllers\Controller;
 use App\Models\Apps\Rocket\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class PhotoUrlController extends Controller
 {
+    /**
+     * Actualiza el conteo 5G V2 para un registro de despacho específico.
+     * Recibe: id_registro, count_5g_v2
+     */
+    public function updateCount5gV2(Request $request)
+    {
+        try {
+            $idRegistro = $request->input('id_registro');
+            $count5gV2 = $request->input('count_5g_v2');
+
+            if (!$idRegistro || !isset($count5gV2)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Parámetros requeridos: id_registro, count_5g_v2'
+                ], 400);
+            }
+
+            // Actualizar registrodespacho
+            $updated = DB::table('registrodespacho')
+                ->where('id_registro', $idRegistro)
+                ->update([
+                    'count_5g_v2' => $count5gV2,
+                    'ignore_trigger' => true
+                ]);
+
+            if ($updated) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Registro $idRegistro actualizado correctamente con count_5g_v2 = $count5gV2"
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => "No se encontró el registro $idRegistro o no hubo cambios"
+                ], 404);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error actualizando registro: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Retorna las URLs firmadas (solo cámara E) por vehículo y rango de fecha/hora.
      */
