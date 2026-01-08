@@ -64,7 +64,7 @@
             </div>
         </th>
         @if( $company->hasRecorderCounter() && $user->canViewPasengervisual())
-            <th class="text-center">
+            <th width="10%" class="text-center">
                 <i class="fa fa-compass text-muted"></i><br>
                 {{ str_limit(__(  'Pasajeros'),9) }}
                 <br>
@@ -73,7 +73,7 @@
 
         @endif
         @if(Auth::user()->isSuperAdmin()|| $user->id =='2018101356' || $user->isExpreso())
-            <th class="text-center">
+            <th width="10%" class="text-center">
                 <i class="icon-users text-muted"></i><br>
                 {{ str_limit(__('Pasajeros'),9) }}
                 <br>
@@ -120,7 +120,7 @@
             </th>
         @endif
         @if($user->CanViewInfoPhotos())
-            <th>
+            <th width="10%">
                 <i class="fa fa-camera text-muted"></i><br>
                 @lang('Info. Fotos')
             </th>
