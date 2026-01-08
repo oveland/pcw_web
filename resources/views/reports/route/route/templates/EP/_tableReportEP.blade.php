@@ -38,7 +38,7 @@
                 <hr class="m-0"> @lang('Dispatcher')
             </th>
         @endif
-        <th width="15%">
+        <th width="10%">
             <i class="fa fa-clock-o text-muted"></i><br>
             @lang('Tiempos de Ruta')
         </th>
@@ -375,35 +375,34 @@
                 </td>
             @endif
 
-            <td width="15%" class="text-center">
-                <div style="display: flex; justify-content: space-between; font-size: 0.9em;">
-                    <span class="tooltips text-primary" data-title="@lang('Departure time')">
-                        <i class="fa fa-clock-o"></i> {{ $strTime->toString($dispatchRegister->departure_time) }}
-                    </span>
-                    <span class="tooltips text-success" data-title="@lang('Arrival Time')">
-                        <i class="fa fa-flag-checkered"></i> 
-                        {{ $dispatchRegister->complete() ? $strTime->toString($dispatchRegister->arrival_time) : '--:--' }}
-                    </span>
-                </div>
-                
-                <hr class="m-t-5 m-b-5">
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <small class="tooltips text-muted" data-title="@lang('Arrival Time Scheduled')">
-                        Prog: {{ $strTime->toString($dispatchRegister->arrival_time_scheduled) }}
-                    </small>
+            <td width="10%" class="text-center">
+                <div style="font-size: 0.9em;">
+                    <div class="m-b-5">
+                        <span class="tooltips text-primary" data-title="@lang('Departure time')">
+                            <i class="fa fa-clock-o"></i> {{ $strTime->toString($dispatchRegister->departure_time) }}
+                        </span>
+                    </div>
                     
-                    <small class="tooltips text-{{ $dispatchRegister->arrival_time_difference > 0 ? 'danger' : 'success' }}" 
-                           data-title="@lang('Arrival Time Difference')">
-                        {{ $strTime->toString($dispatchRegister->arrival_time_difference) }}
-                        <i class="ion-android-stopwatch"></i>
-                    </small>
-                </div>
+                    <div class="m-b-5">
+                        <span class="tooltips text-success" data-title="@lang('Arrival Time')">
+                            <i class="fa fa-flag-checkered"></i> 
+                            {{ $dispatchRegister->complete() ? $strTime->toString($dispatchRegister->arrival_time) : '--:--' }}
+                        </span>
+                    </div>
 
-                <div class="text-center m-t-5">
-                    <small class="badge badge-default tooltips" data-title="@lang('Tiempo de ruta')">
-                        <i class="fa fa-hourglass-half"></i> {{ $dispatchRegister->getRouteTime() }}
-                    </small>
+                    <div class="m-b-5">
+                        <small class="badge badge-default tooltips" data-title="@lang('Tiempo de ruta')">
+                            <i class="fa fa-hourglass-half"></i> {{ $dispatchRegister->getRouteTime() }}
+                        </small>
+                    </div>
+
+                    @if($dispatchRegister->date_end && $dispatchRegister->date_end != $dispatchRegister->date)
+                        <div class="m-t-5">
+                            <small class="text-muted tooltips" data-title="@lang('Fecha llegada')">
+                                <i class="fa fa-calendar"></i> {{ $dispatchRegister->date_end }}
+                            </small>
+                        </div>
+                    @endif
                 </div>
             </td>
             @php
