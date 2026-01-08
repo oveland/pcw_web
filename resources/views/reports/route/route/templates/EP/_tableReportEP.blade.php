@@ -1001,18 +1001,6 @@
             <td class="text-center tooltips" data-title="@lang('Sumatoria area 5G')">
                 {{$sumByCount5G}}
             </td>
-            @php
-                $porcentaje5G = 0;
-                if ($sumByCountPassengerVisual > 0) {
-                    $porcentaje5G = ($sumByCount5G / $sumByCountPassengerVisual) * 100;
-                }
-
-            @endphp
-            <td class="text-center tooltips" data-title="@lang('Porcentaje área 5G respecto a conteo manual')">
-                {{ number_format($porcentaje5G, 2) }}%
-            </td>
-
-
         </tr>
     @endif
     </tbody>
