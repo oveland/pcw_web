@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Command;
 use App\Models\Routes\DispatchRegister;
 use Illuminate\Support\Facades\Http;
@@ -63,13 +64,13 @@ class Process5GCountV2Command extends Command
         // 4. Recientes (últimos 5 días para seguridad, ajustable)
         
         $dispatches = DispatchRegister::query()
-            ->select('registrodespacho.*', 'vehicles.number as vehicle_number', 'vehicles.id as real_vehicle_id')
-            ->join('vehicles', 'registrodespacho.n_vehiculo', '=', 'vehicles.number')
+            ->select('dispatch_registers.*', 'vehicles.number as vehicle_number', 'vehicles.id as real_vehicle_id')
+            ->join('vehicles', 'dispatch_registers.vehicle_id', '=', 'vehicles.id')
             ->join('gps_vehicles', 'vehicles.id', '=', 'gps_vehicles.vehicle_id')
             ->where('gps_vehicles.technology', '5G')
-            ->where('registrodespacho.status', DispatchRegister::COMPLETE) // 'Terminó'
-            ->whereNull('registrodespacho.count_5g_v2')
-            ->where('registrodespacho.fecha', '>=', Carbon::now()->subDays(5)->toDateString())
+            ->where('dispatch_registers.status', DispatchRegister::COMPLETE) // 'Terminó'
+            ->whereNull('dispatch_registers.count_5g_v2')
+            ->where('dispatch_registers.date', '>=', Carbon::now()->subDays(5)->toDateString())
             ->get();
 
         $count = $dispatches->count();
@@ -91,7 +92,7 @@ class Process5GCountV2Command extends Command
 
     private function processDispatch($dispatch, $url, $apiKey)
     {
-        $id = $dispatch->id_registro ?? $dispatch->id; // Asegurar ID correcto
+        $id = $dispatch->id; // Asegurar ID correcto
         $this->line("Procesando registro ID: $id - Vehículo: {$dispatch->vehicle_number}");
 
         try {
