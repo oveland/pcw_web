@@ -470,8 +470,7 @@
                                     <i class="fa fa-times"></i>
                                 </button>
                                 <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                        title="@lang('Save')"
-                                        onclick="return confirm('Confirma que los datos son correctos')">
+                                        title="@lang('Save')">
 
                                     <i class="fa fa-save"></i>
                                 </button>
@@ -518,8 +517,7 @@
                                     <i class="fa fa-times"></i>
                                 </button>
                                 <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                        title="@lang('Save')"
-                                        onclick="return confirm('Confirma que los datos son correctos')">
+                                        title="@lang('Save')">
                                     <i class="fa fa-save"></i>
                                 </button>
                             </div>
@@ -578,8 +576,7 @@
                                         <i class="fa fa-times"></i>
                                     </button>
                                     <button class="btn btn-xs btn-success m-5 edit-btn-save"
-                                            title="@lang('Save')"
-                                            onclick="return confirm('Confirma que los datos son correctos')">
+                                            title="@lang('Save')">
                                         <i class="fa fa-save"></i>
                                     </button>
                                 </div>
@@ -1008,6 +1005,70 @@
 <!-- end table -->
 <script type="application/javascript">
     (function() {
+        // AJAX Inline Edit Handler
+        $(document).on('click', '.edit-btn-save', function(e) {
+            e.preventDefault();
+            
+            const btn = $(this);
+            const container = btn.closest('.box-edit');
+            const input = container.find('.edit-input-value');
+            const textarea = container.find('.edit-input-obs');
+            const url = input.data('url');
+            const id = input.data('id');
+            const field = input.data('field');
+            const value = input.val();
+            const observation = textarea.val();
+            
+            if (!confirm('@lang('Confirma que los datos son correctos')')) return;
+
+            // Show loading state
+            btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: {
+                    id: id,
+                    field: field,
+                    value: value,
+                    obs: observation,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    // Update UI
+                    const outerBox = container.parent();
+                    const displayBox = outerBox.find('.box-info');
+                    const displayIcon = outerBox.find('.text-bold');
+                    
+                    if (displayBox.length) displayBox.text(value);
+                    if (displayIcon.length) {
+                        displayIcon.html('<i class="fa fa-file-o text-muted"></i> ' + (observation || value));
+                    }
+                    
+                    // Hide edit box
+                    container.find('.box-edit').hide();
+                    btn.prop('disabled', false).html('<i class="fa fa-save"></i>');
+                    
+                    gsuccess('@lang('Saved successfully')');
+                },
+                error: function(xhr) {
+                    btn.prop('disabled', false).html('<i class="fa fa-save"></i>');
+                    gerror('@lang('Error saving data')');
+                }
+            });
+        });
+
+        // Toggle edit box
+        $(document).on('click', '.box-info, .text-bold', function() {
+            const container = $(this).closest('.box-edit');
+            container.find('.box-edit').toggle();
+        });
+
+        // Cancel edit
+        $(document).on('click', '.edit-btn-cancel', function() {
+            $(this).closest('.box-edit').hide();
+        });
+
         // Optimización JS Fase C: Procesar visualizaciones desde atributos data
         // Esto evita tener múltiples bloques <script> dentro del bucle foreach
         const vehiclesData = [
