@@ -102,24 +102,41 @@ class Process5GCountV2Command extends Command
 
             // Construir timestamps completos
             // Fecha base
-            $dateStr = explode(' ', $dispatch->fecha)[0];
+            $dateStr = explode(' ', $dispatch->date)[0];
             
             // Hora despacho
-            $timeStr = explode('.', $dispatch->h_reg_despachado)[0];
+            $timeStr = explode('.', $dispatch->departure_time)[0];
+            
+            // Log para depuración
+            $this->line("Debug Dates - Date: '$dateStr', Time: '$timeStr'");
+            
             if (empty($dateStr) || empty($timeStr)) {
                 $this->error("Fecha o hora de despacho inválida para registro $id");
                 return;
             }
 
             try {
-                if (strpos($dateStr, '-') !== false) {
-                    $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
-                } else {
-                    $startDateTime = Carbon::createFromFormat('d/m/Y H:i:s', "$dateStr $timeStr");
+                // Intentar formato Y-m-d (ISO) primero
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateStr)) {
+                     $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
+                } 
+                // Intentar formato d/m/Y (Latino)
+                elseif (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $dateStr)) {
+                     $startDateTime = Carbon::createFromFormat('d/m/Y H:i:s', "$dateStr $timeStr");
+                }
+                // Fallback a parseo inteligente
+                else {
+                    $startDateTime = Carbon::parse("$dateStr $timeStr");
                 }
             } catch (\Exception $e) {
-                 // Fallback si falla el formato exacto, intentar parsear flexiblemente
-                 $startDateTime = Carbon::parse("$dateStr $timeStr");
+                 $this->error("Error parseando fecha inicio: " . $e->getMessage());
+                 // Último intento desesperado
+                 try {
+                    $startDateTime = Carbon::parse($dispatch->date . ' ' . $dispatch->departure_time);
+                 } catch (\Exception $e2) {
+                    $this->error("Fallo total en fecha para registro $id");
+                    return;
+                 }
             }
             
             // Restar los minutos configurados
@@ -128,7 +145,7 @@ class Process5GCountV2Command extends Command
             // Hora llegada (End)
             // Si hay date_end, usarlo, si no, calcular con fecha base (cuidado con cambio de día)
             // Asumiremos que h_reg_llegada es correcto. Si date_end existe, mejor.
-            $endTimeStr = explode('.', $dispatch->h_reg_llegada)[0];
+            $endTimeStr = explode('.', $dispatch->arrival_time)[0];
             
             if (!empty($dispatch->date_end)) {
                 $endDateStr = explode(' ', $dispatch->date_end)[0]; // Si date_end es datetime
