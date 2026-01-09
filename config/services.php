@@ -35,4 +35,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'runpod' => [
+        'api_key' => env('RUNPOD_API_KEY'),
+        'endpoint_id' => env('RUNPOD_ENDPOINT_ID'),
+    ],
+
 ];
