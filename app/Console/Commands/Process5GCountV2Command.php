@@ -45,8 +45,13 @@ class Process5GCountV2Command extends Command
         $apiKey = config('services.runpod.api_key');
         $endpointId = config('services.runpod.endpoint_id');
 
-        if (empty($apiKey) || empty($endpointId)) {
-            $this->error("Error: Faltan credenciales de Runpod (RUNPOD_API_KEY, RUNPOD_ENDPOINT_ID) en el archivo .env");
+        // Si no hay endpointId configurado, usar el proporcionado por defecto
+        if (empty($endpointId)) {
+            $endpointId = '5djqi13hv4sxwp';
+        }
+
+        if (empty($apiKey)) {
+            $this->error("Error: Falta RUNPOD_API_KEY en el archivo .env. Por favor genérela en la consola de Runpod.");
             return;
         }
 
@@ -58,7 +63,7 @@ class Process5GCountV2Command extends Command
         // 4. Recientes (últimos 5 días para seguridad, ajustable)
         
         $dispatches = DispatchRegister::query()
-            ->select('registrodespacho.*', 'vehicles.number as vehicle_number')
+            ->select('registrodespacho.*', 'vehicles.number as vehicle_number', 'vehicles.id as real_vehicle_id')
             ->join('vehicles', 'registrodespacho.n_vehiculo', '=', 'vehicles.number')
             ->join('gps_vehicles', 'vehicles.id', '=', 'gps_vehicles.vehicle_id')
             ->where('gps_vehicles.technology', '5G')
@@ -74,7 +79,8 @@ class Process5GCountV2Command extends Command
             return;
         }
 
-        $url = "https://api.runpod.io/v2/{$endpointId}/run";
+        // Usar api.runpod.ai como solicitó el usuario
+        $url = "https://api.runpod.ai/v2/{$endpointId}/run";
 
         foreach ($dispatches as $dispatch) {
             $this->processDispatch($dispatch, $url, $apiKey);
@@ -89,21 +95,72 @@ class Process5GCountV2Command extends Command
         $this->line("Procesando registro ID: $id - Vehículo: {$dispatch->vehicle_number}");
 
         try {
+            // Lógica de fechas
+            // Restar 15 minutos a la hora de despacho
+            $minutesToSubtract = 15;
+
+            // Construir timestamps completos
+            // Fecha base
+            $dateStr = explode(' ', $dispatch->fecha)[0];
+            
+            // Hora despacho
+            $timeStr = explode('.', $dispatch->h_reg_despachado)[0];
+            if (empty($dateStr) || empty($timeStr)) {
+                $this->error("Fecha o hora de despacho inválida para registro $id");
+                return;
+            }
+
+            try {
+                if (strpos($dateStr, '-') !== false) {
+                    $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
+                } else {
+                    $startDateTime = Carbon::createFromFormat('d/m/Y H:i:s', "$dateStr $timeStr");
+                }
+            } catch (\Exception $e) {
+                 // Fallback si falla el formato exacto, intentar parsear flexiblemente
+                 $startDateTime = Carbon::parse("$dateStr $timeStr");
+            }
+            
+            // Restar los minutos configurados
+            $startDateTime->subMinutes($minutesToSubtract);
+
+            // Hora llegada (End)
+            // Si hay date_end, usarlo, si no, calcular con fecha base (cuidado con cambio de día)
+            // Asumiremos que h_reg_llegada es correcto. Si date_end existe, mejor.
+            $endTimeStr = explode('.', $dispatch->h_reg_llegada)[0];
+            
+            if (!empty($dispatch->date_end)) {
+                $endDateStr = explode(' ', $dispatch->date_end)[0]; // Si date_end es datetime
+                // Si date_end solo es fecha, usar esa fecha con endTimeStr
+                // Si date_end es Y-m-d
+                if (strpos($dispatch->date_end, ':') !== false) {
+                    // Es datetime completo
+                    $endDateTime = Carbon::parse($dispatch->date_end);
+                } else {
+                    $endDateTime = Carbon::parse("$endDateStr $endTimeStr");
+                }
+            } else {
+                // Si no hay date_end, inferir. Si la hora de llegada es menor a la de salida, es el día siguiente
+                // Pero startDateTime ya fue restado, así que comparar con original
+                $originalStart = $startDateTime->copy()->addMinutes($minutesToSubtract);
+                $endDateTime = Carbon::parse("$dateStr $endTimeStr");
+                
+                if ($endDateTime->lt($originalStart)) {
+                    $endDateTime->addDay();
+                }
+            }
+
             // Payload para Runpod
-            // Enviamos el id_registro para que el worker sepa qué actualizar
             $payload = [
                 'input' => [
-                    'id_registro' => $id,
-                    'vehicle_number' => $dispatch->vehicle_number,
-                    'date' => $dispatch->fecha, // O el campo de fecha correcto
-                    'start_time' => $dispatch->h_reg_despachado,
-                    'end_time' => $dispatch->h_reg_llegada,
-                    // Agrega aquí más datos si el worker los necesita
+                    'vehicle_id' => $dispatch->real_vehicle_id, // ID numérico del vehículo (ej: 2685)
+                    'start' => $startDateTime->toDateTimeString(), // "2026-01-05 21:05:00"
+                    'end' => $endDateTime->toDateTimeString(),     // "2026-01-06 03:59:21"
+                    'id_registro' => $id
                 ]
             ];
 
-            // Usamos Guzzle (cliente HTTP por defecto en Laravel) o curl
-            // Laravel 7 usa Guzzle 6
+            // Usamos Guzzle (cliente HTTP por defecto en Laravel)
             $client = new \GuzzleHttp\Client();
             
             $response = $client->post($url, [
