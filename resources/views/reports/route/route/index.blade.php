@@ -63,18 +63,18 @@
                         </a>
                     </div>
                     <div style="display: flex; gap: 4px">
-                        <button type="submit" class="btn btn-success btn-sm btn-search-report" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                        <button type="submit" class="btn btn-success btn-sm btn-search-report" style="display: flex; align-items: center; justify-content: center; height: 32px; font-size: 13px;">
                             <i class="fa fa-search" style="margin-right: 5px;"></i> @lang('Search')
                         </button>
                         <div class="lm-sync-container">
-                            <button id="lm-sync-button" type="button" class="btn btn-info btn-sm" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                            <button id="lm-sync-button" type="button" class="btn btn-success btn-sm" style="display: flex; align-items: center; justify-content: center; height: 32px; font-size: 13px;">
                                 <i class="fa fa-refresh" style="margin-right: 5px;"></i>
                                 <span>@lang('Sync spreadsheets')</span>
                             </button>
                         </div>
                         @if(Auth::user()->isAdmin() ||  Auth::user()->isExpreso())
                             <div class="excel-export-container">
-                                <button id="excel-export-button" type="button" class="btn btn-primary btn-sm" style="display: flex; align-items: center; justify-content: center; height: 32px;">
+                                <button id="excel-export-button" type="button" class="btn btn-success btn-sm" style="display: flex; align-items: center; justify-content: center; height: 32px; font-size: 13px;">
                                     <i class="fa fa-file-excel-o" style="margin-right: 5px;"></i>
                                     <span>@lang('Vuelos Acomulados')</span>
                                 </button>
