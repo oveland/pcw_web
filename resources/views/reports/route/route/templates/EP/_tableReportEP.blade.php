@@ -24,8 +24,8 @@
             @lang('Route')
         </th>
         <th>
-            <i class="fa fa-retweet text-muted"></i><br>
-            @lang('Round Trip')
+            <i class="fa fa-road text-muted"></i><br>
+            @lang('Recorrido (km)')
         </th>
         <th class="">
             <i class="fa fa-car text-muted"></i><br>
@@ -273,8 +273,6 @@
             </th>
             <th width="5%"
                 class="bg-{{ $color }} text-white text-center">
-                {{ $dispatchRegister->round_trip }}
-                <br>
                 <small class="html-observations {{ $dispatchRegister->isCancelled() ? 'cancelled' : '' }}">{!! $dispatchRegister->status !!}</small>
                 @if($dispatchRegister->isCancelled())
                     <small>{{ $dispatchRegister->time_canceled }}</small>
