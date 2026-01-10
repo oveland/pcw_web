@@ -758,7 +758,7 @@
                         @endphp
                     </span>
                     <hr class="m-0">
-                    <span title="Diferencia" style="font-weight: bold">
+                    <span title="Conteo 5G V2" style="font-weight: bold">
                       {{ $dispatchRegister->count_5g_v2 }}
                     </span>
 
