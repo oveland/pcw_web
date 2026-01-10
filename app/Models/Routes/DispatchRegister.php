@@ -995,6 +995,26 @@ class DispatchRegister extends Model
         return $takings;
     }
 
+    function getPhotosByTime()
+    {
+        if ($this->complete()) {
+            $startDate = $this->date;
+            $startTime = $this->departure_time;
+            $startDateTime = "$startDate $startTime";
+
+            $endDate = $this->date_end ?? $startDate;
+            $endTime = $this->arrival_time;
+            $endDateTime = "$endDate $endTime";
+
+            return Photo::where('vehicle_id', $this->vehicle_id)
+                ->whereBetween('date', [$startDateTime, $endDateTime])
+                ->orderBy('date', 'asc')
+                ->get();
+        }
+
+        return $this->photos;
+    }
+
     function processTakings()
     {
         return !(!$this->vehicle->process_takings && ($this->date > $this->vehicle->to_date_takings || !$this->vehicle->to_date_takings));

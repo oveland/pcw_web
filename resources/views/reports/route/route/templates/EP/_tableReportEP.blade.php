@@ -770,7 +770,7 @@
                     <div>
                         @php
                                 //$photos = \App\Models\Apps\Rocket\Photo::withinDispatch($dispatchRegister)->get();
-                                $photos = $dispatchRegister->photos;
+                                $photos = $dispatchRegister->getPhotosByTime();
 
                                 $photosByCamera = $photos->sortBy('side')->groupBy('side');
 
