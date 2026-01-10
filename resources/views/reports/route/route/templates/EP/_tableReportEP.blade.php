@@ -49,11 +49,11 @@
             </th>
         @endif
         <th width="10%" class="text-center">
-            <i class="fa fa-file  fa-3x fa-fw"></i><br>
+            <i class="fa fa-file-text-o fa-3x fa-fw text-muted"></i><br>
             @lang('Pasajeros Planilla')
         </th>
         <th width="10%" class="text-center">
-            <i class="fa fa-file  fa-3x fa-fw"></i><br>
+            <i class="fa fa-list-ol fa-3x fa-fw text-muted"></i><br>
             @lang('Número de planilla')
             <br>
             <div class="input-group input-group-sm text-center" style="display: none;">
@@ -65,7 +65,7 @@
         </th>
         @if( $company->hasRecorderCounter() && $user->canViewPasengervisual())
             <th width="10%" class="text-center">
-                <i class="fa fa-compass text-muted"></i><br>
+                <i class="fa fa-eye fa-3x fa-fw text-muted"></i><br>
                 {{ str_limit(__(  'Pasajeros'),9) }}
                 <br>
                 {{ str_limit(__(  'Visual'), 6) }}
