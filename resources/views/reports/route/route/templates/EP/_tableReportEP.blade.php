@@ -114,9 +114,11 @@
             </th>
         @endif
         @if($user->canViewAverageCount()  || $user->id =='2018101356' )
-            <th>
-                <i class="icon-users text-muted">
-                </i><br>{{"Conteo  5G"}}
+            <th class="text-center">
+                <i class="fa fa-users text-muted"></i>
+                <i class="fa fa-video-camera text-muted" style="font-size: 0.8em;"></i><br>
+                @lang('Conteo 5G')<br>
+                <small>@lang('Área') / V2</small>
             </th>
         @endif
         @if($user->CanViewInfoPhotos())
@@ -755,7 +757,7 @@
 
                         @endphp
                     </span>
-                    <br>
+                    <hr class="m-0">
                     <span title="Diferencia" style="font-weight: bold">
                       {{ $dispatchRegister->count_5g_v2 }}
                     </span>
