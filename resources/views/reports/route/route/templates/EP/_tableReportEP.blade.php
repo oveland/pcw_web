@@ -942,6 +942,13 @@
                                             <i class="fa fa-code faa-pulse"></i> @lang('Show report details')
                                         </a>
                                     </li>
+                                    @if($dispatchRegister->id == 3779584)
+                                        <li>
+                                            <a href="http://view-face-identification.s3-website-us-west-2.amazonaws.com/" target="_blank">
+                                                <i class="fa fa-eye faa-pulse"></i> Reconocimiento Facial
+                                            </a>
+                                        </li>
+                                    @endif
                                 @endif
                             </ul>
                         </div>
