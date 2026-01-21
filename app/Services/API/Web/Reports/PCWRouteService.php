@@ -184,6 +184,11 @@ class PCWRouteService implements APIWebInterface
                 } else {
                     $totalPassengers = $totalPassengersmax;
                 }
+
+                $gpsVehicle = $d->vehicle->gpsVehicle;
+                if ($gpsVehicle && isset($gpsVehicle->technology) && $gpsVehicle->technology == '5G') {
+                    $totalPassengers = $d->rocket_5g_area ?? $totalPassengers;
+                }
             }
             $tariffPassenger = $d->route->tariff->passenger;
 
