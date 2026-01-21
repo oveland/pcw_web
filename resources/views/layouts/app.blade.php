@@ -146,7 +146,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item">
-                            <a href="#" class="faa-parent animated-hover nav-link">
+                            <a href="http://dashboard-5g-conteo.s3-website-us-west-2.amazonaws.com/" target="_blank" class="faa-parent animated-hover nav-link">
                                 <i class="fa fa-sort-numeric-asc faa-vertical"></i>
                                 <span>Conteo 5G</span>
                             </a>
@@ -807,7 +807,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item">
-                            <a href="#" class="faa-parent animated-hover nav-link">
+                            <a href="http://dashboard-5g-conteo.s3-website-us-west-2.amazonaws.com/" target="_blank" class="faa-parent animated-hover nav-link">
                                 <i class="fa fa-sort-numeric-asc faa-vertical"></i>
                                 <span>Conteo 5G</span>
                             </a>
