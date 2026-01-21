@@ -370,7 +370,7 @@
                     <span>Valledupar</span>
                 </a>
                 <ul class="sub-menu">
-                    <li class="has-sub">
+                    <li>
                         <a href="http://dashboard-5g-conteo.s3-website-us-west-2.amazonaws.com/" target="_blank" class="faa-parent animated-hover">
                             <i class="fa fa-sort-numeric-asc faa-vertical"></i>
                             <span>Conteo 5G</span>
