@@ -88,7 +88,14 @@ class APIReportService implements APIWebInterface
                     ->where('vehicle_id', $vehicle->id)
                     ->whereBetween('date', [$from, $to])
                     ->orderBy('date')
-                    ->get(['latitude', 'longitude', 'date']);
+                    ->get(['latitude', 'longitude', 'date'])
+                    ->map(function ($location) {
+                        return [
+                            'latitude' => $location->latitude,
+                            'longitude' => $location->longitude,
+                            'date' => (string) $location->date, // Force string conversion
+                        ];
+                    });
 
                 return response()->json([
                     'error' => false,
