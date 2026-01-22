@@ -24,6 +24,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
+use App\Models\Vehicles\Location;
+
 class APIReportService implements APIWebInterface
 {
     public $controlPointService;
@@ -58,6 +60,41 @@ class APIReportService implements APIWebInterface
     public function serve($service, Request $request): JsonResponse
     {
         switch ($service) {
+            case 'vehicle-locations':
+                $companyId = $request->get('company');
+                $vehicleNumber = $request->get('vehicle');
+                $from = $request->get('from');
+                $to = $request->get('to');
+
+                if (!$companyId || !$vehicleNumber || !$from || !$to) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Missing parameters: company, vehicle, from, to'
+                    ]);
+                }
+
+                $vehicle = Vehicle::where('company_id', $companyId)
+                    ->where('number', $vehicleNumber)
+                    ->first();
+
+                if (!$vehicle) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Vehicle not found'
+                    ]);
+                }
+
+                $locations = Location::where('vehicle_id', $vehicle->id)
+                    ->whereBetween('date', [$from, $to])
+                    ->orderBy('date')
+                    ->get(['latitude', 'longitude', 'date']);
+
+                return response()->json([
+                    'error' => false,
+                    'data' => $locations
+                ]);
+                break;
+
             case 'control-points':
                 $dispatchRegister = DispatchRegister::find($request->get('dispatch-register'));
 
