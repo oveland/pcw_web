@@ -84,7 +84,8 @@ class APIReportService implements APIWebInterface
                     ]);
                 }
 
-                $locations = Location::where('vehicle_id', $vehicle->id)
+                $locations = Location::forDate($from, $to)
+                    ->where('vehicle_id', $vehicle->id)
                     ->whereBetween('date', [$from, $to])
                     ->orderBy('date')
                     ->get(['latitude', 'longitude', 'date']);
