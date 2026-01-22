@@ -93,7 +93,7 @@ class APIReportService implements APIWebInterface
                         return [
                             'latitude' => $location->latitude,
                             'longitude' => $location->longitude,
-                            'date' => (string) $location->date, // Force string conversion
+                            'date' => $location->date->format('Y-m-d H:i:s'), // Explicit format
                         ];
                     });
 
