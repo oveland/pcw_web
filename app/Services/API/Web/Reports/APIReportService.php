@@ -73,6 +73,16 @@ class APIReportService implements APIWebInterface
                     ]);
                 }
 
+                $fromDate = Carbon::parse($from);
+                $toDate = Carbon::parse($to);
+
+                if ($fromDate->diffInHours($toDate) > 24) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'The date range cannot exceed 24 hours'
+                    ]);
+                }
+
                 $vehicle = Vehicle::where('company_id', $companyId)
                     ->where('number', $vehicleNumber)
                     ->first();
