@@ -95,7 +95,7 @@ class PhotoUrlController extends Controller
 
                 $url = Storage::disk('s3')->temporaryUrl(
                     $key,
-                    now()->addHour() // 1 hora de validez
+                    now()->addDays(45) // 45 días de validez
                 );
 
                 // Si solo quieres la URL, dejamos solo esto
