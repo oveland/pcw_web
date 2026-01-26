@@ -95,7 +95,7 @@ class PhotoUrlController extends Controller
 
                 $url = Storage::disk('s3')->temporaryUrl(
                     $key,
-                    now()->addDays(45) // 45 días de validez
+                    now()->addDays(7) // 7 días de validez (límite máximo para Signature v4)
                 );
 
                 // Si solo quieres la URL, dejamos solo esto
