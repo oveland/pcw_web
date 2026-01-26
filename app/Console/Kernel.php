@@ -52,6 +52,7 @@ class Kernel extends ConsoleKernel
 
         Commands\FTP\RefreshPhotoPaths::class,
         \App\Console\Commands\CheckNoPhotosDispatch::class,
+        Commands\Reports\UpdateSimulatedSensorCounter::class,
     ];
 
     /**
@@ -98,6 +99,9 @@ class Kernel extends ConsoleKernel
         /*Alert Photos */
         $schedule->command('check:no-photos-dispatch')->dailyAt('23:50');
         $schedule->command('check:no-photos-dispatch')->dailyAt('12:00');
+
+        /* Simulated sensor counter */
+        $schedule->command('report:update-simulated-sensor')->cron('0 */5 * * *');
     }
 
     /**

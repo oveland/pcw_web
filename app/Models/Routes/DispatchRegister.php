@@ -180,7 +180,7 @@ use Illuminate\Support\Facades\DB;
 class DispatchRegister extends Model
 {
     const CREATED_AT = 'date_created';
-    const UPDATED_AT = 'last_updated';
+    const UPDATED_AT = null;
 
     const IN_PROGRESS = "En camino";
     const COMPLETE = "Terminó";
