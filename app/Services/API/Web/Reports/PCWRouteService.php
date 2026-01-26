@@ -189,6 +189,13 @@ class PCWRouteService implements APIWebInterface
                 if ($gpsVehicle && isset($gpsVehicle->technology) && $gpsVehicle->technology == '5G') {
                     $totalPassengers = $d->rocket_5g_area ?? $totalPassengers;
                 }
+
+                if (in_array($d->route_id, [285, 286, 287, 288, 321, 322, 331, 332, 337, 338, 341, 342, 343, 344])) {
+                    $is5G = $gpsVehicle && isset($gpsVehicle->technology) && $gpsVehicle->technology == '5G';
+                    if (!$is5G) {
+                        $totalPassengers = $d->final_sensor_counter;
+                    }
+                }
             }
             $tariffPassenger = $d->route->tariff->passenger;
 
