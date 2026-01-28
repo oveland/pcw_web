@@ -118,9 +118,9 @@ class PhotoUrlController extends Controller
                     'count'   => 0,
                     'debug_info' => [
                         'vehicle_id' => $vehicleId,
-                        'side_searched' => 'E',
+                        'side_searched' => 'T',
                         'total_photos_in_range' => $totalPhotos,
-                        'message' => 'No se encontraron fotos side=E en este rango, pero existen ' . $totalPhotos . ' fotos totales (de otros lados).'
+                        'message' => 'No se encontraron fotos side=T en este rango, pero existen ' . $totalPhotos . ' fotos totales (de otros lados).'
                     ],
                     'urls'    => [],
                 ]);
@@ -200,9 +200,20 @@ class PhotoUrlController extends Controller
                 ->get(['id', 'vehicle_id', 'path', 'date']);
 
             if ($photos->isEmpty()) {
+                // Debug info para el usuario
+                $totalPhotos = Photo::where('vehicle_id', $vehicleId)
+                    ->whereBetween('date', [$start, $end])
+                    ->count();
+
                 return response()->json([
                     'success' => true,
                     'count'   => 0,
+                    'debug_info' => [
+                        'vehicle_id' => $vehicleId,
+                        'side_searched' => 'T',
+                        'total_photos_in_range' => $totalPhotos,
+                        'message' => 'No se encontraron fotos side=T en este rango, pero existen ' . $totalPhotos . ' fotos totales (de otros lados).'
+                    ],
                     'urls'    => [],
                 ]);
             }
