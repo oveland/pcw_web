@@ -40,7 +40,7 @@ class PCWRouteService implements APIWebInterface
             $initial = $drObservations->min('dispatchRegister.date') ?: $initial;
             $final = $drObservations->max('dispatchRegister.date') ?: $final;
         }
-|
+
         return (object)[
             'initial' => $initial,
             'final' => $final
