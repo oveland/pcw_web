@@ -139,7 +139,7 @@ class PhotoUrlController extends Controller
                 return [
                     'id'   => $photo->id,
                     'date' => $photo->date,
-                    'side' => $photo->side, // Incluir el número de la cámara (side)
+                    'camera' => $photo->side, // Nombre 'camera' para mayor claridad
                     'url'  => $url,
                 ];
             });
@@ -231,7 +231,7 @@ class PhotoUrlController extends Controller
                 return [
                     'id'   => $photo->id,
                     'date' => $photo->date,
-                    'side' => $photo->side, // Incluir el número de la cámara (side)
+                    'camera' => $photo->side, // Nombre 'camera' para mayor claridad
                     'url'  => $url,
                 ];
             });
