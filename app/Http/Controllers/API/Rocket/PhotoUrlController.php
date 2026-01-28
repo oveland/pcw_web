@@ -105,7 +105,7 @@ class PhotoUrlController extends Controller
                 ->where('side', 'E') // solo cámara E
                 ->whereBetween('date', [$start, $end])
                 ->orderBy('date')
-                ->get(['id', 'vehicle_id', 'path', 'date', 'side']);
+                ->get(['id', 'vehicle_id', 'path', 'date']);
 
             if ($photos->isEmpty()) {
                 // Debug info para el usuario
@@ -231,6 +231,7 @@ class PhotoUrlController extends Controller
                 return [
                     'id'   => $photo->id,
                     'date' => $photo->date,
+                    'side' => $photo->side, // Incluir el número de la cámara (side)
                     'url'  => $url,
                 ];
             });
