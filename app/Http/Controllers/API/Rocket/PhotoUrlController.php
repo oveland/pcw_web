@@ -198,7 +198,7 @@ class PhotoUrlController extends Controller
                 ->where('side', '!=', 'E') // Todo lo que no sea E se considera T (cámaras numeradas)
                 ->whereBetween('date', [$start, $end])
                 ->orderBy('date')
-                ->get(['id', 'vehicle_id', 'path', 'date']);
+                ->get(['id', 'vehicle_id', 'path', 'date', 'side']); // Asegurarse de que 'side' está en el select
 
             if ($photos->isEmpty()) {
                 // Debug info para el usuario
