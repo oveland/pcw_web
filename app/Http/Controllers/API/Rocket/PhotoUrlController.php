@@ -118,9 +118,9 @@ class PhotoUrlController extends Controller
                     'count'   => 0,
                     'debug_info' => [
                         'vehicle_id' => $vehicleId,
-                        'side_searched' => 'T',
+                        'side_searched' => 'E',
                         'total_photos_in_range' => $totalPhotos,
-                        'message' => 'No se encontraron fotos side=T en este rango, pero existen ' . $totalPhotos . ' fotos totales (de otros lados).'
+                        'message' => 'No se encontraron fotos side=E en este rango, pero existen ' . $totalPhotos . ' fotos totales (de otros lados).'
                     ],
                     'urls'    => [],
                 ]);
