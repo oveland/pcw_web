@@ -61,15 +61,42 @@ class PhotoUrlController extends Controller
     public function getUrls(Request $request)
     {
         try {
+            // Acepta tanto vehicle_id (legacy) como vehicle_number + company_id (nuevo)
             $vehicleId = $request->get('vehicle_id');
+            $vehicleNumber = $request->get('vehicle_number');
+            $companyId = $request->get('company_id');
             $start = $request->get('start');
             $end   = $request->get('end');
 
-            if (!$vehicleId || !$start || !$end) {
+            if (!$start || !$end) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Parámetros insuficientes: vehicle_id, start, end son requeridos',
+                    'message' => 'Parámetros requeridos: start, end',
                 ], 400);
+            }
+
+            // Si no hay vehicle_id directo, intentar buscarlo por número
+            if (!$vehicleId) {
+                if (!$vehicleNumber || !$companyId) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Se requiere vehicle_id O (vehicle_number y company_id)',
+                    ], 400);
+                }
+
+                $vehicle = DB::table('vehicles')
+                    ->where('number', $vehicleNumber)
+                    ->where('company_id', $companyId)
+                    ->select('id')
+                    ->first();
+
+                if (!$vehicle) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Vehículo $vehicleNumber de la compañía $companyId no encontrado",
+                    ], 404);
+                }
+                $vehicleId = $vehicle->id;
             }
 
             // Buscar las fotos del vehículo, cámara E, en el rango
