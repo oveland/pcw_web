@@ -191,10 +191,10 @@ class PhotoUrlController extends Controller
 
             $vehicleId = $vehicle->id;
 
-            // Buscar las fotos del vehículo, cámara T, en el rango
+            // Buscar las fotos del vehículo, cámara T (todo lo que no sea E), en el rango
             $photos = Photo::query()
                 ->where('vehicle_id', $vehicleId)
-                ->where('side', 'T') // solo cámara T
+                ->where('side', '!=', 'E') // Todo lo que no sea E se considera T (cámaras numeradas)
                 ->whereBetween('date', [$start, $end])
                 ->orderBy('date')
                 ->get(['id', 'vehicle_id', 'path', 'date']);
@@ -210,9 +210,9 @@ class PhotoUrlController extends Controller
                     'count'   => 0,
                     'debug_info' => [
                         'vehicle_id' => $vehicleId,
-                        'side_searched' => 'T',
+                        'side_searched' => 'NOT E (T/Numbered)',
                         'total_photos_in_range' => $totalPhotos,
-                        'message' => 'No se encontraron fotos side=T en este rango, pero existen ' . $totalPhotos . ' fotos totales (de otros lados).'
+                        'message' => 'No se encontraron fotos (side != E) en este rango. Total fotos encontradas: ' . $totalPhotos
                     ],
                     'urls'    => [],
                 ]);
