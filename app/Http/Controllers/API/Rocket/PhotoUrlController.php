@@ -231,7 +231,7 @@ class PhotoUrlController extends Controller
                 return [
                     'id'   => $photo->id,
                     'date' => $photo->date,
-                    'camera' => $photo->side, // Nombre 'camera' para mayor claridad
+                    'camera' => (string) $photo->getAttribute('side'), // Forzar lectura directa del atributo
                     'url'  => $url,
                 ];
             });
