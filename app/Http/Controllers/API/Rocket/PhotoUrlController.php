@@ -230,7 +230,7 @@ class PhotoUrlController extends Controller
 
                 return [
                     'id'   => $photo->id,
-                    'date' => $photo->date,
+                    'date' => $photo->date->format('Y-m-d H:i:s'), // Formato exacto de BD sin Z
                     'camera' => (string) $photo->getAttribute('side'), // Forzar lectura directa del atributo
                     'url'  => $url,
                 ];
