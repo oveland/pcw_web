@@ -118,7 +118,7 @@ class Geolocation
      */
     public static function getAddressFromCoordinates($latitude, $longitude, $force = false)
     {
-        if (!$force) return "";
+        // if (!$force) return ""; // Removed by optimization: allow geocoding
         $address = "";
 
         if ($latitude == 0 || $longitude == 0 || abs(intval($latitude)) > 5 || abs(intval($longitude)) > 90) return $address . "*";

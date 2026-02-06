@@ -34,32 +34,33 @@ try {
     $processed = 0;
     $startTime = microtime(true);
 
-    $query->chunk(50, function ($speedings) use (&$processed, $total) {
+    // OPTIMIZACIÓN: Solo procesar los que NO tienen dirección aún
+    // Esto requiere un LEFT JOIN o whereDoesntHave, pero para ser seguros en legacy,
+    // iteramos y AddressLocation lo chequeará rápido.
+    
+    // Chunk size aumentado para mejor throughput si la mayoría ya existe
+    $query->chunk(200, function ($speedings) use (&$processed, $total) {
         foreach ($speedings as $speeding) {
             try {
-                // getAddress(false, false):
-                // 1er false: No refrescar si ya existe.
-                // 2do false: No forzar (usa caché).
-                // Al llamar a esto, si no tiene dirección, la busca y la guarda en address_locations.
+                // getAddress(false, false)
+                // En el código original de Location.php:
+                // if ($refresh || !$addressLocation || !$addressLocation->address) { ... }
+                // Así que solo llamará a la API si no tiene dirección en la BD.
+                // IMPORTANTE: Hemos modificado Geolocation.php para que NO devuelva "" si force=false.
                 $speeding->getAddress(false, false);
             } catch (\Exception $e) {
-                // Ignorar errores puntuales de conexión o datos
+                // Ignorar errores puntuales
             }
             $processed++;
         }
         
-        // Feedback visual simple
         echo "Procesando... $processed / $total completados.\r";
-        
-        // Pausa muy breve para dar respiro al CPU/API
-        usleep(100000); // 0.1 segundos
+        // usleep eliminado para máxima velocidad, el cuello de botella será la API externa
     });
 
     $duration = round(microtime(true) - $startTime, 2);
     echo "\n\n¡Proceso terminado con éxito en $duration segundos!\n";
-    echo "Ahora puedes ejecutar tu consulta SQL nuevamente.\n";
 
 } catch (\Exception $e) {
     echo "\n\nERROR CRÍTICO: " . $e->getMessage() . "\n";
-    echo $e->getTraceAsString();
 }
