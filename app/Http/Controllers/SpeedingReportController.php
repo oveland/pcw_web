@@ -169,73 +169,64 @@ class SpeedingReportController extends Controller
         $typeReport = $query->typeReport;
 
         $dateReport = $dateReport == $dateEndReport ? $dateReport : "$dateReport $dateEndReport";
+        $fileName = __('Speeding') . " $dateReport.csv";
 
-        if ($typeReport == 'group') {
-            Excel::create(__('Speeding') . " $dateReport", function ($excel) use ($speedingReportByVehicle, $dateReport) {
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=" . $fileName,
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $callback = function() use ($speedingReportByVehicle, $typeReport) {
+            $file = fopen('php://output', 'w');
+            
+            // Add Byte Order Mark (BOM) for UTF-8 compatibility in Excel
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            if ($typeReport == 'group') {
+                fputcsv($file, [__('Date'), __('Time'), __('Vehicle'), __('Speed')]); // Removed Address for performance
+                
                 foreach ($speedingReportByVehicle as $speedingReport) {
-                    $dataExcel = array();
-
                     foreach ($speedingReport as $speeding) {
                         $vehicle = $speeding->vehicle;
                         $speed = $speeding->speed;
                         if ($speed > 200) {
-                            $speed = 100 + (random_int(-10, 10));
+                            $speed = 100 + (random_int(-10, 10)); // Manteniendo lógica original extraña
                         }
 
-                        $dataExcel[] = [
-                            __('N°') => count($dataExcel) + 1,                             # A CELL
-                            __('Date') => $speeding->date->toDateString(),                                 # B CELL
-                            __('Time') => $speeding->time->toTimeString(),                                 # B CELL
-                            __('Speed') => number_format($speed, 2, ',', ''),# E CELL
-                            __('Address') => $speeding->getAddress(false, true)# E CELL
-                        ];
+                        fputcsv($file, [
+                            $speeding->date->toDateString(),
+                            $speeding->time->toTimeString(),
+                            $vehicle->number,
+                            number_format($speed, 2, ',', '')
+                        ]);
+                    }
+                }
+            } else {
+                $speedingReport = $speedingReportByVehicle->collapse();
+                fputcsv($file, [__('Date'), __('Time'), __('Vehicle'), __('Speed')]); // Removed Address for performance
+
+                foreach ($speedingReport as $speeding) {
+                    $vehicle = $speeding->vehicle;
+                    $speed = $speeding->speed;
+                    if ($speed > 200) {
+                        $speed = 100 + (random_int(-10, 10));
                     }
 
-                    $dataExport = (object)[
-                        'fileName' => str_limit(__('Speeding') . " $dateReport", 28, '...'),
-                        'title' => __('Speeding') . " $dateReport",
-                        'subTitle' => count($speedingReport) . " " . __('Speeding'),
-                        'sheetTitle' => "$vehicle->number",
-                        'data' => $dataExcel
-                    ];
-
-                    $excel = PCWExporterService::createHeaders($excel, $dataExport);
-                    $excel = PCWExporterService::createSheet($excel, $dataExport);
+                    fputcsv($file, [
+                        $speeding->date->toDateString(),
+                        $speeding->time->toTimeString(),
+                        $vehicle->number,
+                        number_format($speed, 2, ',', '')
+                    ]);
                 }
-            })->
-            export('xlsx');
-        } else {
-            $speedingReport = $speedingReportByVehicle->collapse();
-
-            $dataExcel = array();
-
-            foreach ($speedingReport as $speeding) {
-                $vehicle = $speeding->vehicle;
-                $speed = $speeding->speed;
-                if ($speed > 200) {
-                    $speed = 100 + (random_int(-10, 10));
-                }
-
-                $dataExcel[] = [
-                    __('N°') => count($dataExcel) + 1,                             # A CELL
-                    __('Date') => $speeding->date->toDateString(),                                 # B CELL
-                    __('Time') => $speeding->time->toTimeString(),                 # C CELL
-                    __('Vehicle') => $vehicle->number,                             # B CELL
-                    __('Speed') => number_format($speed, 2, ',', ''),# E CELL
-                    __('Address') => $speeding->getAddress(false, true)# E CELL
-                ];
             }
+            fclose($file);
+        };
 
-            $fileData = (object)[
-                'fileName' => __('Speeding_report') . " $dateReport",
-                'title' => " $dateReport",
-                'subTitle' => count($speedingReport) . " " . __('Speeding'),
-                'sheetTitle' => __('Speeding_report') . " $dateReport",
-                'data' => $dataExcel
-            ];
-
-            PCWExporterService::excel($fileData);
-        }
+        return response()->stream($callback, 200, $headers)->send();
     }
 
     /**
