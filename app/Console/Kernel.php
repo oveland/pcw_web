@@ -53,6 +53,7 @@ class Kernel extends ConsoleKernel
         Commands\FTP\RefreshPhotoPaths::class,
         \App\Console\Commands\CheckNoPhotosDispatch::class,
         Commands\Reports\UpdateSimulatedSensorCounter::class,
+        Commands\GeocodeSpeedingCommand::class,
     ];
 
     /**
