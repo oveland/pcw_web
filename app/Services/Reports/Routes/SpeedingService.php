@@ -22,7 +22,7 @@ class SpeedingService
      * @param null $vehicleReport
      * @return Location[]|Builder[]|\Illuminate\Database\Eloquent\Collection|Collection
      */
-    function all(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null)
+    function all(Company $company, $initialDate, $finalDate, $routeReport = null, $vehicleReport = null, $withAddresses = false)
     {
         $initialDate = trim($initialDate);
         $finalDate = trim($finalDate);
@@ -42,8 +42,13 @@ class SpeedingService
             $all = $all->whereIn('dispatch_register_id', $dispatchRegisters->pluck('id'));
         }
 
+        $relations = ['vehicle', 'dispatchRegister'];
+        if ($withAddresses) {
+            $relations[] = 'addressLocation';
+        }
+
         return $all
-            ->with(['vehicle', 'dispatchRegister', 'addressLocation'])
+            ->with($relations)
             ->orderBy('date')
             ->get()
             ->filter(function (Location $s) use ($initialDate, $finalDate) {

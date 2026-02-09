@@ -93,7 +93,7 @@ class SpeedingReportController extends Controller
             'enableGeocoding' => $enableGeocoding,
         ];
 
-        $allSpeeding = $this->speedingService->all($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
+        $allSpeeding = $this->speedingService->all($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport, $enableGeocoding);
         $speedingReportByVehicles = $this->speedingService->groupByVehicles($allSpeeding, $query->onlyMax);
 
         if ($request->get('export')) $this->export($speedingReportByVehicles, $query);
