@@ -22,7 +22,7 @@ class Process5GCountV2Command extends Command
      *
      * @var string
      */
-    protected $description = 'Envía solicitudes a Runpod para conteo 5G V2 de registros terminados';
+    protected $description = 'Envía solicitudes a servidor privado para conteo 5G V2 de registros terminados';
 
     /**
      * Create a new command instance.
@@ -42,19 +42,6 @@ class Process5GCountV2Command extends Command
     public function handle()
     {
         $this->info("Iniciando proceso de conteo 5G V2...");
-
-        $apiKey = config('services.runpod.api_key');
-        $endpointId = config('services.runpod.endpoint_id');
-
-        // Si no hay endpointId configurado, usar el proporcionado por defecto
-        if (empty($endpointId)) {
-            $endpointId = '5djqi13hv4sxwp';
-        }
-
-        if (empty($apiKey)) {
-            $this->error("Error: Falta RUNPOD_API_KEY en el archivo .env. Por favor genérela en la consola de Runpod.");
-            return;
-        }
 
         // Buscar registros candidatos
         // Criterios:
@@ -80,34 +67,26 @@ class Process5GCountV2Command extends Command
             return;
         }
 
-        // Usar api.runpod.ai como solicitó el usuario
-        $url = "https://api.runpod.ai/v2/{$endpointId}/run";
+        $url = "http://172.16.22.8:8080/process";
 
         foreach ($dispatches as $dispatch) {
-            $this->processDispatch($dispatch, $url, $apiKey);
+            $this->processDispatch($dispatch, $url);
         }
 
         $this->info("Proceso finalizado.");
     }
 
-    private function processDispatch($dispatch, $url, $apiKey)
+    private function processDispatch($dispatch, $url)
     {
         $id = $dispatch->id; // Asegurar ID correcto
         $this->line("Procesando registro ID: $id - Vehículo: {$dispatch->vehicle_number}");
 
         try {
-            // Lógica de fechas
-            // Restar 15 minutos a la hora de despacho
             $minutesToSubtract = 15;
 
-            // Construir timestamps completos
-            // Fecha base
             $dateStr = explode(' ', $dispatch->date)[0];
-            
-            // Hora despacho
             $timeStr = explode('.', $dispatch->departure_time)[0];
             
-            // Log para depuración
             $this->line("Debug Dates - Date: '$dateStr', Time: '$timeStr'");
             
             if (empty($dateStr) || empty($timeStr)) {
@@ -116,21 +95,17 @@ class Process5GCountV2Command extends Command
             }
 
             try {
-                // Intentar formato Y-m-d (ISO) primero
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateStr)) {
                      $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', "$dateStr $timeStr");
                 } 
-                // Intentar formato d/m/Y (Latino)
                 elseif (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $dateStr)) {
                      $startDateTime = Carbon::createFromFormat('d/m/Y H:i:s', "$dateStr $timeStr");
                 }
-                // Fallback a parseo inteligente
                 else {
                     $startDateTime = Carbon::parse("$dateStr $timeStr");
                 }
             } catch (\Exception $e) {
                  $this->error("Error parseando fecha inicio: " . $e->getMessage());
-                 // Último intento desesperado
                  try {
                     $startDateTime = Carbon::parse($dispatch->date . ' ' . $dispatch->departure_time);
                  } catch (\Exception $e2) {
@@ -139,27 +114,18 @@ class Process5GCountV2Command extends Command
                  }
             }
             
-            // Restar los minutos configurados
             $startDateTime->subMinutes($minutesToSubtract);
 
-            // Hora llegada (End)
-            // Si hay date_end, usarlo, si no, calcular con fecha base (cuidado con cambio de día)
-            // Asumiremos que h_reg_llegada es correcto. Si date_end existe, mejor.
             $endTimeStr = explode('.', $dispatch->arrival_time)[0];
             
             if (!empty($dispatch->date_end)) {
-                $endDateStr = explode(' ', $dispatch->date_end)[0]; // Si date_end es datetime
-                // Si date_end solo es fecha, usar esa fecha con endTimeStr
-                // Si date_end es Y-m-d
+                $endDateStr = explode(' ', $dispatch->date_end)[0];
                 if (strpos($dispatch->date_end, ':') !== false) {
-                    // Es datetime completo
                     $endDateTime = Carbon::parse($dispatch->date_end);
                 } else {
                     $endDateTime = Carbon::parse("$endDateStr $endTimeStr");
                 }
             } else {
-                // Si no hay date_end, inferir. Si la hora de llegada es menor a la de salida, es el día siguiente
-                // Pero startDateTime ya fue restado, así que comparar con original
                 $originalStart = $startDateTime->copy()->addMinutes($minutesToSubtract);
                 $endDateTime = Carbon::parse("$dateStr $endTimeStr");
                 
@@ -168,23 +134,20 @@ class Process5GCountV2Command extends Command
                 }
             }
 
-            // Payload para Runpod
             $payload = [
                 'input' => [
-                    'vehicle_id' => $dispatch->real_vehicle_id, // ID numérico del vehículo (ej: 2685)
-                    'start' => $startDateTime->toDateTimeString(), // "2026-01-05 21:05:00"
-                    'end' => $endDateTime->toDateTimeString(),     // "2026-01-06 03:59:21"
+                    'vehicle_id' => $dispatch->real_vehicle_id,
+                    'start' => $startDateTime->toDateTimeString(),
+                    'end' => $endDateTime->toDateTimeString(),
                     'id_registro' => $id
                 ]
             ];
 
-            // Usamos Guzzle (cliente HTTP por defecto en Laravel)
             $client = new \GuzzleHttp\Client();
             
             $response = $client->post($url, [
                 'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => "Bearer {$apiKey}"
+                    'Content-Type' => 'application/json'
                 ],
                 'json' => $payload
             ]);
@@ -200,7 +163,7 @@ class Process5GCountV2Command extends Command
             }
 
         } catch (\Exception $e) {
-            $this->error("Excepción al llamar a Runpod para registro $id: " . $e->getMessage());
+            $this->error("Excepción al llamar al servidor privado para registro $id: " . $e->getMessage());
         }
     }
 }
