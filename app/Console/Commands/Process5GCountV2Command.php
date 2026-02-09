@@ -71,6 +71,7 @@ class Process5GCountV2Command extends Command
 
         foreach ($dispatches as $dispatch) {
             $this->processDispatch($dispatch, $url);
+            sleep(1); // Pausa de 1 segundo entre peticiones para no saturar al servidor
         }
 
         $this->info("Proceso finalizado.");
