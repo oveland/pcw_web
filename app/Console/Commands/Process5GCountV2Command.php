@@ -135,12 +135,10 @@ class Process5GCountV2Command extends Command
             }
 
             $payload = [
-                'input' => [
-                    'vehicle_id' => $dispatch->real_vehicle_id,
-                    'start' => $startDateTime->toDateTimeString(),
-                    'end' => $endDateTime->toDateTimeString(),
-                    'id_registro' => $id
-                ]
+                'vehicle_id' => $dispatch->real_vehicle_id,
+                'start' => $startDateTime->toDateTimeString(),
+                'end' => $endDateTime->toDateTimeString(),
+                'id_registro' => $id
             ];
 
             $client = new \GuzzleHttp\Client();
