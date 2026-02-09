@@ -69,6 +69,15 @@ class SpeedingReportController extends Controller
         $date = $request->get('date-report');
         $dateEnd = $request->get('with-end-date') ? $request->get('date-end-report') : $date;
 
+
+        $start = \Carbon\Carbon::parse($date);
+        $end = \Carbon\Carbon::parse($dateEnd);
+        $diffDays = $start->diffInDays($end);
+        $isSpecificVehicle = $request->get('vehicle-report') != 'all';
+
+        // Enable geocoding only if specific vehicle AND date range <= 15 days
+        $enableGeocoding = $isSpecificVehicle && ($diffDays <= 15);
+
         $query = (object)[
             'stringParams' => explode('?', $request->getRequestUri())[1] ?? '',
             'company' => $this->pcwAuthService->getCompanyFromRequest($request),
@@ -81,6 +90,7 @@ class SpeedingReportController extends Controller
             'typeReport' => $request->get('type-report'),
             'onlyMax' => $request->get('only-max'),
             'chart' => $request->get('chart'),
+            'enableGeocoding' => $enableGeocoding,
         ];
 
         $allSpeeding = $this->speedingService->all($query->company, "$query->dateReport $query->initialTime:00", "$query->dateEndReport $query->finalTime:59", $query->routeReport, $query->vehicleReport);
@@ -167,6 +177,7 @@ class SpeedingReportController extends Controller
         $dateReport = $query->dateReport;
         $dateEndReport = $query->dateEndReport;
         $typeReport = $query->typeReport;
+        $enableGeocoding = $query->enableGeocoding;
 
         $dateReport = $dateReport == $dateEndReport ? $dateReport : "$dateReport $dateEndReport";
         $fileName = __('Speeding') . " $dateReport.csv";
@@ -179,15 +190,19 @@ class SpeedingReportController extends Controller
             "Expires" => "0"
         ];
 
-        $callback = function() use ($speedingReportByVehicle, $typeReport) {
+        $callback = function() use ($speedingReportByVehicle, $typeReport, $enableGeocoding) {
             $file = fopen('php://output', 'w');
             
             // Add Byte Order Mark (BOM) for UTF-8 compatibility in Excel
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
+            $headers = [__('Date'), __('Time'), __('Vehicle'), __('Speed')];
+            if ($enableGeocoding) {
+                $headers[] = __('Address');
+            }
+            fputcsv($file, $headers);
+
             if ($typeReport == 'group') {
-                fputcsv($file, [__('Date'), __('Time'), __('Vehicle'), __('Speed')]); // Removed Address for performance
-                
                 foreach ($speedingReportByVehicle as $speedingReport) {
                     foreach ($speedingReport as $speeding) {
                         $vehicle = $speeding->vehicle;
@@ -196,17 +211,22 @@ class SpeedingReportController extends Controller
                             $speed = 100 + (random_int(-10, 10)); // Manteniendo lógica original extraña
                         }
 
-                        fputcsv($file, [
+                        $row = [
                             $speeding->date->toDateString(),
                             $speeding->time->toTimeString(),
                             $vehicle->number,
                             number_format($speed, 2, ',', '')
-                        ]);
+                        ];
+
+                        if ($enableGeocoding) {
+                            $row[] = $speeding->getAddress(false, true);
+                        }
+
+                        fputcsv($file, $row);
                     }
                 }
             } else {
                 $speedingReport = $speedingReportByVehicle->collapse();
-                fputcsv($file, [__('Date'), __('Time'), __('Vehicle'), __('Speed')]); // Removed Address for performance
 
                 foreach ($speedingReport as $speeding) {
                     $vehicle = $speeding->vehicle;
@@ -215,12 +235,18 @@ class SpeedingReportController extends Controller
                         $speed = 100 + (random_int(-10, 10));
                     }
 
-                    fputcsv($file, [
+                    $row = [
                         $speeding->date->toDateString(),
                         $speeding->time->toTimeString(),
                         $vehicle->number,
                         number_format($speed, 2, ',', '')
-                    ]);
+                    ];
+
+                    if ($enableGeocoding) {
+                        $row[] = $speeding->getAddress(false, true);
+                    }
+
+                    fputcsv($file, $row);
                 }
             }
             fclose($file);
