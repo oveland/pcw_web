@@ -28,8 +28,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('sync5GV2:sync-photos --empresa=39')->hourly()->runInBackground();
             $schedule->command('sync5GV2:sync-photos --empresa=39')->dailyAt('23:50')->runInBackground();
 
-            // Comando para procesar fotos 5G cada 5 horas
-            $schedule->command('rocket:process-5g-photos')->cron('0 */5 * * *')->runInBackground();
+            // Comando para procesar fotos 5G cada 5 horas areas
+            $schedule->command('rocket:process-5g-photos --company=39')->cron('0 */5 * * *')->runInBackground();
+            $schedule->command('rocket:process-5g-photos --company=41')->cron('0 */5 * * *')->runInBackground();
 
             // Comando para conteo 5G V2 con servidor privado (7am, 10am, 6pm, 11:30pm)
             $schedule->command('rocket:count-5g-v2')->dailyAt('07:00')->runInBackground();

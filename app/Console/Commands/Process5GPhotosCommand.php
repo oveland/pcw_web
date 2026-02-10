@@ -14,7 +14,7 @@ class Process5GPhotosCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rocket:process-5g-photos';
+    protected $signature = 'rocket:process-5g-photos {--company=39}';
 
     /**
      * The console command description.
