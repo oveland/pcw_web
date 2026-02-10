@@ -40,8 +40,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('rocket:count-5g-v2')->dailyAt('10:00')->runInBackground();
             $schedule->command('rocket:count-5g-v2')->dailyAt('18:00')->runInBackground();
             $schedule->command('rocket:count-5g-v2')->dailyAt('23:30')->runInBackground();
+            
 
-      /*      $schedule->command('sync5G:sync-photos --imei=352557104469351')->everyThirtyMinutes()->runInBackground();//8311
+      /*    $schedule->command('sync5G:sync-photos --imei=352557104469351')->everyThirtyMinutes()->runInBackground();//8311
             $schedule->command('sync5G:sync-photos --imei=35255710446935112')->everyThirtyMinutes()->runInBackground(); //8311
             $schedule->command('sync5G:sync-photos --imei=35255710446935113')->everyThirtyMinutes()->runInBackground(); //8311*/
 
@@ -569,24 +570,6 @@ class Kernel extends ConsoleKernel
             $schedule->command('rocket:count --vehicle-plate=KUM-722 --pa=2 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
             /**********************************VALLEDUPAR*************************************************/
-            $schedule->command('sync5G:sync-photos --imei=352557104477222')
-                ->cron('*/30 * * * *')
-                ->runInBackground(); //9104
-
-            $schedule->command('sync5G:sync-photos --imei=3525571044772234')
-                ->cron('*/30 * * * *')
-                ->runInBackground(); //9104
-
-            $schedule->command('sync5G:sync-photos --imei=3525571044772245')
-                ->cron('*/30 * * * *')
-                ->runInBackground(); //9104
-           /* $schedule->command('rocket:count --vehicle-plate=WFQ-326 --pa=2 --pr=10')
-                ->cron('30 23,5,10,15 * * *')
-                ->runInBackground();
-            $schedule->command("rocket:count --vehicle-plate=WFQ-326 --pa=2 --pr=10 date={$yesterday}")
-                ->cron('30 23,5,10,15 * * *')
-                ->runInBackground();*/
-
 
             $schedule->command('syrus:sync-photos --imei=352557104511442')->everyMinute()->runInBackground(); // Vehicle 5017 Valledupar
             //$schedule->command('rocket:count --vehicle-plate=FXS-240 --pa=2 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
