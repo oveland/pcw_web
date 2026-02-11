@@ -7,6 +7,7 @@ use App\Models\Apps\Rocket\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PhotoUrlController extends Controller
 {
@@ -133,18 +134,20 @@ class PhotoUrlController extends Controller
 
                 $url = Storage::disk('s3')->temporaryUrl(
                     $key,
-                    now()->addDays(7) // 7 días de validez (límite máximo para Signature v4)
+                    now()->addDays(7)
                 );
 
-                // Extraer información del UID
                 $uidParts = explode('_', $photo->uid);
-                $seat = isset($uidParts[3]) ? $uidParts[3] : null;
-                // La fecha es la penúltima parte (count - 2), pero hay que validar
-                // Ejemplo: 8403_8403 XVR 1_ch2_10_id1920_20260211071808_E.jpg
-                // Partes: [0]=8403, [1]=8403 XVR 1, [2]=ch2, [3]=10 (asiento), [4]=id1920, [5]=20260211071808 (fecha), [6]=E.jpg
+                $seat = $uidParts[3] ?? null;
+                
                 $photoDate = null;
                 if (count($uidParts) >= 2) {
-                    $photoDate = $uidParts[count($uidParts) - 2];
+                    try {
+                        $rawDate = $uidParts[count($uidParts) - 2];
+                        $photoDate = Carbon::createFromFormat('YmdHis', $rawDate)->format('Y-m-d H:i:s');
+                    } catch (\Exception $e) {
+                        $photoDate = null;
+                    }
                 }
 
                 return [
