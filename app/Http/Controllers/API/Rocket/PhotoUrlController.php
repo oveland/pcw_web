@@ -105,7 +105,7 @@ class PhotoUrlController extends Controller
                 ->where('side', 'E') // solo cámara E
                 ->whereBetween('date', [$start, $end])
                 ->orderBy('date')
-                ->get(['id', 'vehicle_id', 'path', 'date']);
+                ->get(['id', 'vehicle_id', 'path', 'date', 'side', 'uid']); // Incluir uid en la consulta
 
             if ($photos->isEmpty()) {
                 // Debug info para el usuario
@@ -136,10 +136,23 @@ class PhotoUrlController extends Controller
                     now()->addDays(7) // 7 días de validez (límite máximo para Signature v4)
                 );
 
+                // Extraer información del UID
+                $uidParts = explode('_', $photo->uid);
+                $seat = isset($uidParts[3]) ? $uidParts[3] : null;
+                // La fecha es la penúltima parte (count - 2), pero hay que validar
+                // Ejemplo: 8403_8403 XVR 1_ch2_10_id1920_20260211071808_E.jpg
+                // Partes: [0]=8403, [1]=8403 XVR 1, [2]=ch2, [3]=10 (asiento), [4]=id1920, [5]=20260211071808 (fecha), [6]=E.jpg
+                $photoDate = null;
+                if (count($uidParts) >= 2) {
+                    $photoDate = $uidParts[count($uidParts) - 2];
+                }
+
                 return [
                     'id'   => $photo->id,
                     'date' => $photo->date->format('Y-m-d H:i:s'), // Formato exacto de BD sin Z
                     'camera' => (string) $photo->getAttribute('side'), // Forzar lectura directa del atributo
+                    'seat' => $seat,
+                    'photo_date_from_uid' => $photoDate,
                     'url'  => $url,
                 ];
             });
