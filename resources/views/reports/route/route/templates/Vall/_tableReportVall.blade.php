@@ -24,10 +24,6 @@
             <i class="fa fa-retweet text-muted"></i><br>
             @lang('Round Trip')
         </th>
-        <th>
-            <i class="fa fa-list-ol text-muted"></i><br>
-            @lang('Turn')
-        </th>
         <th class="">
             <i class="fa fa-car text-muted"></i><br>
             @lang('Vehicle')
