@@ -78,6 +78,8 @@
                     <!-- begin table -->
                     @if($company->id == 39)
                         @include('reports.route.route.templates.EP._tableReportEP',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'withEndDate'))
+                    @elseif($company->id == 41)
+                        @include('reports.route.route.templates.Vall._tableReportVall',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'withEndDate'))
                     @else
                         @include('reports.route.route.templates._tableReport',compact('dispatchRegisters', 'reportsByVehicle', 'company', 'withEndDate'))
                     @endif
