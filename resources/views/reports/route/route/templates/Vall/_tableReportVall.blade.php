@@ -99,20 +99,18 @@
                 </small>
             </th>
         @endif
-        @if($user->canViewAverageCount()  || $user->id =='2018101356' )
-            <th class="text-center">
-                <i class="fa fa-users text-muted"></i>
-                <i class="fa fa-video-camera text-muted" style="font-size: 0.8em;"></i><br>
-                @lang('Conteo 5G')<br>
-                <small>@lang('Área') / V2</small>
-            </th>
-        @endif
-        @if($user->CanViewInfoPhotos())
-            <th width="10%">
-                <i class="fa fa-camera text-muted"></i><br>
-                @lang('Info. Fotos')
-            </th>
-        @endif
+
+        <th class="text-center">
+            <i class="fa fa-users text-muted"></i>
+            <i class="fa fa-video-camera text-muted" style="font-size: 0.8em;"></i><br>
+            @lang('Conteo 5G')<br>
+            <small>@lang('Área') / V2</small>
+        </th>
+
+        <th width="10%">
+            <i class="fa fa-camera text-muted"></i><br>
+            @lang('Info. Fotos')
+        </th>
 
 
         <th width="10%">
@@ -544,86 +542,84 @@
                     </small>
                 </td>
             @endif
-            @if(($isExpresoPalmira ?? false) && $user->isSuperAdmin() || $user->id =='2018101356' )
-                @php
-                    $sumByCount5G = ($sumByCount5G ?? 0) + $dispatchRegister->rocket_5g_area;
-                @endphp
-                <td width="10%" class="text-center">
-                    <span title="Conteo por Área" style="font-weight: bold">
-                        {{ $dispatchRegister->rocket_5g_area }}
+
+            @php
+                $sumByCount5G = ($sumByCount5G ?? 0) + $dispatchRegister->rocket_5g_area;
+            @endphp
+            <td width="10%" class="text-center">
+                <span title="Conteo por Área" style="font-weight: bold">
+                    {{ $dispatchRegister->rocket_5g_area }}
+                    @php
+                        $visualCount = (int) ($visualPassengers->value ?? 0);
+                        $observationCount = $dispatchRegister->rocket_5g_area ?? 0;
+                        $diferencia = $visualCount - $observationCount;
+
+                    @endphp
+                </span>
+                <hr class="m-0">
+                <span title="Conteo 5G V2" style="font-weight: bold">
+                  {{ $dispatchRegister->count_5g_v2 }}
+                </span>
+
+            </td>
+
+            <td width="10%" class="text-center">
+                <div>
+                    @php
+                            //$photos = \App\Models\Apps\Rocket\Photo::withinDispatch($dispatchRegister)->get();
+                            $photos = $dispatchRegister->getPhotosByTime();
+
+                            $photosByCamera = $photos->sortBy('side')->groupBy('side');
+
+                            //$vehicleCameras = \App\Models\Apps\Rocket\VehicleCamera::where('vehicle_id', $dispatchRegister->vehicle_id)->get()->pluck('camera');
+                            $vehicleCameras = $dispatchRegister->vehicle->cameras->pluck('camera');
+
+                            $routeTimeInMinutes = \App\Http\Controllers\Utils\StrTime::toSeg($dispatchRegister->getRouteTime())/60;
+                            $expectedTotalPhotos = intval(($routeTimeInMinutes) / 2 * $vehicleCameras->count());
+                    @endphp
+
+                    @foreach($vehicleCameras as $camera)
                         @php
-                            $visualCount = (int) ($visualPassengers->value ?? 0);
-                            $observationCount = $dispatchRegister->rocket_5g_area ?? 0;
-                            $diferencia = $visualCount - $observationCount;
+                            $cameraPhotos = $photosByCamera->get($camera);
+                            $totalPhotos = 0;
+                            $photoStatus = "green";
 
+                            $expectedPhotos = intval($routeTimeInMinutes / 2);
+
+                            if($cameraPhotos) {
+                                $totalPhotos = $cameraPhotos->count();
+                                if($totalPhotos < $expectedPhotos * 0.5) $photoStatus = "warning";
+                                else $photoStatus = "green";
+                            } else {
+                                $photoStatus = "red";
+                                $alertPhoto = true;
+                            }
                         @endphp
-                    </span>
-                    <hr class="m-0">
-                    <span title="Conteo 5G V2" style="font-weight: bold">
-                      {{ $dispatchRegister->count_5g_v2 }}
-                    </span>
-
-                </td>
-
-            @endif
-            @if($user->CanViewInfoPhotos())
-                <td width="10%" class="text-center">
-                    <div>
-                        @php
-                                //$photos = \App\Models\Apps\Rocket\Photo::withinDispatch($dispatchRegister)->get();
-                                $photos = $dispatchRegister->getPhotosByTime();
-
-                                $photosByCamera = $photos->sortBy('side')->groupBy('side');
-
-                                //$vehicleCameras = \App\Models\Apps\Rocket\VehicleCamera::where('vehicle_id', $dispatchRegister->vehicle_id)->get()->pluck('camera');
-                                $vehicleCameras = $dispatchRegister->vehicle->cameras->pluck('camera');
-
-                                $routeTimeInMinutes = \App\Http\Controllers\Utils\StrTime::toSeg($dispatchRegister->getRouteTime())/60;
-                                $expectedTotalPhotos = intval(($routeTimeInMinutes) / 2 * $vehicleCameras->count());
-                        @endphp
-
-                        @foreach($vehicleCameras as $camera)
-                            @php
-                                $cameraPhotos = $photosByCamera->get($camera);
-                                $totalPhotos = 0;
-                                $photoStatus = "green";
-
-                                $expectedPhotos = intval($routeTimeInMinutes / 2);
-
-                                if($cameraPhotos) {
-                                    $totalPhotos = $cameraPhotos->count();
-                                    if($totalPhotos < $expectedPhotos * 0.5) $photoStatus = "warning";
-                                    else $photoStatus = "green";
-                                } else {
-                                    $photoStatus = "red";
-                                    $alertPhoto = true;
-                                }
-                            @endphp
-                            <br>
-                            <small class="badge bg-{{ $photoStatus }}">
-                                {{ $camera }} <i class="fa fa-camera"></i> {!! $totalPhotos !!}
-                            </small>
-                        @endforeach
-                        <div class="hide">
-                            <small>{{ $photos->count() }} / {{ $expectedTotalPhotos }}</small>
-                        </div>
+                        <br>
+                        <small class="badge bg-{{ $photoStatus }}">
+                            {{ $camera }} <i class="fa fa-camera"></i> {!! $totalPhotos !!}
+                        </small>
+                    @endforeach
+                    <div class="hide">
+                        <small>{{ $photos->count() }} / {{ $expectedTotalPhotos }}</small>
                     </div>
-                </td>
-                @if ($alertPhoto)
-                <!-- Modal -->
-                    <div class="modal fade" id="alertPhotoModal" tabindex="-1" role="dialog"
-                         aria-labelledby="labelModal"
-                         aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content" style="border: 3px solid darkred;background: silver">
-                                <div class="modal-header text-center">
-                                    <h5 class="modal-title"
-                                        style="font-weight: bold;font-size: 20px;font-family: Glyphicons-Halflings">
-                                        <i class="fa fa-warning faa-pulse"></i> @lang('alert') <i
-                                                class="fa fa-warning faa-pulse"></i>
-                                    </h5>
-                                </div>
-                                <div class="modal-body">
+                </div>
+            </td>
+            @if ($alertPhoto)
+            <!-- Modal -->
+                <div class="modal fade" id="alertPhotoModal" tabindex="-1" role="dialog"
+                     aria-labelledby="labelModal"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="border: 3px solid darkred;background: silver">
+                            <div class="modal-header text-center">
+                                <h5 class="modal-title"
+                                    style="font-weight: bold;font-size: 20px;font-family: Glyphicons-Halflings">
+                                    <i class="fa fa-warning faa-pulse"></i> @lang('alert') <i
+                                            class="fa fa-warning faa-pulse"></i>
+                                </h5>
+                            </div>
+                            <div class="modal-body">
                                     <div class="alert alert-warning"
                                          style="font-weight: bold ; color: white; background: darkred; font-size: 18px">
                                         El vehículo número {{ $vehicle->number }} presenta una novedad en el envío de
@@ -638,7 +634,6 @@
                         </div>
                     </div>
                 @endif
-            @endif
 
             <td width="15%"
                 class="text-center">
