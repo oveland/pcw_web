@@ -4,6 +4,8 @@
     $thresholdMinLocations = 100;
     $alertPhoto = false;
     $isMmontebello = $company->id == \App\Models\Company\Company::MONTEBELLO;
+    $isExpresoPalmira = $company->id == \App\Models\Company\Company::EXPRESO_PALMIRA;
+    $user = Auth::user();
 @endphp
 <!-- begin table -->
 <table id="table-report"
