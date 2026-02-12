@@ -944,7 +944,7 @@
                                     </li>
                                     @if($dispatchRegister->count_5g_v2)
                                         <li>
-                                            <a href="https://view-face-identification.s3.us-west-2.amazonaws.com/index.html?id={{ $dispatchRegister->id }}" target="_blank">
+                                            <a href="https://view-face-identification.s3.us-west-2.amazonaws.com/index.html?id={{ $dispatchRegister->id }}&start_time={{ urlencode($dispatchRegister->departure_time) }}&end_time={{ urlencode($dispatchRegister->arrival_time) }}&route_time={{ urlencode($dispatchRegister->getRouteTime()) }}" target="_blank">
                                                 <i class="fa fa-eye faa-pulse"></i> Reconocimiento Facial
                                             </a>
                                         </li>
