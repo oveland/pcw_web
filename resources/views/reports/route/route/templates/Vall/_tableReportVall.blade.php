@@ -634,7 +634,6 @@
                             <i class="fa fa-code faa-pulse"></i>
                         </a>
 
-                        @if($dispatchRegister->count_5g_v2)
                             @php
                                 $controlPointsJson = $dispatchRegister->route->controlPoints->map(function($cp) {
                                     return [
@@ -650,7 +649,6 @@
                                data-original-title="Reconocimiento Facial">
                                 <i class="fa fa-eye faa-pulse"></i>
                             </a>
-                        @endif
 
                         <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
                                 data-original-title="@lang('Cancel turn')"
