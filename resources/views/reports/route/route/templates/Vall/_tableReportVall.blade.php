@@ -633,7 +633,9 @@
                            data-original-title="@lang('Show report details')">
                             <i class="fa fa-code faa-pulse"></i>
                         </a>
+                    @endif
 
+                    @if( (Auth::user()->isSuperAdmin() || Auth::user()->company_id == 41) && $dispatchRegister->count_5g_v2 )
                             @php
                                 $controlPointsJson = $dispatchRegister->route->controlPoints->map(function($cp) {
                                     return [
@@ -649,7 +651,9 @@
                                data-original-title="Reconocimiento Facial">
                                 <i class="fa fa-eye faa-pulse"></i>
                             </a>
+                    @endif
 
+                    @if( Auth::user()->isSuperAdmin())
                         <button class="btn btn-xs btn-danger faa-parent animated-hover btn-circle tooltips edit-field-dr"
                                 data-original-title="@lang('Cancel turn')"
                                 data-placement="bottom"
