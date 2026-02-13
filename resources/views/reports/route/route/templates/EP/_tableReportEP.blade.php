@@ -943,8 +943,17 @@
                                         </a>
                                     </li>
                                     @if($dispatchRegister->count_5g_v2)
+                                        @php
+                                            $controlPointsJson = $dispatchRegister->route->controlPoints->map(function($cp) {
+                                                return [
+                                                    'name' => $cp->name,
+                                                    'distance_from_dispatch' => $cp->distance_from_dispatch,
+                                                    'distance_next_point' => $cp->distance_next_point
+                                                ];
+                                            })->toJson();
+                                        @endphp
                                         <li>
-                                            <a href="https://view-face-identification.s3.us-west-2.amazonaws.com/index.html?id={{ $dispatchRegister->id }}&start_time={{ urlencode($dispatchRegister->departure_time) }}&end_time={{ urlencode($dispatchRegister->arrival_time) }}&route_time={{ urlencode($dispatchRegister->getRouteTime()) }}" target="_blank">
+                                            <a href="https://view-face-identification.s3.us-west-2.amazonaws.com/index.html?id={{ $dispatchRegister->id }}&start_time={{ urlencode($dispatchRegister->departure_time) }}&end_time={{ urlencode($dispatchRegister->arrival_time) }}&route_time={{ urlencode($dispatchRegister->getRouteTime()) }}&control_points={{ urlencode($controlPointsJson) }}" target="_blank">
                                                 <i class="fa fa-eye faa-pulse"></i> Reconocimiento Facial
                                             </a>
                                         </li>
