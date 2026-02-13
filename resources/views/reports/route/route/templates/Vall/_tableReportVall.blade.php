@@ -644,7 +644,7 @@
                                     ];
                                 })->toJson();
                             @endphp
-                            <a href="https://view-face-identification.s3.us-west-2.amazonaws.com/index.html?id={{ $dispatchRegister->id }}&start_time={{ urlencode($dispatchRegister->departure_time) }}&end_time={{ urlencode($dispatchRegister->arrival_time) }}&route_time={{ urlencode($dispatchRegister->getRouteTime()) }}&control_points={{ urlencode($controlPointsJson) }}"
+                            <a href="https://view-face-identification.s3.us-west-2.amazonaws.com/index.html?id={{ $dispatchRegister->id }}&start_time={{ urlencode($dispatchRegister->departure_time) }}&end_time={{ urlencode($dispatchRegister->arrival_time) }}&route_time={{ urlencode($dispatchRegister->getRouteTime()) }}&route_name={{ urlencode($dispatchRegister->route->name) }}&control_points={{ urlencode($controlPointsJson) }}"
                                target="_blank"
                                class="btn btn-xs btn-primary faa-parent animated-hover tooltips btn-circle"
                                data-original-title="Reconocimiento Facial">
