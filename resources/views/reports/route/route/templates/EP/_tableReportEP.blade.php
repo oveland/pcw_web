@@ -119,6 +119,13 @@
                 <i class="fa fa-video-camera text-muted" style="font-size: 0.8em;"></i><br>
                 @lang('Conteo 5G')<br>
                 <small>@lang('Área') / V2</small>
+                @if(Auth::user()->isSuperAdmin())
+                <div class="m-t-5">
+                    <label class="text-muted" style="font-weight: normal; font-size: 0.8em; cursor: pointer;">
+                        <input type="checkbox" id="toggle-rocket-5g-area" style="vertical-align: middle; margin-top: 0;"> Ver Área
+                    </label>
+                </div>
+                @endif
             </th>
         @endif
         @if($user->CanViewInfoPhotos())
@@ -748,7 +755,7 @@
                     $sumByCount5G += $dispatchRegister->rocket_5g_area;
                 @endphp
                 <td width="10%" class="text-center">
-                    <span title="Conteo por Área" style="font-weight: bold">
+                    <span class="rocket-5g-area-value" title="Conteo por Área" style="font-weight: bold; display: none;">
                         {{ $dispatchRegister->rocket_5g_area }}
                         @php
                             $visualCount = (int) ($visualPassengers->value ?? 0);
@@ -1023,6 +1030,16 @@
 </table>
 <!-- end table -->
 <script type="application/javascript">
+    $(document).ready(function() {
+        $('#toggle-rocket-5g-area').change(function() {
+            if($(this).is(':checked')) {
+                $('.rocket-5g-area-value').show();
+            } else {
+                $('.rocket-5g-area-value').hide();
+            }
+        });
+    });
+
     (function() {
         // Optimización JS Fase C: Procesar visualizaciones desde atributos data
         // Esto evita tener múltiples bloques <script> dentro del bucle foreach
