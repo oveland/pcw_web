@@ -113,7 +113,6 @@
                 </small>
             </th>
         @endif
-        @if($user->canViewAverageCount()  || $user->id =='2018101356' )
             <th class="text-center">
                 <i class="fa fa-users text-muted"></i>
                 <i class="fa fa-video-camera text-muted" style="font-size: 0.8em;"></i><br>
@@ -127,7 +126,6 @@
                 </div>
                 @endif
             </th>
-        @endif
         @if($user->CanViewInfoPhotos())
             <th width="10%">
                 <i class="fa fa-camera text-muted"></i><br>
@@ -750,7 +748,6 @@
                     </small>
                 </td>
             @endif
-            @if($user->isExpreso() && $user->isSuperAdmin() || $user->id =='2018101356' )
                 @php
                     $sumByCount5G += $dispatchRegister->rocket_5g_area;
                 @endphp
@@ -770,8 +767,6 @@
                     </span>
 
                 </td>
-
-            @endif
             @if($user->CanViewInfoPhotos())
                 <td width="10%" class="text-center">
                     <div>
