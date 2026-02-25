@@ -750,7 +750,7 @@
                     </small>
                 </td>
             @endif
-            @if($user->CanViewInfoPhotos() && $user->isSuperAdmin() || $user->id =='2018101356' )
+            @if($user->isExpreso() && $user->isSuperAdmin() || $user->id =='2018101356' )
                 @php
                     $sumByCount5G += $dispatchRegister->rocket_5g_area;
                 @endphp
