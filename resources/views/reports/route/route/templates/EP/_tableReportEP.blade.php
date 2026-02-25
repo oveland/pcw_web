@@ -953,9 +953,23 @@
                                                     'distance_next_point' => $cp->distance_next_point
                                                 ];
                                             })->toJson();
+
+                                            $passengersStopsRaw = json_decode($dispatchRegister->getObservation('passengers_stops')->observation, true);
+                                            $ficsStopsFormatted = [];
+                                            if(is_array($passengersStopsRaw)) {
+                                                foreach($passengersStopsRaw as $stopName => $data) {
+                                                    $ficsStopsFormatted[] = [
+                                                        'stop' => $stopName,
+                                                        'time' => $data['time'] ?? '',
+                                                        'up' => $data['a'] ?? 0,
+                                                        'down' => $data['d'] ?? 0
+                                                    ];
+                                                }
+                                            }
+                                            $ficsStopsJson = json_encode($ficsStopsFormatted);
                                         @endphp
                                         <li>
-                                            <a href="https://view-face-identification.s3.us-west-2.amazonaws.com/index.html?id={{ $dispatchRegister->id }}&start_time={{ urlencode($dispatchRegister->departure_time) }}&end_time={{ urlencode($dispatchRegister->arrival_time) }}&route_time={{ urlencode($dispatchRegister->getRouteTime()) }}&route_name={{ urlencode($dispatchRegister->route->name) }}&control_points={{ urlencode($controlPointsJson) }}" target="_blank">
+                                            <a href="https://view-face-identification.s3.us-west-2.amazonaws.com/index.html?id={{ $dispatchRegister->id }}&start_time={{ urlencode($dispatchRegister->departure_time) }}&end_time={{ urlencode($dispatchRegister->arrival_time) }}&route_time={{ urlencode($dispatchRegister->getRouteTime()) }}&route_name={{ urlencode($dispatchRegister->route->name) }}&control_points={{ urlencode($controlPointsJson) }}&fics_stops={{ urlencode($ficsStopsJson) }}" target="_blank">
                                                 <i class="fa fa-eye faa-pulse"></i> Reconocimiento Facial
                                             </a>
                                         </li>
