@@ -187,7 +187,7 @@ class PCWRouteService implements APIWebInterface
 
                 $gpsVehicle = $d->vehicle->gpsVehicle;
                 if ($gpsVehicle && isset($gpsVehicle->technology) && $gpsVehicle->technology == '5G') {
-                    $totalPassengers = $d->rocket_5g_area ?? $totalPassengers;
+                    $totalPassengers = $d->count_5g_v2 ?? $totalPassengers;
 
                     if ($totalPassengers <= $spreadsheetPassengersSync->value) {
                         $totalPassengers = $spreadsheetPassengersSync->value;
