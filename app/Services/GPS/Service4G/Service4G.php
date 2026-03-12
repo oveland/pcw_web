@@ -22,7 +22,6 @@ use Symfony\Component\ErrorHandler\Error\FatalError;
 class Service4G extends SyrusService
 {
 
-
     /**
      * @throws FileNotFoundException
      * @throws Exception
@@ -171,41 +170,6 @@ class Service4G extends SyrusService
             if ($fileNames[1] == 'ch5') return '5';
         }
 
-        if ($imei == '352557104727600') {
-            if ($fileNames[1] == 'ch1') return '1';
-            if ($fileNames[1] == 'ch2') return '2';
-            if ($fileNames[1] == 'ch3') return '3';
-            if ($fileNames[1] == 'ch4') return '4';
-            if ($fileNames[1] == 'ch5') return '5';
-            if ($fileNames[1] == 'ch6') return '6';
-        }
-
-        if ($imei == '352557104791564') {
-            if ($fileNames[1] == 'ch1') return '1';
-            if ($fileNames[1] == 'ch2') return '2';
-            if ($fileNames[1] == 'ch3') return '3';
-            if ($fileNames[1] == 'ch4') return '4';
-            if ($fileNames[1] == 'ch5') return '5';
-            if ($fileNames[1] == 'ch6') return '6';
-        }
-
-        if ($imei == '352557104555559') {
-            if ($fileNames[1] == 'ch1') return '1';
-            if ($fileNames[1] == 'ch2') return '2';
-            if ($fileNames[1] == 'ch3') return '3';
-            if ($fileNames[1] == 'ch4') return '4';
-            if ($fileNames[1] == 'ch5') return '5';
-            if ($fileNames[1] == 'ch6') return '6';
-        }
-
-        if ($imei == '352557104831642') {
-            if ($fileNames[1] == 'ch1') return '1';
-            if ($fileNames[1] == 'ch2') return '2';
-            if ($fileNames[1] == 'ch3') return '3';
-            if ($fileNames[1] == 'ch4') return '4';
-            if ($fileNames[1] == 'ch5') return '5';
-            if ($fileNames[1] == 'ch6') return '6';
-        }
 
         if ($imei == '352557104788503') {
             if ($fileNames[1] == 'ch1') return '1';
@@ -219,26 +183,6 @@ class Service4G extends SyrusService
             if ($fileNames[1] == 'ch2') return '4';
             if ($fileNames[1] == 'ch3') return '5';
             if ($fileNames[1] == 'ch4') return '6';
-        }
-        if ($imei == '352557104839116') {
-            if ($fileNames[1] == 'ch1') return '1';
-            if ($fileNames[1] == 'ch2') return '2';
-            if ($fileNames[1] == 'ch3') return '3';
-            if ($fileNames[1] == 'ch4') return '4';
-            if ($fileNames[1] == 'ch5') return '5';
-            if ($fileNames[1] == 'ch6') return '6';
-            if ($fileNames[1] == 'ch7') return '7';
-            if ($fileNames[1] == 'ch8') return '8';
-        }
-        if ($imei == '352557104723690') {
-            if ($fileNames[1] == 'ch1') return '1';
-            if ($fileNames[1] == 'ch2') return '2';
-            if ($fileNames[1] == 'ch3') return '3';
-            if ($fileNames[1] == 'ch4') return '4';
-            if ($fileNames[1] == 'ch5') return '5';
-            if ($fileNames[1] == 'ch6') return '6';
-            if ($fileNames[1] == 'ch7') return '7';
-            if ($fileNames[1] == 'ch8') return '8';
         }
         if ($imei == '352557104834810') {
             if ($fileNames[1] == 'ch1') return '1';
@@ -286,7 +230,7 @@ class Service4G extends SyrusService
             if ($fileNames[2] == 'ch5') return '5';
             if ($fileNames[2] == 'ch6') return '6';
             if ($fileNames[2] == 'ch7') return '7';
-            if ($fileNames[2] == 'ch8') return '7';
+            if ($fileNames[2] == 'ch8') return '8';
         }
         if ($fileNames[1] == 'ch1') return '1';
         if ($fileNames[1] == 'ch2') return '2';

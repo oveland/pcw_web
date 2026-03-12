@@ -298,10 +298,16 @@ class Kernel extends ConsoleKernel
             $schedule->command('Sync4G:sync-photos --imei=352557104788131')->everyMinute()->runInBackground(); // vehicle 6837 EP
             $schedule->command('rocket:count --vehicle-plate=ETK-183 --pa=3 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
+            $schedule->command('Sync4G:sync-photos --imei=0970000110')->everyMinute()->runInBackground(); // vehicle 2031 EP
+            $schedule->command('rocket:count --vehicle-plate=WHU-494 --pa=3 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
+            $schedule->command('Sync4G:sync-photos --imei=0970000032')->everyMinute()->runInBackground(); // vehicle 2027 EP
+            $schedule->command('rocket:count --vehicle-plate=WHU-492 --pa=3 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
+            $schedule->command('Sync4G:sync-photos --imei=0700000178')->everyMinute()->runInBackground(); // vehicle 1985 EP
+            $schedule->command('rocket:count --vehicle-plate=WHU-478 --pa=3 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
-
+            
 
             /******************************************   3G   ***********************************************/
 
