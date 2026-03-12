@@ -327,6 +327,32 @@ class EPSyncService extends SyncService
 
 
 
+                // Sync passenger Origin / Destination details
+                $queryPassengers = "
+                    SELECT 
+                         LocsOrigen.Nombre AS origin, 
+                         LocsDestino.Nombre AS destiny,
+                         COUNT(*) as total
+                     FROM dbo.Pasajes p WITH (NOLOCK) 
+                              INNER JOIN dbo.G_Localidades LocsOrigen WITH (NOLOCK) 
+                                         ON p.LocalidadOrigen = LocsOrigen.LocalidadId 
+                              INNER JOIN dbo.G_Localidades LocsDestino WITH (NOLOCK) 
+                                         ON p.LocalidadDestino = LocsDestino.LocalidadId 
+                     WHERE 
+                         p.Viaje = $travelId
+                     GROUP BY LocsOrigen.Nombre, LocsDestino.Nombre
+                ";
+
+                $passengerDetail = collect(EPDB::select($queryPassengers));
+
+                if ($passengerDetail->isNotEmpty()) {
+                    $drObs = $dr->getObservation('passenger_report_detail');
+                    $drObs->value = $passengerDetail->sum('total');
+                    $drObs->observation = $passengerDetail->toJson();
+                    $drObs->user_id = 2018101392;
+                    $drObs->save();
+                }
+
                 $this->processDrivers($dataWithMultipleDrivers, $dr);
 
                 if ($dataStops) {
