@@ -221,6 +221,11 @@ class PCWRouteService implements APIWebInterface
 
            // $tariffPassenger = $d->route->tariff->passenger;
             $totalProduction = $tariffPassenger * $totalPassengers;
+            $routeID = $d->route->id;
+            if ($routeID == 275)
+                {
+                $routeID = 280;
+            }
 
             return [
                 'vehicle' => [
@@ -230,7 +235,7 @@ class PCWRouteService implements APIWebInterface
 
                 ],
                 'route' => [
-                    'id' => $d->route->id,
+                    'id' => $routeID,
                     'name' => $d->route->name
                 ],
                 'passengers' => [
