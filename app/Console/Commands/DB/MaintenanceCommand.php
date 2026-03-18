@@ -15,14 +15,14 @@ class MaintenanceCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'db:maintenance {--from=} {--to=}';
+    protected $signature = 'db:maintenance {table} {--from=} {--to=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Release DB data from locations, reports and vehicle_status_reports tables';
+    protected $description = 'Release DB data from a specific table (e.g., locations, reports, app_photos)';
 
     /**
      * Create a new command instance.
@@ -45,94 +45,25 @@ class MaintenanceCommand extends Command
      */
     public function getMaintenanceData()
     {
+        $tableName = $this->argument('table');
         $from = $this->option('from');
         $to = $this->option('to');
 
+        // By default, if no options are passed, we backup data older than 2 months
+        if (!$from) {
+            $from = '2023-01-01'; // Define a safe start date or adjust as needed
+        }
+        if (!$to) {
+            $to = Carbon::now()->subMonths(2)->endOfMonth()->toDateString();
+        }
+
         return collect([
             [
-                'from' => '2024-07-01',
-                'to' => '2024-07-31',
+                'from' => $from,
+                'to' => $to,
                 'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => true,
-                    ],
-//                    'vehicle_status_reports' => [
-//                        'restore' => true,
-//                        'release' => true,
-//                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => true,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => true,
-                    ]
-                ]
-            ],
-            [
-                'from' => '2024-08-01',
-                'to' => '2024-08-31',
-                'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => true,
-                    ],
-//                    'vehicle_status_reports' => [
-//                        'restore' => true,
-//                        'release' => true,
-//                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => true,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => true,
-                    ]
-                ]
-            ],
-            [
-                'from' => '2024-09-01',
-                'to' => '2024-09-30',
-                'tables' => [
-                    'app_photos' => [
-                        'restore' => true,
-                        'release' => true,
-                    ],
-//                    'vehicle_status_reports' => [
-//                        'restore' => true,
-//                        'release' => true,
-//                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => true,
-                    ],
-                    'reports' => [
-                        'restore' => true,
-                        'release' => true,
-                    ]
-                ]
-            ],
-            [
-                'from' => '2024-10-01',
-                'to' => '2024-10-03',
-                'tables' => [
-//                    'app_photos' => [
-//                        'restore' => true,
-//                        'release' => true,
-//                    ],
-//                    'vehicle_status_reports' => [
-//                        'restore' => true,
-//                        'release' => true,
-//                    ],
-                    'locations' => [
-                        'restore' => true,
-                        'release' => true,
-                    ],
-                    'reports' => [
-                        'restore' => true,
+                    $tableName => [
+                        'restore' => false,
                         'release' => true,
                     ]
                 ]
