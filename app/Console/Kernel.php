@@ -54,6 +54,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\CheckNoPhotosDispatch::class,
         Commands\Reports\UpdateSimulatedSensorCounter::class,
         Commands\GeocodeSpeedingCommand::class,
+        Commands\DB\CleanTableCommand::class,
     ];
 
     /**
