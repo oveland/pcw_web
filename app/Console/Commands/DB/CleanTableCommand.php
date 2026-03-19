@@ -44,8 +44,8 @@ class CleanTableCommand extends Command
         $keepSince = $this->option('keep-since');
 
         if (!$keepSince) {
-            // Default: Keep data from the last 2 months
-            $keepSince = Carbon::now()->subMonths(2)->startOfMonth()->toDateString() . ' 00:00:00';
+            // Default: Keep data from the previous month onwards (e.g. if today is March, keep since Feb 1st)
+            $keepSince = Carbon::now()->subMonth()->startOfMonth()->toDateString() . ' 00:00:00';
         }
 
         $this->info("=====================================================");
