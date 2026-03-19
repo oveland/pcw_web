@@ -14,7 +14,7 @@ class CleanTableCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'db:clean-table {table} {--keep-since=}';
+    protected $signature = 'db:clean-table {table} {--keep-since=} {--cascade}';
 
     /**
      * The console command description.
@@ -86,7 +86,9 @@ class CleanTableCommand extends Command
             $this->info("[3/5] Truncating original table and restoring recent data...");
             $this->info("      (This might lock the table for a few seconds)");
             
-            DB::transaction(function () use ($table, $tempTable, $count) {
+            $useCascade = $this->option('cascade');
+            
+            DB::transaction(function () use ($table, $tempTable, $count, $useCascade) {
                 // Lock the table to prevent new inserts during truncate/restore
                 DB::statement("LOCK TABLE {$table} IN EXCLUSIVE MODE");
 
@@ -94,8 +96,9 @@ class CleanTableCommand extends Command
                 $columns = $this->getTableColumns($table);
 
                 // Truncate
-                $this->log("TRUNCATE TABLE {$table}");
-                DB::statement("TRUNCATE TABLE {$table}");
+                $truncateQuery = $useCascade ? "TRUNCATE TABLE {$table} CASCADE" : "TRUNCATE TABLE {$table}";
+                $this->log($truncateQuery);
+                DB::statement($truncateQuery);
 
                 // Restore
                 if ($count > 0) {
