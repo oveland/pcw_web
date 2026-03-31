@@ -325,6 +325,12 @@ class EPSyncService extends SyncService
                 $drObs->user_id = 2018101392; // Set user BOOTPCW
                 $drObs->save();
 
+                $drObs = $dr->getObservation('travel_id_fics');
+                $drObs->value = $travelId;
+                $drObs->observation = 'ID de viaje FICS';
+                $drObs->user_id = 2018101392; // Set user BOOTPCW
+                $drObs->save();
+
 
 
                 // Sync passenger Origin / Destination details
