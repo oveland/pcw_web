@@ -412,6 +412,7 @@
             </td>
             @php
                 $spreadsheetPassengersSync = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
+                $travelIdFics = $dispatchRegister->getObservation('travel_id_fics');
                 $PassengerStop = $dispatchRegister->getObservation('passengers_stops')->observation;
                 $passengerStops = json_decode($PassengerStop, true);
                 $sumByCountSpreadSheetFICS += $spreadsheetPassengersSync->value;
@@ -427,6 +428,13 @@
                         <small class="tooltips text-bold text-xs" data-title="@lang('# Spreadsheet') sincronizada"
                                data-placement="bottom">
                             <i class="fa fa-file-o text-muted"></i> {{ $spreadsheetPassengersSync->observation }}
+                        </small>
+                    @endif
+                    @if($travelIdFics && $travelIdFics->value != '')
+                        <br>
+                        <small class="tooltips text-bold text-xs" data-title="@lang('Viaje ID')"
+                               data-placement="bottom">
+                            <i class="fa fa-hashtag text-muted"></i> {{ $travelIdFics->value }}
                         </small>
                     @endif
                 </td>
