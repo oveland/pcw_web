@@ -250,7 +250,7 @@ class Kernel extends ConsoleKernel
             //$schedule->command('Sync4G:sync-photos --imei=351234567891011')->everyMinute()->runInBackground(); // vehicle 2673 2 DVR EP
             $schedule->command('rocket:count --vehicle-plate=KUK-485 --pa=3 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
-            //$schedule->command('Sync4G:sync-photos --imei=352557104831642')->everyMinute()->runInBackground(); // vehicle 8321  EP
+            $schedule->command('Sync4G:sync-photos --imei=352557104831642')->everyMinute()->runInBackground(); // vehicle 8321  EP
             //$schedule->command('rocket:count --vehicle-plate=LLR-503 --pa=3 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
             $schedule->command('Sync4G:sync-photos --imei=352557104791564')->everyMinute()->runInBackground(); // vehicle 6601 EP
