@@ -222,9 +222,15 @@ class PCWRouteService implements APIWebInterface
            // $tariffPassenger = $d->route->tariff->passenger;
             $totalProduction = $tariffPassenger * $totalPassengers;
             $routeID = $d->route->id;
-            if ($routeID == 275)
+            if ($routeID == 275)// ruta zamorano se debe enviar a nodum como id de ruta de palmira
                 {
                 $routeID = 280;
+            }
+
+            $routeName = $d->route->name;
+            if (in_array($d->route->id, [347, 348])) {
+                $obsRouteFICS = $d->getObservation('route_FICS')->observation;
+                $routeName = $obsRouteFICS ?: $d->route->name;
             }
 
             return [
@@ -236,7 +242,8 @@ class PCWRouteService implements APIWebInterface
                 ],
                 'route' => [
                     'id' => $routeID,
-                    'name' => $d->route->name
+                    'name' => $routeName,
+                    'travel_id_fics' => $d->getObservation('travel_id_fics')->value
                 ],
                 'passengers' => [
                     'spreadsheet' => $d->getObservation('end_recorder')->observation,
