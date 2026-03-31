@@ -42,7 +42,7 @@ class UpdateSimulatedSensorCounter extends Command
     {
         $this->info('Starting simulated sensor counter update...');
 
-        $routes = [285, 286, 287, 288, 321, 322, 331, 332, 337, 338, 341, 342, 343, 344];
+        $routes = [285, 286, 287, 288, 321, 322, 331, 332, 337, 338, 341, 342, 343, 344, 347, 348];
         $tenDaysAgo = Carbon::now()->subDays(10)->startOfDay();
 
         // Target dispatch registers
@@ -76,9 +76,17 @@ class UpdateSimulatedSensorCounter extends Command
             if ($observation && is_numeric($observation->value) && $observation->value > 0) {
                 $baseValue = intval($observation->value);
 
-                // Logic: Random value between (Base - 10) and (Base + 2)
-                $min = max(0, $baseValue - 10); // Prevent negative values
-                $max = $baseValue + 2;
+                // Logic based on route_id
+                if (in_array($dispatchRegister->route_id, [347, 348])) {
+                    $min = max(0, $baseValue - 2); // Prevent negative values
+                    $max = $baseValue + 1;
+                } elseif (in_array($dispatchRegister->route_id, [342, 341, 332, 331, 288, 287, 286, 285])) {
+                    $min = max(0, $baseValue - 5); // Prevent negative values
+                    $max = $baseValue + 2;
+                } else {
+                    $min = max(0, $baseValue - 10); // Prevent negative values
+                    $max = $baseValue + 2;
+                }
 
                 $randomValue = rand($min, $max);
 
