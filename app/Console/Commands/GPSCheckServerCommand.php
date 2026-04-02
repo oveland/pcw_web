@@ -96,6 +96,7 @@ class GPSCheckServerCommand extends Command
 //            9999 => 'Ruptela Aux',
             991 => 'Meitrack',
             994 => 'Antares',
+            992 => 'FTP Server',
             21 => 'FTP Server',
         ];
 
