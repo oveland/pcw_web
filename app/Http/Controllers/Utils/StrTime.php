@@ -29,10 +29,16 @@ class StrTime
         }
 
         if (count($strTimeArray) == 2) {
-            return ($strTimeArray[0] * 60 + $strTimeArray[1]) * $sign;
+            $h = is_numeric($strTimeArray[0]) ? $strTimeArray[0] : 0;
+            $m = is_numeric($strTimeArray[1]) ? $strTimeArray[1] : 0;
+            return ($h * 60 + $m) * $sign;
         }
 
-        return ($strTimeArray[0] * 3600 + $strTimeArray[1] * 60 + $strTimeArray[2]) * $sign;
+        $h = isset($strTimeArray[0]) && is_numeric($strTimeArray[0]) ? $strTimeArray[0] : 0;
+        $m = isset($strTimeArray[1]) && is_numeric($strTimeArray[1]) ? $strTimeArray[1] : 0;
+        $s = isset($strTimeArray[2]) && is_numeric($strTimeArray[2]) ? $strTimeArray[2] : 0;
+
+        return ($h * 3600 + $m * 60 + $s) * $sign;
     }
 
     static function segToStrTime($seconds)
