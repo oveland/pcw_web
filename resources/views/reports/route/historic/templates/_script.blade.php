@@ -461,7 +461,7 @@
                 class="photo photo-count-${photo.cn} photo-${preview ? 'preview' : 'view'}-${index} ${preview ? 'seen' : ''} photo-image photo-point"
                 onclick="${eventClick}"
                 data-src="${this.getUrlPhoto(photo.id)}"
-                src="${load ? this.getUrlPhoto(photo.id) : 'https://pcwserviciosgps.com/files/camera.pngx'}"
+                src="${load ? this.getUrlPhoto(photo.id) : 'https://pcwserviciosgps.com/files/camera.png'}"
                 draggable="false"
                 style="width: ${width}; height: ${height};flex: 1 1 auto"
             />`;
