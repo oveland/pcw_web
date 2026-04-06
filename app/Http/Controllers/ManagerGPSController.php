@@ -559,6 +559,10 @@ class ManagerGPSController extends Controller
 
 
                 $gpsVehicle->imei = $imei;
+                $gpsVehicle->technology = $request->get('technology');
+                $gpsVehicle->device_id = $request->get('device_id');
+                $gpsVehicle->device_id_2 = $request->get('device_id_2');
+                $gpsVehicle->device_id_3 = $request->get('device_id_3');
 
                 $gpsTypeRecord = GPSType::where('name', $gpsType)->first();
                 if ($gpsTypeRecord) {

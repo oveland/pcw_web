@@ -47,6 +47,35 @@
                 </div>
             </div>
         </div>
+        
+        <div class="row m-t-10">
+            <div class="col-md-3">
+                <select name="technology" class="form-control input-sm" title="Technology">
+                    <option value="">Ninguno</option>
+                    <option value="3G" {{ ($gpsVehicle && $gpsVehicle->technology == '3G') ? 'selected' : '' }}>3G</option>
+                    <option value="4G" {{ ($gpsVehicle && $gpsVehicle->technology == '4G') ? 'selected' : '' }}>4G</option>
+                    <option value="5G" {{ ($gpsVehicle && $gpsVehicle->technology == '5G') ? 'selected' : '' }}>5G</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group has-feedback m-b-0">
+                    <input name="device_id" type="text" class="form-control input-sm" value="{{ $gpsVehicle ? $gpsVehicle->device_id : '' }}" placeholder="XVR 1" style="border-radius: 50px">
+                    <span class="fa fa-video-camera form-control-feedback"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group has-feedback m-b-0">
+                    <input name="device_id_2" type="text" class="form-control input-sm" value="{{ $gpsVehicle ? $gpsVehicle->device_id_2 : '' }}" placeholder="XVR 2" style="border-radius: 50px">
+                    <span class="fa fa-video-camera form-control-feedback"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group has-feedback m-b-0">
+                    <input name="device_id_3" type="text" class="form-control input-sm" value="{{ $gpsVehicle ? $gpsVehicle->device_id_3 : '' }}" placeholder="XVR 3" style="border-radius: 50px">
+                    <span class="fa fa-video-camera form-control-feedback"></span>
+                </div>
+            </div>
+        </div>
     </form>
 </td>
 <td class="text-center" colspan="2">
