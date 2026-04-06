@@ -65,6 +65,8 @@ class SimGPS extends Model
     const MEITRACK = 'MEITRACK';
     const ANTARES = 'ANTARES';
     const ANDROID = 'ANDROID';
+    const SUNTECH = 'SUNTECH';
+    const TELTONIKA = 'TELTONIKA';
 
     const RESET_COMMAND = [
         self::SKYPATROL => 'AT$RESET',
@@ -74,6 +76,8 @@ class SimGPS extends Model
         self::MEITRACK => 'reset',
         self::ANTARES => 'reset',
         self::ANDROID => 'reset',
+        self::SUNTECH => 'reset',
+        self::TELTONIKA => 'reset',
     ];
 
     const GPS_COLOR = [
@@ -84,6 +88,8 @@ class SimGPS extends Model
         self::MEITRACK => 'success',
         self::ANTARES => 'info',
         self::ANDROID => 'success',
+        self::SUNTECH => 'warning',
+        self::TELTONIKA => 'info',
     ];
 
     protected static function boot()
@@ -100,7 +106,7 @@ class SimGPS extends Model
         return $this->belongsTo(User::class);
     }
 
-    const DEVICES = [self::SKYPATROL, self::SKYPATROL_OLD, self::COBAN, self::RUPTELA, self::MEITRACK, self::ANTARES];
+    const DEVICES = [self::SKYPATROL, self::SKYPATROL_OLD, self::COBAN, self::RUPTELA, self::MEITRACK, self::ANTARES, self::SUNTECH, self::TELTONIKA];
 
     protected $table = 'sim_gps';
 
