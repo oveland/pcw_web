@@ -7,6 +7,7 @@ use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\Route;
 use App\Models\Vehicles\CurrentLocationsGPS;
 use App\Models\Vehicles\GpsVehicle;
+use App\Models\Vehicles\GPSType;
 use App\Http\Controllers\API\SMS;
 use App\Models\Vehicles\SimGPS;
 use App\Models\Vehicles\Vehicle;
@@ -480,6 +481,11 @@ class ManagerGPSController extends Controller
 
                 $gpsVehicle->imei = $imei;
 
+                $gpsTypeRecord = GPSType::where('name', $gpsType)->first();
+                if ($gpsTypeRecord) {
+                    $gpsVehicle->gps_type_id = $gpsTypeRecord->id;
+                }
+
                 if ($gpsVehicle->save()) {
                     $simGPS = new SimGPS();
                     $simGPS->sim = $sim;
@@ -552,6 +558,12 @@ class ManagerGPSController extends Controller
 
 
                 $gpsVehicle->imei = $imei;
+
+                $gpsTypeRecord = GPSType::where('name', $gpsType)->first();
+                if ($gpsTypeRecord) {
+                    $gpsVehicle->gps_type_id = $gpsTypeRecord->id;
+                }
+
                 $gpsVehicle->save();
 
                 $simGPS->sim = $sim;
