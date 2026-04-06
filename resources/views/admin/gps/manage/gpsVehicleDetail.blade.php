@@ -54,6 +54,16 @@
         {!! $simGPS->getUrlImageOperator() !!}
         {{ $simGPS->sim }}
     </button>
+    <br><small class="text-muted">SIM GPS</small>
+    @if($simGPS->sim_router)
+        <br>
+        <button class="btn btn-default btn-rounded btn-xs tooltips"
+                data-title="SIM Router">
+            <i class="fa fa-wifi"></i>
+            {{ $simGPS->sim_router }}
+        </button>
+        <br><small class="text-muted">SIM Router</small>
+    @endif
 </td>
 <td class="text-center">
     {{ $simGPS->created_at }}

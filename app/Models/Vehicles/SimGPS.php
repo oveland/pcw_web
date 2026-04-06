@@ -110,7 +110,7 @@ class SimGPS extends Model
 
     protected $table = 'sim_gps';
 
-    protected $fillable = ['sim', 'operator', 'gps_type', 'vehicle_id', 'active'];
+    protected $fillable = ['sim', 'sim_router', 'operator', 'gps_type', 'vehicle_id', 'active'];
 
     protected function getDateFormat()
     {

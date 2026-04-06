@@ -17,7 +17,7 @@
     <form id="form-edit-sim-gps-{{ $id }}" data-id="{{ $id }}" action="{{ route('admin-gps-manage-update-sim-gps',['simGPS' => $id]) }}" class="form-edit-sim-gps" data-target="#detail-{{ $id }}">
         {{ csrf_field() }}
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <select id="gps-type-{{ $id }}" name="gps_type" class="form-control input-sm gps-type" title="@lang('GPS type')"
                         onchange="">
                     @foreach( \App\Models\Vehicles\SimGPS::DEVICES as $device )
@@ -28,16 +28,22 @@
                     $('#gps-type-{{ $id }}').val('{{ $simGPS->gps_type }}');
                 </script>
             </div>
-            <div class="col-md-4 text-center ">
+            <div class="col-md-3 text-center ">
                 <div class="form-group has-success has-feedback m-b-0">
                     <input name="imei" type="text" class="form-control input-sm" value="{{ $gpsVehicle ? $gpsVehicle->imei : '' }}" placeholder="Imei" style="border-radius: 50px">
                     <span class="fa fa-tag form-control-feedback"></span>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group has-success has-feedback m-b-0">
-                    <input name="sim" type="number" class="form-control input-sm" value="{{ $simGPS->sim }}" placeholder="SIM" style="border-radius: 50px">
+                    <input name="sim" type="number" class="form-control input-sm" value="{{ $simGPS->sim }}" placeholder="SIM GPS" style="border-radius: 50px">
                     <span class="fa fa-phone form-control-feedback"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group has-feedback m-b-0">
+                    <input name="sim_router" type="number" class="form-control input-sm" value="{{ $simGPS->sim_router }}" placeholder="SIM Router" style="border-radius: 50px">
+                    <span class="fa fa-wifi form-control-feedback"></span>
                 </div>
             </div>
         </div>

@@ -473,8 +473,24 @@
                                                             <div class="form-group has-success has-feedback m-b-0">
                                                                 <input name="sim" type="number"
                                                                        class="form-control input-sm" value=""
-                                                                       placeholder="SIM" style="border-radius: 50px">
+                                                                       placeholder="SIM GPS" style="border-radius: 50px">
                                                                 <span class="fa fa-phone form-control-feedback"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="text-right col-md-5">
+                                                            <label for="sim_router" class="control-label">
+                                                                SIM Router
+                                                            </label>
+                                                            <i class="fa fa-wifi"></i>
+                                                        </div>
+                                                        <div class="input-group col-md-7">
+                                                            <div class="form-group has-feedback m-b-0">
+                                                                <input name="sim_router" type="number"
+                                                                       class="form-control input-sm" value=""
+                                                                       placeholder="SIM Router" style="border-radius: 50px">
+                                                                <span class="fa fa-wifi form-control-feedback"></span>
                                                             </div>
                                                         </div>
                                                     </div>

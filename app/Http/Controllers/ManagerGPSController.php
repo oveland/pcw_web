@@ -489,6 +489,7 @@ class ManagerGPSController extends Controller
                 if ($gpsVehicle->save()) {
                     $simGPS = new SimGPS();
                     $simGPS->sim = $sim;
+                    $simGPS->sim_router = $request->get('sim_router');
                     $simGPS->vehicle_id = $vehicle->id;
                     $simGPS->gps_type = $gpsType;
 
@@ -567,6 +568,7 @@ class ManagerGPSController extends Controller
                 $gpsVehicle->save();
 
                 $simGPS->sim = $sim;
+                $simGPS->sim_router = $request->get('sim_router');
                 $simGPS->gps_type = $gpsType;
                 $simGPS->updated_at = Carbon::now();
                 $simGPS->save();
