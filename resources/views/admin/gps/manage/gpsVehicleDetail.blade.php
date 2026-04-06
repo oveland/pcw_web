@@ -49,20 +49,23 @@
   </span>
 </td>
 <td class="text-center" width="20%">
-    <small class="text-muted">SIM GPS</small>
-    <button class="btn btn-{{ $simGPS->getOperatorCssColor() }} btn-rounded active tooltips"
-            data-title="{{ strtoupper($simGPS->operator) }}">
-        {!! $simGPS->getUrlImageOperator() !!}
-        {{ $simGPS->sim }}
-    </button>
-    @if($simGPS->sim_router)
-        <br>
-        <small class="text-muted">SIM Router</small>
-        <button class="btn btn-default btn-rounded btn-xs tooltips"
-                data-title="SIM Router">
-            <i class="fa fa-wifi"></i>
-            {{ $simGPS->sim_router }}
+    <div style="display: inline-flex; align-items: center; gap: 5px;">
+        <small class="text-muted" style="display: inline-block; width: 70px; text-align: right;">SIM GPS</small>
+        <button class="btn btn-{{ $simGPS->getOperatorCssColor() }} btn-rounded active tooltips"
+                data-title="{{ strtoupper($simGPS->operator) }}">
+            {!! $simGPS->getUrlImageOperator() !!}
+            {{ $simGPS->sim }}
         </button>
+    </div>
+    @if($simGPS->sim_router)
+        <div style="display: inline-flex; align-items: center; gap: 5px; margin-top: 6px;">
+            <small class="text-muted" style="display: inline-block; width: 70px; text-align: right;">SIM Router</small>
+            <button class="btn btn-default btn-rounded btn-xs tooltips"
+                    data-title="SIM Router">
+                <i class="fa fa-wifi"></i>
+                {{ $simGPS->sim_router }}
+            </button>
+        </div>
     @endif
 </td>
 <td class="text-center">
