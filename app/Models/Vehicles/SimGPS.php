@@ -89,7 +89,7 @@ class SimGPS extends Model
         self::ANTARES => 'info',
         self::ANDROID => 'success',
         self::SUNTECH => 'warning',
-        self::TELTONIKA => 'info',
+        self::TELTONIKA => 'success',
     ];
 
     protected static function boot()
