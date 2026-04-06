@@ -49,20 +49,20 @@
   </span>
 </td>
 <td class="text-center" width="20%">
+    <small class="text-muted">SIM GPS</small>
     <button class="btn btn-{{ $simGPS->getOperatorCssColor() }} btn-rounded active tooltips"
             data-title="{{ strtoupper($simGPS->operator) }}">
         {!! $simGPS->getUrlImageOperator() !!}
         {{ $simGPS->sim }}
     </button>
-    <br><small class="text-muted">SIM GPS</small>
     @if($simGPS->sim_router)
         <br>
+        <small class="text-muted">SIM Router</small>
         <button class="btn btn-default btn-rounded btn-xs tooltips"
                 data-title="SIM Router">
             <i class="fa fa-wifi"></i>
             {{ $simGPS->sim_router }}
         </button>
-        <br><small class="text-muted">SIM Router</small>
     @endif
 </td>
 <td class="text-center">
