@@ -49,12 +49,12 @@ class CheckNoPhotosDispatch extends Command
                 }
 
                 $despachosSinFotos[] = [
-                    'id_registro'    => $despacho->id,
+                    'id_registro' => $despacho->id,
                     'vehicle_number' => $vehicle->number,
                     'departure_time' => $despacho->departure_time,
-                    'arrival_time'   => $despacho->arrival_time,
-                    'date'           => $despacho->date,
-                    'routeName'      => $despacho->route->name ?? 'N/A',
+                    'arrival_time' => $despacho->arrival_time,
+                    'date' => $despacho->date,
+                    'routeName' => $despacho->route->name ?? 'N/A',
                 ];
             }
         }
@@ -62,7 +62,8 @@ class CheckNoPhotosDispatch extends Command
         if (!empty($despachosSinFotos)) {
             $this->sendEmailAlert($despachosSinFotos);
             $this->info('Se encontraron despachos sin fotos. Alerta enviada.');
-        } else {
+        }
+        else {
             $this->info('No se encontraron despachos sin fotos.');
         }
 
@@ -76,6 +77,9 @@ class CheckNoPhotosDispatch extends Command
                 'olmervelasquez@hotmail.com',
                 'olatorre22@hotmail.com',
                 'jojoavicente1@gmail.com',
+                'monitoreo.palmira1@expresopalmira.com.co',
+                'monitoreo.palmira2@expresopalmira.com.co',
+                'monitoreo.palmira3@expresopalmira.com.co',
             ];
 
             Mail::to($emailTo)->send(new NoPhotosAlert($despachosSinFotos));
