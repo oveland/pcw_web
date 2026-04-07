@@ -38,8 +38,9 @@ class CheckNoPhotosDispatch extends Command
                 continue;
             }
 
+            $sinceTime = Carbon::now()->subHours(14);
             $dispatches = DispatchRegister::where('vehicle_id', $vehicle->id)
-                ->whereDate('date', $today)
+                ->where('updated_at', '>=', $sinceTime)
                 ->completed()
                 ->get();
 
