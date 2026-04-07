@@ -26,7 +26,7 @@
     <span class="btn btn-sm btn-rounded btn-{{ $simGPS->getGPSTypeCssColor() }}">
         <i class="icon-tag"></i> {{ $simGPS->gps_type }}
         @if($simGPS->gps_type === 'ANTARES')
-            <br><small>(SYRUS)</small>
+            <small style="font-weight: bold; display: block; text-align: center; margin-top: 2px;">(SYRUS)</small>
         @endif
     </span>
 </td>
