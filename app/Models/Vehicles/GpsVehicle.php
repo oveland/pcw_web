@@ -62,10 +62,7 @@ class GpsVehicle extends Model
         return config('app.simple_date_time_format');
     }
 
-    public function hasValidImei()
-    {
-        return strlen($this->imei) == 15;
-    }
+
 
     public function vehicle()
     {

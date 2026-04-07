@@ -28,8 +28,7 @@
     </span>
 </td>
 <td width="20%" class="text-center">
-  <span class="{{ ($gpsVehicle && $gpsVehicle->hasValidImei()) ? '' : 'text-danger text-bold tooltips' }}"
-        data-title="@lang('The imei must have a length of 15 characters')">
+  <span>
     {{ $gpsVehicle && $gpsVehicle->imei ? $gpsVehicle->imei : '' }}
       @if($gpsVehicle && ($gpsVehicle->device_id || $gpsVehicle->tags || $gpsVehicle->type_device))
           <div class="gps-info">
