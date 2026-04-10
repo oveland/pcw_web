@@ -43,10 +43,19 @@ class UpdateSimulatedSensorCounter extends Command
         $this->info('Starting simulated sensor counter update...');
 
         $routes = [285, 286, 287, 288, 321, 322, 331, 332, 337, 338, 341, 342, 343, 344, 347, 348];
+        $specialRoutes = [279, 280, 282, 283];
+        $specialVehicles = [2590, 2637];
+
         $tenDaysAgo = Carbon::now()->subDays(10)->startOfDay();
 
         // Target dispatch registers
-        $dispatchRegisters = DispatchRegister::whereIn('route_id', $routes)
+        $dispatchRegisters = DispatchRegister::where(function ($query) use ($routes, $specialRoutes, $specialVehicles) {
+                $query->whereIn('route_id', $routes)
+                      ->orWhere(function ($q) use ($specialRoutes, $specialVehicles) {
+                          $q->whereIn('route_id', $specialRoutes)
+                            ->whereIn('vehicle_id', $specialVehicles);
+                      });
+            })
             ->where('date', '>=', $tenDaysAgo)
             ->where(function ($query) {
                 $query->whereNull('final_sensor_counter')
@@ -80,7 +89,7 @@ class UpdateSimulatedSensorCounter extends Command
                 if (in_array($dispatchRegister->route_id, [347, 348])) {
                     $min = max(0, $baseValue - 2); // Prevent negative values
                     $max = $baseValue + 1;
-                } elseif (in_array($dispatchRegister->route_id, [342, 341, 332, 331, 288, 287, 286, 285])) {
+                } elseif (in_array($dispatchRegister->route_id, [342, 341, 332, 331, 288, 287, 286, 285]) || in_array($dispatchRegister->route_id, [279, 280, 282, 283])) {
                     $min = max(0, $baseValue - 5); // Prevent negative values
                     $max = $baseValue + 2;
                 } else {
