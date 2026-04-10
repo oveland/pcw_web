@@ -64,6 +64,12 @@ class UpdateSimulatedSensorCounter extends Command
             ->with(['drObservations', 'vehicle', 'vehicle.gpsVehicle'])
             ->get();
 
+        $this->info("Total dispatch registers found in DB: " . $dispatchRegisters->count());
+        $specialCount = $dispatchRegisters->filter(function($dr) use ($specialRoutes, $specialVehicles) {
+            return in_array($dr->route_id, $specialRoutes) && in_array($dr->vehicle_id, $specialVehicles);
+        })->count();
+        $this->info("Of those, special vehicles/routes found: " . $specialCount);
+
         // Filter non-5G vehicles manually
         $dispatchRegisters = $dispatchRegisters->filter(function ($dispatchRegister) {
             $vehicle = $dispatchRegister->vehicle;
@@ -75,12 +81,26 @@ class UpdateSimulatedSensorCounter extends Command
             return $gpsVehicle->technology != '5G';
         });
 
+        $this->info("Dispatch registers after non-5G filter: " . $dispatchRegisters->count());
+        $specialCountAfter = $dispatchRegisters->filter(function($dr) use ($specialRoutes, $specialVehicles) {
+            return in_array($dr->route_id, $specialRoutes) && in_array($dr->vehicle_id, $specialVehicles);
+        })->count();
+        $this->info("Special vehicles/routes after non-5G filter: " . $specialCountAfter);
+
         $count = 0;
         $fieldName = __('spreadsheet_passengers_sync');
+        $this->info("Looking for observation field: {$fieldName}");
 
         foreach ($dispatchRegisters as $dispatchRegister) {
+            $isSpecial = in_array($dispatchRegister->route_id, $specialRoutes) && in_array($dispatchRegister->vehicle_id, $specialVehicles);
+
             // Find the observation
             $observation = $dispatchRegister->drObservations->where('field', $fieldName)->first();
+
+            if ($isSpecial) {
+                $obsValue = $observation ? $observation->value : 'NOT FOUND';
+                $this->info("DEBUG Special DR ID: {$dispatchRegister->id} | Route: {$dispatchRegister->route_id} | Vehicle: {$dispatchRegister->vehicle_id} | Obs: {$obsValue}");
+            }
 
             if ($observation && is_numeric($observation->value) && $observation->value > 0) {
                 $baseValue = intval($observation->value);
