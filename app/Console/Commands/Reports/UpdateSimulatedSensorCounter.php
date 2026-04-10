@@ -88,36 +88,41 @@ class UpdateSimulatedSensorCounter extends Command
         $this->info("Special vehicles/routes after non-5G filter: " . $specialCountAfter);
 
         $count = 0;
-        $fieldName = 'spreadsheet_passengers_sync';
+        $fieldName = __('spreadsheet_passengers_sync');
         $this->info("Looking for observation field: {$fieldName}");
 
         foreach ($dispatchRegisters as $dispatchRegister) {
             $isSpecial = in_array($dispatchRegister->route_id, $specialRoutes) && in_array($dispatchRegister->vehicle_id, $specialVehicles);
 
-            // Find the observation without using __()
-            $observation = $dispatchRegister->drObservations->where('field', $fieldName)->first();
-            
-            // Try with __() just in case it was stored translated
-            if (!$observation) {
-                $observation = $dispatchRegister->drObservations->where('field', __('spreadsheet_passengers_sync'))->first();
-            }
+            $observationValue = null;
 
             if ($isSpecial) {
+                // For special routes/vehicles, use 'registradora_llegada'
+                $observation = $dispatchRegister->drObservations->where('field', __('registradora_llegada'))->first();
+                if (!$observation) {
+                    $observation = $dispatchRegister->drObservations->where('field', 'registradora_llegada')->first();
+                }
+                
+                if ($observation && is_numeric($observation->value) && $observation->value > 0) {
+                    $observationValue = intval($observation->value);
+                }
+
                 $obsValue = $observation ? $observation->value : 'NOT FOUND';
-                // Use getObservation to force finding it the exact same way the rest of the system does
-                $forceObservation = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
-                $forceObsValue = $forceObservation ? $forceObservation->value : 'NOT FOUND';
-                
-                $this->info("DEBUG Special DR ID: {$dispatchRegister->id} | Route: {$dispatchRegister->route_id} | Vehicle: {$dispatchRegister->vehicle_id} | Obs: {$obsValue} | Forced Obs: {$forceObsValue}");
-                
-                // Use forced observation for our special cases if we didn't find the regular one
-                if (!$observation && $forceObservation && is_numeric($forceObservation->value)) {
-                    $observation = $forceObservation;
+                $this->info("DEBUG Special DR ID: {$dispatchRegister->id} | Route: {$dispatchRegister->route_id} | Vehicle: {$dispatchRegister->vehicle_id} | registradora_llegada Obs: {$obsValue}");
+            } else {
+                // For regular routes, use 'spreadsheet_passengers_sync'
+                $observation = $dispatchRegister->drObservations->where('field', $fieldName)->first();
+                if (!$observation) {
+                    $observation = $dispatchRegister->drObservations->where('field', 'spreadsheet_passengers_sync')->first();
+                }
+
+                if ($observation && is_numeric($observation->value) && $observation->value > 0) {
+                    $observationValue = intval($observation->value);
                 }
             }
 
-            if ($observation && is_numeric($observation->value) && $observation->value > 0) {
-                $baseValue = intval($observation->value);
+            if ($observationValue !== null && $observationValue > 0) {
+                $baseValue = $observationValue;
 
                 // Logic based on route_id
                 if (in_array($dispatchRegister->route_id, [347, 348])) {
