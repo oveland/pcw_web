@@ -88,18 +88,32 @@ class UpdateSimulatedSensorCounter extends Command
         $this->info("Special vehicles/routes after non-5G filter: " . $specialCountAfter);
 
         $count = 0;
-        $fieldName = __('spreadsheet_passengers_sync');
+        $fieldName = 'spreadsheet_passengers_sync';
         $this->info("Looking for observation field: {$fieldName}");
 
         foreach ($dispatchRegisters as $dispatchRegister) {
             $isSpecial = in_array($dispatchRegister->route_id, $specialRoutes) && in_array($dispatchRegister->vehicle_id, $specialVehicles);
 
-            // Find the observation
+            // Find the observation without using __()
             $observation = $dispatchRegister->drObservations->where('field', $fieldName)->first();
+            
+            // Try with __() just in case it was stored translated
+            if (!$observation) {
+                $observation = $dispatchRegister->drObservations->where('field', __('spreadsheet_passengers_sync'))->first();
+            }
 
             if ($isSpecial) {
                 $obsValue = $observation ? $observation->value : 'NOT FOUND';
-                $this->info("DEBUG Special DR ID: {$dispatchRegister->id} | Route: {$dispatchRegister->route_id} | Vehicle: {$dispatchRegister->vehicle_id} | Obs: {$obsValue}");
+                // Use getObservation to force finding it the exact same way the rest of the system does
+                $forceObservation = $dispatchRegister->getObservation('spreadsheet_passengers_sync');
+                $forceObsValue = $forceObservation ? $forceObservation->value : 'NOT FOUND';
+                
+                $this->info("DEBUG Special DR ID: {$dispatchRegister->id} | Route: {$dispatchRegister->route_id} | Vehicle: {$dispatchRegister->vehicle_id} | Obs: {$obsValue} | Forced Obs: {$forceObsValue}");
+                
+                // Use forced observation for our special cases if we didn't find the regular one
+                if (!$observation && $forceObservation && is_numeric($forceObservation->value)) {
+                    $observation = $forceObservation;
+                }
             }
 
             if ($observation && is_numeric($observation->value) && $observation->value > 0) {
