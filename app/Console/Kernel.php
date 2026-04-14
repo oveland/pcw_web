@@ -132,9 +132,9 @@ class Kernel extends ConsoleKernel
                 ->cron('30 23,5,10,15 * * *')
                 ->runInBackground();*/
 
-            $schedule->command('sync5G:sync-photos --imei=352557104813640')->everyThirtyMinutes()->runInBackground(); //2907
-            $schedule->command('sync5G:sync-photos --imei=3525571047806411')->everyThirtyMinutes()->runInBackground(); //2907
-            $schedule->command('sync5G:sync-photos --imei=3525571047806412')->everyThirtyMinutes()->runInBackground(); //2907
+            //$schedule->command('sync5G:sync-photos --imei=352557104813640')->everyThirtyMinutes()->runInBackground(); //2907
+            $schedule->command('Sync4G:sync-photos --imei=352557104813640')->everyMinute()->runInBackground(); //2907
+
            /* $schedule->command('rocket:count --vehicle-plate=NYK-137 --pa=2 --pr=50')
                 ->cron('30 23,5,10,15 * * *')
                 ->runInBackground();
@@ -305,6 +305,8 @@ class Kernel extends ConsoleKernel
             $schedule->command('rocket:count --vehicle-plate=WHU-492 --pa=3 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
             $schedule->command('Sync4G:sync-photos --imei=0700000178')->everyMinute()->runInBackground(); // vehicle 1985 EP
+
+            $schedule->command('Sync4G:sync-photos --imei=352557104838886')->everyMinute()->runInBackground(); // vehicle 2833 EP
 
 
             
