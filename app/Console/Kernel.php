@@ -134,6 +134,7 @@ class Kernel extends ConsoleKernel
 
             //$schedule->command('sync5G:sync-photos --imei=352557104813640')->everyThirtyMinutes()->runInBackground(); //2907
             $schedule->command('Sync4G:sync-photos --imei=352557104813640')->everyMinute()->runInBackground(); //2907
+            $schedule->command('Sync4G:sync-photos --imei=0970000093')->everyMinute()->runInBackground(); //1997
 
            /* $schedule->command('rocket:count --vehicle-plate=NYK-137 --pa=2 --pr=50')
                 ->cron('30 23,5,10,15 * * *')
@@ -574,8 +575,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('syrus:sync-photos --imei=352557104787174')->everyMinute()->runInBackground(); // Vehicle 2645   Expreso Palmira
             $schedule->command('rocket:count --vehicle-plate=KUL-708 --pa=2 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
 
-            $schedule->command('syrus:sync-photos --imei=352557104413599')->everyMinute()->runInBackground(); // Vehicle 2583   Valledupar
+            $schedule->command('syrus:sync-photos --imei=352557104413599')->everyMinute()->runInBackground(); // Vehicle 2583
             $schedule->command('rocket:count --vehicle-plate=KUM-722 --pa=2 --pr=20 ')->cron('0 */4 * * *')->runInBackground();
+
 
             /**********************************VALLEDUPAR*************************************************/
 
