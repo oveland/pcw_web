@@ -29,6 +29,10 @@ use Illuminate\Support\Carbon;
  */
 class VehicleCamera extends Model
 {
+    protected $table = 'vehicle_cameras';
+
+    protected $fillable = ['vehicle_id', 'camera'];
+
     function vehicle()
     {
         return $this->belongsTo(Vehicle::class);

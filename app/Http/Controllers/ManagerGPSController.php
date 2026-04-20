@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Apps\Rocket\VehicleCamera;
 use App\Models\Company\Company;
 use App\Models\Routes\DispatcherVehicle;
 use App\Models\Routes\Route;
@@ -496,6 +497,18 @@ class ManagerGPSController extends Controller
                     $message .= __('Register created successfully');
 
                     $simGPS->save();
+
+                    // Sync vehicle cameras
+                    $camerasCount = $request->get('cameras_count');
+                    if ($camerasCount !== null && $camerasCount !== '') {
+                        VehicleCamera::where('vehicle_id', $vehicle->id)->delete();
+                        for ($i = 1; $i <= (int)$camerasCount; $i++) {
+                            VehicleCamera::create([
+                                'vehicle_id' => $vehicle->id,
+                                'camera' => $i,
+                            ]);
+                        }
+                    }
                     $created = true;
                     \DB::update("UPDATE crear_vehiculo SET imei_gps = '$gpsVehicle->imei' WHERE id_crear_vehiculo = $vehicle->id"); // TODO: temporal while migration for vehicles table is completed
 
@@ -576,6 +589,18 @@ class ManagerGPSController extends Controller
                 $simGPS->gps_type = $gpsType;
                 $simGPS->updated_at = Carbon::now();
                 $simGPS->save();
+
+                // Sync vehicle cameras
+                $camerasCount = $request->get('cameras_count');
+                if ($camerasCount !== null && $camerasCount !== '') {
+                    VehicleCamera::where('vehicle_id', $vehicle->id)->delete();
+                    for ($i = 1; $i <= (int)$camerasCount; $i++) {
+                        VehicleCamera::create([
+                            'vehicle_id' => $vehicle->id,
+                            'camera' => $i,
+                        ]);
+                    }
+                }
 
                 $updated = true;
                 $message .= "Actualizado correctamente";
