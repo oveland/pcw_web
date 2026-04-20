@@ -505,7 +505,7 @@
                                                             <div class="form-group has-feedback m-b-0">
                                                                 <input name="cameras_count" type="number" min="0" max="20"
                                                                        class="form-control input-sm" value=""
-                                                                       placeholder="Nº Cámaras (opcional)" style="border-radius: 50px">
+                                                                       placeholder="# Cámaras" style="border-radius: 50px">
                                                                 <span class="fa fa-camera form-control-feedback"></span>
                                                             </div>
                                                         </div>

@@ -80,12 +80,9 @@
         <div class="row m-t-10">
             <div class="col-md-3">
                 <div class="form-group has-feedback m-b-0">
-                    <input name="cameras_count" type="number" min="0" max="20" class="form-control input-sm" value="{{ $vehicle->cameras ? $vehicle->cameras->count() : '' }}" placeholder="Nº Cámaras" style="border-radius: 50px">
+                    <input name="cameras_count" type="number" min="0" max="20" class="form-control input-sm" value="{{ $vehicle->cameras ? $vehicle->cameras->count() : '' }}" placeholder="# Cámaras" style="border-radius: 50px">
                     <span class="fa fa-camera form-control-feedback"></span>
                 </div>
-            </div>
-            <div class="col-md-9">
-                <small class="text-muted" style="line-height: 30px;">Cantidad de cámaras del vehículo (opcional)</small>
             </div>
         </div>
     </form>

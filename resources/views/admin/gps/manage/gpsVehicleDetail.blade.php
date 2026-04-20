@@ -49,6 +49,14 @@
         </div>
       @endif
   </span>
+  @php($camerasCount = $vehicle->cameras ? $vehicle->cameras->count() : 0)
+  @if($camerasCount > 0)
+      <div style="margin-top: 4px;">
+          <span class="badge badge-default tooltips" data-title="# Cámaras" style="background: #5b6b7c; color: white;">
+              <i class="fa fa-camera"></i> {{ $camerasCount }}
+          </span>
+      </div>
+  @endif
 </td>
 <td class="text-center" width="20%">
     <div style="display: inline-flex; align-items: center; gap: 5px;">
