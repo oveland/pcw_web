@@ -86,12 +86,12 @@ class Service4G extends SyrusService
         if($imei=='352557104777777' || $imei=='352557104777778' || $imei == '3525571047885031'){
             $deviceID = $gpsVehicle->tags;
         }else{
-           $deviceID = $gpsVehicle->device_id;
+            $deviceID = $gpsVehicle->device_id;
         }
         $date4G = carbon::now()->toDateString();
-     /*   if ($vehicle->number == '8217'){
-            $date4G ='2025-10-29';
-        }*/
+        /*   if ($vehicle->number == '8217'){
+               $date4G ='2025-10-29';
+           }*/
         //$date4G = '2025-01-11';
         $path = "$deviceID/$date4G";
         $response->put('imei', $imei);
@@ -108,12 +108,12 @@ class Service4G extends SyrusService
                 $side = $this->getSide($fileName, $imei);
                 $service->for($vehicle, $side);
                 $fileHasError = false;
-                
+
                 try {
-                    $jpegInfo = exec("jpeginfo -c " . $storage->path($file));
-                    $fileHasError = Str::contains($jpegInfo, "ERROR");
+                    $jpegInfo = exec("jpeginfo -c " . escapeshellarg($storage->path($file)));
+                    $fileHasError = Str::contains($jpegInfo, "ERROR") || Str::contains($jpegInfo, "can't open");
                 } catch (Exception $e) {
-                    
+
                 }
                 $fileNames = explode('_', $fileName);
                 if (isset($fileNames[2]) && preg_match('/^\d{14}$/', $fileNames[2])) {
@@ -126,7 +126,8 @@ class Service4G extends SyrusService
                     ? Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString()
                     : $dateImag;
                 if (!$fileHasError) {
-                    $image = Image::make($storage->get($file));
+                    try {
+                        $image = Image::make($storage->get($file));
                         $process = $service->saveImageData([
                             'date' => $date,
                             'img' => $image->encode('data-url'),
@@ -134,20 +135,24 @@ class Service4G extends SyrusService
                             'side' => $side,
                             'uid' => $vehicle->id . "_" . $fileName
                         ]);
-                    $success = $process->response->success;
-                    $message = $process->response->message;
-                    $extra = "";
-                    if ($success === true) {
-                        $deleted = $storage->delete($file);
-                        if (!$deleted) $extra = ". Error photo NOT deleted!";
-                        $message .= $extra;
-                    } else {
-                        $extra = $message;
+                        $success = $process->response->success;
+                        $message = $process->response->message;
+                        $extra = "";
+                        if ($success === true) {
+                            $deleted = $storage->delete($file);
+                            if (!$deleted) $extra = ". Error photo NOT deleted!";
+                            $message .= $extra;
+                        } else {
+                            $extra = $message;
+                        }
+                        $this->log("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra");
+                        $response['success'] = $success;
+                        $response['message'] = $message;
+                        $saveFiles->push($message);
+                    } catch (Exception $e) {
+                        $this->log("             • Vehicle #$vehicle->number Error processing image $fileName: " . $e->getMessage());
+                        $storage->delete($file);
                     }
-                    $this->log("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra");
-                    $response['success'] = $success;
-                    $response['message'] = $message;
-                    $saveFiles->push($message);
                 } else {
                     $storage->delete($file);
                 }
@@ -183,7 +188,7 @@ class Service4G extends SyrusService
             if ($fileNames[1] == 'ch2') return '2';
             if ($fileNames[1] == 'ch3') return '5';
             if ($fileNames[1] == 'ch4') return '6';
-         }
+        }
         if ($imei == '352557104777777') {
             if ($fileNames[1] == 'ch1') return '3';
             if ($fileNames[1] == 'ch2') return '4';
