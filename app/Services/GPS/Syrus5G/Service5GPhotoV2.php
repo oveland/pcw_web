@@ -95,12 +95,9 @@ class Service5GPhotoV2 extends SyrusService
                 }
 
                 // Fecha desde nombre (preferida) o mtime del archivo
-                $fileNames = explode('_', $fileName);
-                $dateImag  = '';
-                if (isset($fileNames[2]) && preg_match('/^\d{14}$/', $fileNames[2])) {
-                    $dateImag = Carbon::createFromFormat("YmdHis", $fileNames[2])->toDateTimeString();
-                } elseif (isset($fileNames[3]) && preg_match('/^\d{14}$/', $fileNames[3])) {
-                    $dateImag = Carbon::createFromFormat("YmdHis", $fileNames[3])->toDateTimeString();
+                $dateImag = '';
+                if (preg_match('/(\d{14})/', $fileName, $matches)) {
+                    $dateImag = Carbon::createFromFormat("YmdHis", $matches[1])->toDateTimeString();
                 }
                 $date = $dateImag === ''
                     ? Carbon::createFromTimestamp($storage->lastModified($file))->toDateTimeString()
@@ -169,14 +166,16 @@ class Service5GPhotoV2 extends SyrusService
 
     function getSideV2($fileName, GpsVehicle $gpsVehicle, $deviceId)
     {
-        $fileNames = explode('_', $fileName);
-
         if (Str::endsWith($fileName, ['E.jpg'])) {
             return 'E';
         }
 
-        $channel = $fileNames[1] ?? null;
-        if (!$channel || !preg_match('/^ch\d+$/', $channel)) {
+        $channel = null;
+        if (preg_match('/(ch\d+)/', $fileName, $matches)) {
+            $channel = $matches[1];
+        }
+
+        if (!$channel) {
             return '0';
         }
 
