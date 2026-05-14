@@ -78,6 +78,7 @@ class ReportRouteController extends Controller
         $dateTimeRequest = $request->get('date-report');
         $dateTimeEndRequest = $request->get('date-end-report');
         $spreadsheetReport = $request->get('spreadsheet-report');
+        $travelIdReport = $request->get('travel-id-report');
 
         $dateTimeRequestArray = collect(explode(' ', $dateTimeRequest));
         $dateTimeEndRequestArray = collect(explode(' ', $dateTimeEndRequest));
@@ -110,6 +111,9 @@ class ReportRouteController extends Controller
 
         if ($spreadsheetReport) {
             $dispatchRegistersByVehicles = $this->routeService->dispatch->allBySpreadsheet($spreadsheetReport);
+            if($dispatchRegistersByVehicles->count()) $company = $dispatchRegistersByVehicles->first()->first()->vehicle->company;
+        } elseif ($travelIdReport) {
+            $dispatchRegistersByVehicles = $this->routeService->dispatch->allByTravelId($travelIdReport);
             if($dispatchRegistersByVehicles->count()) $company = $dispatchRegistersByVehicles->first()->first()->vehicle->company;
         } else {
             $dispatchRegistersByVehicles = $this->routeService->dispatch->allByVehicles($company, $dateReport, $dateEndReport, $routeReport, $vehicleReport, $completedTurns, $noTakenTurns, $initialTime, $finalTime, $activeTurns, $cancelledTurns, ['drObservations', 'dispatcherVehicle.route', 'routeTakings', 'photos', 'vehicle.cameras']);
@@ -163,6 +167,7 @@ class ReportRouteController extends Controller
             'cancelledTurns',
             'timeReport',
             'spreadsheetReport',
+            'travelIdReport',
             'activeRoutes',
             'activeVehicles'
         ]));

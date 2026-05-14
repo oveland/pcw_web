@@ -126,6 +126,20 @@ class DispatchRouteService
         })->groupBy('vehicle_id');
     }
 
+    function allByTravelId($travelId)
+    {
+        $drs = DrObservation::where('field', __('travel_id_fics'))
+            ->where('value', $travelId)
+            ->with('dispatchRegister')
+            ->get();
+
+        return $drs->pluck('dispatchRegister')->unique(function ($dr) {
+            return $dr->id;
+        })->sortBy(function ($dr) {
+            return "$dr->date-" . $dr->vehicle->number . "$dr->departure_time";
+        })->groupBy('vehicle_id');
+    }
+
     /**
      * Builds route report for all dispatch register's locations
      *

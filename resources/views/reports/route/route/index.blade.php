@@ -158,6 +158,15 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="travel-id-report" class="control-label">ID de viaje</label>
+                                <div class="form-group">
+                                    <input type="number" min="0" name="travel-id-report" id="travel-id-report" class="form-control col-md-12" data-with-all="true"/>
+                                </div>
+                            </div>
+                        </div>
+
                         <hr class="col-md-12 hr">
                         <div class="col-md-12 options with-route">
                             <div class="form-group" style="display: flex; align-items: center;gap: 12px">
@@ -414,13 +423,17 @@
             }
         });
 
-        $('#spreadsheet-report').keyup(function () {
-            const hasValue = !!$(this).val();
+        function toggleExclusiveFilters() {
+            const hasValue = !!$('#spreadsheet-report').val() || !!$('#travel-id-report').val();
             const primaryFilters = $('.primary-filter');
             primaryFilters.parents('.form-group:not(.form-date)').css({'opacity': (hasValue ? 0.3 : 1)});
 
             const labels = primaryFilters.parents('.form-group').find('.control-label').addClass('field-required');
             if(hasValue) labels.removeClass('field-required');
+        }
+
+        $('#spreadsheet-report, #travel-id-report').keyup(function () {
+            toggleExclusiveFilters();
         });
 
         initDateTimePicker("YYYY-MM-DD");

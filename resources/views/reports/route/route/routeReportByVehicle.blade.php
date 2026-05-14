@@ -24,13 +24,13 @@
                     <i class="fa fa-plus-square"></i>
                 </button>
                 @endif
-                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ urlencode($dateTimeRequest) }}&date-end-report={{ urlencode($dateTimeEndRequest) }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&spreadsheet-report={{ $spreadsheetReport }}&completed-turns={{ $completedTurns }}&active-turns={{ $activeTurns }}&cancelled-turns={{ $cancelledTurns }}&type-report=group-vehicles&export=true"
+                <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ urlencode($dateTimeRequest) }}&date-end-report={{ urlencode($dateTimeEndRequest) }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&spreadsheet-report={{ $spreadsheetReport }}&travel-id-report={{ $travelIdReport }}&completed-turns={{ $completedTurns }}&active-turns={{ $activeTurns }}&cancelled-turns={{ $cancelledTurns }}&type-report=group-vehicles&export=true"
                    class="btn green btn-circle tooltips"
                    data-title="@lang('Export grouped report') | @lang('Excel')">
                     <i class="fa fa-download"></i>
                 </a>
                 @if(Auth::user()->isSuperAdmin())
-                    <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ urlencode($dateTimeRequest) }}&date-end-report={{ urlencode($dateTimeEndRequest) }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&spreadsheet-report={{ $spreadsheetReport }}&completed-turns={{ $completedTurns }}&active-turns={{ $activeTurns }}&cancelled-turns={{ $cancelledTurns }}&type-report=group-vehicles&export=true&export-FICS=true"
+                    <a href="{{ route('report-route-search') }}?company-report={{ $company->id }}&date-report={{ urlencode($dateTimeRequest) }}&date-end-report={{ urlencode($dateTimeEndRequest) }}&time-range-report={{ $timeReport }}&with-end-date={{ $withEndDate }}&route-report={{ $routeReport }}&vehicle-report={{ $vehicleReport }}&spreadsheet-report={{ $spreadsheetReport }}&travel-id-report={{ $travelIdReport }}&completed-turns={{ $completedTurns }}&active-turns={{ $activeTurns }}&cancelled-turns={{ $cancelledTurns }}&type-report=group-vehicles&export=true&export-FICS=true"
                        class="btn green btn-circle tooltips"
                        data-title="@lang('Exportar FICS')">
                         <i class="fa fa-arrow-circle-down"></i>
