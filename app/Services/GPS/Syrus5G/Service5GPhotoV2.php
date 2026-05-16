@@ -110,47 +110,57 @@ class Service5GPhotoV2 extends SyrusService
                 }
 
                 // Cargar contenido y enviar a SavePhotoService
-                $image = Image::make($storage->get($file));
-                $process = $service->saveImageData([
-                    'date'       => $date,
-                    'img'        => $image->encode('data-url'),
-                    'type'       => $type,         // ✅ T o E (no 'syrus')
-                    'side'       => $side,         // para E no es obligatorio (validador en SavePhotoService)
-                    'uid'        => $uid,          // ✅ consistente
-                    'file_type'  => $type,         // T | E
-                    'file_name'  => $fileName,
-                ], true); // ✅ pedir retorno de 'photo' (getAPIFields)
+                try {
+                    $image = Image::make($storage->get($file));
+                    $process = $service->saveImageData([
+                        'date'       => $date,
+                        'img'        => $image->encode('data-url'),
+                        'type'       => $type,         // ✅ T o E (no 'syrus')
+                        'side'       => $side,         // para E no es obligatorio (validador en SavePhotoService)
+                        'uid'        => $uid,          // ✅ consistente
+                        'file_type'  => $type,         // T | E
+                        'file_name'  => $fileName,
+                    ], true); // ✅ pedir retorno de 'photo' (getAPIFields)
 
+                    $success = $process->response->success ?? false;
+                    $message = $process->response->message ?? '';
+                    $extra   = "";
 
-                $success = $process->response->success ?? false;
-                $message = $process->response->message ?? '';
-                $extra   = "";
+                    if ($success === true) {
 
-                if ($success === true) {
+                        // ✅ Guardar en file_names aquí mismo (sin 'path')
+                        //    Tomamos DR desde la respuesta si viene; si no, null.
+                        $photoPayload = (array)($process->photo ?? []);
+                        $dispatchId   = $photoPayload['dispatch_register_id'] ?? null;
 
-                    // ✅ Guardar en file_names aquí mismo (sin 'path')
-                    //    Tomamos DR desde la respuesta si viene; si no, null.
-                    $photoPayload = (array)($process->photo ?? []);
-                    $dispatchId   = $photoPayload['dispatch_register_id'] ?? null;
+                        DB::table('file_names')->insertOrIgnore([
+                            'file_name'            => $fileName,     // solo nombre original
+                            'vehicle_id'           => $vehicle->id,
+                            'dispatch_register_id' => $dispatchId,
+                            'file_type'            => $type,         // T o E
+                            'date'                 => $date,         // fecha de la foto
+                            'created_at'           => now(),
+                            'updated_at'           => now(),
+                        ]);
 
-                    DB::table('file_names')->insertOrIgnore([
-                        'file_name'            => $fileName,     // solo nombre original
-                        'vehicle_id'           => $vehicle->id,
-                        'dispatch_register_id' => $dispatchId,
-                        'file_type'            => $type,         // T o E
-                        'date'                 => $date,         // fecha de la foto
-                        'created_at'           => now(),
-                        'updated_at'           => now(),
-                    ]);
-
-                    // Eliminar archivo de origen si todo fue bien
-                    $deleted = $storage->delete($file);
-                    if (!$deleted) {
-                        $extra = ". Error photo NOT deleted!";
+                        // Eliminar archivo de origen si todo fue bien
+                        $deleted = $storage->delete($file);
+                        if (!$deleted) {
+                            $extra = ". Error photo NOT deleted!";
+                            $this->log("             • Vehicle #$vehicle->number could not delete source file $file");
+                        } else {
+                            $this->log("             • Vehicle #$vehicle->number source file deleted $file");
+                        }
+                        $message .= $extra;
+                    } else {
+                        $extra = $message;
+                        $this->log("             • Vehicle #$vehicle->number saveImageData returned false for $fileName: $message");
                     }
-                    $message .= $extra;
-                } else {
+                } catch (\Throwable $e) {
+                    $success = false;
+                    $message = "Error saving file $uid: " . $e->getMessage();
                     $extra = $message;
+                    $this->log("             • Vehicle #$vehicle->number exception on $fileName: " . $e->getMessage());
                 }
 
                 $this->log("             • Vehicle #$vehicle->number saveImageData • #$index/" . $files->count() . " $extra" . $message);
