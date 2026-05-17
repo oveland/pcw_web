@@ -17,6 +17,9 @@ class SavePhotoService extends PhotoService
         $success = false;
         $message = "";
         $photo = null;
+        $path = null;
+        $pathUploaded = false;
+        $photoSaved = false;
         $uid = $data['uid'];
         $context = [
             'uid' => $uid,
@@ -56,55 +59,81 @@ class SavePhotoService extends PhotoService
                 $path = $photo->path;
                 $image = $this->decodeImageData($data->get('img'));
 
-                Log::channel('rocket')->info("SavePhotoService: starting upload", $context + [
+                $this->safeRocketLog('info', "SavePhotoService: starting upload", $context + [
                     'path' => $path,
                     'dispatch_register_id' => $photo->dispatch_register_id,
                     'location_id' => $photo->location_id,
                 ]);
 
                 $storageResponse = $this->storage->put($path, $image);
+                $pathUploaded = (bool)$storageResponse;
                 if (!$storageResponse) {
                     $message = "Image $uid has invalid format!";
-                    Log::channel('rocket')->error("SavePhotoService: S3 upload returned false", $context + ['path' => $path]);
-                } elseif (!$photo->save()) {
-                    $message = "Error saving data $uid";
-                    $this->storage->delete($path);
-                    Log::channel('rocket')->error("SavePhotoService: photo model save returned false", $context + ['path' => $path]);
+                    $this->safeRocketLog('error', "SavePhotoService: S3 upload returned false", $context + ['path' => $path]);
                 } else {
-                    $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
-                    $currentPhoto->fill($data->toArray());
-                    $currentPhoto->disk = $photo->disk;
-                    $currentPhoto->date = $photo->date;
-                    $currentPhoto->data = $photo->data;
-                    $currentPhoto->persons = $photo->persons;
-                    $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
-                    $currentPhoto->location_id = $photo->location_id;
-                    $currentPhoto->path = $path;
+                    try {
+                        DB::beginTransaction();
+
+                        if (!$photo->save()) {
+                            throw new \RuntimeException("Error saving data $uid");
+                        }
+                        $photoSaved = true;
+
+                        $currentPhoto = CurrentPhoto::findByVehicle($this->vehicle);
+                        $currentPhoto->fill($data->toArray());
+                        $currentPhoto->disk = $photo->disk;
+                        $currentPhoto->date = $photo->date;
+                        $currentPhoto->data = $photo->data;
+                        $currentPhoto->persons = $photo->persons;
+                        $currentPhoto->dispatch_register_id = $photo->dispatch_register_id;
+                        $currentPhoto->location_id = $photo->location_id;
+                        $currentPhoto->path = $path;
+
+                        if (!$currentPhoto->save()) {
+                            throw new \RuntimeException("Current photo update failed for $uid");
+                        }
+
+                        DB::commit();
+                    } catch (\Throwable $dbException) {
+                        if (DB::transactionLevel() > 0) {
+                            DB::rollBack();
+                        }
+                        $photoSaved = false;
+                        throw $dbException;
+                    }
 
                     $success = true;
                     $message = "Photo $uid saved successfully";
 
-                    if (!$currentPhoto->save()) {
-                        $message .= " (warning: current photo was not updated)";
-                        Log::channel('rocket')->warning("SavePhotoService: current photo save returned false", $context + [
-                            'path' => $path,
-                            'photo_id' => $photo->id,
-                        ]);
-                    }
-
-                    Log::channel('rocket')->info("SavePhotoService: photo saved successfully", $context + [
+                    $this->safeRocketLog('info', "SavePhotoService: photo saved successfully", $context + [
                         'path' => $path,
                         'photo_id' => $photo->id,
                         'dispatch_register_id' => $photo->dispatch_register_id,
                     ]);
                 }
             } catch (\Throwable $e) {
-                $path = $photo ? $photo->getOriginalPath() : null;
-                if ($path) {
+                $path = $path ?: ($photo ? $photo->getOriginalPath() : null);
+
+                if (DB::transactionLevel() > 0) {
+                    DB::rollBack();
+                }
+
+                if ($photoSaved && $photo && $photo->exists) {
+                    try {
+                        $photo->delete();
+                    } catch (\Throwable $deletePhotoException) {
+                        $this->safeRocketLog('error', "SavePhotoService: failed to rollback photo row after exception", $context + [
+                            'path' => $path,
+                            'rollback_error' => $deletePhotoException->getMessage(),
+                        ]);
+                    }
+                }
+
+                if ($pathUploaded && $path) {
                     try {
                         $this->storage->delete($path);
                     } catch (\Throwable $deleteException) {
-                        Log::channel('rocket')->error("SavePhotoService: failed to rollback S3 file after exception", $context + [
+                        $this->safeRocketLog('error', "SavePhotoService: failed to rollback S3 file after exception", $context + [
                             'path' => $path,
                             'rollback_error' => $deleteException->getMessage(),
                         ]);
@@ -112,7 +141,7 @@ class SavePhotoService extends PhotoService
                 }
 
                 $message = "Error saving file $uid: " . $e->getMessage();
-                Log::channel('rocket')->error("SavePhotoService: exception while saving photo", $context + [
+                $this->safeRocketLog('error', "SavePhotoService: exception while saving photo", $context + [
                     'path' => $path,
                     'error' => $e->getMessage(),
                 ]);
@@ -121,15 +150,35 @@ class SavePhotoService extends PhotoService
             $photoSaved = Photo::where('uid', $uid)->first();
 
             if ($photoSaved) {
-                $success = true;
-                $message = "Photo $uid is already saved";
-                Log::channel('rocket')->info("SavePhotoService: duplicated uid already saved", $context + [
-                    'photo_id' => $photoSaved->id,
-                ]);
+                $photoExistsInDisk = false;
+
+                try {
+                    $photoExistsInDisk = $photoSaved->disk && $photoSaved->path
+                        ? $this->storageDriverFor($photoSaved->disk)->exists($photoSaved->path)
+                        : false;
+                } catch (\Throwable $e) {
+                    $photoExistsInDisk = false;
+                }
+
+                if ($photoExistsInDisk) {
+                    $success = true;
+                    $message = "Photo $uid is already saved";
+                    $this->safeRocketLog('info', "SavePhotoService: duplicated uid already saved", $context + [
+                        'photo_id' => $photoSaved->id,
+                    ]);
+                } else {
+                    $success = false;
+                    $message = "Photo $uid exists in database but file is missing in storage";
+                    $this->safeRocketLog('warning', "SavePhotoService: stale photo row detected", $context + [
+                        'photo_id' => $photoSaved->id,
+                        'disk' => $photoSaved->disk,
+                        'path' => $photoSaved->path,
+                    ]);
+                }
             } else {
                 $success = false;
                 $message = "Error saving photo $uid: " . collect($validator->errors())->flatten()->implode(' ');
-                Log::channel('rocket')->warning("SavePhotoService: validation failed", $context + [
+                $this->safeRocketLog('warning', "SavePhotoService: validation failed", $context + [
                     'errors' => collect($validator->errors())->flatten()->implode(' '),
                 ]);
             }
@@ -142,5 +191,19 @@ class SavePhotoService extends PhotoService
             ],
             'photo' => $success && $withPhoto ? $photo->getAPIFields() : null
         ];
+    }
+
+    private function safeRocketLog(string $level, string $message, array $context = []): void
+    {
+        try {
+            Log::channel('rocket')->$level($message, $context);
+        } catch (\Throwable $e) {
+            // El log nunca debe romper el guardado de la foto.
+        }
+    }
+
+    private function storageDriverFor(string $disk)
+    {
+        return \Storage::disk($disk);
     }
 }

@@ -76,9 +76,33 @@ class Service5GPhotoV2 extends SyrusService
                 // El UID debe incluir el device para no colisionar entre múltiples DVRs/cámaras.
                 $uid = $this->buildPhotoUid($vehicle->number, $deviceID, $fileName);
 
-                // Evitar reprocesar
+                // Evitar reprocesar solo si la foto realmente existe en storage.
+                $existingPhoto = Photo::where('uid', $uid)->first();
+                if ($existingPhoto) {
+                    $existsInStorage = false;
+                    try {
+                        $existsInStorage = $existingPhoto->disk && $existingPhoto->path
+                            ? Storage::disk($existingPhoto->disk)->exists($existingPhoto->path)
+                            : false;
+                    } catch (\Throwable $e) {
+                        $existsInStorage = false;
+                    }
+
+                    if ($existsInStorage) {
+                        $this->log("             • Vehicle #$vehicle->number duplicate uid skipped for $fileName ($uid)");
+                        continue;
+                    }
+
+                    $this->log("             • Vehicle #$vehicle->number stale uid found for $fileName ($uid), deleting row and retrying");
+                    try {
+                        $existingPhoto->delete();
+                    } catch (\Throwable $e) {
+                        $this->log("             • Vehicle #$vehicle->number could not delete stale row for $uid: " . $e->getMessage());
+                        continue;
+                    }
+                }
+
                 if (Photo::where('uid', $uid)->exists()) {
-                    $this->log("             • Vehicle #$vehicle->number duplicate uid skipped for $fileName ($uid)");
                     continue;
                 }
 

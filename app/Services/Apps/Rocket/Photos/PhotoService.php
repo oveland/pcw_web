@@ -25,6 +25,7 @@ use File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Image;
 use Storage;
 use Validator;
@@ -1557,6 +1558,25 @@ class PhotoService
     function getFile(Photo $photo, $encode = "webp", $withEffect = false, $withMask = false, $withTitle = false)
     {
         $image = $photo->getImage($encode, $withEffect, $withMask, $withTitle, $withTitle);
+
+        if (!$image) {
+            Log::channel('rocket')->warning('PhotoService: image not found for report rendering', [
+                'photo_id' => $photo->id,
+                'vehicle_id' => $photo->vehicle_id,
+                'disk' => $photo->disk,
+                'path' => $photo->path,
+                'encode' => $encode,
+                'with_effect' => $withEffect,
+                'with_mask' => $withMask,
+                'with_title' => $withTitle,
+            ]);
+
+            $image = $this->notFoundImage();
+        }
+
+        if (!$image) {
+            abort(404, 'Photo file not found');
+        }
 
         if (collect(['png', 'jpg', 'jpeg', 'gif'])->contains($encode)) {
             return $image->response($encode);
