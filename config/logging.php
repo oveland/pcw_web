@@ -39,34 +39,36 @@ return [
         ],
 
         'single' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
+            'days' => 7,
         ],
 
         'lm' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/lm.log'),
             'level' => 'debug',
+            'days' => 7,
         ],
 
         'rocket' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/rocket.log'),
             'level' => 'debug',
-//            'days' => 1,
+            'days' => 7,
         ],
         'sync3g' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/sync3g.log'),
             'level' => 'debug',
-//            'days' => 1,
+            'days' => 7,
         ],
         'sync4g' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/sync4g.log'),
             'level' => 'debug',
-//            'days' => 1,
+            'days' => 7,
         ],
 
         'daily' => [

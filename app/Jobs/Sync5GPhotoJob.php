@@ -29,7 +29,7 @@ class Sync5GPhotoJob implements ShouldQueue
     {
         $gpsVehicle = GpsVehicle::find($this->gpsVehicleId);
         if (!$gpsVehicle) {
-            Log::warning("Vehículo 5G no encontrado con ID {$this->gpsVehicleId}");
+            Log::channel('sync5g')->warning("Vehículo 5G no encontrado con ID {$this->gpsVehicleId}");
             return;
         }
 
@@ -37,9 +37,9 @@ class Sync5GPhotoJob implements ShouldQueue
 
         try {
             $response = $service5G->syncPhotoV2($gpsVehicle);
-            Log::info("✓ Vehículo {$gpsVehicle->vehicle->number} sincronizado correctamente: {$response}");
+            Log::channel('sync5g')->info("✓ Vehículo {$gpsVehicle->vehicle->number} sincronizado correctamente: {$response}");
         } catch (\Exception $e) {
-            Log::error("✗ Error al sincronizar vehículo {$gpsVehicle->vehicle->number}: " . $e->getMessage());
+            Log::channel('sync5g')->error("✗ Error al sincronizar vehículo {$gpsVehicle->vehicle->number}: " . $e->getMessage());
         }
     }
 }

@@ -65,21 +65,20 @@ class Service5GPhotoV2 extends SyrusService
             foreach ($files as $index => $file) {
                 $fileName = collect(explode('/', $file))->last();
 
-                // ✅ Procesar solo T.jpg y E.jpg
-                if (!Str::endsWith($file, ['T.jpg', 'E.jpg'])) {
+                // Procesar solo fotos válidas T/E, tolerando variaciones de mayúsculas.
+                if (!$this->isSyncablePhoto($fileName)) {
                     continue;
                 }
 
-                // ✅ Tipo y side
-                $isE  = Str::endsWith($file, 'E.jpg');
-                $type = $isE ? 'E' : 'T';
+                $type = $this->resolvePhotoType($fileName);
                 $side = $this->getSideV2($fileName, $gpsVehicle, $deviceID);
 
-                // ✅ UID consistente (y usarlo tanto para consultar como para guardar)
-                $uid = $vehicle->number . "_" . $fileName;
+                // El UID debe incluir el device para no colisionar entre múltiples DVRs/cámaras.
+                $uid = $this->buildPhotoUid($vehicle->number, $deviceID, $fileName);
 
                 // Evitar reprocesar
                 if (Photo::where('uid', $uid)->exists()) {
+                    $this->log("             • Vehicle #$vehicle->number duplicate uid skipped for $fileName ($uid)");
                     continue;
                 }
 
@@ -174,15 +173,32 @@ class Service5GPhotoV2 extends SyrusService
         return $response;
     }
 
+    private function isSyncablePhoto($fileName): bool
+    {
+        return preg_match('/[TE]\.jpe?g$/i', $fileName) === 1;
+    }
+
+    private function resolvePhotoType($fileName): string
+    {
+        preg_match('/([TE])\.jpe?g$/i', $fileName, $matches);
+        return Str::upper($matches[1] ?? 'T');
+    }
+
+    private function buildPhotoUid($vehicleNumber, $deviceId, $fileName): string
+    {
+        $safeDeviceId = preg_replace('/[^A-Za-z0-9._-]+/', '_', (string)$deviceId);
+        return $vehicleNumber . "_" . $safeDeviceId . "_" . $fileName;
+    }
+
     function getSideV2($fileName, GpsVehicle $gpsVehicle, $deviceId)
     {
-        if (Str::endsWith($fileName, ['E.jpg'])) {
+        if ($this->resolvePhotoType($fileName) === 'E') {
             return 'E';
         }
 
         $channel = null;
-        if (preg_match('/(ch\d+)/', $fileName, $matches)) {
-            $channel = $matches[1];
+        if (preg_match('/(ch\d+)/i', $fileName, $matches)) {
+            $channel = Str::lower($matches[1]);
         }
 
         if (!$channel) {
@@ -209,6 +225,6 @@ class Service5GPhotoV2 extends SyrusService
 
     function log($message)
     {
-        Log::channel('sync4g')->info("[Service4G] $message");
+        Log::channel('sync5g')->info("[Service5GV2] $message");
     }
 }
