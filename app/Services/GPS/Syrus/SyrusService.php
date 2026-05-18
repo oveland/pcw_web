@@ -7,7 +7,6 @@ namespace App\Services\GPS\Syrus;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\PhotoEvent;
 use App\Models\Vehicles\GpsVehicle;
-use App\Services\Apps\Rocket\Photos\PhotoService;
 use App\Services\Apps\Rocket\Photos\SavePhotoService;
 use Carbon\Carbon;
 use Exception;
@@ -15,62 +14,17 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Image;
-use Intervention\Image\Exception\NotReadableException;
 use Storage;
-use Symfony\Component\ErrorHandler\Error\FatalError;
 use Log;
-use App\Models\Apps\Rocket\SyncStatus;
 
 class SyrusService
 {
-    function readyToSync($imei)
-    {
-        $syncStatus = SyncStatus::where('imei', $imei)->first();
-        if (!$syncStatus) return true;
-
-        return !$syncStatus->busy || $syncStatus->updated_at->diffInMinutes() > 30;
-    }
-
-    function setStatus($imei, $busy)
-    {
-        $syncStatus = SyncStatus::where('imei', $imei)->first();
-        if (!$syncStatus) $syncStatus = new SyncStatus(['imei' => $imei]);
-        $syncStatus->busy = $busy;
-        $syncStatus->save();
-    }
-
     /**
      * @throws FileNotFoundException
      * @throws Exception
      */
     function syncPhoto($imei): Collection
     {
-        if (!$this->readyToSync($imei)) return collect([
-            'success' => false,
-            'message' => " ~~~~ $imei is not ready to Sync",
-        ]);
-
-        $this->setStatus($imei, true);
-
-        $imeisForPhotoService = [
-            '352557100781619',
-            '352557104744845',
-            '352557104791069',
-            '352557104743391',
-            '352557104787257',
-            '352557104787240',
-            '352557104743243',
-            '352557104743219',
-            '352557104743052',
-            '352557104743383',
-            '352557104791234',
-            '352557104787356',
-            '352557104790533',
-            '352557104791127',
-            '352557100774424'
-        ];
-
-        //$service = in_array($imei, $imeisForPhotoService) ? new PhotoService() : new SavePhotoService();
         $service = new SavePhotoService();
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
@@ -81,11 +35,7 @@ class SyrusService
         ]);
 
         $vehicle = $gpsVehicle->vehicle;
-
-        $waitSeconds = random_int(0, 30);
-
-        $this->log("• Start sync for vehicle $vehicle->number in $waitSeconds");
-        sleep($waitSeconds);
+        $this->log("• Start sync for vehicle $vehicle->number");
 
         $response = collect([
             'success' => true,
@@ -167,8 +117,6 @@ class SyrusService
         }
 
         $response->put('sync', $saveFiles);
-
-        $this->setStatus($imei, false);
 
         return $response;
     }
