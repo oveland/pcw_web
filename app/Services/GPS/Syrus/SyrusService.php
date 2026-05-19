@@ -7,6 +7,7 @@ namespace App\Services\GPS\Syrus;
 use App\Models\Apps\Rocket\Photo;
 use App\Models\Apps\Rocket\PhotoEvent;
 use App\Models\Vehicles\GpsVehicle;
+use App\Models\Apps\Rocket\SyncStatus;
 use App\Services\Apps\Rocket\Photos\SavePhotoService;
 use Carbon\Carbon;
 use Exception;
@@ -19,20 +20,46 @@ use Log;
 
 class SyrusService
 {
+    function readyToSync($imei)
+    {
+        $syncStatus = SyncStatus::where('imei', $imei)->first();
+        if (!$syncStatus) return true;
+
+        return !$syncStatus->busy || $syncStatus->updated_at->diffInMinutes() > 30;
+    }
+
+    function setStatus($imei, $busy)
+    {
+        $syncStatus = SyncStatus::where('imei', $imei)->first();
+        if (!$syncStatus) $syncStatus = new SyncStatus(['imei' => $imei]);
+        $syncStatus->busy = $busy;
+        $syncStatus->save();
+    }
+
     /**
      * @throws FileNotFoundException
      * @throws Exception
      */
     function syncPhoto($imei): Collection
     {
+        if (!$this->readyToSync($imei)) return collect([
+            'success' => false,
+            'message' => " ~~~~ $imei is not ready to Sync",
+        ]);
+
+        $this->setStatus($imei, true);
+
         $service = new SavePhotoService();
 
         $gpsVehicle = GpsVehicle::where('imei', $imei)->first();
 
-        if (!$gpsVehicle) return collect([
-            'success' => false,
-            'message' => "Imei $imei is not associated with a vehicle",
-        ]);
+        if (!$gpsVehicle) {
+            $this->setStatus($imei, false);
+            return collect([
+                'success' => false,
+                'message' => "Imei $imei is not associated with a vehicle",
+            ]);
+        }
 
         $vehicle = $gpsVehicle->vehicle;
         $this->log("• Start sync for vehicle $vehicle->number");
@@ -117,6 +144,8 @@ class SyrusService
         }
 
         $response->put('sync', $saveFiles);
+
+        $this->setStatus($imei, false);
 
         return $response;
     }
