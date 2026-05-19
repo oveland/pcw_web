@@ -314,7 +314,10 @@ class Kernel extends ConsoleKernel
 
             /******************************************   3G   ***********************************************/
 
-            $schedule->command('sync3GV2:sync-photos')->everyFiveMinutes()->runInBackground();
+            // Día: 6:00 AM a 8:59 PM - cada 10 minutos
+            $schedule->command('sync3GV2:sync-photos')->everyTenMinutes()->between('06:00', '20:59')->runInBackground();
+            // Noche: 9:00 PM a 5:59 AM - cada 2 horas
+            $schedule->command('sync3GV2:sync-photos')->cron('0 21,23,1,3,5 * * *')->runInBackground();
 
 
             $schedule->command('rocket:count --vehicle-plate=TST-001 --pa=3 --pr=5 ')->cron('0 */4 * * *')->runInBackground();
